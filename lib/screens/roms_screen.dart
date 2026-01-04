@@ -438,29 +438,32 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   Widget _buildListWithDetail() {
-    return Row(
-      children: [
-        Expanded(flex: 3, child: _buildListView()),
-        const VerticalDivider(width: 1),
-        Expanded(
-          flex: 2,
-          child: _selectedRom != null
-              ? _buildDetailPanel(_selectedRom!)
-              : const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.info_outline, size: 64, color: Colors.grey),
-                      SizedBox(height: 16),
-                      Text(
-                        'Select a ROM to view details',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        children: [
+          Expanded(flex: 3, child: _buildListView()),
+          const VerticalDivider(width: 1),
+          Expanded(
+            flex: 2,
+            child: _selectedRom != null
+                ? _buildDetailPanel(_selectedRom!)
+                : const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.info_outline, size: 64, color: Colors.grey),
+                        SizedBox(height: 16),
+                        Text(
+                          'Select a ROM to view details',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -542,76 +545,79 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   Widget _buildListView() {
-    return Focus(
-      focusNode: _listFocusNode,
-      autofocus: true,
-      onKeyEvent: (node, event) {
-        if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    return Padding(
+      padding: const EdgeInsets.only(top: 48),
+      child: Focus(
+        focusNode: _listFocusNode,
+        autofocus: true,
+        onKeyEvent: (node, event) {
+          if (event is! KeyDownEvent) return KeyEventResult.ignored;
 
-        final key = event.logicalKey;
+          final key = event.logicalKey;
 
-        if (_keyboardService.isAlphabeticalJump(event)) {
-          final letter = _keyboardService.getAlphabeticalJumpLetter(event);
-          if (letter != null) {
-            final newIndex = _keyboardService.findIndexByLetter(
-              letter: letter,
-              items: _filteredItems,
-              getDisplayName: (item) => item.displayName,
-            );
-            if (newIndex != null) {
-              setState(() {
-                _selectedIndex = newIndex;
-                _selectedRom = _filteredItems[newIndex];
-              });
-              _scrollToIndexInList(newIndex);
-              return KeyEventResult.handled;
+          if (_keyboardService.isAlphabeticalJump(event)) {
+            final letter = _keyboardService.getAlphabeticalJumpLetter(event);
+            if (letter != null) {
+              final newIndex = _keyboardService.findIndexByLetter(
+                letter: letter,
+                items: _filteredItems,
+                getDisplayName: (item) => item.displayName,
+              );
+              if (newIndex != null) {
+                setState(() {
+                  _selectedIndex = newIndex;
+                  _selectedRom = _filteredItems[newIndex];
+                });
+                _scrollToIndexInList(newIndex);
+                return KeyEventResult.handled;
+              }
             }
           }
-        }
 
-        if (_keyboardService.isBackKey(key)) {
-          _navigateBack();
-          return KeyEventResult.handled;
-        }
-
-        // Handle selection
-        if (_keyboardService.isSelectKey(key)) {
-          final item = _filteredItems[_selectedIndex];
-          if (item.isFolder) {
-            _navigateToFolder(item);
-          } else {
-            _showRomDetailDialog(item);
+          if (_keyboardService.isBackKey(key)) {
+            _navigateBack();
+            return KeyEventResult.handled;
           }
-          return KeyEventResult.handled;
-        }
 
-        // Handle navigation
-        final newIndex = _keyboardService.handleListNavigation(
-          key: key,
-          currentIndex: _selectedIndex,
-          itemCount: _filteredItems.length,
-        );
+          // Handle selection
+          if (_keyboardService.isSelectKey(key)) {
+            final item = _filteredItems[_selectedIndex];
+            if (item.isFolder) {
+              _navigateToFolder(item);
+            } else {
+              _showRomDetailDialog(item);
+            }
+            return KeyEventResult.handled;
+          }
 
-        if (newIndex != null) {
-          setState(() {
-            _selectedIndex = newIndex;
-            _selectedRom = _filteredItems[newIndex];
-          });
-          _scrollToIndexInList(newIndex);
-          return KeyEventResult.handled;
-        }
+          // Handle navigation
+          final newIndex = _keyboardService.handleListNavigation(
+            key: key,
+            currentIndex: _selectedIndex,
+            itemCount: _filteredItems.length,
+          );
 
-        return KeyEventResult.ignored;
-      },
-      child: ListView.builder(
-        controller: _listScrollController,
-        padding: const EdgeInsets.all(8),
-        itemCount: _filteredItems.length,
-        itemBuilder: (context, index) {
-          final item = _filteredItems[index];
-          final isSelected = index == _selectedIndex;
-          return _buildListItem(item, isSelected);
+          if (newIndex != null) {
+            setState(() {
+              _selectedIndex = newIndex;
+              _selectedRom = _filteredItems[newIndex];
+            });
+            _scrollToIndexInList(newIndex);
+            return KeyEventResult.handled;
+          }
+
+          return KeyEventResult.ignored;
         },
+        child: ListView.builder(
+          controller: _listScrollController,
+          padding: const EdgeInsets.all(8),
+          itemCount: _filteredItems.length,
+          itemBuilder: (context, index) {
+            final item = _filteredItems[index];
+            final isSelected = index == _selectedIndex;
+            return _buildListItem(item, isSelected);
+          },
+        ),
       ),
     );
   }
