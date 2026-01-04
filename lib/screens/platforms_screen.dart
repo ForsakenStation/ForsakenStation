@@ -196,10 +196,17 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.light,
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(color: Colors.black.withOpacity(0.2)),
+          ),
+        ),
         title: const Text('Forsaken Roms: Platforms'),
         actions: [
           const ThemeSelector(),
@@ -268,68 +275,86 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
       return _buildCarouselView();
     }
 
-    return Focus(
-      focusNode: _gridFocusNode,
-      autofocus: true,
-      onKeyEvent: (node, event) {
-        if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    return Padding(
+      padding: const EdgeInsets.only(top: 48),
+      child: Focus(
+        focusNode: _gridFocusNode,
+        autofocus: true,
+        onKeyEvent: (node, event) {
+          if (event is! KeyDownEvent) return KeyEventResult.ignored;
 
-        final key = event.logicalKey;
+          final key = event.logicalKey;
+          if (_keyboardService.isAlphabeticalJump(event)) {
+            final letter = _keyboardService.getAlphabeticalJumpLetter(event);
+            if (letter != null) {
+              final newIndex = _keyboardService.findIndexByLetter(
+                letter: letter,
+                items: _platforms,
+                getDisplayName: (platform) => platform.displayName,
+              );
+              if (newIndex != null) {
+                setState(() {
+                  _gridSelectedIndex = newIndex;
+                });
+                final columns = _calculateCrossAxisCount(context);
+                _scrollToIndex(newIndex, columns);
+                return KeyEventResult.handled;
+              }
+            }
+          }
 
-        // Handle back navigation
-        if (_keyboardService.isBackKey(key)) {
-          Navigator.of(context).pop();
-          return KeyEventResult.handled;
-        }
+          if (_keyboardService.isBackKey(key)) {
+            _showExitDialog();
+            return KeyEventResult.handled;
+          }
 
-        // Handle selection
-        if (_keyboardService.isSelectKey(key)) {
-          _navigateToRoms(_platforms[_gridSelectedIndex]);
-          return KeyEventResult.handled;
-        }
+          if (_keyboardService.isSelectKey(key)) {
+            _navigateToRoms(_platforms[_gridSelectedIndex]);
+            return KeyEventResult.handled;
+          }
 
-        // Handle navigation
-        final columns = _calculateCrossAxisCount(context);
-        final newIndex = _keyboardService.handleGridNavigation(
-          key: key,
-          currentIndex: _gridSelectedIndex,
-          itemCount: _platforms.length,
-          columns: columns,
-        );
-
-        if (newIndex != null) {
-          setState(() {
-            _gridSelectedIndex = newIndex;
-          });
-          // Scroll to keep selected item visible
-          _scrollToIndex(newIndex, columns);
-          return KeyEventResult.handled;
-        }
-
-        return KeyEventResult.ignored;
-      },
-      child: GridView.builder(
-        controller: _gridScrollController,
-        padding: const EdgeInsets.all(16),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: _calculateCrossAxisCount(context),
-          childAspectRatio: 0.8,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-        ),
-        itemCount: _platforms.length,
-        itemBuilder: (context, index) {
-          final platform = _platforms[index];
-          return PlatformCard(
-            platform: platform,
-            onTap: () => _navigateToRoms(platform),
-            logoPath: _systemLogosCache[platform.name],
-            backgroundPath: _systemBackgroundsCache[platform.name],
-            onLoadLogo: () => _loadSystemLogo(platform.name),
-            onLoadBackground: () => _loadSystemBackground(platform.name),
-            isSelected: index == _gridSelectedIndex,
+          final columns = _calculateCrossAxisCount(context);
+          final newIndex = _keyboardService.handleGridNavigation(
+            key: key,
+            currentIndex: _gridSelectedIndex,
+            itemCount: _platforms.length,
+            columns: columns,
           );
+
+          if (newIndex != null) {
+            setState(() {
+              _gridSelectedIndex = newIndex;
+            });
+            // Scroll to keep selected item visible
+            _scrollToIndex(newIndex, columns);
+            return KeyEventResult.handled;
+          }
+
+          return KeyEventResult.ignored;
         },
+        child: GridView.builder(
+          controller: _gridScrollController,
+          padding: const EdgeInsets.all(16),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: _calculateCrossAxisCount(context),
+            childAspectRatio: 0.8,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          ),
+          itemCount: _platforms.length,
+          itemBuilder: (context, index) {
+            final platform = _platforms[index];
+            return PlatformCard(
+              platform: platform,
+              onTap: () => _navigateToRoms(platform),
+              logoPath: _systemLogosCache[platform.name],
+              backgroundPath: _systemBackgroundsCache[platform.name],
+              onLoadLogo: () => _loadSystemLogo(platform.name),
+              onLoadBackground: () => _loadSystemBackground(platform.name),
+              isSelected: index == _gridSelectedIndex,
+            );
+          },
+        ),
       ),
     );
   }
@@ -353,53 +378,87 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     );
   }
 
+  Future<void> _showExitDialog() async {
+    final shouldExit = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Exit Application'),
+        content: const Text('Are you sure you want to exit?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => SystemNavigator.pop(),
+            child: const Text('Exit'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldExit == true && mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
   Widget _buildCarouselView() {
     return Focus(
       focusNode: _carouselFocusNode,
       autofocus: true,
       onKeyEvent: (node, event) {
-        if (event is KeyDownEvent) {
-          if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-            _hideNavigationHint();
-            // Infinite carousel: wrap to end if at beginning
-            if (_carouselCurrentIndex > 0) {
-              _carouselController.previousPage(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            } else {
+        if (event is! KeyDownEvent) return KeyEventResult.ignored;
+
+        final key = event.logicalKey;
+
+        if (_keyboardService.isAlphabeticalJump(event)) {
+          final letter = _keyboardService.getAlphabeticalJumpLetter(event);
+          if (letter != null) {
+            final newIndex = _keyboardService.findIndexByLetter(
+              letter: letter,
+              items: _platforms,
+              getDisplayName: (platform) => platform.displayName,
+            );
+            if (newIndex != null) {
+              _hideNavigationHint();
               _carouselController.animateToPage(
-                _platforms.length - 1,
+                newIndex,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
               );
+              return KeyEventResult.handled;
             }
-            return KeyEventResult.handled;
-          } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-            _hideNavigationHint();
-            // Infinite carousel: wrap to beginning if at end
-            if (_carouselCurrentIndex < _platforms.length - 1) {
-              _carouselController.nextPage(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            } else {
-              _carouselController.animateToPage(
-                0,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            }
-            return KeyEventResult.handled;
-          } else if (_keyboardService.isSelectKey(event.logicalKey)) {
-            _navigateToRoms(_platforms[_carouselCurrentIndex]);
-            return KeyEventResult.handled;
-          } else if (_keyboardService.isBackKey(event.logicalKey)) {
-            // Back navigation - exit app
-            Navigator.of(context).pop();
-            return KeyEventResult.handled;
           }
         }
+
+        // Handle selection
+        if (_keyboardService.isSelectKey(key)) {
+          _navigateToRoms(_platforms[_carouselCurrentIndex]);
+          return KeyEventResult.handled;
+        }
+
+        if (_keyboardService.isBackKey(key)) {
+          _showExitDialog();
+          return KeyEventResult.handled;
+        }
+
+        final newIndex = _keyboardService.handleCarouselNavigation(
+          key: key,
+          currentIndex: _carouselCurrentIndex,
+          itemCount: _platforms.length,
+          loop: true,
+        );
+
+        if (newIndex != null) {
+          _hideNavigationHint();
+          _carouselController.animateToPage(
+            newIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+          return KeyEventResult.handled;
+        }
+
         return KeyEventResult.ignored;
       },
       child: Stack(

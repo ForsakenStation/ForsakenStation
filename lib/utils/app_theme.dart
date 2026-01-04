@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Custom color schemes for the app
 class AppColors {
@@ -110,6 +111,7 @@ class AppTheme {
         filled: true,
         fillColor: AppColors.lightSurfaceVariant.withOpacity(0.3),
       ),
+      fontFamily: GoogleFonts.orbitron().fontFamily,
     );
   }
 
@@ -164,6 +166,7 @@ class AppTheme {
         filled: true,
         fillColor: AppColors.darkSurfaceVariant.withOpacity(0.3),
       ),
+      fontFamily: GoogleFonts.orbitron().fontFamily,
     );
   }
 }

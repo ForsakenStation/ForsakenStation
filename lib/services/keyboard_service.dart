@@ -112,6 +112,16 @@ class KeyboardService {
       if (newIndex >= itemCount) {
         newIndex = loop ? 0 : itemCount - 1;
       }
+    }else if (key == keyPageUp) {
+      newIndex = currentIndex + 10;
+      if (newIndex >= itemCount) {
+        newIndex = loop ? 0 : itemCount - 10;
+      }
+    } else if (key == keyPageDown) {
+      newIndex = currentIndex - 10;
+      if (newIndex < 0) {
+        newIndex = loop ? itemCount - 10 : 0;
+      }
     } else if (key == keyHome) {
       newIndex = 0;
     } else if (key == keyEnd) {
@@ -148,6 +158,102 @@ class KeyboardService {
   /// Check if key is a back key
   bool isBackKey(LogicalKeyboardKey key) {
     return key == keyBack || key == LogicalKeyboardKey.backspace;
+  }
+
+  /// Check if event is an alphabetical jump (Shift + Letter)
+  bool isAlphabeticalJump(KeyEvent event) {
+    if (event is! KeyDownEvent) return false;
+
+    // Check if shift is pressed using both methods for reliability
+    final hardwareShiftPressed = HardwareKeyboard.instance.isShiftPressed;
+    final logicalShiftPressed = HardwareKeyboard.instance.logicalKeysPressed
+        .any(
+          (key) =>
+              key == LogicalKeyboardKey.shiftLeft ||
+              key == LogicalKeyboardKey.shiftRight,
+        );
+
+    final isShiftPressed = hardwareShiftPressed || logicalShiftPressed;
+
+    final key = event.logicalKey;
+
+    _debug.debug(
+      'Checking alphabetical jump: shift=$isShiftPressed, key=${key.keyLabel}, keyId=${key.keyId}',
+      tag: 'KeyboardService',
+    );
+
+    // Check if it's a letter key (keyA to keyZ)
+    final isLetterKey =
+        (key.keyId >= LogicalKeyboardKey.keyA.keyId &&
+        key.keyId <= LogicalKeyboardKey.keyZ.keyId);
+
+    return isShiftPressed && isLetterKey;
+  }
+
+  /// Get the letter from an alphabetical jump event
+  String? getAlphabeticalJumpLetter(KeyEvent event) {
+    if (!isAlphabeticalJump(event)) return null;
+
+    // Convert keyId to letter (keyA = 0x00000000061, so subtract keyA's id and add 'A')
+    final key = event.logicalKey;
+    final letterIndex = key.keyId - LogicalKeyboardKey.keyA.keyId;
+    if (letterIndex >= 0 && letterIndex < 26) {
+      return String.fromCharCode('A'.codeUnitAt(0) + letterIndex);
+    }
+
+    return null;
+  }
+
+  /// Find item index by letter (or next available letter in alphabet)
+  /// Returns null if no match found
+  int? findIndexByLetter<T>({
+    required String letter,
+    required List<T> items,
+    required String Function(T item) getDisplayName,
+  }) {
+    if (items.isEmpty) return null;
+
+    final upperLetter = letter.toUpperCase();
+
+    // First try to find exact match
+    final exactIndex = items.indexWhere(
+      (item) => getDisplayName(item).toUpperCase().startsWith(upperLetter),
+    );
+
+    if (exactIndex != -1) {
+      _debug.debug(
+        'Found item starting with "$upperLetter" at index $exactIndex',
+        tag: 'KeyboardService',
+      );
+      return exactIndex;
+    }
+
+    // If no exact match, find the next letter that exists
+    for (
+      int charCode = upperLetter.codeUnitAt(0) + 1;
+      charCode <= 'Z'.codeUnitAt(0);
+      charCode++
+    ) {
+      final nextLetter = String.fromCharCode(charCode);
+      final nextIndex = items.indexWhere(
+        (item) => getDisplayName(item).toUpperCase().startsWith(nextLetter),
+      );
+
+      if (nextIndex != -1) {
+        _debug.debug(
+          'No item with "$upperLetter", jumping to "$nextLetter" at index $nextIndex',
+          tag: 'KeyboardService',
+        );
+        return nextIndex;
+      }
+    }
+
+    // If nothing found after this letter, return null (no change)
+    _debug.debug(
+      'No items found starting with or after "$upperLetter"',
+      tag: 'KeyboardService',
+    );
+    return null;
   }
 
   /// Create a keyboard listener widget
