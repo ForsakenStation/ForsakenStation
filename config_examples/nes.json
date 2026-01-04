@@ -1,0 +1,15 @@
+{
+  "platform": "nes",
+  "commands": [
+    {
+      "name": "FCEUX",
+      "command": "fceux",
+      "args": ["{ROM}"]
+    },
+    {
+      "name": "Nestopia",
+      "command": "nestopia",
+      "args": ["--fullscreen", "{ROM}"]
+    }
+  ]
+}

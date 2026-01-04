@@ -1,0 +1,10 @@
+{
+  "platform": "amiga",
+  "commands": [
+    {
+      "name": "FS-UAE",
+      "command": "fs-uae",
+      "args": ["--floppy-drive-0={ROM}"]
+    }
+  ]
+}

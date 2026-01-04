@@ -1,0 +1,301 @@
+import 'dart:io';
+import 'package:path/path.dart' as path;
+import '../models/rom.dart';
+import '../models/rom_item.dart';
+import '../models/emulator_config.dart';
+import 'download_service.dart';
+import 'debug_service.dart';
+
+class EmulatorService {
+  final String emulatorsBasePath;
+  final String configFilePath;
+  final DownloadService downloadService;
+  final _debug = DebugService.instance;
+
+  EmulatorsConfig? _config;
+  DateTime? _configLoadTime;
+  String? _configDir; // Directory where config.json is located
+
+  EmulatorService({
+    required this.emulatorsBasePath,
+    required this.configFilePath,
+    required this.downloadService,
+  }) {
+    // Store config directory for resolving relative paths
+    _configDir = path.dirname(configFilePath);
+  }
+
+  /// Load the main emulators configuration file
+  Future<EmulatorsConfig?> _loadConfig({bool forceReload = false}) async {
+    // Cache config for 5 seconds to avoid repeated file reads
+    if (!forceReload &&
+        _config != null &&
+        _configLoadTime != null &&
+        DateTime.now().difference(_configLoadTime!).inSeconds < 5) {
+      return _config;
+    }
+
+    _debug.info(
+      'Loading emulators config from: $configFilePath',
+      tag: 'EmulatorService',
+    );
+    _config = await EmulatorsConfig.loadFromFile(configFilePath);
+    _configLoadTime = DateTime.now();
+
+    if (_config != null) {
+      _debug.info(
+        'Loaded ${_config!.emulators.length} platform configurations',
+        tag: 'EmulatorService',
+      );
+    }
+
+    return _config;
+  }
+
+  /// Load emulator configuration for a specific platform
+  Future<EmulatorConfig?> loadPlatformConfig(String platform) async {
+    final config = await _loadConfig();
+    if (config == null) {
+      _debug.error('Failed to load emulators config', tag: 'EmulatorService');
+      return null;
+    }
+
+    final platformConfig = config.getConfigForPlatform(platform);
+    if (platformConfig == null) {
+      _debug.warning(
+        'No configuration found for platform: $platform',
+        tag: 'EmulatorService',
+      );
+    } else {
+      _debug.info(
+        'Found ${platformConfig.commands.length} emulator(s) for $platform',
+        tag: 'EmulatorService',
+      );
+    }
+
+    return platformConfig;
+  }
+
+  /// Check if emulator is configured for a platform
+  Future<bool> isPlatformConfigured(String platform) async {
+    final config = await _loadConfig();
+    return config?.isPlatformConfigured(platform) ?? false;
+  }
+
+  /// Launch emulator with a specific command
+  Future<bool> launchWithCommand({
+    required EmulatorCommand command,
+    required String romPath,
+    required String platform,
+  }) async {
+    try {
+      String emulatorPath;
+
+      // Check if command is a relative path (starts with ./ or ../)
+      if (command.command.startsWith('./') ||
+          command.command.startsWith('../')) {
+        // Resolve relative to config file directory
+        emulatorPath = path.normalize(
+          path.join(_configDir ?? emulatorsBasePath, command.command),
+        );
+      } else if (command.command.startsWith('/')) {
+        // Absolute path, use as-is
+        emulatorPath = command.command;
+      } else {
+        // Relative to EMULATORS_PATH
+        emulatorPath = path.join(emulatorsBasePath, command.command);
+      }
+
+      _debug.info(
+        'Launching emulator: ${command.name}',
+        tag: 'EmulatorService',
+      );
+      _debug.debug('Emulator path: $emulatorPath', tag: 'EmulatorService');
+      _debug.debug('ROM path: $romPath', tag: 'EmulatorService');
+
+      // Check if emulator exists
+      final emulatorFile = File(emulatorPath);
+      if (!await emulatorFile.exists()) {
+        _debug.error(
+          'Emulator not found at: $emulatorPath',
+          tag: 'EmulatorService',
+        );
+        return false;
+      }
+
+      // Check if ROM exists
+      final romFile = File(romPath);
+      if (!await romFile.exists()) {
+        _debug.error('ROM not found at: $romPath', tag: 'EmulatorService');
+        return false;
+      }
+
+      // Build command arguments with ROM path
+      final args = command.buildCommand(romPath);
+
+      _debug.info(
+        'Command: $emulatorPath ${args.join(' ')}',
+        tag: 'EmulatorService',
+      );
+      _debug.debug(
+        'Working directory: $emulatorsBasePath',
+        tag: 'EmulatorService',
+      );
+      _debug.debug(
+        "Environment: DISPLAY=${Platform.environment['DISPLAY']}",
+        tag: 'EmulatorService',
+      );
+
+      // Launch emulator process
+      // Pass environment variables explicitly to ensure UI displays correctly
+      final process = await Process.start(
+        emulatorPath,
+        args,
+        mode: ProcessStartMode.detached,
+        workingDirectory: emulatorsBasePath,
+        environment: {
+          'DISPLAY': Platform.environment['DISPLAY'] ?? ':0',
+          'HOME': Platform.environment['HOME'] ?? '',
+          'XDG_RUNTIME_DIR': Platform.environment['XDG_RUNTIME_DIR'] ?? '',
+          'WAYLAND_DISPLAY': Platform.environment['WAYLAND_DISPLAY'] ?? '',
+        }..removeWhere((key, value) => value.isEmpty),
+      );
+
+      _debug.info(
+        'Emulator launched with PID: ${process.pid}',
+        tag: 'EmulatorService',
+      );
+
+      // Give the process a moment to initialize
+      await Future.delayed(Duration(milliseconds: 500));
+
+      // Verify process is still running
+      try {
+        final result = await Process.run('ps', ['-p', '${process.pid}']);
+        if (result.exitCode == 0) {
+          _debug.debug(
+            'Process ${process.pid} is running',
+            tag: 'EmulatorService',
+          );
+        } else {
+          _debug.warning(
+            'Process ${process.pid} may have terminated',
+            tag: 'EmulatorService',
+          );
+        }
+      } catch (e) {
+        _debug.warning(
+          'Could not verify process status',
+          tag: 'EmulatorService',
+        );
+      }
+
+      // In detached mode, we can't read stdout/stderr
+      // The process runs completely independently
+
+      // Don't wait for process to complete - let it run independently
+      // The process will continue running even after this method returns
+
+      return true;
+    } catch (e) {
+      _debug.error(
+        'Error launching emulator',
+        tag: 'EmulatorService',
+        error: e,
+      );
+      return false;
+    }
+  }
+
+  /// Launch emulator for a ROM (download first if needed)
+  Future<bool> launchRom({
+    required RomItem romItem,
+    required String platform,
+    EmulatorCommand? selectedCommand,
+  }) async {
+    try {
+      _debug.info(
+        'Attempting to launch ROM: ${romItem.displayName}',
+        tag: 'EmulatorService',
+      );
+      _debug.debug('Platform: $platform', tag: 'EmulatorService');
+
+      // Load platform configuration
+      final config = await loadPlatformConfig(platform);
+      if (config == null || config.commands.isEmpty) {
+        _debug.error(
+          'No emulator configuration found for platform: $platform',
+          tag: 'EmulatorService',
+        );
+        return false;
+      }
+
+      // Determine which command to use
+      final command = selectedCommand ?? config.defaultCommand;
+      if (command == null) {
+        _debug.error('No emulator command available', tag: 'EmulatorService');
+        return false;
+      }
+
+      String romPath;
+
+      // Check if ROM needs to be downloaded
+      if (romItem.downloadUrl != null && romItem.downloadUrl!.isNotEmpty) {
+        _debug.info(
+          'ROM has download URL: ${romItem.downloadUrl}',
+          tag: 'EmulatorService',
+        );
+        _debug.debug(
+          'Will download to: _temp/$platform/${romItem.name}',
+          tag: 'EmulatorService',
+        );
+
+        // Create a temporary Rom object for download
+        final rom = Rom(
+          name: romItem.name,
+          fileName: romItem.name,
+          platform: platform,
+          urlFilePath: romItem.path,
+        );
+        rom.downloadUrl = romItem.downloadUrl;
+
+        // Download ROM
+        final downloadedPath = await downloadService.downloadRom(rom);
+        if (downloadedPath == null) {
+          _debug.error('Failed to download ROM', tag: 'EmulatorService');
+          return false;
+        }
+
+        _debug.info(
+          'Downloaded ROM to: $downloadedPath',
+          tag: 'EmulatorService',
+        );
+        romPath = downloadedPath;
+      } else {
+        // Use local ROM file
+        romPath = romItem.path;
+      }
+
+      // Launch emulator
+      return await launchWithCommand(
+        command: command,
+        romPath: romPath,
+        platform: platform,
+      );
+    } catch (e) {
+      _debug.error('Error in launchRom', tag: 'EmulatorService', error: e);
+      return false;
+    }
+  }
+
+  /// Get list of all configured platforms
+  Future<List<String>> getConfiguredPlatforms() async {
+    final config = await _loadConfig();
+    return config?.configuredPlatforms ?? [];
+  }
+
+  /// Reload configuration from file
+  Future<void> reloadConfig() async {
+    await _loadConfig(forceReload: true);
+  }
+}

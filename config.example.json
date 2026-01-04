@@ -1,0 +1,164 @@
+{
+  "emulators": [
+    {
+      "platform": "nes",
+      "commands": [
+        {
+          "name": "FCEUX",
+          "command": "fceux",
+          "args": ["{ROM}"]
+        },
+        {
+          "name": "Nestopia",
+          "command": "nestopia",
+          "args": ["--fullscreen", "{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "snes",
+      "commands": [
+        {
+          "name": "SNES9x",
+          "command": "snes9x",
+          "args": ["{ROM}"]
+        },
+        {
+          "name": "bsnes",
+          "command": "bsnes",
+          "args": ["{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "n64",
+      "commands": [
+        {
+          "name": "Mupen64Plus",
+          "command": "mupen64plus",
+          "args": ["--fullscreen", "{ROM}"]
+        },
+        {
+          "name": "Project64",
+          "command": "project64",
+          "args": ["{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "gba",
+      "commands": [
+        {
+          "name": "mGBA",
+          "command": "mgba",
+          "args": ["-f", "{ROM}"]
+        },
+        {
+          "name": "VisualBoyAdvance",
+          "command": "vba",
+          "args": ["{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "ps1",
+      "commands": [
+        {
+          "name": "DuckStation",
+          "command": "duckstation-qt",
+          "args": ["-fullscreen", "{ROM}"]
+        },
+        {
+          "name": "PCSX-ReARMed",
+          "command": "pcsx",
+          "args": ["-nogui", "-cdfile", "{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "genesis",
+      "commands": [
+        {
+          "name": "Gens",
+          "command": "gens",
+          "args": ["{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "amiga",
+      "commands": [
+        {
+          "name": "FS-UAE",
+          "command": "fs-uae",
+          "args": ["--floppy-drive-0={ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "gb",
+      "commands": [
+        {
+          "name": "SameBoy",
+          "command": "sameboy",
+          "args": ["{ROM}"]
+        },
+        {
+          "name": "mGBA",
+          "command": "mgba",
+          "args": ["-f", "{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "gbc",
+      "commands": [
+        {
+          "name": "SameBoy",
+          "command": "sameboy",
+          "args": ["{ROM}"]
+        },
+        {
+          "name": "mGBA",
+          "command": "mgba",
+          "args": ["-f", "{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "atari2600",
+      "commands": [
+        {
+          "name": "Stella",
+          "command": "stella",
+          "args": ["{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "dreamcast",
+      "commands": [
+        {
+          "name": "Redream",
+          "command": "redream",
+          "args": ["{ROM}"]
+        },
+        {
+          "name": "Flycast",
+          "command": "flycast",
+          "args": ["{ROM}"]
+        }
+      ]
+    },
+    {
+      "platform": "psp",
+      "commands": [
+        {
+          "name": "PPSSPP",
+          "command": "ppsspp",
+          "args": ["{ROM}"]
+        }
+      ]
+    }
+  ]
+}
