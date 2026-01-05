@@ -17,6 +17,7 @@ import '../services/media_service.dart';
 import '../services/emulator_service.dart';
 import '../services/download_service.dart';
 import '../services/keyboard_service.dart';
+import '../widgets/common/info_row.dart';
 import '../widgets/roms/media_carousel.dart';
 import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
@@ -201,7 +202,7 @@ class _RomsScreenState extends State<RomsScreen> {
     if (!_listScrollController.hasClients) return;
 
     // Approximate item height (card height)
-    const itemHeight = 72.0 + 8.0; // ListTile height + margin
+    const itemHeight = 56.0 + 8.0; // ListTile height + margin
 
     final itemOffset = index * itemHeight;
     final viewportHeight = _listScrollController.position.viewportDimension;
@@ -656,7 +657,12 @@ class _RomsScreenState extends State<RomsScreen> {
       selectedIndex: _selectedIndex,
       scrollController: _gridScrollController,
       focusNode: _gridFocusNode,
-      onItemTap: _showRomDetailDialog,
+      onItemTap: (index, item) {
+        setState(() {
+          _selectedIndex = index;
+        });
+        _showRomDetailDialog(item);
+      },
       onKeyEvent: _handleKeyEvent,
       mediaCache: _mediaCache,
       mediaService: _mediaService,
@@ -726,13 +732,16 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   void _showRomDetailDialog(RomItem item) {
-    // Ensure media is loaded
+    if (item.isFolder) {
+      _navigateToFolder(item);
+      return;
+    }
+
     if (!_mediaCache.containsKey(item.name)) {
       _loadMediaForItem(item);
     }
 
     final media = _mediaCache[item.name];
-    final isLocalFile = item.downloadUrl == null || item.downloadUrl!.isEmpty;
 
     showDialog(
       context: context,
@@ -757,32 +766,16 @@ class _RomsScreenState extends State<RomsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Media carousel
                       if (media != null)
                         MediaCarousel(media: media, height: 400)
                       else
                         Center(child: PlaceholderImage(size: 300)),
                       const SizedBox(height: 24),
-                      // Type
-                      Text(
-                        'Type',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                      InfoRow(
+                        label: 'Description',
+                        value: 'No description available for this ROM.',
                       ),
                       const SizedBox(height: 8),
-                      Text(isLocalFile ? 'Local File' : 'Download URL'),
-                      const SizedBox(height: 16),
-                      // Path/URL
-                      Text(
-                        isLocalFile ? 'Path' : 'Download URL',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      SelectableText(
-                        isLocalFile ? item.path : item.downloadUrl!,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      ),
                     ],
                   ),
                 ),
@@ -803,10 +796,8 @@ class _RomsScreenState extends State<RomsScreen> {
                         Navigator.pop(context);
                         _handleRomLaunch(item);
                       },
-                      icon: Icon(
-                        isLocalFile ? Icons.play_arrow : Icons.download,
-                      ),
-                      label: Text(isLocalFile ? 'Launch' : 'Download'),
+                      icon: Icon(Icons.gamepad),
+                      label: Text('Play'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 24,

@@ -16,12 +16,19 @@ class InfoRow extends StatelessWidget {
           label,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 12,
+            fontSize: 14,
             color: Colors.grey,
           ),
         ),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontSize: 14)),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[600],
+            height: 1.5,
+          ),
+        ),
       ],
     );
   }

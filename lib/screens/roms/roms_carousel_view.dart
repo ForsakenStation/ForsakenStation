@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
+import '../../widgets/common/info_row.dart';
+import '../../widgets/common/placeholder_image.dart';
 import '../../widgets/roms/media_carousel.dart';
 import '../../widgets/roms/folder_widget.dart';
 
@@ -134,7 +136,7 @@ class RomsCarouselView extends StatelessWidget {
                           height: availableHeight,
                         ),
                     )
-                    : Center(child: _buildPlaceholderImage(context, 300)),
+                    : Center(child: PlaceholderImage(size: 300)),
               ),
               Expanded(
                 flex: 2,
@@ -148,29 +150,7 @@ class RomsCarouselView extends StatelessWidget {
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
-                      _buildInfoRow(
-                        context,
-                        'Type',
-                        isLocalFile ? 'Local File' : 'Download URL',
-                      ),
-                      const SizedBox(height: 12),
-                      const Text(
-                        'Description',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'No description available for this ROM.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                          height: 1.5,
-                        ),
-                      ),
+                      InfoRow(label: 'Description', value: 'No description available for this ROM.'),
                       const SizedBox(height: 24),
                       SizedBox(
                         width: double.infinity,
@@ -195,24 +175,6 @@ class RomsCarouselView extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildInfoRow(BuildContext context, String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontSize: 14)),
-      ],
     );
   }
 
@@ -330,10 +292,10 @@ class RomsCarouselView extends StatelessWidget {
                           File(imagePath),
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return _buildPlaceholderImage(context, null);
+                            return PlaceholderImage(size: null);
                           },
                         )
-                      : _buildPlaceholderImage(context, null),
+                      : PlaceholderImage(size: null),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -405,19 +367,6 @@ class RomsCarouselView extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildPlaceholderImage(BuildContext context, double? size) {
-    return Container(
-      width: size,
-      height: size,
-      color: Colors.grey[300],
-      child: Icon(
-        Icons.videogame_asset,
-        size: size != null ? size * 0.5 : 48,
-        color: Colors.grey[600],
       ),
     );
   }

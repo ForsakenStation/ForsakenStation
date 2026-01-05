@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
+import '../../widgets/common/info_row.dart';
 import '../../widgets/roms/folder_widget.dart';
 import '../../widgets/common/placeholder_image.dart';
 import '../../widgets/roms/media_carousel.dart';
@@ -41,11 +42,11 @@ class RomsListView extends StatelessWidget {
     RomItem? selectedRom = items[selectedIndex];
 
     return Padding(
-      padding: EdgeInsets.only(top: 48),
+      padding: EdgeInsets.only(top: 56),
       child: Row(
         children: [
           Expanded(
-            flex: isWideScreen ? 3 : 5,
+            flex: 3,
             child: Focus(
               focusNode: focusNode,
               autofocus: true,
@@ -182,14 +183,7 @@ class RomsListView extends StatelessWidget {
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          // Type
-          _buildInfoRow('Type', isLocalFile ? 'Local File' : 'Download URL'),
-          const SizedBox(height: 8),
-          // Path/URL
-          _buildInfoRow(
-            isLocalFile ? 'Path' : 'Download URL',
-            isLocalFile ? item.path : item.downloadUrl!,
-          ),
+          InfoRow(label: 'Description', value: 'No description available for this ROM.'),
           const SizedBox(height: 24),
           // Launch button
           SizedBox(
@@ -205,24 +199,6 @@ class RomsListView extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontSize: 14)),
-      ],
     );
   }
 }

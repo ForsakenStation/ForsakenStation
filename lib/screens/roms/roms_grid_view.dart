@@ -10,7 +10,7 @@ class RomsGridView extends StatelessWidget {
   final int selectedIndex;
   final ScrollController scrollController;
   final FocusNode focusNode;
-  final Function(RomItem) onItemTap;
+  final Function(int index, RomItem) onItemTap;
   final Function(KeyEvent) onKeyEvent;
   final Map<String, RomMedia> mediaCache;
   final MediaService mediaService;
@@ -49,7 +49,7 @@ class RomsGridView extends StatelessWidget {
           itemCount: items.length,
           itemBuilder: (context, index) {
             final item = items[index];
-            return _buildGridCard(context, item);
+            return _buildGridCard(context, index, item);
           },
         ),
       ),
@@ -65,9 +65,9 @@ class RomsGridView extends StatelessWidget {
     return 2;
   }
 
-  Widget _buildGridCard(BuildContext context, RomItem item) {
+  Widget _buildGridCard(BuildContext context, int index,RomItem item) {
     if (item.isFolder) {
-      return _buildFolderCard(context, item);
+      return _buildFolderCard(context, index, item);
     }
     if (!mediaCache.containsKey(item.name)) {
       onLoadMedia(item);
@@ -90,7 +90,7 @@ class RomsGridView extends StatelessWidget {
             : BorderSide.none,
       ),
       child: InkWell(
-        onTap: () => onItemTap(item),
+        onTap: () => onItemTap(index, item),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -124,7 +124,7 @@ class RomsGridView extends StatelessWidget {
     );
   }
 
-  Widget _buildFolderCard(BuildContext context, RomItem item) {
+  Widget _buildFolderCard(BuildContext context, index, RomItem item) {
     RomItem? selectedRom = items[selectedIndex];
     final isSelected = selectedRom == item;
 
@@ -137,7 +137,7 @@ class RomsGridView extends StatelessWidget {
             : BorderSide.none,
       ),
       child: InkWell(
-        onTap: () => onItemTap(item),
+        onTap: () => onItemTap(index, item),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
