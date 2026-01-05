@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
-import '../../widgets/common/info_row.dart';
 import '../../widgets/common/placeholder_image.dart';
 import '../../widgets/roms/media_carousel.dart';
 import '../../widgets/roms/folder_widget.dart';
+import '../../widgets/roms/rom_detail_panel.dart';
 
 class RomsCarouselView extends StatelessWidget {
   final List<RomItem> items;
@@ -119,7 +119,6 @@ class RomsCarouselView extends StatelessWidget {
     loadGameInfoForItem(item);
     final media = mediaCache[item.name];
     final gameInfo = gameInfoCache[item.name];
-    final isLocalFile = item.downloadUrl == null || item.downloadUrl!.isEmpty;
 
     return LayoutBuilder(
       key: ValueKey('detail_${item.path}'),
@@ -146,80 +145,14 @@ class RomsCarouselView extends StatelessWidget {
               ),
               Expanded(
                 flex: 2,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 16),
-                      InfoRow(
-                        label: 'Description',
-                        value:
-                            gameInfo?.desc ??
-                            'No description available for this ROM.',
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Release Date',
-                              value: gameInfo?.releaseDate?.toString().split(' ')[0] ?? '',
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Developer',
-                              value: gameInfo?.developer ?? '',
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Publisher',
-                              value: gameInfo?.publisher ?? '',
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Expanded(child: InfoRow(label: 'Genre', value: gameInfo?.genre ?? '')),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Players',
-                              value: gameInfo?.playersText ?? '',
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Rating',
-                              value: gameInfo?.ratingPercentage ?? '--',
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed: () => onRomLaunch(item),
-                          icon: Icon(Icons.gamepad),
-                          label: Text('Play'),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(16),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                child: RomDetailPanel(
+                  item: item,
+                  media: media,
+                  gameInfo: gameInfo,
+                  onLaunch: () => onRomLaunch(item),
+                  onLoadMedia: () => loadMediaForItem(item),
+                  onLoadGameInfo: () => loadGameInfoForItem(item),
+                  showMediaCarousel: false, // Media shows on left side
                 ),
               ),
             ],

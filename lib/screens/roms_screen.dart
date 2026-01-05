@@ -345,7 +345,6 @@ class _RomsScreenState extends State<RomsScreen> {
           break;
         case ViewMode.list:
           _viewMode = ViewMode.carousel;
-          _carouselController = ScrollController();
           break;
         case ViewMode.carousel:
           _viewMode = ViewMode.grid;
@@ -356,6 +355,7 @@ class _RomsScreenState extends State<RomsScreen> {
     // Request focus for the new view mode after the widget rebuilds
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _requestFocusForCurrentViewMode();
+      _requestScrollToIndexCurrentViewMode();
     });
   }
 
@@ -1123,5 +1123,19 @@ class _RomsScreenState extends State<RomsScreen> {
     ).then((_) {
       _requestFocusForCurrentViewMode();
     });
+  }
+
+  void _requestScrollToIndexCurrentViewMode() {
+    switch (_viewMode) {
+      case ViewMode.list:
+        _scrollToIndexInList(_selectedIndex);
+        break;
+      case ViewMode.carousel:
+        _scrollToCarouselIndex(_selectedIndex);
+        break;
+      case ViewMode.grid:
+        _scrollToIndexInGrid(_selectedIndex, _calculateCrossAxisCount(context));
+        break;
+    }
   }
 }

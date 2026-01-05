@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:forsaken/models/game_info.dart';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
