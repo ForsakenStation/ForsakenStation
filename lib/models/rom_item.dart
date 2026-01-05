@@ -17,11 +17,13 @@ class RomItem {
   });
 
   String get displayName {
-    // No need to remove extension anymore - show full filename
-    return name;
+    return name
+        .substring(0, name.lastIndexOf('.') > 0 ? name.lastIndexOf('.') : name.length)
+        .replaceAll('_', ' ');
   }
 
   bool get isFolder => type == RomItemType.folder;
+
   bool get isRom => type == RomItemType.rom;
 
   Future<String?> loadDownloadUrl() async {
@@ -34,7 +36,11 @@ class RomItem {
         return content.trim();
       }
     } catch (e) {
-      DebugService.instance.error('Error loading download URL for $name', tag: 'RomItem', error: e);
+      DebugService.instance.error(
+        'Error loading download URL for $name',
+        tag: 'RomItem',
+        error: e,
+      );
     }
     return null;
   }

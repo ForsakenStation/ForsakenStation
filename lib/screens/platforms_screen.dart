@@ -12,6 +12,7 @@ import '../services/keyboard_service.dart';
 import '../utils/platform_icons.dart';
 import '../widgets/platforms/platform_card.dart';
 import '../widgets/common/theme_selector.dart';
+import '../widgets/common/help_dialog.dart';
 import 'roms_screen.dart';
 
 enum ViewMode { grid, carousel }
@@ -214,30 +215,41 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
 
     final key = event.logicalKey;
 
-    // 1. Handle alphabetical jump (Shift + Letter)
+    // 1. Handle help shortcut (Shift + ?)
+    if (_keyboardService.isHelpKey(event)) {
+      _showHelpDialog();
+      return KeyEventResult.handled;
+    }
+
+    // 2. Handle alphabetical jump (Shift + Letter)
     if (_keyboardService.isAlphabeticalJump(event)) {
       return _handleAlphabeticalJump(event);
     }
 
-    // 2. Handle common shortcuts (R, V)
+    // 3. Handle common shortcuts (R, V)
     if (_handleCommonShortcuts(key)) {
       return KeyEventResult.handled;
     }
 
-    // 3. Handle back/exit
+    // 4. Handle back/exit
     if (_keyboardService.isBackKey(key)) {
       _showExitDialog();
       return KeyEventResult.handled;
     }
 
-    // 4. Handle selection
+    // 5. Handle selection
     if (_keyboardService.isSelectKey(key)) {
       _handleSelection();
       return KeyEventResult.handled;
     }
 
-    // 5. Handle directional navigation (depends on view mode)
+    // 6. Handle directional navigation (depends on view mode)
     return _handleDirectionalNavigation(key);
+  }
+
+  /// Show help dialog with keyboard shortcuts
+  void _showHelpDialog() {
+    HelpDialog.show(context, showSearchShortcut: false);
   }
 
   /// Handle alphabetical jump based on current view mode

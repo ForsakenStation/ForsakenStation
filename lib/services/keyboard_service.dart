@@ -30,6 +30,7 @@ class KeyboardService {
   static const keySearch = LogicalKeyboardKey.keyS;
   static const keyRefresh = LogicalKeyboardKey.keyR;
   static const keyToggleView = LogicalKeyboardKey.keyV;
+  static const keyHelp = LogicalKeyboardKey.question; // ? key (shift + slash)
 
   /// Handle grid navigation
   /// Returns new index or null if navigation not possible
@@ -112,7 +113,7 @@ class KeyboardService {
       if (newIndex >= itemCount) {
         newIndex = loop ? 0 : itemCount - 1;
       }
-    }else if (key == keyPageUp) {
+    } else if (key == keyPageUp) {
       newIndex = currentIndex + 10;
       if (newIndex >= itemCount) {
         newIndex = loop ? 0 : itemCount - 10;
@@ -158,6 +159,22 @@ class KeyboardService {
   /// Check if key is a back key
   bool isBackKey(LogicalKeyboardKey key) {
     return key == keyBack || key == LogicalKeyboardKey.backspace;
+  }
+
+  /// Check if key is a help key (? character, works with any keyboard layout)
+  bool isHelpKey(KeyEvent event) {
+    if (event is! KeyDownEvent) return false;
+
+    // Use the character property to detect '?' regardless of keyboard layout
+    // This works for QWERTY (Shift+/), QWERTZ (Shift+ß), Spanish (Shift+-), etc.
+    final character = event.character;
+
+    _debug.debug(
+      'Checking help key: character="$character"',
+      tag: 'KeyboardService',
+    );
+
+    return character == '?';
   }
 
   /// Check if event is an alphabetical jump (Shift + Letter)
