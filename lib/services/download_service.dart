@@ -13,7 +13,10 @@ class DownloadService {
   Future<String?> downloadRom(Rom rom, {Function(double)? onProgress}) async {
     try {
       if (rom.downloadUrl == null || rom.downloadUrl!.isEmpty) {
-        _debug.warning('No download URL for ROM: ${rom.displayName}', tag: 'DownloadService');
+        _debug.warning(
+          'No download URL for ROM: ${rom.displayName}',
+          tag: 'DownloadService',
+        );
         return null;
       }
 
@@ -29,12 +32,18 @@ class DownloadService {
       // Check if file already exists and skip download
       final existingFile = File(filePath);
       if (await existingFile.exists()) {
-        _debug.info('ROM already downloaded: $filePath', tag: 'DownloadService');
+        _debug.info(
+          'ROM already downloaded: $filePath',
+          tag: 'DownloadService',
+        );
         rom.localPath = filePath;
         return filePath;
       }
 
-      _debug.info('Downloading ROM: ${rom.displayName}', tag: 'DownloadService');
+      _debug.info(
+        'Downloading ROM: ${rom.displayName}',
+        tag: 'DownloadService',
+      );
       _debug.debug('URL: ${rom.downloadUrl}', tag: 'DownloadService');
       _debug.debug('Destination: $filePath', tag: 'DownloadService');
 
@@ -43,7 +52,10 @@ class DownloadService {
       final response = await request.send();
 
       if (response.statusCode != 200) {
-        _debug.error('Download failed with status: ${response.statusCode}', tag: 'DownloadService');
+        _debug.error(
+          'Download failed with status: ${response.statusCode}',
+          tag: 'DownloadService',
+        );
         return null;
       }
 
@@ -71,52 +83,13 @@ class DownloadService {
       rom.localPath = filePath;
       return filePath;
     } catch (e) {
-      _debug.error('Error downloading ROM ${rom.displayName}', tag: 'DownloadService', error: e);
+      _debug.error(
+        'Error downloading ROM ${rom.displayName}',
+        tag: 'DownloadService',
+        error: e,
+      );
       return null;
     }
-  }
-
-  String _getFileNameFromUrl(String url, String fallbackName) {
-    // Extract filename from URL or use ROM name
-    try {
-      final uri = Uri.parse(url);
-      final segments = uri.pathSegments;
-      if (segments.isNotEmpty && segments.last.isNotEmpty) {
-        return segments.last;
-      }
-    } catch (e) {
-      _debug.error('Error parsing URL', tag: 'DownloadService', error: e);
-    }
-
-    // Fallback to ROM name with common extension
-    final ext = _guessExtensionFromUrl(url);
-    return '${fallbackName}$ext';
-  }
-
-  String _guessExtensionFromUrl(String url) {
-    // Try to guess extension from URL
-    final commonExtensions = [
-      '.zip',
-      '.rar',
-      '.7z',
-      '.iso',
-      '.bin',
-      '.cue',
-      '.nes',
-      '.snes',
-      '.sfc',
-      '.n64',
-      '.gba',
-      '.nds',
-    ];
-
-    for (var ext in commonExtensions) {
-      if (url.toLowerCase().contains(ext)) {
-        return ext;
-      }
-    }
-
-    return '.rom'; // Default fallback
   }
 
   Future<void> deleteTemporaryRom(String filePath) async {
@@ -124,10 +97,17 @@ class DownloadService {
       final file = File(filePath);
       if (await file.exists()) {
         await file.delete();
-        _debug.debug('Deleted temporary ROM: $filePath', tag: 'DownloadService');
+        _debug.debug(
+          'Deleted temporary ROM: $filePath',
+          tag: 'DownloadService',
+        );
       }
     } catch (e) {
-      _debug.error('Error deleting temporary ROM', tag: 'DownloadService', error: e);
+      _debug.error(
+        'Error deleting temporary ROM',
+        tag: 'DownloadService',
+        error: e,
+      );
     }
   }
 
@@ -143,7 +123,11 @@ class DownloadService {
       await tempDir.delete(recursive: true);
       _debug.info('Cleaned up all temporary ROMs', tag: 'DownloadService');
     } catch (e) {
-      _debug.error('Error cleaning up temporary ROMs', tag: 'DownloadService', error: e);
+      _debug.error(
+        'Error cleaning up temporary ROMs',
+        tag: 'DownloadService',
+        error: e,
+      );
     }
   }
 
@@ -154,14 +138,24 @@ class DownloadService {
       );
 
       if (!await platformTempDir.exists()) {
-        _debug.debug('Platform temp directory does not exist: $platform', tag: 'DownloadService');
+        _debug.debug(
+          'Platform temp directory does not exist: $platform',
+          tag: 'DownloadService',
+        );
         return;
       }
 
       await platformTempDir.delete(recursive: true);
-      _debug.info('Cleaned up temporary ROMs for platform: $platform', tag: 'DownloadService');
+      _debug.info(
+        'Cleaned up temporary ROMs for platform: $platform',
+        tag: 'DownloadService',
+      );
     } catch (e) {
-      _debug.error('Error cleaning up temporary ROMs for $platform', tag: 'DownloadService', error: e);
+      _debug.error(
+        'Error cleaning up temporary ROMs for $platform',
+        tag: 'DownloadService',
+        error: e,
+      );
     }
   }
 }

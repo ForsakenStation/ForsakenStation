@@ -114,7 +114,7 @@ class EmulatorConfig {
         commands = [EmulatorCommand.fromForsakenFormat(system, commandField)];
       } else if (commandField is List) {
         // Multiple commands as array of strings
-        commands = (commandField as List)
+        commands = commandField
             .asMap()
             .entries
             .map(

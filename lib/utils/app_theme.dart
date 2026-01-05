@@ -109,7 +109,7 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         filled: true,
-        fillColor: AppColors.lightSurfaceVariant.withOpacity(0.3),
+        fillColor: AppColors.lightSurfaceVariant.withValues(alpha: 0.3),
       ),
       fontFamily: GoogleFonts.orbitron().fontFamily,
     );
@@ -164,7 +164,7 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         filled: true,
-        fillColor: AppColors.darkSurfaceVariant.withOpacity(0.3),
+        fillColor: AppColors.darkSurfaceVariant.withValues(alpha: 0.3),
       ),
       fontFamily: GoogleFonts.orbitron().fontFamily,
     );

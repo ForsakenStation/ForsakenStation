@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:emulator/screens/roms/roms_carousel_view.dart';
+import 'package:emulator/screens/roms/roms_grid_view.dart';
+import 'package:emulator/screens/roms/roms_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,6 +20,7 @@ import '../services/keyboard_service.dart';
 import '../widgets/roms/media_carousel.dart';
 import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
+import '../widgets/common/placeholder_image.dart';
 
 enum ViewMode { list, grid, carousel }
 
@@ -41,7 +45,6 @@ class _RomsScreenState extends State<RomsScreen> {
   final List<String> _pathHistory = [];
   bool _isLoading = true;
   ViewMode _viewMode = ViewMode.grid;
-  RomItem? _selectedRom;
   int _selectedIndex = 0;
   Map<String, RomMedia> _mediaCache = {};
   late MediaService _mediaService;
@@ -54,14 +57,11 @@ class _RomsScreenState extends State<RomsScreen> {
   late FocusNode _carouselFocusNode;
   late FocusNode _gridFocusNode;
   late FocusNode _listFocusNode;
-  int _carouselCurrentIndex = 0;
-  bool _showNavigationHint = true; // Show hint initially
+  bool _showNavigationHint = true;
 
   // Search/filter functionality
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
   bool _isSearchMode = false;
-  String folderImagePath = '';
 
   @override
   void initState() {
@@ -71,7 +71,6 @@ class _RomsScreenState extends State<RomsScreen> {
     final romsPath = dotenv.env['ROMS_PATH'] ?? '';
     final emulatorsPath = dotenv.env['EMULATORS_PATH'] ?? '';
     final configPath = dotenv.env['EMULATORS_CONFIG_PATH'] ?? '';
-    folderImagePath = 'assets/theme/images/systems/_default.png';
 
     _mediaService = MediaService(mediaBasePath: mediaPath);
     _downloadService = DownloadService(romsBasePath: romsPath);
@@ -112,19 +111,14 @@ class _RomsScreenState extends State<RomsScreen> {
     if (mounted) {
       setState(() {
         _items = items;
-        // Reset search when loading new directory
         _searchController.clear();
-        _searchQuery = '';
         _isSearchMode = false;
         _filteredItems = items;
         _isLoading = false;
-        _selectedRom = null;
         _selectedIndex = 0;
-        // Clear media cache to force reload for new directory
         _mediaCache.clear();
       });
 
-      // Request focus after loading items
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _requestFocusForCurrentViewMode();
       });
@@ -144,9 +138,7 @@ class _RomsScreenState extends State<RomsScreen> {
 
   void _onSearchChanged(String query) {
     setState(() {
-      _searchQuery = query;
       _filteredItems = _filterItems(_items, query);
-      _selectedRom = null;
       _selectedIndex = 0;
     });
   }
@@ -154,10 +146,9 @@ class _RomsScreenState extends State<RomsScreen> {
   void _clearSearch() {
     _searchController.clear();
     setState(() {
-      _searchQuery = '';
+      _filteredItems = _items;
       _isSearchMode = false;
       _filteredItems = _items;
-      _selectedRom = null;
       _selectedIndex = 0;
     });
   }
@@ -239,12 +230,9 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   Future<void> _loadMediaForItem(RomItem item) async {
-    // Check if already loaded
     if (_mediaCache.containsKey(item.name)) {
       return;
     }
-
-    // Load media
     final media = await _mediaService.getMediaForRomItem(
       item,
       widget.platform.name,
@@ -280,7 +268,7 @@ class _RomsScreenState extends State<RomsScreen> {
     if (_currentPath == widget.platform.path) {
       return "Forsaken Roms: ${widget.platform.displayName}";
     }
-    return path.basename(_currentPath);
+    return "Forsaken Roms: ${widget.platform.displayName} > ${path.basename(_currentPath)}";
   }
 
   IconData _getViewModeIcon() {
@@ -313,7 +301,6 @@ class _RomsScreenState extends State<RomsScreen> {
           break;
         case ViewMode.list:
           _viewMode = ViewMode.carousel;
-          _carouselCurrentIndex = 0;
           _carouselController = ScrollController();
           break;
         case ViewMode.carousel:
@@ -367,8 +354,6 @@ class _RomsScreenState extends State<RomsScreen> {
     return false;
   }
 
-  /// Centralized keyboard event handler for all view modes
-  /// This eliminates code duplication across grid, list, and carousel views
   KeyEventResult _handleKeyEvent(KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
 
@@ -427,42 +412,24 @@ class _RomsScreenState extends State<RomsScreen> {
     );
 
     if (newIndex == null) return KeyEventResult.ignored;
-
+    setState(() {
+      _selectedIndex = newIndex;
+      _showNavigationHint = false;
+    });
     if (_viewMode == ViewMode.grid) {
-      setState(() {
-        _selectedIndex = newIndex;
-        _selectedRom = _filteredItems[newIndex];
-      });
       final columns = _calculateCrossAxisCount(context);
       _scrollToIndexInGrid(newIndex, columns);
     } else if (_viewMode == ViewMode.list) {
-      setState(() {
-        _selectedIndex = newIndex;
-        _selectedRom = _filteredItems[newIndex];
-      });
       _scrollToIndexInList(newIndex);
     } else {
-      // Carousel
-      if (_showNavigationHint) {
-        setState(() {
-          _showNavigationHint = false;
-        });
-      }
-      setState(() {
-        _carouselCurrentIndex = newIndex;
-        _selectedRom = _filteredItems[newIndex];
-      });
       _scrollToCarouselIndex(newIndex);
     }
 
     return KeyEventResult.handled;
   }
 
-  /// Handle selection based on current view mode
   void _handleSelection() {
-    final item = _viewMode == ViewMode.carousel
-        ? _filteredItems[_carouselCurrentIndex]
-        : _filteredItems[_selectedIndex];
+    final item = _filteredItems[_selectedIndex];
 
     if (item.isFolder) {
       _navigateToFolder(item);
@@ -499,7 +466,6 @@ class _RomsScreenState extends State<RomsScreen> {
     if (newIndex != null) {
       setState(() {
         _selectedIndex = newIndex;
-        _selectedRom = _filteredItems[newIndex];
       });
       _scrollToIndexInGrid(newIndex, columns);
       return KeyEventResult.handled;
@@ -519,7 +485,6 @@ class _RomsScreenState extends State<RomsScreen> {
     if (newIndex != null) {
       setState(() {
         _selectedIndex = newIndex;
-        _selectedRom = _filteredItems[newIndex];
       });
       _scrollToIndexInList(newIndex);
       return KeyEventResult.handled;
@@ -532,7 +497,7 @@ class _RomsScreenState extends State<RomsScreen> {
   KeyEventResult _handleCarouselNavigationKeys(LogicalKeyboardKey key) {
     final newIndex = _keyboardService.handleCarouselNavigation(
       key: key,
-      currentIndex: _carouselCurrentIndex,
+      currentIndex: _selectedIndex,
       itemCount: _filteredItems.length,
       loop: true,
     );
@@ -544,10 +509,9 @@ class _RomsScreenState extends State<RomsScreen> {
         });
       }
       setState(() {
-        _carouselCurrentIndex = newIndex;
-        _selectedRom = _filteredItems[_carouselCurrentIndex];
+        _selectedIndex = newIndex;
       });
-      _scrollToCarouselIndex(_carouselCurrentIndex);
+      _scrollToCarouselIndex(_selectedIndex);
       return KeyEventResult.handled;
     }
 
@@ -556,15 +520,12 @@ class _RomsScreenState extends State<RomsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen = MediaQuery.of(context).size.width > 800;
-
-    return WillPopScope(
-      onWillPop: () async {
-        if (_pathHistory.isNotEmpty) {
+    return PopScope(
+      canPop: _pathHistory.isEmpty,
+      onPopInvokedWithResult: (bool didPop, Object? result) {
+        if (!didPop && _pathHistory.isNotEmpty) {
           _navigateBack();
-          return false;
         }
-        return true;
       },
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -589,11 +550,7 @@ class _RomsScreenState extends State<RomsScreen> {
                   decoration: InputDecoration(
                     hintText: 'Search ROMs...',
                     border: InputBorder.none,
-                    hintStyle: TextStyle(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onPrimary.withValues(alpha: 0.6),
-                    ),
+                    hintStyle: TextStyle(color: Colors.white),
                   ),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimary,
@@ -629,12 +586,12 @@ class _RomsScreenState extends State<RomsScreen> {
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : _buildBody(isWideScreen),
+            : _buildBody(),
       ),
     );
   }
 
-  Widget _buildBody(bool isWideScreen) {
+  Widget _buildBody() {
     if (_filteredItems.isEmpty) {
       return Center(
         child: Column(
@@ -665,8 +622,6 @@ class _RomsScreenState extends State<RomsScreen> {
 
     if (_viewMode == ViewMode.carousel) {
       return _buildCarouselView();
-    } else if (_viewMode == ViewMode.list && isWideScreen) {
-      return _buildListWithDetail();
     } else if (_viewMode == ViewMode.list) {
       return _buildListView();
     } else {
@@ -674,209 +629,38 @@ class _RomsScreenState extends State<RomsScreen> {
     }
   }
 
-  Widget _buildListWithDetail() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Row(
-        children: [
-          Expanded(flex: 3, child: _buildListView()),
-          const VerticalDivider(width: 1),
-          Expanded(
-            flex: 2,
-            child: _selectedRom != null
-                ? _buildDetailPanel(_selectedRom!)
-                : const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.info_outline, size: 64, color: Colors.grey),
-                        SizedBox(height: 16),
-                        Text(
-                          'Select a ROM to view details',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailPanel(RomItem item) {
-    // Trigger media loading if not loaded
-    if (!_mediaCache.containsKey(item.name)) {
-      _loadMediaForItem(item);
-    }
-
-    final media = _mediaCache[item.name];
-    final isLocalFile = item.downloadUrl == null || item.downloadUrl!.isEmpty;
-
-    return SingleChildScrollView(
-      key: ValueKey(item.path), // Force rebuild when ROM changes
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Media carousel
-          if (media != null)
-            MediaCarousel(
-              key: ValueKey('${item.path}_carousel'),
-              media: media,
-              height: 300,
-            )
-          else
-            Center(child: _buildPlaceholderImage(200)),
-          const SizedBox(height: 24),
-          // ROM Name
-          Text(
-            item.displayName,
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          // Type
-          _buildInfoRow('Type', isLocalFile ? 'Local File' : 'Download URL'),
-          const SizedBox(height: 8),
-          // Path/URL
-          _buildInfoRow(
-            isLocalFile ? 'Path' : 'Download URL',
-            isLocalFile ? item.path : item.downloadUrl!,
-          ),
-          const SizedBox(height: 24),
-          // Launch button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () => _handleRomLaunch(item),
-              icon: Icon(isLocalFile ? Icons.play_arrow : Icons.download),
-              label: Text(isLocalFile ? 'Launch' : 'Download & Launch'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(16),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontSize: 14)),
-      ],
-    );
-  }
-
   Widget _buildListView() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 48),
-      child: Focus(
-        focusNode: _listFocusNode,
-        autofocus: true,
-        onKeyEvent: (node, event) => _handleKeyEvent(event),
-        child: ListView.builder(
-          controller: _listScrollController,
-          padding: const EdgeInsets.all(8),
-          itemCount: _filteredItems.length,
-          itemBuilder: (context, index) {
-            final item = _filteredItems[index];
-            final isSelected = index == _selectedIndex;
-            return _buildListItem(item, isSelected);
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildListItem(RomItem item, bool isSelected) {
-    // Trigger lazy loading of media
-    if (item.isRom && !_mediaCache.containsKey(item.name)) {
-      _loadMediaForItem(item);
-    }
-
-    final media = _mediaCache[item.name];
-    final imagePath = media != null
-        ? _mediaService.getBestImagePath(media)
-        : null;
-    final isLocalFile = item.downloadUrl == null || item.downloadUrl!.isEmpty;
-
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      elevation: isSelected ? 8 : 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: isSelected
-            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
-            : BorderSide.none,
-      ),
-      color: isSelected
-          ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-          : null,
-      child: ListTile(
-        leading: item.isFolder
-            ? _buildThumbnail(folderImagePath)
-            : _buildThumbnail(imagePath),
-        title: Text(
-          item.displayName,
-          style: const TextStyle(fontWeight: FontWeight.w500),
-        ),
-        trailing: Icon(
-          item.isFolder
-              ? Icons.chevron_right
-              : Icons.videogame_asset,
-          color: Colors.grey[600],
-        ),
-        onTap: () {
-          if (item.isFolder) {
-            _navigateToFolder(item);
-          } else {
-            setState(() {
-              _selectedRom = item;
-              _selectedIndex = _filteredItems.indexOf(item);
-            });
-          }
-        },
-      ),
+    return RomsListView(
+      items: _filteredItems,
+      selectedIndex: _selectedIndex,
+      scrollController: _listScrollController,
+      focusNode: _listFocusNode,
+      onItemTap: (int index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+        _scrollToIndexInList(index);
+      },
+      onKeyEvent: _handleKeyEvent,
+      mediaCache: _mediaCache,
+      mediaService: _mediaService,
+      onLoadMedia: _loadMediaForItem,
+      onRomLaunch: _handleRomLaunch,
+      showRomDetailDialog: _showRomDetailDialog,
     );
   }
 
   Widget _buildGridView() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 48),
-      child: Focus(
-        focusNode: _gridFocusNode,
-        autofocus: true,
-        onKeyEvent: (node, event) => _handleKeyEvent(event),
-        child: GridView.builder(
-          controller: _gridScrollController,
-          padding: const EdgeInsets.all(16),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: _calculateCrossAxisCount(context),
-            childAspectRatio: 0.7,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-          ),
-          itemCount: _filteredItems.length,
-          itemBuilder: (context, index) {
-            final item = _filteredItems[index];
-            return _buildGridCard(item);
-          },
-        ),
-      ),
+    return RomsGridView(
+      items: _filteredItems,
+      selectedIndex: _selectedIndex,
+      scrollController: _gridScrollController,
+      focusNode: _gridFocusNode,
+      onItemTap: _showRomDetailDialog,
+      onKeyEvent: _handleKeyEvent,
+      mediaCache: _mediaCache,
+      mediaService: _mediaService,
+      onLoadMedia: _loadMediaForItem,
     );
   }
 
@@ -889,136 +673,25 @@ class _RomsScreenState extends State<RomsScreen> {
     return 2;
   }
 
-  Widget _buildGridCard(RomItem item) {
-    if (item.isFolder) {
-      return _buildFolderCard(item);
-    }
-
-    // Trigger lazy loading of media
-    if (!_mediaCache.containsKey(item.name)) {
-      _loadMediaForItem(item);
-    }
-
-    final media = _mediaCache[item.name];
-    final imagePath = media != null
-        ? _mediaService.getBestImagePath(media)
-        : null;
-    final isSelected = _selectedRom == item;
-
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: isSelected ? 8 : 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: isSelected
-            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
-            : BorderSide.none,
-      ),
-      child: InkWell(
-        onTap: () => _showRomDetailDialog(item),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: imagePath != null
-                  ? Image.file(
-                      File(imagePath),
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return _buildPlaceholderImage(null);
-                      },
-                    )
-                  : _buildPlaceholderImage(null),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                item.displayName,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFolderCard(RomItem item) {
-    final isSelected = _selectedRom == item;
-
-    return Card(
-      elevation: isSelected ? 8 : 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: isSelected
-            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
-            : BorderSide.none,
-      ),
-      child: InkWell(
-        onTap: () => _navigateToFolder(item),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _folderWidget(),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                item.displayName,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Container _folderWidget({
-    double width = 64,
-    double height = 64,
-    double size = 64,
-  }) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.file(
-          File(folderImagePath),
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Icon(Icons.folder, size: size, color: Colors.amber);
-          },
-        ),
-      ),
-    );
-  }
-
   Widget _buildCarouselView() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 48),
-      child: Focus(
-        focusNode: _carouselFocusNode,
-        autofocus: true,
-        onKeyEvent: (node, event) => _handleKeyEvent(event),
-        child: Column(
-          children: [
-            Expanded(flex: 2, child: _buildCarouselDetailPanel()),
-            SizedBox(height: 280, child: _buildCarouselCards()),
-          ],
-        ),
-      ),
+    return RomsCarouselView(
+      items: _filteredItems,
+      currentIndex: _selectedIndex,
+      scrollController: _carouselController,
+      focusNode: _carouselFocusNode,
+      onFolderTap: _navigateToFolder,
+      onRomLaunch: _handleRomLaunch,
+      onKeyEvent: _handleKeyEvent,
+      mediaCache: _mediaCache,
+      mediaService: _mediaService,
+      onLoadMedia: _loadMediaForItem,
+      onCardTap: (int index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+        _scrollToCarouselIndex(index);
+      },
+      showNavigationHint: _showNavigationHint,
     );
   }
 
@@ -1050,378 +723,6 @@ class _RomsScreenState extends State<RomsScreen> {
         curve: Curves.easeInOut,
       );
     }
-  }
-
-  Widget _buildCarouselDetailPanel() {
-    final item = _filteredItems[_carouselCurrentIndex];
-
-    if (item.isFolder) {
-      return Center(
-        key: ValueKey('folder_${item.path}'),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _folderWidget(width: 128, height: 128, size: 128),
-            const SizedBox(height: 24),
-            Text(
-              item.displayName,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () => _navigateToFolder(item),
-              icon: const Icon(Icons.folder_open),
-              label: const Text('Open Folder'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // Trigger lazy loading of media
-    if (!_mediaCache.containsKey(item.name)) {
-      _loadMediaForItem(item);
-      // Show loading while media loads
-      return Center(
-        key: ValueKey('loading_${item.path}'),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Loading media...'),
-          ],
-        ),
-      );
-    }
-
-    final media = _mediaCache[item.name];
-    final isLocalFile = item.downloadUrl == null || item.downloadUrl!.isEmpty;
-
-    return LayoutBuilder(
-      key: ValueKey('detail_${item.path}'),
-      builder: (context, constraints) {
-        final availableHeight = constraints.maxHeight - 48; // Subtract padding
-
-        return Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Left side: Media (2/3 width)
-              Expanded(
-                flex: 2,
-                child: media != null
-                    ? MediaCarousel(
-                        key: ValueKey('carousel_${item.path}'),
-                        media: media,
-                        height: availableHeight,
-                      )
-                    : Center(child: _buildPlaceholderImage(300)),
-              ),
-              const SizedBox(width: 24),
-              // Right side: Info and actions (1/3 width)
-              Expanded(
-                flex: 1,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ROM title
-                      Text(
-                        item.displayName,
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 16),
-                      // Type
-                      _buildInfoRow(
-                        'Type',
-                        isLocalFile ? 'Local File' : 'Download URL',
-                      ),
-                      const SizedBox(height: 12),
-                      // Description section
-                      const Text(
-                        'Description',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'No description available for this ROM.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                          height: 1.5,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      // Action buttons
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed: () => _handleRomLaunch(item),
-                          icon: Icon(
-                            isLocalFile ? Icons.play_arrow : Icons.download,
-                          ),
-                          label: Text(
-                            isLocalFile ? 'Launch' : 'Download & Launch',
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(16),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () => _showRomDetailDialog(item),
-                          icon: const Icon(Icons.info_outline),
-                          label: const Text('More Details'),
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.all(16),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildCarouselCards() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Stack(
-        children: [
-          ListView.builder(
-            controller: _carouselController,
-            scrollDirection: Axis.horizontal,
-            itemCount: _filteredItems.length,
-            itemBuilder: (context, index) {
-              final item = _filteredItems[index];
-              final isSelected = index == _carouselCurrentIndex;
-              return _buildCarouselCard(item, isSelected, index);
-            },
-          ),
-          // Position indicator
-          Positioned(
-            bottom: 8,
-            right: 16,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Text(
-                '${_carouselCurrentIndex + 1} / ${_filteredItems.length}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          // Navigation hint
-          if (_showNavigationHint)
-            Positioned(
-              top: 8,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Text(
-                    'Use arrow keys or swipe to navigate',
-                    style: TextStyle(color: Colors.white70, fontSize: 11),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCarouselCard(RomItem item, bool isSelected, int index) {
-    const cardWidth = 180.0;
-    const cardHeight = cardWidth / 0.7; // Maintain 0.7 aspect ratio like grid
-
-    if (item.isFolder) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-        child: SizedBox(
-          width: cardWidth,
-          height: cardHeight,
-          child: Card(
-            elevation: isSelected ? 8 : 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-              side: isSelected
-                  ? BorderSide(
-                      color: Theme.of(context).colorScheme.primary,
-                      width: 3,
-                    )
-                  : BorderSide.none,
-            ),
-            child: InkWell(
-              onTap: () => _navigateToFolder(item),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _folderWidget(),
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        item.displayName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    // Trigger lazy loading of media
-    if (!_mediaCache.containsKey(item.name)) {
-      _loadMediaForItem(item);
-    }
-
-    final media = _mediaCache[item.name];
-    final imagePath = media != null
-        ? _mediaService.getBestImagePath(media)
-        : null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-      child: SizedBox(
-        width: cardWidth,
-        height: cardHeight,
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          elevation: isSelected ? 8 : 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: isSelected
-                ? BorderSide(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 3,
-                  )
-                : BorderSide.none,
-          ),
-          child: InkWell(
-            onTap: () {
-              setState(() {
-                _carouselCurrentIndex = index;
-                _selectedRom = item;
-              });
-              _scrollToCarouselIndex(index);
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Image
-                Expanded(
-                  child: imagePath != null
-                      ? Image.file(
-                          File(imagePath),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildPlaceholderImage(null);
-                          },
-                        )
-                      : _buildPlaceholderImage(null),
-                ),
-                // Title
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    item.displayName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildThumbnail(String? imagePath) {
-    if (imagePath != null) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(4),
-        child: Image.file(
-          File(imagePath),
-          width: 60,
-          height: 60,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return _buildPlaceholderImage(60);
-          },
-        ),
-      );
-    }
-    return _buildPlaceholderImage(60);
-  }
-
-  Widget _buildPlaceholderImage(double? size) {
-    return Container(
-      width: size,
-      height: size,
-      color: Colors.grey[300],
-      child: Icon(
-        Icons.videogame_asset,
-        size: size != null ? size * 0.5 : 48,
-        color: Colors.grey[600],
-      ),
-    );
   }
 
   void _showRomDetailDialog(RomItem item) {
@@ -1460,7 +761,7 @@ class _RomsScreenState extends State<RomsScreen> {
                       if (media != null)
                         MediaCarousel(media: media, height: 400)
                       else
-                        Center(child: _buildPlaceholderImage(300)),
+                        Center(child: PlaceholderImage(size: 300)),
                       const SizedBox(height: 24),
                       // Type
                       Text(
@@ -1521,13 +822,11 @@ class _RomsScreenState extends State<RomsScreen> {
         ),
       ),
     ).then((_) {
-      // Request focus back after dialog closes
       _requestFocusForCurrentViewMode();
     });
   }
 
   Future<void> _handleRomLaunch(RomItem item) async {
-    // Load emulator config for platform
     final config = await _emulatorService.loadPlatformConfig(
       widget.platform.name,
     );
@@ -1617,7 +916,7 @@ class _RomsScreenState extends State<RomsScreen> {
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       // Fallback to placeholder if image fails to load
-                      return _buildPlaceholderImage(150);
+                      return PlaceholderImage(size: 150);
                     },
                   ),
                 ),
@@ -1626,7 +925,7 @@ class _RomsScreenState extends State<RomsScreen> {
               // Show placeholder if no image available
               Container(
                 margin: const EdgeInsets.only(bottom: 16),
-                child: _buildPlaceholderImage(150),
+                child: PlaceholderImage(size: 150),
               ),
             const CircularProgressIndicator(),
             const SizedBox(height: 16),
@@ -1653,7 +952,7 @@ class _RomsScreenState extends State<RomsScreen> {
       );
 
       if (!mounted) return;
-      Navigator.pop(context); // Close loading dialog
+      Navigator.pop(context);
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -1672,15 +971,11 @@ class _RomsScreenState extends State<RomsScreen> {
           '• Configuration is correct',
         );
       }
-
-      // Request focus back after dialog closes
       _requestFocusForCurrentViewMode();
     } catch (e) {
       if (!mounted) return;
       Navigator.pop(context); // Close loading dialog
       _showErrorDialog('Error launching ROM: $e');
-
-      // Request focus back after dialog closes
       _requestFocusForCurrentViewMode();
     }
   }
@@ -1699,10 +994,7 @@ class _RomsScreenState extends State<RomsScreen> {
         ],
       ),
     ).then((_) {
-      // Request focus back after dialog closes
       _requestFocusForCurrentViewMode();
     });
   }
 }
-
-// Media Carousel Widget
