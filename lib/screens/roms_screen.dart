@@ -71,7 +71,7 @@ class _RomsScreenState extends State<RomsScreen> {
     final romsPath = dotenv.env['ROMS_PATH'] ?? '';
     final emulatorsPath = dotenv.env['EMULATORS_PATH'] ?? '';
     final configPath = dotenv.env['EMULATORS_CONFIG_PATH'] ?? '';
-    folderImagePath = path.join(mediaPath, '_system', '_default.png');
+    folderImagePath = 'assets/theme/images/systems/_default.png';
 
     _mediaService = MediaService(mediaBasePath: mediaPath);
     _downloadService = DownloadService(romsBasePath: romsPath);
@@ -942,7 +942,7 @@ class _RomsScreenState extends State<RomsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.folder, size: 64, color: Colors.amber),
+            _folderWidget(),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -955,6 +955,28 @@ class _RomsScreenState extends State<RomsScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container _folderWidget({
+    double width = 64,
+    double height = 64,
+    double size = 64,
+  }) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.file(
+          File(folderImagePath),
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(Icons.folder, size: size, color: Colors.amber);
+          },
         ),
       ),
     );
@@ -1016,7 +1038,7 @@ class _RomsScreenState extends State<RomsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.folder, size: 128, color: Colors.amber),
+            _folderWidget(width: 128, height: 128, size: 128),
             const SizedBox(height: 24),
             Text(
               item.displayName,
@@ -1252,7 +1274,7 @@ class _RomsScreenState extends State<RomsScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.folder, size: 64, color: Colors.amber),
+                    _folderWidget(),
                     const SizedBox(height: 8),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),

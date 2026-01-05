@@ -75,7 +75,7 @@ class RomService {
         return roms;
       }
 
-      await for (var file in platformDir.list(recursive: false)) {
+      await for (var file in platformDir.list(recursive: true)) {
         // Only process files (not directories)
         if (file is File) {
           final fileName = path.basename(file.path);
@@ -93,11 +93,6 @@ class RomService {
             urlFilePath: file.path,
           );
 
-          // Load the download URL from the file if it's a .txt file
-          if (file.path.endsWith('.txt')) {
-            await rom.loadDownloadUrl();
-          }
-
           roms.add(rom);
         }
       }
@@ -106,7 +101,7 @@ class RomService {
       roms.sort((a, b) => a.displayName.compareTo(b.displayName));
 
       _debug.info(
-        'Loaded ${roms.length} ROMs for platform $platformName',
+        'Loaded ${roms.length} ROMs for platform $platformName (including subdirectories)',
         tag: 'RomService',
       );
     } catch (e) {
