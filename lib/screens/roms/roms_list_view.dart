@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:forsaken/models/game_info.dart';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
@@ -17,9 +18,11 @@ class RomsListView extends StatelessWidget {
   final Function(KeyEvent) onKeyEvent;
   final Map<String, RomMedia> mediaCache;
   final MediaService mediaService;
-  final Function(RomItem) onLoadMedia;
+  final Function(RomItem) loadMediaForItem;
   final Function(RomItem) onRomLaunch;
   final Function(RomItem) showRomDetailDialog;
+  final Future<void> Function(RomItem item) loadGameInfoForItem;
+  final Map<String, GameInfo> gameInfoCache;
 
   const RomsListView({
     super.key,
@@ -31,9 +34,11 @@ class RomsListView extends StatelessWidget {
     required this.onKeyEvent,
     required this.mediaCache,
     required this.mediaService,
-    required this.onLoadMedia,
+    required this.loadMediaForItem,
     required this.onRomLaunch,
     required this.showRomDetailDialog,
+    required this.loadGameInfoForItem,
+    required this.gameInfoCache,
   });
 
   @override
@@ -91,7 +96,7 @@ class RomsListView extends StatelessWidget {
     bool isWideScreen,
   ) {
     if (item.isRom && !mediaCache.containsKey(item.name)) {
-      onLoadMedia(item);
+      loadMediaForItem(item);
     }
 
     final media = mediaCache[item.name];
@@ -151,16 +156,16 @@ class RomsListView extends StatelessWidget {
   }
 
   Widget _buildDetailPanel(RomItem item, BuildContext context) {
-    // Trigger media loading if not loaded
     if (!mediaCache.containsKey(item.name)) {
-      onLoadMedia(item);
     }
+    loadMediaForItem(item);
+    loadGameInfoForItem(item);
 
     final media = mediaCache[item.name];
-    final isLocalFile = item.downloadUrl == null || item.downloadUrl!.isEmpty;
+    final gameInfo = gameInfoCache[item.name];
 
     return SingleChildScrollView(
-      key: ValueKey(item.path), // Force rebuild when ROM changes
+      key: ValueKey(item.path),
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,15 +188,69 @@ class RomsListView extends StatelessWidget {
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          InfoRow(label: 'Description', value: 'No description available for this ROM.'),
+          InfoRow(
+            label: 'Description',
+            value:
+            gameInfo?.desc ??
+                'No description available for this ROM.',
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: InfoRow(
+                  label: 'Release Date',
+                  value: gameInfo?.releaseDate?.toString().split(' ')[0] ?? '',
+                ),
+              ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: InfoRow(
+                  label: 'Developer',
+                  value: gameInfo?.developer ?? '',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: InfoRow(
+                  label: 'Publisher',
+                  value: gameInfo?.publisher ?? '',
+                ),
+              ),
+              const SizedBox(height: 8),
+              Expanded(child: InfoRow(label: 'Genre', value: gameInfo?.genre ?? '')),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: InfoRow(
+                  label: 'Players',
+                  value: gameInfo?.playersText ?? '',
+                ),
+              ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: InfoRow(
+                  label: 'Rating',
+                  value: gameInfo?.ratingPercentage ?? '--',
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 24),
           // Launch button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () => onRomLaunch(item),
-              icon: Icon(isLocalFile ? Icons.play_arrow : Icons.download),
-              label: Text(isLocalFile ? 'Launch' : 'Download & Launch'),
+              icon: Icon(Icons.gamepad),
+              label: Text('Play'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
               ),

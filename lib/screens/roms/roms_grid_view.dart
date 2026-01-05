@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:forsaken/models/game_info.dart';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
@@ -14,7 +15,7 @@ class RomsGridView extends StatelessWidget {
   final Function(KeyEvent) onKeyEvent;
   final Map<String, RomMedia> mediaCache;
   final MediaService mediaService;
-  final Function(RomItem) onLoadMedia;
+  final Function(RomItem) loadMediaForItem;
 
   const RomsGridView({
     super.key,
@@ -26,7 +27,7 @@ class RomsGridView extends StatelessWidget {
     required this.onKeyEvent,
     required this.mediaCache,
     required this.mediaService,
-    required this.onLoadMedia,
+    required this.loadMediaForItem,
   });
 
   @override
@@ -65,12 +66,12 @@ class RomsGridView extends StatelessWidget {
     return 2;
   }
 
-  Widget _buildGridCard(BuildContext context, int index,RomItem item) {
+  Widget _buildGridCard(BuildContext context, int index, RomItem item) {
     if (item.isFolder) {
       return _buildFolderCard(context, index, item);
     }
     if (!mediaCache.containsKey(item.name)) {
-      onLoadMedia(item);
+      loadMediaForItem(item);
     }
     RomItem? selectedRom = items[selectedIndex];
 

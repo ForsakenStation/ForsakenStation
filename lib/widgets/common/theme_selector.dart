@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:emulator/providers/theme_provider.dart';
+import '../../providers/theme_provider.dart';
 
 /// A widget that allows users to select the theme mode (light, dark, or system)
 class ThemeSelector extends StatelessWidget {

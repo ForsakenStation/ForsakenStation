@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:emulator/screens/roms/roms_carousel_view.dart';
-import 'package:emulator/screens/roms/roms_grid_view.dart';
-import 'package:emulator/screens/roms/roms_list_view.dart';
+import '../screens/roms/roms_carousel_view.dart';
+import '../screens/roms/roms_grid_view.dart';
+import '../screens/roms/roms_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,12 +13,14 @@ import '../models/platform.dart';
 import '../models/rom_item.dart';
 import '../models/media.dart';
 import '../models/emulator_config.dart';
+import '../models/game_info.dart';
 import '../services/debug_service.dart';
 import '../services/rom_service.dart';
 import '../services/media_service.dart';
 import '../services/emulator_service.dart';
 import '../services/download_service.dart';
 import '../services/keyboard_service.dart';
+import '../services/gamelist_service.dart';
 import '../widgets/common/info_row.dart';
 import '../widgets/roms/media_carousel.dart';
 import '../widgets/common/theme_selector.dart';
@@ -50,10 +52,12 @@ class _RomsScreenState extends State<RomsScreen> {
   ViewMode _viewMode = ViewMode.grid;
   int _selectedIndex = 0;
   Map<String, RomMedia> _mediaCache = {};
+  Map<String, GameInfo> _gameInfoCache = {};
   late MediaService _mediaService;
   late EmulatorService _emulatorService;
   late DownloadService _downloadService;
   late KeyboardService _keyboardService;
+  late GamelistService _gamelistService;
   late ScrollController _carouselController;
   late ScrollController _gridScrollController;
   late ScrollController _listScrollController;
@@ -76,6 +80,7 @@ class _RomsScreenState extends State<RomsScreen> {
     final romsPath = dotenv.env['ROMS_PATH'] ?? '';
     final emulatorsPath = dotenv.env['EMULATORS_PATH'] ?? '';
     final configPath = dotenv.env['EMULATORS_CONFIG_PATH'] ?? '';
+    final gamelistPath = dotenv.env['GAMELIST_PATH'] ?? '';
 
     _mediaService = MediaService(mediaBasePath: mediaPath);
     _downloadService = DownloadService(romsBasePath: romsPath);
@@ -84,6 +89,7 @@ class _RomsScreenState extends State<RomsScreen> {
       configFilePath: configPath,
       downloadService: _downloadService,
     );
+    _gamelistService = GamelistService(gamelistBasePath: gamelistPath);
     _keyboardService = KeyboardService.instance;
     _carouselController = ScrollController();
     _gridScrollController = ScrollController();
@@ -113,7 +119,6 @@ class _RomsScreenState extends State<RomsScreen> {
     final platformLogoPath = await _mediaService.getSystemLogo(
       widget.platform.code,
     );
-    _debug.error('Found color logo: ${platformLogoPath}', tag: 'MediaService');
     final items = await widget.romService.loadItemsInDirectory(_currentPath);
     if (mounted) {
       setState(() {
@@ -250,6 +255,36 @@ class _RomsScreenState extends State<RomsScreen> {
       setState(() {
         _mediaCache[item.name] = media;
       });
+    }
+  }
+
+  Future<void> _loadGameInfoForItem(RomItem item) async {
+    // Check if already loaded
+    if (_gameInfoCache.containsKey(item.name)) {
+      return;
+    }
+
+    try {
+      // Load game info from gamelist.xml
+      final gameInfo = await _gamelistService.getGameInfo(
+        widget.platform.name,
+        item.path,
+      );
+
+      if (mounted && gameInfo != null) {
+        setState(() {
+          _gameInfoCache[item.name] = gameInfo;
+        });
+        _debug.info(
+          'Loaded game info for ${item.name}: ${gameInfo.name}',
+          tag: 'RomsScreen',
+        );
+      }
+    } catch (e) {
+      _debug.error(
+        'Failed to load game info for ${item.name}: $e',
+        tag: 'RomsScreen',
+      );
     }
   }
 
@@ -675,9 +710,11 @@ class _RomsScreenState extends State<RomsScreen> {
       onKeyEvent: _handleKeyEvent,
       mediaCache: _mediaCache,
       mediaService: _mediaService,
-      onLoadMedia: _loadMediaForItem,
+      loadMediaForItem: _loadMediaForItem,
       onRomLaunch: _handleRomLaunch,
       showRomDetailDialog: _showRomDetailDialog,
+      loadGameInfoForItem: _loadGameInfoForItem,
+      gameInfoCache: _gameInfoCache,
     );
   }
 
@@ -696,7 +733,7 @@ class _RomsScreenState extends State<RomsScreen> {
       onKeyEvent: _handleKeyEvent,
       mediaCache: _mediaCache,
       mediaService: _mediaService,
-      onLoadMedia: _loadMediaForItem,
+      loadMediaForItem: _loadMediaForItem,
     );
   }
 
@@ -720,7 +757,7 @@ class _RomsScreenState extends State<RomsScreen> {
       onKeyEvent: _handleKeyEvent,
       mediaCache: _mediaCache,
       mediaService: _mediaService,
-      onLoadMedia: _loadMediaForItem,
+      loadMediaForItem: _loadMediaForItem,
       onCardTap: (int index) {
         setState(() {
           _selectedIndex = index;
@@ -728,6 +765,8 @@ class _RomsScreenState extends State<RomsScreen> {
         _scrollToCarouselIndex(index);
       },
       showNavigationHint: _showNavigationHint,
+      loadGameInfoForItem: _loadGameInfoForItem,
+      gameInfoCache: _gameInfoCache,
     );
   }
 
@@ -761,17 +800,24 @@ class _RomsScreenState extends State<RomsScreen> {
     }
   }
 
-  void _showRomDetailDialog(RomItem item) {
+  void _showRomDetailDialog(RomItem item) async {
     if (item.isFolder) {
       _navigateToFolder(item);
       return;
     }
 
+    // Load media if not cached
     if (!_mediaCache.containsKey(item.name)) {
       _loadMediaForItem(item);
     }
 
+    // Load game info if not cached (lazy loading)
+    if (!_gameInfoCache.containsKey(item.name)) {
+      _loadGameInfoForItem(item);
+    }
+
     final media = _mediaCache[item.name];
+    final gameInfo = _gameInfoCache[item.name];
 
     showDialog(
       context: context,
@@ -782,7 +828,7 @@ class _RomsScreenState extends State<RomsScreen> {
             children: [
               // Header
               AppBar(
-                title: Text(item.displayName),
+                title: Text(gameInfo?.name ?? item.displayName),
                 leading: IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
@@ -800,12 +846,72 @@ class _RomsScreenState extends State<RomsScreen> {
                         MediaCarousel(media: media, height: 400)
                       else
                         Center(child: PlaceholderImage(size: 300)),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 16),
                       InfoRow(
                         label: 'Description',
-                        value: 'No description available for this ROM.',
+                        value:
+                            gameInfo?.desc ??
+                            'No description available for this ROM.',
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Release Date',
+                              value:
+                                  gameInfo?.releaseDate?.toString().split(
+                                    ' ',
+                                  )[0] ??
+                                  '',
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Developer',
+                              value: gameInfo?.developer ?? '',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Publisher',
+                              value: gameInfo?.publisher ?? '',
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Genre',
+                              value: gameInfo?.genre ?? '',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Players',
+                              value: gameInfo?.playersText ?? '',
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Rating',
+                              value: gameInfo?.ratingPercentage ?? '--',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),

@@ -72,8 +72,8 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 // Internal imports
-import 'package:emulator/models/rom.dart';
-import 'package:emulator/services/rom_service.dart';
+import 'package:forsaken/models/rom.dart';
+import 'package:forsaken/services/rom_service.dart';
 ```
 
 ### Formatting

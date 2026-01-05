@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:forsaken/models/game_info.dart';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
@@ -18,9 +19,11 @@ class RomsCarouselView extends StatelessWidget {
   final Function(KeyEvent) onKeyEvent;
   final Map<String, RomMedia> mediaCache;
   final MediaService mediaService;
-  final Function(RomItem) onLoadMedia;
+  final Function(RomItem) loadMediaForItem;
   final Function(int) onCardTap;
   final bool showNavigationHint;
+  final Future<void> Function(RomItem item) loadGameInfoForItem;
+  final Map<String, GameInfo> gameInfoCache;
 
   const RomsCarouselView({
     super.key,
@@ -33,9 +36,11 @@ class RomsCarouselView extends StatelessWidget {
     required this.onKeyEvent,
     required this.mediaCache,
     required this.mediaService,
-    required this.onLoadMedia,
+    required this.loadMediaForItem,
     required this.onCardTap,
     required this.showNavigationHint,
+    required this.loadGameInfoForItem,
+    required this.gameInfoCache,
   });
 
   @override
@@ -98,7 +103,7 @@ class RomsCarouselView extends StatelessWidget {
 
     // Trigger lazy loading of media
     if (!mediaCache.containsKey(item.name)) {
-      onLoadMedia(item);
+      loadMediaForItem(item);
       return Center(
         key: ValueKey('loading_${item.path}'),
         child: const Column(
@@ -111,8 +116,9 @@ class RomsCarouselView extends StatelessWidget {
         ),
       );
     }
-
+    loadGameInfoForItem(item);
     final media = mediaCache[item.name];
+    final gameInfo = gameInfoCache[item.name];
     final isLocalFile = item.downloadUrl == null || item.downloadUrl!.isEmpty;
 
     return LayoutBuilder(
@@ -129,13 +135,13 @@ class RomsCarouselView extends StatelessWidget {
                 flex: 3,
                 child: media != null
                     ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: MediaCarousel(
+                        padding: const EdgeInsets.all(8.0),
+                        child: MediaCarousel(
                           key: ValueKey('carousel_${item.path}'),
                           media: media,
                           height: availableHeight,
                         ),
-                    )
+                      )
                     : Center(child: PlaceholderImage(size: 300)),
               ),
               Expanded(
@@ -144,24 +150,69 @@ class RomsCarouselView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item.displayName,
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                      const SizedBox(height: 16),
+                      InfoRow(
+                        label: 'Description',
+                        value:
+                            gameInfo?.desc ??
+                            'No description available for this ROM.',
                       ),
                       const SizedBox(height: 16),
-                      InfoRow(label: 'Description', value: 'No description available for this ROM.'),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Release Date',
+                              value: gameInfo?.releaseDate?.toString().split(' ')[0] ?? '',
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Developer',
+                              value: gameInfo?.developer ?? '',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Publisher',
+                              value: gameInfo?.publisher ?? '',
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(child: InfoRow(label: 'Genre', value: gameInfo?.genre ?? '')),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Players',
+                              value: gameInfo?.playersText ?? '',
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Rating',
+                              value: gameInfo?.ratingPercentage ?? '--',
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 24),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
                           onPressed: () => onRomLaunch(item),
-                          icon: Icon(
-                            isLocalFile ? Icons.play_arrow : Icons.download,
-                          ),
-                          label: Text(
-                            isLocalFile ? 'Launch' : 'Download & Launch',
-                          ),
+                          icon: Icon(Icons.gamepad),
+                          label: Text('Play'),
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.all(16),
                           ),
@@ -256,7 +307,7 @@ class RomsCarouselView extends StatelessWidget {
 
     // Trigger lazy loading of media
     if (!mediaCache.containsKey(item.name)) {
-      onLoadMedia(item);
+      loadMediaForItem(item);
     }
 
     final media = mediaCache[item.name];
