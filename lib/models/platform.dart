@@ -1,5 +1,7 @@
 import 'rom.dart';
 import 'package:path/path.dart' as filePath;
+import '../utils/platform_names.dart';
+
 class Platform {
   final String name;
   final String path;
@@ -7,7 +9,11 @@ class Platform {
   Platform({required this.name, required this.path, this.roms = const []});
 
   String get displayName {
-    return name[0].toUpperCase() + name.substring(1);
+    return PlatformNames.getDisplayName(name);
+  }
+
+  String get shortName {
+    return PlatformNames.getShortName(name);
   }
 
   String get code {

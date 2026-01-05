@@ -10,7 +10,10 @@ class DownloadService {
 
   DownloadService({required this.romsBasePath});
 
-  Future<String?> downloadRom(Rom rom, {Function(double)? onProgress}) async {
+  Future<String?> downloadRom(
+    Rom rom, {
+    Function(double progress, int received, int total)? onProgress,
+  }) async {
     try {
       if (rom.downloadUrl == null || rom.downloadUrl!.isEmpty) {
         _debug.warning(
@@ -73,7 +76,7 @@ class DownloadService {
 
         if (totalBytes > 0 && onProgress != null) {
           final progress = receivedBytes / totalBytes;
-          onProgress(progress);
+          onProgress(progress, receivedBytes, totalBytes);
         }
       }
 

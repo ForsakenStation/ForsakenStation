@@ -212,6 +212,7 @@ class EmulatorService {
     required RomItem romItem,
     required String platform,
     EmulatorCommand? selectedCommand,
+    Function(double progress, int received, int total)? onDownloadProgress,
   }) async {
     try {
       _debug.info(
@@ -260,7 +261,10 @@ class EmulatorService {
         rom.downloadUrl = romItem.downloadUrl;
 
         // Download ROM
-        final downloadedPath = await downloadService.downloadRom(rom);
+        final downloadedPath = await downloadService.downloadRom(
+          rom,
+          onProgress: onDownloadProgress,
+        );
         if (downloadedPath == null) {
           _debug.error('Failed to download ROM', tag: 'EmulatorService');
           return false;

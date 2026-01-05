@@ -27,6 +27,7 @@ import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
 import '../widgets/common/placeholder_image.dart';
 import '../widgets/common/virtual_keyboard.dart';
+import '../widgets/roms/launch_progress_dialog.dart';
 
 enum ViewMode { list, grid, carousel }
 
@@ -1051,54 +1052,21 @@ class _RomsScreenState extends State<RomsScreen> {
         ? _mediaService.getLaunchImagePath(media)
         : null;
 
+    final isDownloading =
+        item.downloadUrl != null && item.downloadUrl!.isNotEmpty;
+
+    // Create dialog key to access state
+    final GlobalKey<LaunchProgressDialogState> dialogKey = GlobalKey();
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(item.displayName),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Show marquee/boxart if available
-            if (imagePath != null)
-              Container(
-                constraints: const BoxConstraints(
-                  maxHeight: 200,
-                  maxWidth: 200,
-                ),
-                margin: const EdgeInsets.only(bottom: 16),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    File(imagePath),
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      // Fallback to placeholder if image fails to load
-                      return PlaceholderImage(size: 150);
-                    },
-                  ),
-                ),
-              )
-            else
-              // Show placeholder if no image available
-              Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                child: PlaceholderImage(size: 150),
-              ),
-            const CircularProgressIndicator(),
-            const SizedBox(height: 16),
-            Text(
-              item.downloadUrl != null && item.downloadUrl!.isNotEmpty
-                  ? 'Downloading & Launching...'
-                  : 'Launching...',
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Emulator: ${command.name}',
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-            ),
-          ],
-        ),
+      builder: (context) => LaunchProgressDialog(
+        key: dialogKey,
+        item: item,
+        command: command,
+        imagePath: imagePath,
+        isDownloading: isDownloading,
       ),
     );
 
@@ -1107,6 +1075,10 @@ class _RomsScreenState extends State<RomsScreen> {
         romItem: item,
         platform: widget.platform.name,
         selectedCommand: command,
+        onDownloadProgress: (progress, received, total) {
+          // Update dialog progress
+          dialogKey.currentState?.updateProgress(progress, received, total);
+        },
       );
 
       if (!mounted) return;
