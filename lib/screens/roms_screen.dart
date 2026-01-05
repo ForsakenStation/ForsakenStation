@@ -26,6 +26,7 @@ import '../widgets/roms/media_carousel.dart';
 import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
 import '../widgets/common/placeholder_image.dart';
+import '../widgets/common/virtual_keyboard.dart';
 
 enum ViewMode { list, grid, carousel }
 
@@ -70,7 +71,9 @@ class _RomsScreenState extends State<RomsScreen> {
 
   // Search/filter functionality
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   bool _isSearchMode = false;
+  bool _showVirtualKeyboard = false;
 
   @override
   void initState() {
@@ -109,6 +112,7 @@ class _RomsScreenState extends State<RomsScreen> {
     _gridFocusNode.dispose();
     _listFocusNode.dispose();
     _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -169,6 +173,10 @@ class _RomsScreenState extends State<RomsScreen> {
   void _activateSearchMode() {
     setState(() {
       _isSearchMode = true;
+    });
+    // Request focus after the widget rebuilds
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _searchFocusNode.requestFocus();
     });
   }
 
@@ -590,11 +598,21 @@ class _RomsScreenState extends State<RomsScreen> {
           title: _isSearchMode
               ? TextField(
                   controller: _searchController,
+                  focusNode: _searchFocusNode,
                   autofocus: true,
                   decoration: InputDecoration(
                     hintText: 'Search ROMs...',
                     border: InputBorder.none,
                     hintStyle: TextStyle(color: Colors.white),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.keyboard, color: Colors.white70),
+                      onPressed: () {
+                        setState(() {
+                          _showVirtualKeyboard = !_showVirtualKeyboard;
+                        });
+                      },
+                      tooltip: 'Toggle virtual keyboard',
+                    ),
                   ),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimary,
@@ -630,7 +648,20 @@ class _RomsScreenState extends State<RomsScreen> {
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : _buildBody(),
+            : Column(
+                children: [
+                  Expanded(child: _buildBody()),
+                  if (_showVirtualKeyboard && _isSearchMode)
+                    VirtualKeyboard(
+                      controller: _searchController,
+                      onClose: () {
+                        setState(() {
+                          _showVirtualKeyboard = false;
+                        });
+                      },
+                    ),
+                ],
+              ),
       ),
     );
   }
