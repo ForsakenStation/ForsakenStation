@@ -123,6 +123,11 @@ class _RomsScreenState extends State<RomsScreen> {
         // Clear media cache to force reload for new directory
         _mediaCache.clear();
       });
+
+      // Request focus after loading items
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _requestFocusForCurrentViewMode();
+      });
     }
   }
 
@@ -316,6 +321,32 @@ class _RomsScreenState extends State<RomsScreen> {
           break;
       }
     });
+
+    // Request focus for the new view mode after the widget rebuilds
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestFocusForCurrentViewMode();
+    });
+  }
+
+  /// Request focus for the current view mode's FocusNode
+  void _requestFocusForCurrentViewMode() {
+    switch (_viewMode) {
+      case ViewMode.grid:
+        if (!_gridFocusNode.hasFocus) {
+          _gridFocusNode.requestFocus();
+        }
+        break;
+      case ViewMode.list:
+        if (!_listFocusNode.hasFocus) {
+          _listFocusNode.requestFocus();
+        }
+        break;
+      case ViewMode.carousel:
+        if (!_carouselFocusNode.hasFocus) {
+          _carouselFocusNode.requestFocus();
+        }
+        break;
+    }
   }
 
   /// Handles common keyboard shortcuts (R, V, S) that work across all view modes
@@ -803,18 +834,10 @@ class _RomsScreenState extends State<RomsScreen> {
           item.displayName,
           style: const TextStyle(fontWeight: FontWeight.w500),
         ),
-        subtitle: item.isFolder
-            ? const Text('Folder')
-            : Text(
-                isLocalFile ? 'Local file' : item.downloadUrl!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
         trailing: Icon(
           item.isFolder
               ? Icons.chevron_right
-              : (isLocalFile ? Icons.play_arrow : Icons.download),
+              : Icons.videogame_asset,
           color: Colors.grey[600],
         ),
         onTap: () {
@@ -1497,7 +1520,10 @@ class _RomsScreenState extends State<RomsScreen> {
           ),
         ),
       ),
-    );
+    ).then((_) {
+      // Request focus back after dialog closes
+      _requestFocusForCurrentViewMode();
+    });
   }
 
   Future<void> _handleRomLaunch(RomItem item) async {
@@ -1531,7 +1557,7 @@ class _RomsScreenState extends State<RomsScreen> {
   Future<EmulatorCommand?> _showEmulatorSelectionDialog(
     EmulatorConfig config,
   ) async {
-    return showDialog<EmulatorCommand>(
+    final result = await showDialog<EmulatorCommand>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Select Emulator'),
@@ -1554,6 +1580,11 @@ class _RomsScreenState extends State<RomsScreen> {
         ],
       ),
     );
+
+    // Request focus back after dialog closes
+    _requestFocusForCurrentViewMode();
+
+    return result;
   }
 
   Future<void> _launchWithCommand(RomItem item, EmulatorCommand command) async {
@@ -1641,10 +1672,16 @@ class _RomsScreenState extends State<RomsScreen> {
           '• Configuration is correct',
         );
       }
+
+      // Request focus back after dialog closes
+      _requestFocusForCurrentViewMode();
     } catch (e) {
       if (!mounted) return;
       Navigator.pop(context); // Close loading dialog
       _showErrorDialog('Error launching ROM: $e');
+
+      // Request focus back after dialog closes
+      _requestFocusForCurrentViewMode();
     }
   }
 
@@ -1661,7 +1698,10 @@ class _RomsScreenState extends State<RomsScreen> {
           ),
         ],
       ),
-    );
+    ).then((_) {
+      // Request focus back after dialog closes
+      _requestFocusForCurrentViewMode();
+    });
   }
 }
 

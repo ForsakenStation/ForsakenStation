@@ -82,6 +82,11 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
           _platforms = platforms;
           _isLoading = false;
         });
+
+        // Request focus after loading platforms
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _requestFocusForCurrentViewMode();
+        });
       }
     } catch (e) {
       if (mounted) {
@@ -192,6 +197,27 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
         _viewMode = ViewMode.grid;
       }
     });
+
+    // Request focus for the new view mode after the widget rebuilds
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestFocusForCurrentViewMode();
+    });
+  }
+
+  /// Request focus for the current view mode's FocusNode
+  void _requestFocusForCurrentViewMode() {
+    switch (_viewMode) {
+      case ViewMode.grid:
+        if (!_gridFocusNode.hasFocus) {
+          _gridFocusNode.requestFocus();
+        }
+        break;
+      case ViewMode.carousel:
+        if (!_carouselFocusNode.hasFocus) {
+          _carouselFocusNode.requestFocus();
+        }
+        break;
+    }
   }
 
   /// Handles common keyboard shortcuts (R, V) that work across all view modes
