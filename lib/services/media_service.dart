@@ -346,6 +346,19 @@ class MediaService {
     return null;
   }
 
+  String? getLaunchImagePath(RomMedia media) {
+    if (media.marquee?.exists ?? false) {
+      return media.marquee!.path;
+    }
+    if (media.cover?.exists ?? false) {
+      return media.cover!.path;
+    }
+    if (media.titlescreen?.exists ?? false) {
+      return media.titlescreen!.path;
+    }
+    return null;
+  }
+
   /// Get the best available image for carousel display
   /// Priority for ROMs in carousel: miximages > 3dboxes > cover > marquee > screenshot > null
   String? getBestImagePathForCarousel(RomMedia media) {

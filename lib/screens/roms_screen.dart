@@ -317,6 +317,200 @@ class _RomsScreenState extends State<RomsScreen> {
     });
   }
 
+  /// Handles common keyboard shortcuts (R, V, S) that work across all view modes
+  /// Returns true if the key was handled, false otherwise
+  bool _handleCommonShortcuts(LogicalKeyboardKey key) {
+    if (key == KeyboardService.keyRefresh) {
+      _loadItems();
+      return true;
+    }
+    if (key == KeyboardService.keyToggleView) {
+      _toggleViewMode();
+      return true;
+    }
+    if (key == KeyboardService.keySearch) {
+      _activateSearchMode();
+      return true;
+    }
+    return false;
+  }
+
+  /// Centralized keyboard event handler for all view modes
+  /// This eliminates code duplication across grid, list, and carousel views
+  KeyEventResult _handleKeyEvent(KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+
+    final key = event.logicalKey;
+
+    // 1. Handle alphabetical jump (Shift + Letter)
+    if (_keyboardService.isAlphabeticalJump(event)) {
+      return _handleAlphabeticalJump(event);
+    }
+
+    // 2. Handle common shortcuts (R, V, S)
+    if (_handleCommonShortcuts(key)) {
+      return KeyEventResult.handled;
+    }
+
+    // 3. Handle back navigation
+    if (_keyboardService.isBackKey(key)) {
+      if (_isSearchMode) {
+        _clearSearch();
+      } else {
+        _navigateBack();
+      }
+      return KeyEventResult.handled;
+    }
+
+    // 4. Handle selection
+    if (_keyboardService.isSelectKey(key)) {
+      _handleSelection();
+      return KeyEventResult.handled;
+    }
+
+    // 5. Handle directional navigation (depends on view mode)
+    return _handleDirectionalNavigation(key);
+  }
+
+  /// Handle alphabetical jump based on current view mode
+  KeyEventResult _handleAlphabeticalJump(KeyEvent event) {
+    final letter = _keyboardService.getAlphabeticalJumpLetter(event);
+    if (letter == null) return KeyEventResult.ignored;
+
+    final newIndex = _keyboardService.findIndexByLetter(
+      letter: letter,
+      items: _filteredItems,
+      getDisplayName: (item) => item.displayName,
+    );
+
+    if (newIndex == null) return KeyEventResult.ignored;
+
+    if (_viewMode == ViewMode.grid) {
+      setState(() {
+        _selectedIndex = newIndex;
+        _selectedRom = _filteredItems[newIndex];
+      });
+      final columns = _calculateCrossAxisCount(context);
+      _scrollToIndexInGrid(newIndex, columns);
+    } else if (_viewMode == ViewMode.list) {
+      setState(() {
+        _selectedIndex = newIndex;
+        _selectedRom = _filteredItems[newIndex];
+      });
+      _scrollToIndexInList(newIndex);
+    } else {
+      // Carousel
+      if (_showNavigationHint) {
+        setState(() {
+          _showNavigationHint = false;
+        });
+      }
+      setState(() {
+        _carouselCurrentIndex = newIndex;
+        _selectedRom = _filteredItems[newIndex];
+      });
+      _scrollToCarouselIndex(newIndex);
+    }
+
+    return KeyEventResult.handled;
+  }
+
+  /// Handle selection based on current view mode
+  void _handleSelection() {
+    final item = _viewMode == ViewMode.carousel
+        ? _filteredItems[_carouselCurrentIndex]
+        : _filteredItems[_selectedIndex];
+
+    if (item.isFolder) {
+      _navigateToFolder(item);
+    } else {
+      if (_viewMode == ViewMode.carousel) {
+        _handleRomLaunch(item);
+      } else {
+        _showRomDetailDialog(item);
+      }
+    }
+  }
+
+  /// Handle directional navigation based on current view mode
+  KeyEventResult _handleDirectionalNavigation(LogicalKeyboardKey key) {
+    if (_viewMode == ViewMode.grid) {
+      return _handleGridNavigation(key);
+    } else if (_viewMode == ViewMode.list) {
+      return _handleListNavigation(key);
+    } else {
+      return _handleCarouselNavigationKeys(key);
+    }
+  }
+
+  /// Handle grid-specific navigation
+  KeyEventResult _handleGridNavigation(LogicalKeyboardKey key) {
+    final columns = _calculateCrossAxisCount(context);
+    final newIndex = _keyboardService.handleGridNavigation(
+      key: key,
+      currentIndex: _selectedIndex,
+      itemCount: _filteredItems.length,
+      columns: columns,
+    );
+
+    if (newIndex != null) {
+      setState(() {
+        _selectedIndex = newIndex;
+        _selectedRom = _filteredItems[newIndex];
+      });
+      _scrollToIndexInGrid(newIndex, columns);
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
+  }
+
+  /// Handle list-specific navigation
+  KeyEventResult _handleListNavigation(LogicalKeyboardKey key) {
+    final newIndex = _keyboardService.handleListNavigation(
+      key: key,
+      currentIndex: _selectedIndex,
+      itemCount: _filteredItems.length,
+    );
+
+    if (newIndex != null) {
+      setState(() {
+        _selectedIndex = newIndex;
+        _selectedRom = _filteredItems[newIndex];
+      });
+      _scrollToIndexInList(newIndex);
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
+  }
+
+  /// Handle carousel-specific navigation
+  KeyEventResult _handleCarouselNavigationKeys(LogicalKeyboardKey key) {
+    final newIndex = _keyboardService.handleCarouselNavigation(
+      key: key,
+      currentIndex: _carouselCurrentIndex,
+      itemCount: _filteredItems.length,
+      loop: true,
+    );
+
+    if (newIndex != null) {
+      if (_showNavigationHint) {
+        setState(() {
+          _showNavigationHint = false;
+        });
+      }
+      setState(() {
+        _carouselCurrentIndex = newIndex;
+        _selectedRom = _filteredItems[_carouselCurrentIndex];
+      });
+      _scrollToCarouselIndex(_carouselCurrentIndex);
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
+  }
+
   @override
   Widget build(BuildContext context) {
     final isWideScreen = MediaQuery.of(context).size.width > 800;
@@ -338,7 +532,7 @@ class _RomsScreenState extends State<RomsScreen> {
           flexibleSpace: ClipRect(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(color: Colors.black.withOpacity(0.2)),
+              child: Container(color: Colors.black.withValues(alpha: 0.2)),
             ),
           ),
           leading: IconButton(
@@ -355,7 +549,7 @@ class _RomsScreenState extends State<RomsScreen> {
                     hintStyle: TextStyle(
                       color: Theme.of(
                         context,
-                      ).colorScheme.onPrimary.withOpacity(0.6),
+                      ).colorScheme.onPrimary.withValues(alpha: 0.6),
                     ),
                   ),
                   style: TextStyle(
@@ -550,64 +744,7 @@ class _RomsScreenState extends State<RomsScreen> {
       child: Focus(
         focusNode: _listFocusNode,
         autofocus: true,
-        onKeyEvent: (node, event) {
-          if (event is! KeyDownEvent) return KeyEventResult.ignored;
-
-          final key = event.logicalKey;
-
-          if (_keyboardService.isAlphabeticalJump(event)) {
-            final letter = _keyboardService.getAlphabeticalJumpLetter(event);
-            if (letter != null) {
-              final newIndex = _keyboardService.findIndexByLetter(
-                letter: letter,
-                items: _filteredItems,
-                getDisplayName: (item) => item.displayName,
-              );
-              if (newIndex != null) {
-                setState(() {
-                  _selectedIndex = newIndex;
-                  _selectedRom = _filteredItems[newIndex];
-                });
-                _scrollToIndexInList(newIndex);
-                return KeyEventResult.handled;
-              }
-            }
-          }
-
-          if (_keyboardService.isBackKey(key)) {
-            _navigateBack();
-            return KeyEventResult.handled;
-          }
-
-          // Handle selection
-          if (_keyboardService.isSelectKey(key)) {
-            final item = _filteredItems[_selectedIndex];
-            if (item.isFolder) {
-              _navigateToFolder(item);
-            } else {
-              _showRomDetailDialog(item);
-            }
-            return KeyEventResult.handled;
-          }
-
-          // Handle navigation
-          final newIndex = _keyboardService.handleListNavigation(
-            key: key,
-            currentIndex: _selectedIndex,
-            itemCount: _filteredItems.length,
-          );
-
-          if (newIndex != null) {
-            setState(() {
-              _selectedIndex = newIndex;
-              _selectedRom = _filteredItems[newIndex];
-            });
-            _scrollToIndexInList(newIndex);
-            return KeyEventResult.handled;
-          }
-
-          return KeyEventResult.ignored;
-        },
+        onKeyEvent: (node, event) => _handleKeyEvent(event),
         child: ListView.builder(
           controller: _listScrollController,
           padding: const EdgeInsets.all(8),
@@ -644,7 +781,7 @@ class _RomsScreenState extends State<RomsScreen> {
             : BorderSide.none,
       ),
       color: isSelected
-          ? Theme.of(context).primaryColor.withOpacity(0.1)
+          ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
           : null,
       child: ListTile(
         leading: item.isFolder
@@ -688,65 +825,7 @@ class _RomsScreenState extends State<RomsScreen> {
       child: Focus(
         focusNode: _gridFocusNode,
         autofocus: true,
-        onKeyEvent: (node, event) {
-          if (event is! KeyDownEvent) return KeyEventResult.ignored;
-
-          final key = event.logicalKey;
-
-          if (_keyboardService.isAlphabeticalJump(event)) {
-            final letter = _keyboardService.getAlphabeticalJumpLetter(event);
-            if (letter != null) {
-              final newIndex = _keyboardService.findIndexByLetter(
-                letter: letter,
-                items: _filteredItems,
-                getDisplayName: (item) => item.displayName,
-              );
-              if (newIndex != null) {
-                setState(() {
-                  _selectedIndex = newIndex;
-                  _selectedRom = _filteredItems[newIndex];
-                });
-                final columns = _calculateCrossAxisCount(context);
-                _scrollToIndexInGrid(newIndex, columns);
-                return KeyEventResult.handled;
-              }
-            }
-          }
-
-          if (_keyboardService.isBackKey(key)) {
-            _navigateBack();
-            return KeyEventResult.handled;
-          }
-
-          if (_keyboardService.isSelectKey(key)) {
-            final item = _filteredItems[_selectedIndex];
-            if (item.isFolder) {
-              _navigateToFolder(item);
-            } else {
-              _showRomDetailDialog(item);
-            }
-            return KeyEventResult.handled;
-          }
-
-          final columns = _calculateCrossAxisCount(context);
-          final newIndex = _keyboardService.handleGridNavigation(
-            key: key,
-            currentIndex: _selectedIndex,
-            itemCount: _filteredItems.length,
-            columns: columns,
-          );
-
-          if (newIndex != null) {
-            setState(() {
-              _selectedIndex = newIndex;
-              _selectedRom = _filteredItems[newIndex];
-            });
-            _scrollToIndexInGrid(newIndex, columns);
-            return KeyEventResult.handled;
-          }
-
-          return KeyEventResult.ignored;
-        },
+        onKeyEvent: (node, event) => _handleKeyEvent(event),
         child: GridView.builder(
           controller: _gridScrollController,
           padding: const EdgeInsets.all(16),
@@ -875,73 +954,7 @@ class _RomsScreenState extends State<RomsScreen> {
       child: Focus(
         focusNode: _carouselFocusNode,
         autofocus: true,
-        onKeyEvent: (node, event) {
-          if (event is! KeyDownEvent) return KeyEventResult.ignored;
-
-          final key = event.logicalKey;
-
-          if (_keyboardService.isAlphabeticalJump(event)) {
-            final letter = _keyboardService.getAlphabeticalJumpLetter(event);
-            if (letter != null) {
-              final newIndex = _keyboardService.findIndexByLetter(
-                letter: letter,
-                items: _filteredItems,
-                getDisplayName: (item) => item.displayName,
-              );
-              if (newIndex != null) {
-                if (_showNavigationHint) {
-                  setState(() {
-                    _showNavigationHint = false;
-                  });
-                }
-                setState(() {
-                  _carouselCurrentIndex = newIndex;
-                  _selectedRom = _filteredItems[newIndex];
-                });
-                _scrollToCarouselIndex(newIndex);
-                return KeyEventResult.handled;
-              }
-            }
-          }
-
-          if (_keyboardService.isSelectKey(key)) {
-            final item = _filteredItems[_carouselCurrentIndex];
-            if (item.isFolder) {
-              _navigateToFolder(item);
-            } else {
-              _handleRomLaunch(item);
-            }
-            return KeyEventResult.handled;
-          }
-
-          if (_keyboardService.isBackKey(key)) {
-            _navigateBack();
-            return KeyEventResult.handled;
-          }
-
-          final newIndex = _keyboardService.handleCarouselNavigation(
-            key: key,
-            currentIndex: _carouselCurrentIndex,
-            itemCount: _filteredItems.length,
-            loop: true,
-          );
-
-          if (newIndex != null) {
-            if (_showNavigationHint) {
-              setState(() {
-                _showNavigationHint = false;
-              });
-            }
-            setState(() {
-              _carouselCurrentIndex = newIndex;
-              _selectedRom = _filteredItems[_carouselCurrentIndex];
-            });
-            _scrollToCarouselIndex(_carouselCurrentIndex);
-            return KeyEventResult.handled;
-          }
-
-          return KeyEventResult.ignored;
-        },
+        onKeyEvent: (node, event) => _handleKeyEvent(event),
         child: Column(
           children: [
             Expanded(flex: 2, child: _buildCarouselDetailPanel()),
@@ -1510,6 +1523,12 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   Future<void> _launchWithCommand(RomItem item, EmulatorCommand command) async {
+    // Get media for this ROM to show marquee/boxart
+    final media = _mediaCache[item.name];
+    final imagePath = media != null
+        ? _mediaService.getLaunchImagePath(media)
+        : null;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -1518,6 +1537,32 @@ class _RomsScreenState extends State<RomsScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Show marquee/boxart if available
+            if (imagePath != null)
+              Container(
+                constraints: const BoxConstraints(
+                  maxHeight: 200,
+                  maxWidth: 200,
+                ),
+                margin: const EdgeInsets.only(bottom: 16),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(
+                    File(imagePath),
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      // Fallback to placeholder if image fails to load
+                      return _buildPlaceholderImage(150);
+                    },
+                  ),
+                ),
+              )
+            else
+              // Show placeholder if no image available
+              Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                child: _buildPlaceholderImage(150),
+              ),
             const CircularProgressIndicator(),
             const SizedBox(height: 16),
             Text(

@@ -193,6 +193,145 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     });
   }
 
+  /// Handles common keyboard shortcuts (R, V) that work across all view modes
+  /// Returns true if the key was handled, false otherwise
+  bool _handleCommonShortcuts(LogicalKeyboardKey key) {
+    if (key == KeyboardService.keyRefresh) {
+      _loadPlatforms();
+      return true;
+    }
+    if (key == KeyboardService.keyToggleView) {
+      _toggleViewMode();
+      return true;
+    }
+    return false;
+  }
+
+  /// Centralized keyboard event handler for all view modes
+  /// This eliminates code duplication across grid and carousel views
+  KeyEventResult _handleKeyEvent(KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+
+    final key = event.logicalKey;
+
+    // 1. Handle alphabetical jump (Shift + Letter)
+    if (_keyboardService.isAlphabeticalJump(event)) {
+      return _handleAlphabeticalJump(event);
+    }
+
+    // 2. Handle common shortcuts (R, V)
+    if (_handleCommonShortcuts(key)) {
+      return KeyEventResult.handled;
+    }
+
+    // 3. Handle back/exit
+    if (_keyboardService.isBackKey(key)) {
+      _showExitDialog();
+      return KeyEventResult.handled;
+    }
+
+    // 4. Handle selection
+    if (_keyboardService.isSelectKey(key)) {
+      _handleSelection();
+      return KeyEventResult.handled;
+    }
+
+    // 5. Handle directional navigation (depends on view mode)
+    return _handleDirectionalNavigation(key);
+  }
+
+  /// Handle alphabetical jump based on current view mode
+  KeyEventResult _handleAlphabeticalJump(KeyEvent event) {
+    final letter = _keyboardService.getAlphabeticalJumpLetter(event);
+    if (letter == null) return KeyEventResult.ignored;
+
+    final newIndex = _keyboardService.findIndexByLetter(
+      letter: letter,
+      items: _platforms,
+      getDisplayName: (platform) => platform.displayName,
+    );
+
+    if (newIndex == null) return KeyEventResult.ignored;
+
+    if (_viewMode == ViewMode.grid) {
+      setState(() {
+        _gridSelectedIndex = newIndex;
+      });
+      final columns = _calculateCrossAxisCount(context);
+      _scrollToIndex(newIndex, columns);
+    } else {
+      // Carousel
+      _hideNavigationHint();
+      _carouselController.animateToPage(
+        newIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+
+    return KeyEventResult.handled;
+  }
+
+  /// Handle selection based on current view mode
+  void _handleSelection() {
+    final selectedPlatform = _viewMode == ViewMode.grid
+        ? _platforms[_gridSelectedIndex]
+        : _platforms[_carouselCurrentIndex];
+    _navigateToRoms(selectedPlatform);
+  }
+
+  /// Handle directional navigation based on current view mode
+  KeyEventResult _handleDirectionalNavigation(LogicalKeyboardKey key) {
+    if (_viewMode == ViewMode.grid) {
+      return _handleGridNavigation(key);
+    } else {
+      return _handleCarouselNavigation(key);
+    }
+  }
+
+  /// Handle grid-specific navigation
+  KeyEventResult _handleGridNavigation(LogicalKeyboardKey key) {
+    final columns = _calculateCrossAxisCount(context);
+    final newIndex = _keyboardService.handleGridNavigation(
+      key: key,
+      currentIndex: _gridSelectedIndex,
+      itemCount: _platforms.length,
+      columns: columns,
+    );
+
+    if (newIndex != null) {
+      setState(() {
+        _gridSelectedIndex = newIndex;
+      });
+      _scrollToIndex(newIndex, columns);
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
+  }
+
+  /// Handle carousel-specific navigation
+  KeyEventResult _handleCarouselNavigation(LogicalKeyboardKey key) {
+    final newIndex = _keyboardService.handleCarouselNavigation(
+      key: key,
+      currentIndex: _carouselCurrentIndex,
+      itemCount: _platforms.length,
+      loop: true,
+    );
+
+    if (newIndex != null) {
+      _hideNavigationHint();
+      _carouselController.animateToPage(
+        newIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,7 +343,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
         flexibleSpace: ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacity(0.2)),
+            child: Container(color: Colors.black.withValues(alpha: 0.2)),
           ),
         ),
         title: const Text('Forsaken Roms: Platforms'),
@@ -280,58 +419,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
       child: Focus(
         focusNode: _gridFocusNode,
         autofocus: true,
-        onKeyEvent: (node, event) {
-          if (event is! KeyDownEvent) return KeyEventResult.ignored;
-
-          final key = event.logicalKey;
-          if (_keyboardService.isAlphabeticalJump(event)) {
-            final letter = _keyboardService.getAlphabeticalJumpLetter(event);
-            if (letter != null) {
-              final newIndex = _keyboardService.findIndexByLetter(
-                letter: letter,
-                items: _platforms,
-                getDisplayName: (platform) => platform.displayName,
-              );
-              if (newIndex != null) {
-                setState(() {
-                  _gridSelectedIndex = newIndex;
-                });
-                final columns = _calculateCrossAxisCount(context);
-                _scrollToIndex(newIndex, columns);
-                return KeyEventResult.handled;
-              }
-            }
-          }
-
-          if (_keyboardService.isBackKey(key)) {
-            _showExitDialog();
-            return KeyEventResult.handled;
-          }
-
-          if (_keyboardService.isSelectKey(key)) {
-            _navigateToRoms(_platforms[_gridSelectedIndex]);
-            return KeyEventResult.handled;
-          }
-
-          final columns = _calculateCrossAxisCount(context);
-          final newIndex = _keyboardService.handleGridNavigation(
-            key: key,
-            currentIndex: _gridSelectedIndex,
-            itemCount: _platforms.length,
-            columns: columns,
-          );
-
-          if (newIndex != null) {
-            setState(() {
-              _gridSelectedIndex = newIndex;
-            });
-            // Scroll to keep selected item visible
-            _scrollToIndex(newIndex, columns);
-            return KeyEventResult.handled;
-          }
-
-          return KeyEventResult.ignored;
-        },
+        onKeyEvent: (node, event) => _handleKeyEvent(event),
         child: GridView.builder(
           controller: _gridScrollController,
           padding: const EdgeInsets.all(16),
@@ -406,61 +494,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     return Focus(
       focusNode: _carouselFocusNode,
       autofocus: true,
-      onKeyEvent: (node, event) {
-        if (event is! KeyDownEvent) return KeyEventResult.ignored;
-
-        final key = event.logicalKey;
-
-        if (_keyboardService.isAlphabeticalJump(event)) {
-          final letter = _keyboardService.getAlphabeticalJumpLetter(event);
-          if (letter != null) {
-            final newIndex = _keyboardService.findIndexByLetter(
-              letter: letter,
-              items: _platforms,
-              getDisplayName: (platform) => platform.displayName,
-            );
-            if (newIndex != null) {
-              _hideNavigationHint();
-              _carouselController.animateToPage(
-                newIndex,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-              return KeyEventResult.handled;
-            }
-          }
-        }
-
-        // Handle selection
-        if (_keyboardService.isSelectKey(key)) {
-          _navigateToRoms(_platforms[_carouselCurrentIndex]);
-          return KeyEventResult.handled;
-        }
-
-        if (_keyboardService.isBackKey(key)) {
-          _showExitDialog();
-          return KeyEventResult.handled;
-        }
-
-        final newIndex = _keyboardService.handleCarouselNavigation(
-          key: key,
-          currentIndex: _carouselCurrentIndex,
-          itemCount: _platforms.length,
-          loop: true,
-        );
-
-        if (newIndex != null) {
-          _hideNavigationHint();
-          _carouselController.animateToPage(
-            newIndex,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-          return KeyEventResult.handled;
-        }
-
-        return KeyEventResult.ignored;
-      },
+      onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Stack(
         children: [
           PageView.builder(
@@ -569,8 +603,8 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.5),
-                  Colors.black.withOpacity(0.8),
+                  Colors.black.withValues(alpha: 0.5),
+                  Colors.black.withValues(alpha: 0.8),
                 ],
               ),
             ),
@@ -613,7 +647,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
                       decoration: BoxDecoration(
                         color: Theme.of(
                           context,
-                        ).colorScheme.secondaryContainer.withOpacity(0.9),
+                        ).colorScheme.secondaryContainer.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
