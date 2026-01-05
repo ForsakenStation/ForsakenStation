@@ -4,10 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import '../models/rom.dart';
 import 'debug_service.dart';
+import 'download_resolver_service.dart';
 
 class DownloadService {
   final String romsBasePath;
   final _debug = DebugService.instance;
+  final _resolver = DownloadResolverService();
   bool _isCancelled = false;
 
   DownloadService({required this.romsBasePath});
@@ -61,8 +63,23 @@ class DownloadService {
       _debug.debug('URL: ${rom.downloadUrl}', tag: 'DownloadService');
       _debug.debug('Destination: $filePath', tag: 'DownloadService');
 
-      // Start download
-      final request = http.Request('GET', Uri.parse(rom.downloadUrl!));
+      // Resolve URL (handles MediaFire, Google Drive, Dropbox, etc.)
+      final resolvedUrl = await _resolver.resolveDownloadUrl(rom.downloadUrl!);
+
+      if (resolvedUrl == null) {
+        _debug.error(
+          'Failed to resolve download URL for ${rom.displayName}',
+          tag: 'DownloadService',
+        );
+        return null;
+      }
+
+      if (resolvedUrl != rom.downloadUrl) {
+        _debug.info('Resolved URL: $resolvedUrl', tag: 'DownloadService');
+      }
+
+      // Start download with resolved URL
+      final request = http.Request('GET', Uri.parse(resolvedUrl));
       final response = await request.send();
 
       if (response.statusCode != 200) {

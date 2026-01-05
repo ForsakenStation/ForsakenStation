@@ -51,7 +51,7 @@ class _RomsScreenState extends State<RomsScreen> {
   String _currentPath = '';
   final List<String> _pathHistory = [];
   bool _isLoading = true;
-  ViewMode _viewMode = ViewMode.grid;
+  ViewMode _viewMode = ViewMode.list;
   int _selectedIndex = 0;
   Map<String, RomMedia> _mediaCache = {};
   Map<String, GameInfo> _gameInfoCache = {};
@@ -646,13 +646,12 @@ class _RomsScreenState extends State<RomsScreen> {
                             ),
                           ),
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
+                            color: Colors.white,
                           ),
                           onChanged: _onSearchChanged,
                         )
                       : _buildTitile(),
                   actions: [
-                    const ThemeSelector(),
                     if (!_isSearchMode)
                       IconButton(
                         icon: const Icon(Icons.search),
@@ -665,6 +664,7 @@ class _RomsScreenState extends State<RomsScreen> {
                         onPressed: _clearSearch,
                         tooltip: 'Clear search',
                       ),
+                    const ThemeSelector(),
                     IconButton(
                       icon: Icon(_getViewModeIcon()),
                       onPressed: _toggleViewMode,

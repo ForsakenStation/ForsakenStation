@@ -5,6 +5,10 @@ import '../../models/game_info.dart';
 import 'media_carousel.dart';
 import '../common/placeholder_image.dart';
 import '../common/info_row.dart';
+import '../common/language_flags.dart';
+import '../common/star_rating.dart';
+import '../common/region_flags.dart';
+import '../common/rom_tag_badges.dart';
 
 class RomDetailPanel extends StatelessWidget {
   final RomItem item;
@@ -74,6 +78,26 @@ class RomDetailPanel extends StatelessWidget {
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: 12),
+
+                // Rating stars, Languages, Regions, and Tags
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 8,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    // Star rating
+                    if (gameInfo?.rating != null)
+                      StarRating(
+                        rating: gameInfo!.rating,
+                        size: 20,
+                        showRatingText: true,
+                      ),
+                    // ROM tags (from ROM filename)
+                    if (item.tags != null)
+                      RomTagBadges(romTags: item.tags, fontSize: 11),
+                  ],
+                ),
                 const SizedBox(height: 16),
 
                 // Description
@@ -131,7 +155,52 @@ class RomDetailPanel extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // Row 3: Players, Rating
+                // Row 3: Language and regions
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Language flags (from ROM filename)
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Language',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          LanguageFlags(languageInfo: item.languages, size: 24),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    // Region flags (from ROM filename)
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Regions',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          RegionFlags(regionInfo: item.regions, size: 20),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Row 4: Players, Rating
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

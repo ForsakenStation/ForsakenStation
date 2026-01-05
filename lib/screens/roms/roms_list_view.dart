@@ -102,7 +102,6 @@ class RomsListView extends StatelessWidget {
     final imagePath = media != null
         ? mediaService.getBestImagePath(media)
         : null;
-    final isLocalFile = item.downloadUrl == null || item.downloadUrl!.isEmpty;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -127,7 +126,7 @@ class RomsListView extends StatelessWidget {
         trailing: Icon(
           item.isFolder
               ? Icons.chevron_right
-              : (isLocalFile ? Icons.play_arrow : Icons.download),
+              : Icons.play_arrow,
           color: Colors.grey[600],
         ),
         onTap: () =>
