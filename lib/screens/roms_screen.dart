@@ -7,11 +7,13 @@ import 'package:emulator/screens/roms/roms_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:path/path.dart' as path;
 import '../models/platform.dart';
 import '../models/rom_item.dart';
 import '../models/media.dart';
 import '../models/emulator_config.dart';
+import '../services/debug_service.dart';
 import '../services/rom_service.dart';
 import '../services/media_service.dart';
 import '../services/emulator_service.dart';
@@ -59,6 +61,8 @@ class _RomsScreenState extends State<RomsScreen> {
   late FocusNode _gridFocusNode;
   late FocusNode _listFocusNode;
   bool _showNavigationHint = true;
+  String? _platformLogoPath;
+  final _debug = DebugService.instance;
 
   // Search/filter functionality
   final TextEditingController _searchController = TextEditingController();
@@ -106,12 +110,15 @@ class _RomsScreenState extends State<RomsScreen> {
     setState(() {
       _isLoading = true;
     });
-
+    final platformLogoPath = await _mediaService.getSystemLogo(
+      widget.platform.code,
+    );
+    _debug.error('Found color logo: ${platformLogoPath}', tag: 'MediaService');
     final items = await widget.romService.loadItemsInDirectory(_currentPath);
-
     if (mounted) {
       setState(() {
         _items = items;
+        _platformLogoPath = platformLogoPath;
         _searchController.clear();
         _isSearchMode = false;
         _filteredItems = items;
@@ -265,11 +272,12 @@ class _RomsScreenState extends State<RomsScreen> {
     }
   }
 
-  String _getCurrentFolderName() {
-    if (_currentPath == widget.platform.path) {
-      return "Forsaken Roms: ${widget.platform.displayName}";
+  String? _getCurrentFolderName() {
+    if (_currentPath != widget.platform.path) {
+      return path.basename(_currentPath);
     }
-    return "Forsaken Roms: ${widget.platform.displayName} > ${path.basename(_currentPath)}";
+
+    return null;
   }
 
   IconData _getViewModeIcon() {
@@ -558,7 +566,7 @@ class _RomsScreenState extends State<RomsScreen> {
                   ),
                   onChanged: _onSearchChanged,
                 )
-              : Text(_getCurrentFolderName()),
+              : _buildTitile(),
           actions: [
             const ThemeSelector(),
             if (!_isSearchMode)
@@ -588,6 +596,28 @@ class _RomsScreenState extends State<RomsScreen> {
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _buildBody(),
+      ),
+    );
+  }
+
+  Widget _buildTitile() {
+    String? subFolder = _getCurrentFolderName();
+    return Container(
+      margin: const EdgeInsets.only(right: 1),
+      child: Row(
+        children: [
+          Image.file(File('assets/images/icon.png'), width: 24, height: 24),
+          Icon(Icons.chevron_right),
+          _platformLogoPath != null
+              ? SvgPicture.asset(
+                  _platformLogoPath!,
+                  height: 24,
+                  fit: BoxFit.contain,
+                )
+              : Text(widget.platform.displayName),
+          if (subFolder != null) Icon(Icons.chevron_right),
+          if (subFolder != null) Text(subFolder),
+        ],
       ),
     );
   }

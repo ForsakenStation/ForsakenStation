@@ -384,7 +384,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
             child: Container(color: Colors.black.withValues(alpha: 0.2)),
           ),
         ),
-        title: const Text('Forsaken Roms: Platforms'),
+        title: Image.file(File('assets/images/icon.png'), width: 24, height: 24),
         actions: [
           const ThemeSelector(),
           IconButton(

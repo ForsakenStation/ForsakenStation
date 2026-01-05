@@ -304,7 +304,7 @@ class MediaService {
     return romMedia.hasAnyMedia;
   }
 
-  Future<List<String>> getPlatformBoxartPaths(String platform) async {
+  Future<List<String>> getSystemBoxartPaths(String platform) async {
     final boxartPath = path.join(mediaBasePath, platform, '3dboxes');
     final boxartDir = Directory(boxartPath);
 
