@@ -10,7 +10,7 @@ import '../../widgets/roms/folder_widget.dart';
 
 class RomsCarouselView extends StatelessWidget {
   final List<RomItem> items;
-  final int currentIndex;
+  final int selectedIndex;
   final ScrollController scrollController;
   final FocusNode focusNode;
   final Function(RomItem) onFolderTap;
@@ -25,7 +25,7 @@ class RomsCarouselView extends StatelessWidget {
   const RomsCarouselView({
     super.key,
     required this.items,
-    required this.currentIndex,
+    required this.selectedIndex,
     required this.scrollController,
     required this.focusNode,
     required this.onFolderTap,
@@ -57,7 +57,7 @@ class RomsCarouselView extends StatelessWidget {
   }
 
   Widget _buildDetailPanel(BuildContext context) {
-    final item = items[currentIndex];
+    final item = items[selectedIndex];
 
     if (item.isFolder) {
       return Center(
@@ -189,7 +189,7 @@ class RomsCarouselView extends StatelessWidget {
             itemCount: items.length,
             itemBuilder: (context, index) {
               final item = items[index];
-              final isSelected = index == currentIndex;
+              final isSelected = index == selectedIndex;
               return _buildCarouselCard(context, item, isSelected, index);
             },
           ),
@@ -204,7 +204,7 @@ class RomsCarouselView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                '${currentIndex + 1} / ${items.length}',
+                '${selectedIndex + 1} / ${items.length}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,

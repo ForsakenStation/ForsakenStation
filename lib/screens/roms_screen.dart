@@ -682,7 +682,7 @@ class _RomsScreenState extends State<RomsScreen> {
   Widget _buildCarouselView() {
     return RomsCarouselView(
       items: _filteredItems,
-      currentIndex: _selectedIndex,
+      selectedIndex: _selectedIndex,
       scrollController: _carouselController,
       focusNode: _carouselFocusNode,
       onFolderTap: _navigateToFolder,
