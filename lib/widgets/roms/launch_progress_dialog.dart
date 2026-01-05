@@ -10,6 +10,7 @@ class LaunchProgressDialog extends StatefulWidget {
   final EmulatorCommand command;
   final String? imagePath;
   final bool isDownloading;
+  final VoidCallback? onCancel;
 
   const LaunchProgressDialog({
     super.key,
@@ -17,6 +18,7 @@ class LaunchProgressDialog extends StatefulWidget {
     required this.command,
     this.imagePath,
     required this.isDownloading,
+    this.onCancel,
   });
 
   @override
@@ -230,6 +232,26 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog> {
                 ],
               ),
             ),
+
+            // Cancel button (only show while downloading)
+            if (widget.isDownloading && widget.onCancel != null) ...[
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: widget.onCancel,
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('Cancel Download'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

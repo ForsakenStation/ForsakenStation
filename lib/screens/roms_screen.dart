@@ -1,33 +1,33 @@
 import 'dart:io';
 import 'dart:ui';
 
-import '../screens/roms/roms_carousel_view.dart';
-import '../screens/roms/roms_grid_view.dart';
-import '../screens/roms/roms_list_view.dart';
+import 'package:forsaken/screens/roms/roms_carousel_view.dart';
+import 'package:forsaken/screens/roms/roms_grid_view.dart';
+import 'package:forsaken/screens/roms/roms_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:path/path.dart' as path;
-import '../models/platform.dart';
-import '../models/rom_item.dart';
-import '../models/media.dart';
-import '../models/emulator_config.dart';
-import '../models/game_info.dart';
-import '../services/debug_service.dart';
-import '../services/rom_service.dart';
-import '../services/media_service.dart';
-import '../services/emulator_service.dart';
-import '../services/download_service.dart';
-import '../services/keyboard_service.dart';
-import '../services/gamelist_service.dart';
-import '../widgets/common/info_row.dart';
-import '../widgets/roms/media_carousel.dart';
-import '../widgets/common/theme_selector.dart';
-import '../widgets/common/help_dialog.dart';
-import '../widgets/common/placeholder_image.dart';
-import '../widgets/common/virtual_keyboard.dart';
-import '../widgets/roms/launch_progress_dialog.dart';
+import 'package:forsaken/models/platform.dart';
+import 'package:forsaken/models/rom_item.dart';
+import 'package:forsaken/models/media.dart';
+import 'package:forsaken/models/emulator_config.dart';
+import 'package:forsaken/models/game_info.dart';
+import 'package:forsaken/services/debug_service.dart';
+import 'package:forsaken/services/rom_service.dart';
+import 'package:forsaken/services/media_service.dart';
+import 'package:forsaken/services/emulator_service.dart';
+import 'package:forsaken/services/download_service.dart';
+import 'package:forsaken/services/keyboard_service.dart';
+import 'package:forsaken/services/gamelist_service.dart';
+import 'package:forsaken/widgets/common/info_row.dart';
+import 'package:forsaken/widgets/roms/media_carousel.dart';
+import 'package:forsaken/widgets/common/theme_selector.dart';
+import 'package:forsaken/widgets/common/help_dialog.dart';
+import 'package:forsaken/widgets/common/placeholder_image.dart';
+import 'package:forsaken/widgets/common/virtual_keyboard.dart';
+import 'package:forsaken/widgets/roms/launch_progress_dialog.dart';
 
 enum ViewMode { list, grid, carousel }
 
@@ -68,6 +68,7 @@ class _RomsScreenState extends State<RomsScreen> {
   late FocusNode _listFocusNode;
   bool _showNavigationHint = true;
   String? _platformLogoPath;
+  String? _platformBackgroundPath;
   final _debug = DebugService.instance;
 
   // Search/filter functionality
@@ -124,11 +125,15 @@ class _RomsScreenState extends State<RomsScreen> {
     final platformLogoPath = await _mediaService.getSystemLogo(
       widget.platform.code,
     );
+    final platformBackgroundPath = await _mediaService.getSystemBackground(
+      widget.platform.code,
+    );
     final items = await widget.romService.loadItemsInDirectory(_currentPath);
     if (mounted) {
       setState(() {
         _items = items;
         _platformLogoPath = platformLogoPath;
+        _platformBackgroundPath = platformBackgroundPath;
         _searchController.clear();
         _isSearchMode = false;
         _filteredItems = items;
@@ -582,87 +587,116 @@ class _RomsScreenState extends State<RomsScreen> {
       },
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-          flexibleSpace: ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(color: Colors.black.withValues(alpha: 0.2)),
-            ),
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: _navigateBack,
-          ),
-          title: _isSearchMode
-              ? TextField(
-                  controller: _searchController,
-                  focusNode: _searchFocusNode,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    hintText: 'Search ROMs...',
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(color: Colors.white),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.keyboard, color: Colors.white70),
-                      onPressed: () {
-                        setState(() {
-                          _showVirtualKeyboard = !_showVirtualKeyboard;
-                        });
-                      },
-                      tooltip: 'Toggle virtual keyboard',
+        body: Stack(
+          children: [
+            // Background image (very attenuated)
+            if (_platformBackgroundPath != null)
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.15, // Very attenuated (15% opacity)
+                  child: Image.file(
+                    File(_platformBackgroundPath!),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                ),
+              ),
+            // Main content
+            Column(
+              children: [
+                // AppBar
+                AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  systemOverlayStyle: SystemUiOverlayStyle.light,
+                  flexibleSpace: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Container(
+                        color: Colors.black.withValues(alpha: 0.2),
+                      ),
                     ),
                   ),
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: _navigateBack,
                   ),
-                  onChanged: _onSearchChanged,
-                )
-              : _buildTitile(),
-          actions: [
-            const ThemeSelector(),
-            if (!_isSearchMode)
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: _activateSearchMode,
-                tooltip: 'Search',
-              )
-            else
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: _clearSearch,
-                tooltip: 'Clear search',
-              ),
-            IconButton(
-              icon: Icon(_getViewModeIcon()),
-              onPressed: _toggleViewMode,
-              tooltip: _getViewModeTooltip(),
-            ),
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: _loadItems,
-              tooltip: 'Refresh',
+                  title: _isSearchMode
+                      ? TextField(
+                          controller: _searchController,
+                          focusNode: _searchFocusNode,
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            hintText: 'Search ROMs...',
+                            border: InputBorder.none,
+                            hintStyle: TextStyle(color: Colors.white),
+                            suffixIcon: IconButton(
+                              icon: const Icon(
+                                Icons.keyboard,
+                                color: Colors.white70,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _showVirtualKeyboard = !_showVirtualKeyboard;
+                                });
+                              },
+                              tooltip: 'Toggle virtual keyboard',
+                            ),
+                          ),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                          onChanged: _onSearchChanged,
+                        )
+                      : _buildTitile(),
+                  actions: [
+                    const ThemeSelector(),
+                    if (!_isSearchMode)
+                      IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: _activateSearchMode,
+                        tooltip: 'Search',
+                      )
+                    else
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: _clearSearch,
+                        tooltip: 'Clear search',
+                      ),
+                    IconButton(
+                      icon: Icon(_getViewModeIcon()),
+                      onPressed: _toggleViewMode,
+                      tooltip: _getViewModeTooltip(),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.refresh),
+                      onPressed: _loadItems,
+                      tooltip: 'Refresh',
+                    ),
+                  ],
+                ),
+                // Body
+                Expanded(
+                  child: _isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : _buildBody(),
+                ),
+                // Virtual keyboard
+                if (_showVirtualKeyboard && _isSearchMode)
+                  VirtualKeyboard(
+                    controller: _searchController,
+                    onClose: () {
+                      setState(() {
+                        _showVirtualKeyboard = false;
+                      });
+                    },
+                  ),
+              ],
             ),
           ],
         ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  Expanded(child: _buildBody()),
-                  if (_showVirtualKeyboard && _isSearchMode)
-                    VirtualKeyboard(
-                      controller: _searchController,
-                      onClose: () {
-                        setState(() {
-                          _showVirtualKeyboard = false;
-                        });
-                      },
-                    ),
-                ],
-              ),
       ),
     );
   }
@@ -1057,6 +1091,7 @@ class _RomsScreenState extends State<RomsScreen> {
 
     // Create dialog key to access state
     final GlobalKey<LaunchProgressDialogState> dialogKey = GlobalKey();
+    bool wasCancelled = false;
 
     showDialog(
       context: context,
@@ -1067,6 +1102,23 @@ class _RomsScreenState extends State<RomsScreen> {
         command: command,
         imagePath: imagePath,
         isDownloading: isDownloading,
+        onCancel: isDownloading
+            ? () {
+                // Cancel the download
+                _emulatorService.cancelDownload();
+                wasCancelled = true;
+                if (mounted) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Download cancelled'),
+                      backgroundColor: Colors.orange,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+              }
+            : null,
       ),
     );
 
@@ -1082,7 +1134,11 @@ class _RomsScreenState extends State<RomsScreen> {
       );
 
       if (!mounted) return;
-      Navigator.pop(context);
+
+      // Only close dialog if not already closed by cancel
+      if (!wasCancelled) {
+        Navigator.pop(context);
+      }
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -1092,7 +1148,7 @@ class _RomsScreenState extends State<RomsScreen> {
             duration: const Duration(seconds: 2),
           ),
         );
-      } else {
+      } else if (!wasCancelled) {
         _showErrorDialog(
           'Failed to launch ROM.\n\n'
           'Check that:\n'
@@ -1104,8 +1160,10 @@ class _RomsScreenState extends State<RomsScreen> {
       _requestFocusForCurrentViewMode();
     } catch (e) {
       if (!mounted) return;
-      Navigator.pop(context); // Close loading dialog
-      _showErrorDialog('Error launching ROM: $e');
+      if (!wasCancelled) {
+        Navigator.pop(context); // Close loading dialog
+        _showErrorDialog('Error launching ROM: $e');
+      }
       _requestFocusForCurrentViewMode();
     }
   }

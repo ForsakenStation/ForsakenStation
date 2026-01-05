@@ -24,6 +24,8 @@ class PlatformNames {
     'nds': 'Nintendo DS',
     'ds': 'Nintendo DS',
     '3ds': 'Nintendo 3DS',
+    'n3ds': 'Nintendo 3DS',
+    'satellaview': 'Nintendo Satella View',
 
     // Sega Consoles
     'genesis': 'Sega Genesis',
@@ -35,6 +37,8 @@ class PlatformNames {
     'dreamcast': 'Sega Dreamcast',
     'dc': 'Sega Dreamcast',
     'sg1000': 'Sega SG-1000',
+    'model2': 'Sega Model 2',
+    'model3': 'Sega Model 3',
 
     // Sega Handhelds
     'gamegear': 'Sega Game Gear',
@@ -68,17 +72,22 @@ class PlatformNames {
 
     // Neo Geo
     'neogeo': 'Neo Geo',
+    'neogeocs': 'Neo Geo CD',
     'ngp': 'Neo Geo Pocket',
     'ngpc': 'Neo Geo Pocket Color',
 
     // Classic Computers
     'amiga': 'Commodore Amiga',
+    'amiga600': 'Commodore Amiga 600',
+    'amiga1200': 'Commodore Amiga 1200',
     'c64': 'Commodore 64',
     'c128': 'Commodore 128',
     'vic20': 'Commodore VIC-20',
+    'cdtv': 'Commodore CDTV',
     'zxspectrum': 'ZX Spectrum',
     'spectrum': 'ZX Spectrum',
     'msx': 'MSX',
+    'msx1': 'MSX',
     'msx2': 'MSX2',
     'amstradcpc': 'Amstrad CPC',
     'cpc': 'Amstrad CPC',
@@ -92,7 +101,13 @@ class PlatformNames {
     'fba': 'FinalBurn Alpha',
     'fbneo': 'FinalBurn Neo',
     'naomi': 'Sega Naomi',
+    'naomi2': 'Sega Naomi 2',
+    'naomig': 'Sega Naomi GD-ROM',
     'atomiswave': 'Sammy Atomiswave',
+    'cps': 'Capcom Play System',
+    'cps1': 'Capcom Play System',
+    'cps2': 'Capcom Play System 2',
+    'cps3': 'Capcom Play System 3',
 
     // Other Consoles
     '3do': '3DO Interactive Multiplayer',
@@ -114,10 +129,12 @@ class PlatformNames {
     'odyssey2': 'Magnavox Odyssey 2',
     'virtualboy': 'Virtual Boy',
     'vb': 'Virtual Boy',
+    'fmtows': 'FM Towns Marty',
 
     // Mobile/Modern
     'android': 'Android',
     'ios': 'iOS',
+    'ngage': 'N-GAGE',
 
     // PC
     'pc': 'PC',

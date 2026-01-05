@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import '../models/rom.dart';
@@ -7,13 +8,23 @@ import 'debug_service.dart';
 class DownloadService {
   final String romsBasePath;
   final _debug = DebugService.instance;
+  bool _isCancelled = false;
 
   DownloadService({required this.romsBasePath});
+
+  /// Cancel the current download
+  void cancelDownload() {
+    _isCancelled = true;
+    _debug.info('Download cancellation requested', tag: 'DownloadService');
+  }
 
   Future<String?> downloadRom(
     Rom rom, {
     Function(double progress, int received, int total)? onProgress,
   }) async {
+    // Reset cancellation flag
+    _isCancelled = false;
+
     try {
       if (rom.downloadUrl == null || rom.downloadUrl!.isEmpty) {
         _debug.warning(
@@ -70,14 +81,34 @@ class DownloadService {
       final file = File(filePath);
       final sink = file.openWrite();
 
-      await for (var chunk in response.stream) {
-        sink.add(chunk);
-        receivedBytes += chunk.length;
+      try {
+        await for (var chunk in response.stream) {
+          // Check if download was cancelled
+          if (_isCancelled) {
+            _debug.info('Download cancelled by user', tag: 'DownloadService');
+            await sink.close();
+            // Delete partial file
+            if (await file.exists()) {
+              await file.delete();
+            }
+            return null;
+          }
 
-        if (totalBytes > 0 && onProgress != null) {
-          final progress = receivedBytes / totalBytes;
-          onProgress(progress, receivedBytes, totalBytes);
+          sink.add(chunk);
+          receivedBytes += chunk.length;
+
+          if (totalBytes > 0 && onProgress != null) {
+            final progress = receivedBytes / totalBytes;
+            onProgress(progress, receivedBytes, totalBytes);
+          }
         }
+      } catch (e) {
+        await sink.close();
+        // Delete partial file on error
+        if (await file.exists()) {
+          await file.delete();
+        }
+        rethrow;
       }
 
       await sink.close();

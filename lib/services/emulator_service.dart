@@ -302,4 +302,9 @@ class EmulatorService {
   Future<void> reloadConfig() async {
     await _loadConfig(forceReload: true);
   }
+
+  /// Cancel the current download
+  void cancelDownload() {
+    downloadService.cancelDownload();
+  }
 }
