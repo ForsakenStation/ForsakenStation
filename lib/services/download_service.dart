@@ -2,19 +2,36 @@ import 'dart:io';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/rom.dart';
 import 'debug_service.dart';
 import 'download_resolver_service.dart';
 import 'rom_storage_service.dart';
 
 class DownloadService {
+  static DownloadService? _instance;
+
   final String romsBasePath; // Legacy field, kept for compatibility
   final _debug = DebugService.instance;
   final _resolver = DownloadResolverService();
   final _storage = RomStorageService.instance;
   bool _isCancelled = false;
 
-  DownloadService({required this.romsBasePath});
+  DownloadService._({required this.romsBasePath});
+
+  /// Get the singleton instance
+  static DownloadService get instance {
+    if (_instance == null) {
+      final romsPath = dotenv.env['ROMS_PATH'] ?? '';
+      _instance = DownloadService._(romsBasePath: romsPath);
+    }
+    return _instance!;
+  }
+
+  /// Initialize the service with custom path (for testing)
+  static void initialize({required String romsBasePath}) {
+    _instance = DownloadService._(romsBasePath: romsBasePath);
+  }
 
   /// Cancel the current download
   void cancelDownload() {

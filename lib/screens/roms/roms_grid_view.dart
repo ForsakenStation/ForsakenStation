@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
 import '../../widgets/roms/folder_widget.dart';
+import '../../widgets/roms/rom_card.dart';
 
 class RomsGridView extends StatelessWidget {
   final List<RomItem> items;
@@ -79,91 +79,15 @@ class RomsGridView extends StatelessWidget {
     RomItem? selectedRom = items[selectedIndex];
 
     final media = mediaCache[item.name];
-    final imagePath = media != null
-        ? mediaService.getBestImagePath(media)
-        : null;
     final isSelected = selectedRom == item;
 
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: isSelected ? 8 : 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: isSelected
-            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
-            : BorderSide.none,
-      ),
-      child: InkWell(
-        onTap: () => onItemTap(index, item),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: imagePath != null
-                      ? Image.file(
-                          File(imagePath),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildPlaceholderImage(context, null);
-                          },
-                        )
-                      : _buildPlaceholderImage(context, null),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    item.displayName,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            // Download indicator badge
-            if (item.downloadUrl != null &&
-                item.downloadUrl!.isNotEmpty &&
-                isRomDownloaded != null)
-              FutureBuilder<bool>(
-                future: isRomDownloaded!(item),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data == true) {
-                    return Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.cloud_done,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-          ],
-        ),
-      ),
+    return RomCard(
+      item: item,
+      isSelected: isSelected,
+      onTap: () => onItemTap(index, item),
+      media: media,
+      mediaService: mediaService,
+      isRomDownloaded: isRomDownloaded,
     );
   }
 
@@ -198,19 +122,6 @@ class RomsGridView extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildPlaceholderImage(BuildContext context, double? size) {
-    return Container(
-      width: size,
-      height: size,
-      color: Colors.grey[300],
-      child: Icon(
-        Icons.videogame_asset,
-        size: size != null ? size * 0.5 : 48,
-        color: Colors.grey[600],
       ),
     );
   }

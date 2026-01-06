@@ -22,6 +22,7 @@ class RomsListView extends StatelessWidget {
   final Function(RomItem) showRomDetailDialog;
   final Future<void> Function(RomItem item) loadGameInfoForItem;
   final Map<String, GameInfo> gameInfoCache;
+  final Future<bool> Function(RomItem)? isRomDownloaded;
 
   const RomsListView({
     super.key,
@@ -38,6 +39,7 @@ class RomsListView extends StatelessWidget {
     required this.showRomDetailDialog,
     required this.loadGameInfoForItem,
     required this.gameInfoCache,
+    this.isRomDownloaded,
   });
 
   @override
@@ -116,17 +118,53 @@ class RomsListView extends StatelessWidget {
           ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
           : null,
       child: ListTile(
-        leading: item.isFolder
-            ? FolderWidget(width: 60, height: 60, iconSize: 60, borderRadius: 4)
-            : _buildThumbnail(context, imagePath),
+        leading: Stack(
+          children: [
+            item.isFolder
+                ? FolderWidget(
+                    width: 60,
+                    height: 60,
+                    iconSize: 60,
+                    borderRadius: 4,
+                  )
+                : _buildThumbnail(context, imagePath),
+            // Download badge
+            if (!item.isFolder &&
+                item.downloadUrl != null &&
+                item.downloadUrl!.isNotEmpty &&
+                isRomDownloaded != null)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: FutureBuilder<bool>(
+                  future: isRomDownloaded!(item),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data == true) {
+                      return Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.cloud_done,
+                          color: Colors.white,
+                          size: 14,
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+          ],
+        ),
         title: Text(
           item.displayName,
           style: const TextStyle(fontWeight: FontWeight.w500),
         ),
         trailing: Icon(
-          item.isFolder
-              ? Icons.chevron_right
-              : Icons.play_arrow,
+          item.isFolder ? Icons.chevron_right : Icons.play_arrow,
           color: Colors.grey[600],
         ),
         onTap: () =>

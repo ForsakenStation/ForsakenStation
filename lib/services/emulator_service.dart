@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
 import '../models/emulator_config.dart';
@@ -8,6 +9,8 @@ import 'debug_service.dart';
 import 'config_service.dart';
 
 class EmulatorService {
+  static EmulatorService? _instance;
+
   final String emulatorsBasePath;
   final DownloadService downloadService;
   final _debug = DebugService.instance;
@@ -16,10 +19,34 @@ class EmulatorService {
   EmulatorsConfig? _config;
   DateTime? _configLoadTime;
 
-  EmulatorService({
+  EmulatorService._({
     required this.emulatorsBasePath,
     required this.downloadService,
   });
+
+  /// Get the singleton instance
+  static EmulatorService get instance {
+    if (_instance == null) {
+      final emulatorsPath = dotenv.env['EMULATORS_PATH'] ?? '';
+
+      _instance = EmulatorService._(
+        emulatorsBasePath: emulatorsPath,
+        downloadService: DownloadService.instance,
+      );
+    }
+    return _instance!;
+  }
+
+  /// Initialize the service with custom paths (for testing or custom config)
+  static void initialize({
+    required String emulatorsBasePath,
+    required DownloadService downloadService,
+  }) {
+    _instance = EmulatorService._(
+      emulatorsBasePath: emulatorsBasePath,
+      downloadService: downloadService,
+    );
+  }
 
   /// Load the main emulators configuration file
   Future<EmulatorsConfig?> _loadConfig({bool forceReload = false}) async {

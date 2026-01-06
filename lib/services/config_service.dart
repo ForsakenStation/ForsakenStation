@@ -62,7 +62,14 @@ class ConfigService {
   /// Priority:
   /// 1. shared_preferences (user overrides) - if exists
   /// 2. assets/config.json (bundled default)
-  Future<Map<String, dynamic>> loadConfig() async {
+  ///
+  /// Set forceReload to true to bypass cache and reload from source
+  Future<Map<String, dynamic>> loadConfig({bool forceReload = false}) async {
+    // Return cached config if available and not forcing reload
+    if (!forceReload && _config != null) {
+      return _config!;
+    }
+
     try {
       // Try to load from shared_preferences first (user overrides)
       final prefs = await SharedPreferences.getInstance();
@@ -88,6 +95,17 @@ class ConfigService {
       _hasLocalOverrides = false;
       return _config!;
     }
+  }
+
+  /// Force reload configuration from source
+  ///
+  /// Clears cache and reloads from shared_preferences or assets
+  /// Useful when config file has been modified externally
+  Future<void> reloadConfig() async {
+    debugPrint('Force reloading config from source');
+    _config = null;
+    await loadConfig(forceReload: true);
+    debugPrint('Config reloaded successfully');
   }
 
   /// Save configuration to shared_preferences

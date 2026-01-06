@@ -61,11 +61,23 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
   Future<void> _loadEmulators() async {
     setState(() => _isLoading = true);
     try {
+      // Force reload config from source (assets or shared_preferences)
+      await _configService.reloadConfig();
+
       final emulators = await _configService.getEmulators();
       setState(() {
         _emulators = emulators;
         _isLoading = false;
       });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Configuration reloaded'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {

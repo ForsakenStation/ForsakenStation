@@ -90,16 +90,11 @@ class _RomsScreenState extends State<RomsScreen> {
     _currentPath = widget.platform.path;
     _currentSubdirectory = null; // Start at root for JSONL platforms
     final mediaPath = dotenv.env['MEDIA_PATH'] ?? '';
-    final romsPath = dotenv.env['ROMS_PATH'] ?? '';
-    final emulatorsPath = dotenv.env['EMULATORS_PATH'] ?? '';
     final gamelistPath = dotenv.env['GAMELIST_PATH'] ?? '';
 
     _mediaService = MediaService(mediaBasePath: mediaPath);
-    _downloadService = DownloadService(romsBasePath: romsPath);
-    _emulatorService = EmulatorService(
-      emulatorsBasePath: emulatorsPath,
-      downloadService: _downloadService,
-    );
+    _downloadService = DownloadService.instance;
+    _emulatorService = EmulatorService.instance;
     _gamelistService = GamelistService(gamelistBasePath: gamelistPath);
     _keyboardService = KeyboardService.instance;
     _carouselController = ScrollController();
@@ -145,8 +140,8 @@ class _RomsScreenState extends State<RomsScreen> {
     if (widget.platform.isJsonlPlatform) {
       // Load ROMs from JSONL file if not already loaded
       _platformRoms ??= await widget.romService.loadRomsForJsonlPlatform(
-          widget.platform.name,
-        );
+        widget.platform.name,
+      );
 
       // Convert ROMs to RomItems based on current subdirectory
       items = await widget.romService.loadItemsFromRoms(
@@ -831,6 +826,7 @@ class _RomsScreenState extends State<RomsScreen> {
       showRomDetailDialog: _showRomDetailDialog,
       loadGameInfoForItem: _loadGameInfoForItem,
       gameInfoCache: _gameInfoCache,
+      isRomDownloaded: _isRomDownloaded,
     );
   }
 
@@ -885,6 +881,7 @@ class _RomsScreenState extends State<RomsScreen> {
       showNavigationHint: _showNavigationHint,
       loadGameInfoForItem: _loadGameInfoForItem,
       gameInfoCache: _gameInfoCache,
+      isRomDownloaded: _isRomDownloaded,
     );
   }
 
@@ -1165,7 +1162,7 @@ class _RomsScreenState extends State<RomsScreen> {
                     const SnackBar(
                       content: Text('Download cancelled'),
                       backgroundColor: Colors.orange,
-                      duration: Duration(seconds: 2),
+                      duration: Duration(seconds: 5),
                     ),
                   );
                 }

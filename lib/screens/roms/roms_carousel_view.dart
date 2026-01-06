@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:forsaken/models/game_info.dart';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
@@ -8,6 +7,7 @@ import '../../widgets/common/placeholder_image.dart';
 import '../../widgets/roms/media_carousel.dart';
 import '../../widgets/roms/folder_widget.dart';
 import '../../widgets/roms/rom_detail_panel.dart';
+import '../../widgets/roms/rom_card.dart';
 
 class RomsCarouselView extends StatelessWidget {
   final List<RomItem> items;
@@ -24,6 +24,7 @@ class RomsCarouselView extends StatelessWidget {
   final bool showNavigationHint;
   final Future<void> Function(RomItem item) loadGameInfoForItem;
   final Map<String, GameInfo> gameInfoCache;
+  final Future<bool> Function(RomItem)? isRomDownloaded;
 
   const RomsCarouselView({
     super.key,
@@ -41,6 +42,7 @@ class RomsCarouselView extends StatelessWidget {
     required this.showNavigationHint,
     required this.loadGameInfoForItem,
     required this.gameInfoCache,
+    this.isRomDownloaded,
   });
 
   @override
@@ -244,60 +246,18 @@ class RomsCarouselView extends StatelessWidget {
     }
 
     final media = mediaCache[item.name];
-    final imagePath = media != null
-        ? mediaService.getBestImagePath(media)
-        : null;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-      child: SizedBox(
+      child: RomCard(
+        item: item,
+        isSelected: isSelected,
+        onTap: () => onCardTap(index),
+        media: media,
+        mediaService: mediaService,
+        isRomDownloaded: isRomDownloaded,
         width: cardWidth,
         height: cardHeight,
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          elevation: isSelected ? 8 : 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: isSelected
-                ? BorderSide(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 3,
-                  )
-                : BorderSide.none,
-          ),
-          child: InkWell(
-            onTap: () => onCardTap(index),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: imagePath != null
-                      ? Image.file(
-                          File(imagePath),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return PlaceholderImage(size: null);
-                          },
-                        )
-                      : PlaceholderImage(size: null),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    item.displayName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

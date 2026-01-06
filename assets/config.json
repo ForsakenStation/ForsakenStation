@@ -4,7 +4,7 @@
         {
             "system": "3do",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/opera_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/opera_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -13,7 +13,7 @@
         {
             "system": "3ds",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/citra_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/citra_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -22,7 +22,7 @@
         {
             "system": "adam",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/gearcoleco_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/gearcoleco_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -31,7 +31,7 @@
         {
             "system": "advision",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "todo": true,
@@ -41,8 +41,8 @@
         {
             "system": "amiga",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -51,8 +51,8 @@
         {
             "system": "amiga1200",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -61,8 +61,8 @@
         {
             "system": "amiga500",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -71,8 +71,8 @@
         {
             "system": "amigacd32",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -81,8 +81,8 @@
         {
             "system": "amigacdtv",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -91,7 +91,7 @@
         {
             "system": "amstradcpc",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/cap32_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/cap32_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -100,7 +100,7 @@
         {
             "system": "apfm1000",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -110,7 +110,7 @@
         {
             "system": "apple2",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/applewin_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/applewin_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -120,10 +120,10 @@
         {
             "system": "arcade",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2010_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2003_plus_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2010_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2003_plus_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -132,7 +132,7 @@
         {
             "system": "arcadia",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -142,7 +142,7 @@
         {
             "system": "arduboy",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/arduous_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/arduous_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -151,7 +151,7 @@
         {
             "system": "astrocde",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -161,8 +161,8 @@
         {
             "system": "atari2600",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/stella2023_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/stella_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/stella2023_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/stella_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -171,7 +171,7 @@
         {
             "system": "atari5200",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/a5200_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/a5200_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -180,8 +180,8 @@
         {
             "system": "atari7800",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/prosystem_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/stella_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/prosystem_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/stella_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -190,7 +190,7 @@
         {
             "system": "atari800",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/atari800_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/atari800_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -199,7 +199,7 @@
         {
             "system": "atarijaguar",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/virtualjaguar_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/virtualjaguar_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -218,7 +218,7 @@
         {
             "system": "atarilynx",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/handy_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/handy_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -227,7 +227,7 @@
         {
             "system": "atarist",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/hatari_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/hatari_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -236,7 +236,7 @@
         {
             "system": "atarixe",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/atari800_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/atari800_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -245,7 +245,7 @@
         {
             "system": "atomiswave",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -254,7 +254,7 @@
         {
             "system": "bbcmicro",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/beebem_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/beebem_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -263,7 +263,7 @@
         {
             "system": "c20",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/vice_xvic_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/vice_xvic_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -272,7 +272,7 @@
         {
             "system": "c64",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/vice_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/vice_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -281,17 +281,21 @@
         {
             "system": "casloopy",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
             "system": "cave",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbalpha_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbalpha2012_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2003_plus_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2016_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -300,7 +304,7 @@
         {
             "system": "cdi",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/same_cdi_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/same_cdi_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -309,7 +313,7 @@
         {
             "system": "cdimono",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/same_cdi_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/same_cdi_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": null,
@@ -318,7 +322,7 @@
         {
             "system": "cdimono1",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/cdimono1_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/cdimono1_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -327,7 +331,7 @@
         {
             "system": "cdtv",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -336,7 +340,7 @@
         {
             "system": "channelf",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/freechannelf_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/freechannelf_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -345,7 +349,7 @@
         {
             "system": "colecovision",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/gearcoleco_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/gearcoleco_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -354,7 +358,7 @@
         {
             "system": "cplus4",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/vice_xplus4_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/vice_xplus4_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -363,7 +367,7 @@
         {
             "system": "cps",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -372,7 +376,7 @@
         {
             "system": "cps1",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -381,7 +385,7 @@
         {
             "system": "cps2",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -390,7 +394,7 @@
         {
             "system": "cps3",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -399,7 +403,7 @@
         {
             "system": "crvision",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -409,7 +413,7 @@
         {
             "system": "dos",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/dosbox_pure_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/dosbox_pure_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -418,7 +422,7 @@
         {
             "system": "dreamcast",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -427,7 +431,7 @@
         {
             "system": "dsi",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/melondsds_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/melondsds_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -436,7 +440,7 @@
         {
             "system": "easyrpg",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/easyrpg_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/easyrpg_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -445,7 +449,7 @@
         {
             "system": "fbneo",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -454,9 +458,9 @@
         {
             "system": "fds",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/nestopia_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fceumm_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mesen_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/nestopia_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fceumm_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mesen_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -465,7 +469,7 @@
         {
             "system": "flash",
             "command": [
-                "../ruffle.AppImage"
+                "ruffle.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -474,7 +478,7 @@
         {
             "system": "fm7",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -504,7 +508,7 @@
         {
             "system": "gamate",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -513,7 +517,7 @@
         {
             "system": "gameandwatch",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/gw_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/gw_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -522,8 +526,8 @@
         {
             "system": "gamecube",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
-                "../dolphin.AppImage -e"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
+                "dolphin.AppImage -e"
             ],
             "useForeverMode": false,
             "acceptZipFiles": false,
@@ -532,9 +536,9 @@
         {
             "system": "gamegear",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/picodrive_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/smsplus_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/picodrive_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/smsplus_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -543,7 +547,7 @@
         {
             "system": "gamepock",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -553,10 +557,10 @@
         {
             "system": "gb",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/gambatte_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/sameboy_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/gearboy_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mgba_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/gambatte_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/sameboy_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/gearboy_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mgba_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -565,10 +569,10 @@
         {
             "system": "gba",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mgba_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/vba_next_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/vbam_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/gpsp_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mgba_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/vba_next_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/vbam_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/gpsp_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -577,10 +581,10 @@
         {
             "system": "gbc",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/gambatte_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/sameboy_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/gearboy_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mgba_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/gambatte_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/sameboy_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/gearboy_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mgba_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -589,8 +593,8 @@
         {
             "system": "gc",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
-                "../dolphin.AppImage -e"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
+                "dolphin.AppImage -e"
             ],
             "useForeverMode": false,
             "acceptZipFiles": false,
@@ -599,7 +603,7 @@
         {
             "system": "gmaster",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -608,7 +612,7 @@
         {
             "system": "gp32",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -618,7 +622,7 @@
         {
             "system": "gx4000",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/cap32_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/cap32_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -627,7 +631,7 @@
         {
             "system": "intellivision",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/freeintv_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/freeintv_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -636,7 +640,7 @@
         {
             "system": "jaguar",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/virtualjaguar_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/virtualjaguar_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -645,7 +649,7 @@
         {
             "system": "jaguarcd",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/virtualjaguar-libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/virtualjaguar-libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -654,7 +658,7 @@
         {
             "system": "lowresnx",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/lowresnx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/lowresnx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -663,7 +667,7 @@
         {
             "system": "lutro",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/lutro_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/lutro_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -672,7 +676,7 @@
         {
             "system": "lynx",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/handy_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/handy_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -681,10 +685,10 @@
         {
             "system": "mame",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2010_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2003_plus_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2010_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame2003_plus_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -693,9 +697,9 @@
         {
             "system": "mastersystem",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/picodrive_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/picodrive_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -704,7 +708,7 @@
         {
             "system": "megacd",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -713,9 +717,9 @@
         {
             "system": "megadrive",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/picodrive_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/blastem_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/picodrive_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/blastem_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -724,7 +728,7 @@
         {
             "system": "megadrive-msu",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -733,7 +737,7 @@
         {
             "system": "megaduck",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/sameboy_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/sameboy_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -762,7 +766,7 @@
         {
             "system": "mplayer",
             "command": [
-                "../vlc.AppImage"
+                "vlc.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -771,7 +775,7 @@
         {
             "system": "msx",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/bluemsx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/bluemsx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -780,7 +784,7 @@
         {
             "system": "msx1",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/bluemsx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/bluemsx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -789,7 +793,7 @@
         {
             "system": "msx2",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/bluemsx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/bluemsx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -798,7 +802,7 @@
         {
             "system": "multivision",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -808,7 +812,7 @@
         {
             "system": "n3ds",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/citra_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/citra_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -817,8 +821,8 @@
         {
             "system": "n64",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mupen64plus_next_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/parallel_n64_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mupen64plus_next_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/parallel_n64_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -827,7 +831,7 @@
         {
             "system": "n64dd",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mupen64plus_next_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mupen64plus_next_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -836,7 +840,7 @@
         {
             "system": "naomi",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -845,7 +849,7 @@
         {
             "system": "naomi2",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -854,7 +858,7 @@
         {
             "system": "naomigd",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/flycast_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -863,7 +867,7 @@
         {
             "system": "nds",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/melondsds_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/melondsds_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -872,8 +876,8 @@
         {
             "system": "neogeo",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -882,7 +886,7 @@
         {
             "system": "neogeo64",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -892,7 +896,7 @@
         {
             "system": "neogeocd",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/neocd_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/neocd_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -901,10 +905,10 @@
         {
             "system": "nes",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/nestopia_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fceumm_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mesen_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/quicknes_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/nestopia_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fceumm_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mesen_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/quicknes_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -913,7 +917,7 @@
         {
             "system": "ngage",
             "command": [
-                "../eka2l1.AppImage"
+                "eka2l1.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -922,7 +926,7 @@
         {
             "system": "ngp",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_ngp_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_ngp_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -931,7 +935,7 @@
         {
             "system": "ngpc",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_ngp_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_ngp_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -940,7 +944,7 @@
         {
             "system": "odyssey2",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/o2em_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/o2em_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -949,7 +953,7 @@
         {
             "system": "openbor",
             "command": [
-                "../openbor.AppImage"
+                "openbor.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -958,7 +962,7 @@
         {
             "system": "oricatmos",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -968,7 +972,7 @@
         {
             "system": "pc88",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/quasi88_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/quasi88_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -977,7 +981,7 @@
         {
             "system": "pc98",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/np2kai_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/np2kai_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -986,8 +990,8 @@
         {
             "system": "pcengine",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_pce_fast_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_supergrafx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_pce_fast_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_supergrafx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -996,7 +1000,7 @@
         {
             "system": "pcenginecd",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_pce_fast_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_pce_fast_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1005,7 +1009,7 @@
         {
             "system": "pet",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/vice_xpet_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/vice_xpet_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1014,7 +1018,7 @@
         {
             "system": "pico8",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/retro8_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/retro8_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1033,7 +1037,7 @@
         {
             "system": "pokemini",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/pokemini_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/pokemini_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1042,8 +1046,8 @@
         {
             "system": "ps2",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/pcsx2_libretro.so",
-                "../pcsx2-qt.AppImage"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/pcsx2_libretro.so",
+                "pcsx2-qt.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1052,7 +1056,7 @@
         {
             "system": "ps3",
             "command": [
-                "../rpcs3.AppImage"
+                "rpcs3.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1061,7 +1065,7 @@
         {
             "system": "ps4",
             "command": [
-                "../shadps4.AppImage -f -g"
+                "shadps4.AppImage -f -g"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1070,7 +1074,7 @@
         {
             "system": "psp",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/ppsspp_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/ppsspp_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1079,7 +1083,7 @@
         {
             "system": "psvita",
             "command": [
-                "../vita3k.AppImage"
+                "vita3k.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1088,10 +1092,10 @@
         {
             "system": "psx",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_psx_hw_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/pcsx_rearmed_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/duckstation_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/swanstation_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_psx_hw_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/pcsx_rearmed_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/duckstation_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/swanstation_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1100,7 +1104,7 @@
         {
             "system": "pv1000",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1110,7 +1114,7 @@
         {
             "system": "revistas",
             "command": [
-                "../pdf.AppImage"
+                "pdf.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": false,
@@ -1119,7 +1123,7 @@
         {
             "system": "samcoupe",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1129,7 +1133,7 @@
         {
             "system": "satellaview",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1138,7 +1142,7 @@
         {
             "system": "saturn",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_saturn_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_saturn_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1147,7 +1151,7 @@
         {
             "system": "scummvm",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/scummvm_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/scummvm_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1156,7 +1160,7 @@
         {
             "system": "scv",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1166,7 +1170,7 @@
         {
             "system": "sega32x",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/picodrive_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/picodrive_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1175,7 +1179,7 @@
         {
             "system": "segacd",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1184,7 +1188,7 @@
         {
             "system": "segastv",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/kronos_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/kronos_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1193,10 +1197,10 @@
         {
             "system": "snes",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/bsnes_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mesen-s_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_2010_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/bsnes_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mesen-s_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_2010_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1205,8 +1209,8 @@
         {
             "system": "snes-msu1",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_libretro.so",
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/bsnes_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_libretro.so",
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/bsnes_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1215,7 +1219,7 @@
         {
             "system": "spectravideo",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/bluemsx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/bluemsx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1224,7 +1228,7 @@
         {
             "system": "stv",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/kronos_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/kronos_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1233,7 +1237,7 @@
         {
             "system": "sufami",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/snes9x_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1242,7 +1246,7 @@
         {
             "system": "supervision",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/potator_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/potator_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1251,8 +1255,8 @@
         {
             "system": "switch",
             "command": [
-                "../ryujinx.AppImage",
-                "../citron.AppImage"
+                "ryujinx.AppImage",
+                "citron.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1271,8 +1275,8 @@
         {
             "system": "triforce",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
-                "../dolphin.AppImage -e"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
+                "dolphin.AppImage -e"
             ],
             "useForeverMode": false,
             "acceptZipFiles": false,
@@ -1281,7 +1285,7 @@
         {
             "system": "uzebox",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/uzem_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/uzem_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1290,7 +1294,7 @@
         {
             "system": "vc4000",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1300,7 +1304,7 @@
         {
             "system": "vectrex",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/vecx_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/vecx_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1309,7 +1313,7 @@
         {
             "system": "videopac",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/o2em_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/o2em_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1318,7 +1322,7 @@
         {
             "system": "vircon32",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/vircon32_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/vircon32_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1327,7 +1331,7 @@
         {
             "system": "virtualboy",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_vb_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_vb_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1336,7 +1340,7 @@
         {
             "system": "vsmile",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1346,7 +1350,7 @@
         {
             "system": "wasm4",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/wasm4_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/wasm4_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1355,8 +1359,8 @@
         {
             "system": "wii",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
-                "../dolphin.AppImage -e"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
+                "dolphin.AppImage -e"
             ],
             "useForeverMode": false,
             "acceptZipFiles": false,
@@ -1365,7 +1369,7 @@
         {
             "system": "wiiu",
             "command": [
-                "../cemu.AppImage -g"
+                "cemu.AppImage -g"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1374,8 +1378,8 @@
         {
             "system": "wiiware",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
-                "../dolphin.AppImage -e"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/dolphin_libretro.so",
+                "dolphin.AppImage -e"
             ],
             "useForeverMode": false,
             "acceptZipFiles": false,
@@ -1384,7 +1388,7 @@
         {
             "system": "windows",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1394,7 +1398,7 @@
         {
             "system": "wonderswan",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1403,7 +1407,7 @@
         {
             "system": "wonderswanc",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1412,7 +1416,7 @@
         {
             "system": "wonderswancolor",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1421,7 +1425,7 @@
         {
             "system": "wswan",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1430,7 +1434,7 @@
         {
             "system": "wswanc",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1439,7 +1443,7 @@
         {
             "system": "x68000",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/px68k_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/px68k_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1448,7 +1452,7 @@
         {
             "system": "xbox",
             "command": [
-                "../xemu.AppImage"
+                "xemu.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1457,7 +1461,7 @@
         {
             "system": "xbox360",
             "command": [
-                "../xenia.AppImage"
+                "xenia.AppImage"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1466,7 +1470,7 @@
         {
             "system": "xegs",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/atari800_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/atari800_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1475,7 +1479,7 @@
         {
             "system": "zmachine",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/mojozork_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/mojozork_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1484,7 +1488,7 @@
         {
             "system": "zx81",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/81_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/81_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
@@ -1493,7 +1497,7 @@
         {
             "system": "zxspectrum",
             "command": [
-                "../retroarch.AppImage -f -L ~/.config/retroarch/cores/fuse_libretro.so"
+                "retroarch.AppImage -f -L ~/.config/retroarch/cores/fuse_libretro.so"
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
