@@ -461,7 +461,6 @@ class MediaService {
   /// Get system background image from assets
   /// Returns asset path to background or default.jpg if platform background not found
   Future<String> getSystemBackground(String platformName) async {
-    // Try to find platform-specific background
     final backgroundPath = 'assets/theme/images/backgrounds/$platformName.jpg';
     final backgroundFile = File(backgroundPath);
 

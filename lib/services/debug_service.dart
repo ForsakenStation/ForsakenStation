@@ -31,9 +31,17 @@ class DebugService {
     );
   }
 
+  /// Check if debug logging is currently enabled
+  bool get isDebugEnabled => _isEnabled;
+
   /// Enable or disable all logging
   void setEnabled(bool enabled) {
     _isEnabled = enabled;
+  }
+
+  /// Toggle debug logging on/off
+  void toggleDebug() {
+    _isEnabled = !_isEnabled;
   }
 
   /// Set the minimum log level to display

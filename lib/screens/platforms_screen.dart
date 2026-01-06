@@ -14,6 +14,7 @@ import '../widgets/platforms/platform_card.dart';
 import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
 import 'roms_screen.dart';
+import 'settings_screen.dart';
 
 enum ViewMode { grid, carousel }
 
@@ -384,7 +385,11 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
             child: Container(color: Colors.black.withValues(alpha: 0.2)),
           ),
         ),
-        title: Image.file(File('assets/images/icon.png'), width: 24, height: 24),
+        title: Image.file(
+          File('assets/images/icon.png'),
+          width: 24,
+          height: 24,
+        ),
         actions: [
           const ThemeSelector(),
           IconButton(
@@ -400,6 +405,16 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
             icon: const Icon(Icons.refresh),
             onPressed: _loadPlatforms,
             tooltip: 'Refresh',
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
+            tooltip: 'Settings',
           ),
         ],
       ),

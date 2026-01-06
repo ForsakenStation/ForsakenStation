@@ -7,6 +7,7 @@ import 'package:media_kit/media_kit.dart';
 import 'screens/platforms_screen.dart';
 import 'services/rom_service.dart';
 import 'services/debug_service.dart';
+import 'services/config_service.dart';
 import 'providers/theme_provider.dart';
 import 'utils/app_theme.dart';
 
@@ -42,6 +43,9 @@ Future<void> main() async {
   }
 
   _initializeDebugService();
+
+  // Initialize ConfigService
+  await ConfigService.instance.initialize();
 
   runApp(const EmulatorApp());
 }
