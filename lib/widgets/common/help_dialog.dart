@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Help dialog that shows keyboard shortcuts for the application
+/// Help dialog that shows keyboard and gamepad controls for the application
 /// Can be configured for different screens (Platforms or ROMs)
 class HelpDialog extends StatelessWidget {
   final bool showSearchShortcut;
@@ -30,7 +30,7 @@ class HelpDialog extends StatelessWidget {
                   const Icon(Icons.help_outline, color: Colors.white, size: 28),
                   const SizedBox(width: 12),
                   const Text(
-                    'Keyboard Shortcuts',
+                    'Keyboard & Gamepad Controls',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -55,9 +55,14 @@ class HelpDialog extends StatelessWidget {
                   children: [
                     _buildSection(context, 'Navigation', Icons.navigation, [
                       _ShortcutItem('Arrow Keys', 'Navigate through items'),
+                      _ShortcutItem('D-Pad / Left Stick', 'Gamepad navigation'),
                       _ShortcutItem(
                         'Page Up / Page Down',
                         'Quick navigation (jump multiple items)',
+                      ),
+                      _ShortcutItem(
+                        'LB / RB Buttons',
+                        'Gamepad page navigation',
                       ),
                       _ShortcutItem('Home', 'Go to first item'),
                       _ShortcutItem('End', 'Go to last item'),
@@ -69,12 +74,14 @@ class HelpDialog extends StatelessWidget {
                     const SizedBox(height: 24),
                     _buildSection(context, 'Actions', Icons.touch_app, [
                       _ShortcutItem('Enter / Space', 'Select item'),
+                      _ShortcutItem('A Button / Start', 'Gamepad select'),
                       _ShortcutItem(
                         'Escape',
                         showSearchShortcut
                             ? 'Go back / Close dialogs'
                             : 'Exit application',
                       ),
+                      _ShortcutItem('B Button / Select', 'Gamepad back'),
                     ]),
                     const SizedBox(height: 24),
                     _buildSection(context, 'View Controls', Icons.view_module, [
@@ -82,9 +89,12 @@ class HelpDialog extends StatelessWidget {
                         'V',
                         'Toggle view mode (Grid/List/Carousel)',
                       ),
+                      _ShortcutItem('Y Button', 'Gamepad view toggle'),
                       _ShortcutItem('R', 'Refresh current view'),
                       if (showSearchShortcut)
                         _ShortcutItem('S', 'Activate search'),
+                      if (showSearchShortcut)
+                        _ShortcutItem('X Button', 'Gamepad search'),
                     ]),
                     const SizedBox(height: 24),
                     _buildSection(context, 'Help', Icons.info_outline, [
@@ -95,7 +105,9 @@ class HelpDialog extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                        color: Theme.of(
+                          context,
+                        ).primaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: Theme.of(
@@ -125,11 +137,14 @@ class HelpDialog extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 12),
-                          _buildTip('Use keyboard for faster navigation'),
+                          _buildTip('Use keyboard or gamepad for navigation'),
                           _buildTip(
                             'Alphabetical jump works in all view modes',
                           ),
                           _buildTip('Press ? anytime to see this help'),
+                          _buildTip(
+                            'Gamepad works alongside keyboard controls',
+                          ),
                         ],
                       ),
                     ),

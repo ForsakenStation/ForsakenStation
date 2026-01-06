@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  gamepads_windows
   media_kit_video
   screen_retriever_windows
   window_manager

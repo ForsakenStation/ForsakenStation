@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import '../models/platform.dart';
 import '../services/rom_service.dart';
 import '../services/media_service.dart';
 import '../services/keyboard_service.dart';
+import '../services/gamepad_service.dart';
 import '../utils/platform_icons.dart';
 import '../widgets/platforms/platform_card.dart';
 import '../widgets/common/theme_selector.dart';
@@ -33,6 +35,8 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
   String? _errorMessage;
   late MediaService _mediaService;
   late KeyboardService _keyboardService;
+  late GamepadService _gamepadService;
+  Timer? _gamepadPollTimer;
   final Map<String, String?> _systemImagesCache = {};
   final Map<String, String?> _systemLogosCache = {};
   final Map<String, String> _systemBackgroundsCache = {};
@@ -51,20 +55,103 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     final mediaPath = dotenv.env['MEDIA_PATH'] ?? '';
     _mediaService = MediaService(mediaBasePath: mediaPath);
     _keyboardService = KeyboardService.instance;
+    _gamepadService = GamepadService.instance;
     _carouselController = PageController();
     _gridScrollController = ScrollController();
     _carouselFocusNode = FocusNode();
     _gridFocusNode = FocusNode();
     _loadPlatforms();
+    _startGamepadPolling();
   }
 
   @override
   void dispose() {
+    _gamepadPollTimer?.cancel();
     _carouselController.dispose();
     _gridScrollController.dispose();
     _carouselFocusNode.dispose();
     _gridFocusNode.dispose();
     super.dispose();
+  }
+
+  /// Start polling gamepad state periodically
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(
+      const Duration(milliseconds: 100),
+      (_) => _handleGamepadInput(),
+    );
+  }
+
+  /// Handle gamepad input
+  void _handleGamepadInput() {
+    if (!_gamepadService.isGamepadConnected) return;
+    if (_platforms.isEmpty) return;
+
+    // Handle selection (A button or Start)
+    if (_gamepadService.isSelectPressed()) {
+      _handleSelection();
+      return;
+    }
+
+    // Handle back (B button or Select)
+    if (_gamepadService.isBackPressed()) {
+      _showExitDialog();
+      return;
+    }
+
+    // Handle view toggle (Y button)
+    if (_gamepadService.isViewTogglePressed()) {
+      _toggleViewMode();
+      return;
+    }
+
+    // Handle help (X button for help)
+    if (_gamepadService.isHelpPressed()) {
+      _showHelpDialog();
+      return;
+    }
+
+    // Handle navigation
+    if (_viewMode == ViewMode.grid) {
+      _handleGamepadGridNavigation();
+    } else {
+      _handleGamepadCarouselNavigation();
+    }
+  }
+
+  /// Handle gamepad navigation in grid mode
+  void _handleGamepadGridNavigation() {
+    final columns = _calculateCrossAxisCount(context);
+    final newIndex = _gamepadService.handleGridNavigation(
+      currentIndex: _gridSelectedIndex,
+      itemCount: _platforms.length,
+      columns: columns,
+    );
+
+    if (newIndex != null) {
+      setState(() {
+        _gridSelectedIndex = newIndex;
+      });
+      _scrollToIndex(newIndex, columns);
+    }
+  }
+
+  /// Handle gamepad navigation in carousel mode
+  void _handleGamepadCarouselNavigation() {
+    final newIndex = _gamepadService.handleCarouselNavigation(
+      currentIndex: _carouselCurrentIndex,
+      itemCount: _platforms.length,
+      loop: true,
+    );
+
+    if (newIndex != null) {
+      _hideNavigationHint();
+      _carouselController.animateToPage(
+        newIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   Future<void> _loadPlatforms() async {

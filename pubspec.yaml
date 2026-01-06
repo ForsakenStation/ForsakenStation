@@ -21,11 +21,11 @@ dependencies:
   media_kit_libs_linux: ^1.2.1
   shared_preferences: ^2.5.4
   window_manager: ^0.5.1
-  # File picker (if needed)
   file_picker: ^10.3.8
   google_fonts: ^6.3.3
   xml: ^6.6.1
   archive: ^4.0.7
+  gamepads: ^0.1.9
 
 dev_dependencies:
   flutter_test:

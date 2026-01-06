@@ -6,11 +6,14 @@
 
 #include "generated_plugin_registrant.h"
 
+#include <gamepads_windows/gamepads_windows_plugin_c_api.h>
 #include <media_kit_video/media_kit_video_plugin_c_api.h>
 #include <screen_retriever_windows/screen_retriever_windows_plugin_c_api.h>
 #include <window_manager/window_manager_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
+  GamepadsWindowsPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("GamepadsWindowsPluginCApi"));
   MediaKitVideoPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("MediaKitVideoPluginCApi"));
   ScreenRetrieverWindowsPluginCApiRegisterWithRegistrar(
