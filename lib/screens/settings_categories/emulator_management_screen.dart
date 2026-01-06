@@ -186,7 +186,64 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
       autofocus: true,
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Emulator Management')),
+        appBar: AppBar(
+          title: const Text('Emulator Management'),
+          actions: [
+            // Reload button
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: 'Reload Configuration (R)',
+              onPressed: _isLoading ? null : _loadEmulators,
+            ),
+            // Info button showing config source
+            IconButton(
+              icon: const Icon(Icons.info_outline),
+              tooltip: 'Configuration Info',
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Configuration Source'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Config location:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(_configService.configPath),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Has local overrides: ${_configService.hasLocalOverrides ? 'Yes' : 'No'}',
+                        ),
+                        if (_configService.hasLocalOverrides) ...[
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Your changes are saved to device storage.',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ] else ...[
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Using bundled config. Edit to create local overrides.',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _emulators.isEmpty

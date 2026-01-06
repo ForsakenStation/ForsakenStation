@@ -5,8 +5,15 @@ import '../utils/platform_names.dart';
 class Platform {
   final String name;
   final String path;
-  final List<Rom> roms;
-  Platform({required this.name, required this.path, this.roms = const []});
+  final List<Rom> roms; // For file-based platforms or cached JSONL ROMs
+  final int? _romCount; // For JSONL platforms: pre-calculated count
+
+  Platform({
+    required this.name,
+    required this.path,
+    this.roms = const [],
+    int? romCount,
+  }) : _romCount = romCount;
 
   String get displayName {
     return PlatformNames.getDisplayName(name);
@@ -17,13 +24,16 @@ class Platform {
   }
 
   String get code {
-    return filePath.basename(path);
+    return filePath.basename(name);
   }
 
-  int get romCount => roms.length;
+  int get romCount => _romCount ?? roms.length;
+
+  /// True if this is a JSONL platform (lazy-loaded, ROMs not in memory)
+  bool get isJsonlPlatform => _romCount != null && roms.isEmpty;
 
   @override
   String toString() {
-    return 'Platform(name: $displayName, roms: ${roms.length})';
+    return 'Platform(name: $displayName, roms: $romCount)';
   }
 }

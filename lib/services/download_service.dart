@@ -5,11 +5,13 @@ import 'package:path/path.dart' as path;
 import '../models/rom.dart';
 import 'debug_service.dart';
 import 'download_resolver_service.dart';
+import 'rom_storage_service.dart';
 
 class DownloadService {
-  final String romsBasePath;
+  final String romsBasePath; // Legacy field, kept for compatibility
   final _debug = DebugService.instance;
   final _resolver = DownloadResolverService();
+  final _storage = RomStorageService.instance;
   bool _isCancelled = false;
 
   DownloadService({required this.romsBasePath});
@@ -23,6 +25,7 @@ class DownloadService {
   Future<String?> downloadRom(
     Rom rom, {
     Function(double progress, int received, int total)? onProgress,
+    bool saveForever = false, // New parameter: save to permanent storage
   }) async {
     // Reset cancellation flag
     _isCancelled = false;
@@ -36,25 +39,57 @@ class DownloadService {
         return null;
       }
 
-      // Create temp directory: ROMS_PATH/_temp/PLATFORM/
-      final tempDir = Directory(path.join(romsBasePath, '_temp', rom.platform));
-      await tempDir.create(recursive: true);
-
       // Use the original filename (which already has correct extension)
-      // This preserves the exact name as it appears in the ROM folder
       final fileName = rom.fileName;
-      final filePath = path.join(tempDir.path, fileName);
 
-      // Check if file already exists and skip download
-      final existingFile = File(filePath);
-      if (await existingFile.exists()) {
+      // Check if ROM already exists in forever storage
+      final existingForever = await _storage.findRomInForeverStorage(
+        rom.platform,
+        fileName,
+      );
+      if (existingForever != null) {
         _debug.info(
-          'ROM already downloaded: $filePath',
+          'ROM already exists in forever storage: $existingForever',
           tag: 'DownloadService',
         );
-        rom.localPath = filePath;
-        return filePath;
+        rom.localPath = existingForever;
+        return existingForever;
       }
+
+      // Check if ROM already exists in temp storage
+      final existingTemp = await _storage.findRomInTempStorage(
+        rom.platform,
+        fileName,
+      );
+      if (existingTemp != null && !saveForever) {
+        _debug.info(
+          'ROM already exists in temp storage: $existingTemp',
+          tag: 'DownloadService',
+        );
+        rom.localPath = existingTemp;
+        return existingTemp;
+      }
+
+      // Cleanup old temp ROMs for this platform before downloading new one
+      if (!saveForever) {
+        _debug.info(
+          'Cleaning up old temp ROMs for platform: ${rom.platform}',
+          tag: 'DownloadService',
+        );
+        await _storage.cleanupPlatformTempRoms(rom.platform);
+      }
+
+      // Determine destination directory
+      final Directory destDir;
+      if (saveForever) {
+        destDir = await _storage.getPlatformForeverDirectory(rom.platform);
+      } else {
+        destDir = await _storage.getPlatformTempDirectory(rom.platform);
+      }
+
+      await destDir.create(recursive: true);
+
+      final filePath = path.join(destDir.path, fileName);
 
       _debug.info(
         'Downloading ROM: ${rom.displayName}',
@@ -62,6 +97,10 @@ class DownloadService {
       );
       _debug.debug('URL: ${rom.downloadUrl}', tag: 'DownloadService');
       _debug.debug('Destination: $filePath', tag: 'DownloadService');
+      _debug.debug(
+        'Save mode: ${saveForever ? 'forever' : 'temp'}',
+        tag: 'DownloadService',
+      );
 
       // Resolve URL (handles MediaFire, Google Drive, Dropbox, etc.)
       final resolvedUrl = await _resolver.resolveDownloadUrl(rom.downloadUrl!);
@@ -164,14 +203,7 @@ class DownloadService {
 
   Future<void> cleanupAllTemporaryRoms() async {
     try {
-      final tempDir = Directory(path.join(romsBasePath, '_temp'));
-
-      if (!await tempDir.exists()) {
-        _debug.debug('Temp directory does not exist', tag: 'DownloadService');
-        return;
-      }
-
-      await tempDir.delete(recursive: true);
+      await _storage.cleanupAllTempRoms();
       _debug.info('Cleaned up all temporary ROMs', tag: 'DownloadService');
     } catch (e) {
       _debug.error(
@@ -184,19 +216,7 @@ class DownloadService {
 
   Future<void> cleanupPlatformTemporaryRoms(String platform) async {
     try {
-      final platformTempDir = Directory(
-        path.join(romsBasePath, '_temp', platform),
-      );
-
-      if (!await platformTempDir.exists()) {
-        _debug.debug(
-          'Platform temp directory does not exist: $platform',
-          tag: 'DownloadService',
-        );
-        return;
-      }
-
-      await platformTempDir.delete(recursive: true);
+      await _storage.cleanupPlatformTempRoms(platform);
       _debug.info(
         'Cleaned up temporary ROMs for platform: $platform',
         tag: 'DownloadService',

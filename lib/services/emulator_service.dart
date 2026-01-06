@@ -5,29 +5,25 @@ import '../models/rom_item.dart';
 import '../models/emulator_config.dart';
 import 'download_service.dart';
 import 'debug_service.dart';
+import 'config_service.dart';
 
 class EmulatorService {
   final String emulatorsBasePath;
-  final String configFilePath;
   final DownloadService downloadService;
   final _debug = DebugService.instance;
+  final _configService = ConfigService.instance;
 
   EmulatorsConfig? _config;
   DateTime? _configLoadTime;
-  String? _configDir; // Directory where config.json is located
 
   EmulatorService({
     required this.emulatorsBasePath,
-    required this.configFilePath,
     required this.downloadService,
-  }) {
-    // Store config directory for resolving relative paths
-    _configDir = path.dirname(configFilePath);
-  }
+  });
 
   /// Load the main emulators configuration file
   Future<EmulatorsConfig?> _loadConfig({bool forceReload = false}) async {
-    // Cache config for 5 seconds to avoid repeated file reads
+    // Cache config for 5 seconds to avoid repeated reads
     if (!forceReload &&
         _config != null &&
         _configLoadTime != null &&
@@ -36,20 +32,42 @@ class EmulatorService {
     }
 
     _debug.info(
-      'Loading emulators config from: $configFilePath',
+      'Loading emulators config from ConfigService',
       tag: 'EmulatorService',
     );
-    _config = await EmulatorsConfig.loadFromFile(configFilePath);
-    _configLoadTime = DateTime.now();
 
-    if (_config != null) {
-      _debug.info(
-        'Loaded ${_config!.emulators.length} platform configurations',
+    try {
+      final configData = await _configService.loadConfig();
+      _config = EmulatorsConfig.fromJson(configData);
+      _configLoadTime = DateTime.now();
+
+      if (_config != null) {
+        _debug.info(
+          'Loaded ${_config!.emulators.length} platform configurations',
+          tag: 'EmulatorService',
+        );
+      }
+
+      return _config;
+    } catch (e) {
+      _debug.error(
+        'Error loading emulators config',
         tag: 'EmulatorService',
+        error: e,
       );
+      return null;
     }
+  }
 
-    return _config;
+  /// Force reload the configuration from ConfigService
+  ///
+  /// This will refresh the config from shared_preferences or assets,
+  /// bypassing the cache
+  Future<void> reloadConfig() async {
+    _debug.info('Force reloading emulators config', tag: 'EmulatorService');
+    _config = null;
+    _configLoadTime = null;
+    await _loadConfig(forceReload: true);
   }
 
   /// Load emulator configuration for a specific platform
@@ -94,9 +112,9 @@ class EmulatorService {
       // Check if command is a relative path (starts with ./ or ../)
       if (command.command.startsWith('./') ||
           command.command.startsWith('../')) {
-        // Resolve relative to config file directory
+        // Resolve relative to emulators base path
         emulatorPath = path.normalize(
-          path.join(_configDir ?? emulatorsBasePath, command.command),
+          path.join(emulatorsBasePath, command.command),
         );
       } else if (command.command.startsWith('/')) {
         // Absolute path, use as-is
@@ -296,11 +314,6 @@ class EmulatorService {
   Future<List<String>> getConfiguredPlatforms() async {
     final config = await _loadConfig();
     return config?.configuredPlatforms ?? [];
-  }
-
-  /// Reload configuration from file
-  Future<void> reloadConfig() async {
-    await _loadConfig(forceReload: true);
   }
 
   /// Cancel the current download

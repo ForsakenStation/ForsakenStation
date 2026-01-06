@@ -46,4 +46,5 @@ app.*.map.json
 
 # Environment variables
 .env
-*.orig
+*.orig!/.output.txt
+.output.txt

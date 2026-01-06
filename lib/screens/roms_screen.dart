@@ -10,6 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:path/path.dart' as path;
 import 'package:forsaken/models/platform.dart';
+import 'package:forsaken/models/rom.dart';
 import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/emulator_config.dart';
@@ -28,6 +29,8 @@ import 'package:forsaken/widgets/common/help_dialog.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
 import 'package:forsaken/widgets/common/virtual_keyboard.dart';
 import 'package:forsaken/widgets/roms/launch_progress_dialog.dart';
+import 'package:forsaken/widgets/roms/save_rom_dialog.dart';
+import 'package:forsaken/services/rom_storage_service.dart';
 
 enum ViewMode { list, grid, carousel }
 
@@ -49,12 +52,16 @@ class _RomsScreenState extends State<RomsScreen> {
   List<RomItem> _items = [];
   List<RomItem> _filteredItems = [];
   String _currentPath = '';
+  String? _currentSubdirectory; // For JSONL platforms: current subdirectory
   final List<String> _pathHistory = [];
   bool _isLoading = true;
+  List<Rom>? _platformRoms; // Cached ROMs for JSONL platform
   ViewMode _viewMode = ViewMode.list;
   int _selectedIndex = 0;
   Map<String, RomMedia> _mediaCache = {};
   Map<String, GameInfo> _gameInfoCache = {};
+  Map<String, bool> _downloadedRomsCache =
+      {}; // Cache for downloaded ROM status
   late MediaService _mediaService;
   late EmulatorService _emulatorService;
   late DownloadService _downloadService;
@@ -81,17 +88,16 @@ class _RomsScreenState extends State<RomsScreen> {
   void initState() {
     super.initState();
     _currentPath = widget.platform.path;
+    _currentSubdirectory = null; // Start at root for JSONL platforms
     final mediaPath = dotenv.env['MEDIA_PATH'] ?? '';
     final romsPath = dotenv.env['ROMS_PATH'] ?? '';
     final emulatorsPath = dotenv.env['EMULATORS_PATH'] ?? '';
-    final configPath = dotenv.env['EMULATORS_CONFIG_PATH'] ?? '';
     final gamelistPath = dotenv.env['GAMELIST_PATH'] ?? '';
 
     _mediaService = MediaService(mediaBasePath: mediaPath);
     _downloadService = DownloadService(romsBasePath: romsPath);
     _emulatorService = EmulatorService(
       emulatorsBasePath: emulatorsPath,
-      configFilePath: configPath,
       downloadService: _downloadService,
     );
     _gamelistService = GamelistService(gamelistBasePath: gamelistPath);
@@ -107,6 +113,11 @@ class _RomsScreenState extends State<RomsScreen> {
 
   @override
   void dispose() {
+    // Clear platform cache when leaving the screen to free up memory
+    if (widget.platform.isJsonlPlatform) {
+      widget.romService.clearPlatformCache(widget.platform.name);
+    }
+
     _carouselController.dispose();
     _gridScrollController.dispose();
     _listScrollController.dispose();
@@ -128,7 +139,25 @@ class _RomsScreenState extends State<RomsScreen> {
     final platformBackgroundPath = await _mediaService.getSystemBackground(
       widget.platform.code,
     );
-    final items = await widget.romService.loadItemsInDirectory(_currentPath);
+
+    List<RomItem> items;
+    // Check if this is a JSONL platform (lazy-loaded)
+    if (widget.platform.isJsonlPlatform) {
+      // Load ROMs from JSONL file if not already loaded
+      _platformRoms ??= await widget.romService.loadRomsForJsonlPlatform(
+          widget.platform.name,
+        );
+
+      // Convert ROMs to RomItems based on current subdirectory
+      items = await widget.romService.loadItemsFromRoms(
+        _platformRoms!,
+        _currentSubdirectory,
+      );
+    } else {
+      // File-based platform: load from filesystem
+      items = await widget.romService.loadItemsInDirectory(_currentPath);
+    }
+
     if (mounted) {
       setState(() {
         _items = items;
@@ -303,18 +332,36 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   void _navigateToFolder(RomItem folder) {
-    _pathHistory.add(_currentPath);
-    setState(() {
-      _currentPath = folder.path;
-    });
+    if (widget.platform.isJsonlPlatform) {
+      // For JSONL platforms, navigate by subdirectory name
+      _pathHistory.add(_currentSubdirectory ?? '');
+      setState(() {
+        _currentSubdirectory = folder.path; // folder.path is subdirectory name
+      });
+    } else {
+      // For file-based platforms, navigate by filesystem path
+      _pathHistory.add(_currentPath);
+      setState(() {
+        _currentPath = folder.path;
+      });
+    }
     _loadItems();
   }
 
   void _navigateBack() {
     if (_pathHistory.isNotEmpty) {
-      setState(() {
-        _currentPath = _pathHistory.removeLast();
-      });
+      if (widget.platform.isJsonlPlatform) {
+        // For JSONL platforms, restore subdirectory
+        final previous = _pathHistory.removeLast();
+        setState(() {
+          _currentSubdirectory = previous.isEmpty ? null : previous;
+        });
+      } else {
+        // For file-based platforms, restore filesystem path
+        setState(() {
+          _currentPath = _pathHistory.removeLast();
+        });
+      }
       _loadItems();
     } else {
       Navigator.pop(context);
@@ -322,11 +369,16 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   String? _getCurrentFolderName() {
-    if (_currentPath != widget.platform.path) {
-      return path.basename(_currentPath);
+    if (widget.platform.isJsonlPlatform) {
+      // For JSONL platforms, return current subdirectory name
+      return _currentSubdirectory;
+    } else {
+      // For file-based platforms, return folder name if not at root
+      if (_currentPath != widget.platform.path) {
+        return path.basename(_currentPath);
+      }
+      return null;
     }
-
-    return null;
   }
 
   IconData _getViewModeIcon() {
@@ -645,9 +697,7 @@ class _RomsScreenState extends State<RomsScreen> {
                               tooltip: 'Toggle virtual keyboard',
                             ),
                           ),
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
+                          style: TextStyle(color: Colors.white),
                           onChanged: _onSearchChanged,
                         )
                       : _buildTitile(),
@@ -800,6 +850,8 @@ class _RomsScreenState extends State<RomsScreen> {
       mediaCache: _mediaCache,
       mediaService: _mediaService,
       loadMediaForItem: _loadMediaForItem,
+      isRomDownloaded: _isRomDownloaded,
+      platformName: widget.platform.name,
     );
   }
 
@@ -1148,6 +1200,21 @@ class _RomsScreenState extends State<RomsScreen> {
             duration: const Duration(seconds: 2),
           ),
         );
+
+        // If ROM was downloaded, ask if user wants to save it permanently
+        if (isDownloading && !wasCancelled) {
+          // Check if ROM is already in forever storage
+          final storageService = RomStorageService.instance;
+          final foreverPath = await storageService.findRomInForeverStorage(
+            widget.platform.name,
+            item.name,
+          );
+
+          // Only ask to save if not already in forever storage
+          if (foreverPath == null) {
+            await _askToSaveRomPermanently(item, imagePath);
+          }
+        }
       } else if (!wasCancelled) {
         _showErrorDialog(
           'Failed to launch ROM.\n\n'
@@ -1166,6 +1233,116 @@ class _RomsScreenState extends State<RomsScreen> {
       }
       _requestFocusForCurrentViewMode();
     }
+  }
+
+  /// Ask user if they want to save ROM permanently after playing
+  Future<void> _askToSaveRomPermanently(RomItem item, String? imagePath) async {
+    // Show dialog asking if user wants to save ROM permanently
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => SaveRomDialog(item: item, imagePath: imagePath),
+    );
+
+    if (!mounted) return;
+
+    // If user chose to save permanently
+    if (result == true) {
+      try {
+        final storageService = RomStorageService.instance;
+
+        // Move ROM from temp to forever storage
+        final newPath = await storageService.moveToForeverStorage(
+          widget.platform.name,
+          item.name,
+        );
+
+        if (newPath != null && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${item.displayName} saved permanently'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+              action: SnackBarAction(
+                label: 'Undo',
+                textColor: Colors.white,
+                onPressed: () async {
+                  // Move back to temp storage
+                  await storageService.deleteFromForeverStorage(
+                    widget.platform.name,
+                    item.name,
+                  );
+                },
+              ),
+            ),
+          );
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to save ROM permanently'),
+              backgroundColor: Colors.orange,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error saving ROM: $e'),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } else {
+      // User chose "Not Now" - ROM stays in temp storage for now
+      // It will be cleaned up when downloading another ROM for this platform
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${item.displayName} kept in temporary storage'),
+            backgroundColor: Colors.grey[700],
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+
+    _requestFocusForCurrentViewMode();
+  }
+
+  /// Check if a ROM is already downloaded (in temp or forever storage)
+  Future<bool> _isRomDownloaded(RomItem item) async {
+    // Check cache first
+    if (_downloadedRomsCache.containsKey(item.name)) {
+      return _downloadedRomsCache[item.name]!;
+    }
+
+    // Check if ROM is in storage
+    final storageService = RomStorageService.instance;
+
+    // Check forever storage first (preferred)
+    final foreverPath = await storageService.findRomInForeverStorage(
+      widget.platform.name,
+      item.name,
+    );
+
+    if (foreverPath != null) {
+      _downloadedRomsCache[item.name] = true;
+      return true;
+    }
+
+    // Check temp storage
+    final tempPath = await storageService.findRomInTempStorage(
+      widget.platform.name,
+      item.name,
+    );
+
+    final isDownloaded = tempPath != null;
+    _downloadedRomsCache[item.name] = isDownloaded;
+    return isDownloaded;
   }
 
   void _showErrorDialog(String message) {

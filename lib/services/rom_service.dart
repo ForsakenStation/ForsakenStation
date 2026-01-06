@@ -4,14 +4,153 @@ import '../models/platform.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
 import 'debug_service.dart';
+import 'jsonl_rom_loader.dart';
 
 class RomService {
   final String romsBasePath;
+  final String? jsonlBasePath; // Optional path to JSONL files directory
   final _debug = DebugService.instance;
+  final _jsonlLoader = JsonlRomLoader();
 
-  RomService({required this.romsBasePath});
+  // Cache for loaded JSONL platform ROMs (platform name -> List<Rom>)
+  final Map<String, List<Rom>> _jsonlRomsCache = {};
+
+  RomService({required this.romsBasePath, this.jsonlBasePath});
 
   Future<List<Platform>> loadPlatforms() async {
+    // If JSONL path is provided, use JSONL loader
+    if (jsonlBasePath != null && jsonlBasePath!.isNotEmpty) {
+      return await loadPlatformsFromJsonl();
+    }
+
+    // Otherwise, use legacy file-based loader
+    return await loadPlatformsFromFiles();
+  }
+
+  /// Load platforms from JSONL files (lazy loading - only loads ROM counts)
+  Future<List<Platform>> loadPlatformsFromJsonl() async {
+    final List<Platform> platforms = [];
+
+    try {
+      _debug.info(
+        'Loading platforms from JSONL directory: $jsonlBasePath',
+        tag: 'RomService',
+      );
+
+      // Get ROM counts for all platforms (without loading all ROMs)
+      final platformCounts = await _jsonlLoader.getPlatformRomCounts(
+        jsonlBasePath!,
+      );
+
+      // Convert to Platform objects (without loading ROM data)
+      for (final entry in platformCounts.entries) {
+        final platformName = entry.key;
+        final romCount = entry.value;
+
+        if (romCount > 0) {
+          platforms.add(
+            Platform(
+              name: platformName,
+              path: '', // Not used for JSONL platforms
+              roms: [], // Empty - ROMs will be lazy-loaded when needed
+              romCount: romCount, // Pre-calculated count
+            ),
+          );
+        }
+      }
+
+      // Sort platforms alphabetically
+      platforms.sort((a, b) => a.name.compareTo(b.name));
+
+      _debug.info(
+        'Loaded ${platforms.length} platforms from JSONL (lazy loading enabled)',
+        tag: 'RomService',
+      );
+    } catch (e) {
+      _debug.error(
+        'Error loading platforms from JSONL',
+        tag: 'RomService',
+        error: e,
+      );
+    }
+
+    return platforms;
+  }
+
+  /// Load ROMs for a specific JSONL platform (lazy loading)
+  ///
+  /// This is called when the user enters a platform screen
+  /// ROMs are cached after first load
+  Future<List<Rom>> loadRomsForJsonlPlatform(String platformName) async {
+    // Check cache first
+    if (_jsonlRomsCache.containsKey(platformName)) {
+      _debug.debug(
+        'Using cached ROMs for platform: $platformName',
+        tag: 'RomService',
+      );
+      return _jsonlRomsCache[platformName]!;
+    }
+
+    // Load from JSONL file
+    if (jsonlBasePath == null || jsonlBasePath!.isEmpty) {
+      _debug.error(
+        'JSONL base path not set, cannot load platform: $platformName',
+        tag: 'RomService',
+      );
+      return [];
+    }
+
+    try {
+      _debug.info(
+        'Loading ROMs for platform: $platformName',
+        tag: 'RomService',
+      );
+
+      final jsonlFile = path.join(jsonlBasePath!, '$platformName.jsonl');
+      final roms = await _jsonlLoader.loadRomsFromJsonl(
+        jsonlFile,
+        platformName,
+      );
+
+      // Cache the loaded ROMs
+      _jsonlRomsCache[platformName] = roms;
+
+      _debug.info(
+        'Loaded and cached ${roms.length} ROMs for platform: $platformName',
+        tag: 'RomService',
+      );
+
+      return roms;
+    } catch (e) {
+      _debug.error(
+        'Error loading ROMs for JSONL platform: $platformName',
+        tag: 'RomService',
+        error: e,
+      );
+      return [];
+    }
+  }
+
+  /// Clear the JSONL ROMs cache for a specific platform
+  /// This can be called when leaving a platform to free up memory
+  void clearPlatformCache(String platformName) {
+    if (_jsonlRomsCache.containsKey(platformName)) {
+      _debug.debug(
+        'Clearing cache for platform: $platformName',
+        tag: 'RomService',
+      );
+      _jsonlRomsCache.remove(platformName);
+    }
+  }
+
+  /// Clear all JSONL ROMs caches
+  void clearAllCaches() {
+    _debug.debug('Clearing all platform caches', tag: 'RomService');
+    _jsonlRomsCache.clear();
+  }
+
+  /// Load platforms from directory structure (legacy method)
+  Future<List<Platform>> loadPlatformsFromFiles() async {
     final List<Platform> platforms = [];
 
     try {
@@ -115,6 +254,89 @@ class RomService {
     return roms;
   }
 
+  /// Load items (ROMs and folders) from Platform.roms list
+  /// Used for JSONL-based platforms
+  Future<List<RomItem>> loadItemsFromRoms(
+    List<Rom> roms,
+    String? currentSubdirectory,
+  ) async {
+    final List<RomItem> items = [];
+
+    try {
+      // Group ROMs by subdirectory
+      final Map<String, List<Rom>> romsBySubdir = {};
+      final List<Rom> romsInCurrentDir = [];
+
+      for (final rom in roms) {
+        final romSubdir = rom.subdirectory ?? '';
+
+        // If we're at root level (currentSubdirectory is null)
+        if (currentSubdirectory == null) {
+          if (romSubdir.isEmpty) {
+            // ROM is at root level
+            romsInCurrentDir.add(rom);
+          } else {
+            // ROM is in a subdirectory - group them
+            romsBySubdir.putIfAbsent(romSubdir, () => []).add(rom);
+          }
+        } else {
+          // We're inside a subdirectory
+          if (romSubdir == currentSubdirectory) {
+            romsInCurrentDir.add(rom);
+          }
+        }
+      }
+
+      // Add subdirectories as folders (only at root level)
+      if (currentSubdirectory == null) {
+        for (final subdirName in romsBySubdir.keys) {
+          items.add(
+            RomItem(
+              name: subdirName,
+              path: subdirName, // Use subdirectory name as path
+              type: RomItemType.folder,
+            ),
+          );
+        }
+      }
+
+      // Add ROMs in current directory
+      for (final rom in romsInCurrentDir) {
+        items.add(
+          RomItem(
+            name: rom.fileName, // Use fileName to preserve extension
+            path: rom.urlFilePath, // For JSONL, this is just the name
+            type: RomItemType.rom,
+            downloadUrl: rom.downloadUrl,
+          ),
+        );
+      }
+
+      // Sort: folders first, then ROMs, alphabetically within each group
+      items.sort((a, b) {
+        if (a.isFolder && !b.isFolder) return -1;
+        if (!a.isFolder && b.isFolder) return 1;
+        return a.displayName.compareTo(b.displayName);
+      });
+
+      _debug.info(
+        'Loaded ${items.where((i) => i.isFolder).length} folders, '
+        '${items.where((i) => !i.isFolder).length} ROMs '
+        '${currentSubdirectory != null ? "in subdirectory: $currentSubdirectory" : "at root"}',
+        tag: 'RomService',
+      );
+    } catch (e) {
+      _debug.error(
+        'Error loading items from ROMs list',
+        tag: 'RomService',
+        error: e,
+      );
+    }
+
+    return items;
+  }
+
+  /// Load items from filesystem directory (legacy method)
   Future<List<RomItem>> loadItemsInDirectory(String directoryPath) async {
     final List<RomItem> items = [];
 

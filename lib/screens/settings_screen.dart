@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'settings_categories/emulator_management_screen.dart';
 import 'settings_categories/system_paths_screen.dart';
+import 'settings_categories/rom_database_screen.dart';
+import 'settings_categories/rom_storage_management_screen.dart';
 import 'settings_categories/download_manager_screen.dart';
 import 'settings_categories/system_utilities_screen.dart';
 import 'settings_categories/system_check_screen.dart';
@@ -85,6 +87,38 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const SystemPathsScreen(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 12),
+
+          _buildCategoryCard(
+            context,
+            icon: Icons.storage,
+            title: 'ROM Database',
+            description: 'Download and manage ROM lists from GitHub',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RomDatabaseScreen(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 12),
+
+          _buildCategoryCard(
+            context,
+            icon: Icons.folder_special,
+            title: 'ROM Storage',
+            description: 'Manage downloaded ROMs and storage space',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RomStorageManagementScreen(),
                 ),
               );
             },
@@ -233,6 +267,32 @@ class SettingsScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const Text(
                 'A modern multi-platform emulator frontend built with Flutter.',
+              ),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+              const Text(
+                'ROM Database',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'ROM lists are sourced from the AndroidRoms repository by Arley4d:',
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 8),
+              const SelectableText(
+                'https://github.com/Arley4d/AndroidRoms',
+                style: TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Special thanks to the AndroidRoms project for maintaining comprehensive ROM databases for preservation purposes.',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 16),
               const Divider(),

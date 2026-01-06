@@ -228,6 +228,16 @@ class ConfigService {
   String get gamelistPath =>
       dotenv.maybeGet('GAMELIST_PATH') ?? '/path/to/gamelists';
 
+  /// Get temporary ROM storage path from environment
+  ///
+  /// Used for ROMs downloaded temporarily for single play sessions
+  String? get romTempPath => dotenv.maybeGet('ROM_TEMP_PATH');
+
+  /// Get permanent ROM storage path from environment
+  ///
+  /// Used for ROMs saved permanently for offline play
+  String? get romForeverPath => dotenv.maybeGet('ROM_FOREVER_PATH');
+
   /// Check if debug mode is enabled
   bool get isDebugEnabled =>
       dotenv.maybeGet('DEBUG_ENABLED')?.toLowerCase() == 'true';

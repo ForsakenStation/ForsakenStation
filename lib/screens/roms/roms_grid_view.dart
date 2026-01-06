@@ -15,6 +15,8 @@ class RomsGridView extends StatelessWidget {
   final Map<String, RomMedia> mediaCache;
   final MediaService mediaService;
   final Function(RomItem) loadMediaForItem;
+  final Future<bool> Function(RomItem)? isRomDownloaded;
+  final String platformName;
 
   const RomsGridView({
     super.key,
@@ -27,6 +29,8 @@ class RomsGridView extends StatelessWidget {
     required this.mediaCache,
     required this.mediaService,
     required this.loadMediaForItem,
+    this.isRomDownloaded,
+    required this.platformName,
   });
 
   @override
@@ -91,33 +95,72 @@ class RomsGridView extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () => onItemTap(index, item),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Stack(
           children: [
-            Expanded(
-              child: imagePath != null
-                  ? Image.file(
-                      File(imagePath),
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return _buildPlaceholderImage(context, null);
-                      },
-                    )
-                  : _buildPlaceholderImage(context, null),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                item.displayName,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: imagePath != null
+                      ? Image.file(
+                          File(imagePath),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return _buildPlaceholderImage(context, null);
+                          },
+                        )
+                      : _buildPlaceholderImage(context, null),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    item.displayName,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
             ),
+            // Download indicator badge
+            if (item.downloadUrl != null &&
+                item.downloadUrl!.isNotEmpty &&
+                isRomDownloaded != null)
+              FutureBuilder<bool>(
+                future: isRomDownloaded!(item),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data == true) {
+                    return Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.cloud_done,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
           ],
         ),
       ),

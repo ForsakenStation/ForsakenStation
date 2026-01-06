@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,8 @@ import 'services/rom_service.dart';
 import 'services/debug_service.dart';
 import 'services/config_service.dart';
 import 'services/gamepad_service.dart';
+import 'services/romlist_download_service.dart';
+import 'services/rom_storage_service.dart';
 import 'providers/theme_provider.dart';
 import 'utils/app_theme.dart';
 
@@ -92,24 +95,100 @@ void _initializeDebugService() {
   debug.debug('Min log level: ${minLevel.name}', tag: 'Main');
 }
 
-class EmulatorApp extends StatelessWidget {
+class EmulatorApp extends StatefulWidget {
   const EmulatorApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final romsPath = dotenv.env['ROMS_PATH'] ?? '';
+  State<EmulatorApp> createState() => _EmulatorAppState();
+}
 
-    if (romsPath.isEmpty) {
+class _EmulatorAppState extends State<EmulatorApp> {
+  final _romlistService = RomlistDownloadService.instance;
+  bool _isInitializing = true;
+  String? _jsonlPath;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeRomlists();
+  }
+
+  Future<void> _initializeRomlists() async {
+    try {
+      // Initialize ROM storage directories
+      await RomStorageService.instance.initializeStorageDirectories();
+
+      // Load custom storage paths from environment (if set)
+      final configService = ConfigService.instance;
+      if (configService.romTempPath != null) {
+        RomStorageService.instance.setCustomTempPath(configService.romTempPath);
+      }
+      if (configService.romForeverPath != null) {
+        RomStorageService.instance.setCustomForeverPath(
+          configService.romForeverPath,
+        );
+      }
+
+      // Check if romlists are already downloaded
+      final isDownloaded = await _romlistService.isDownloaded();
+
+      if (!isDownloaded) {
+        // First-time setup: download romlists
+        final success = await _romlistService.downloadAndExtract();
+
+        if (!success) {
+          setState(() {
+            _errorMessage = 'Failed to download ROM lists from GitHub';
+            _isInitializing = false;
+          });
+          return;
+        }
+      }
+
+      // Get the JSONL path
+      final jsonlPath = await _romlistService.getJsonlPath();
+
+      setState(() {
+        _jsonlPath = jsonlPath;
+        _isInitializing = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error initializing: $e';
+        _isInitializing = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isInitializing) {
       return MaterialApp(
         title: 'Forsaken Roms',
         theme: AppTheme.lightTheme(),
         darkTheme: AppTheme.darkTheme(),
         themeMode: ThemeMode.system,
-        home: const ConfigurationErrorScreen(),
+        home: const InitializingScreen(),
       );
     }
 
-    final romService = RomService(romsBasePath: romsPath);
+    if (_errorMessage != null) {
+      return MaterialApp(
+        title: 'Forsaken Roms',
+        theme: AppTheme.lightTheme(),
+        darkTheme: AppTheme.darkTheme(),
+        themeMode: ThemeMode.system,
+        home: ErrorScreen(message: _errorMessage!),
+      );
+    }
+
+    final romsPath = dotenv.env['ROMS_PATH'] ?? '';
+
+    final romService = RomService(
+      romsBasePath: romsPath,
+      jsonlBasePath: _jsonlPath!,
+    );
 
     return ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -124,6 +203,76 @@ class EmulatorApp extends StatelessWidget {
             home: PlatformsScreen(romService: romService),
           );
         },
+      ),
+    );
+  }
+}
+
+class InitializingScreen extends StatelessWidget {
+  const InitializingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.file(File('assets/images/logo.png'), width: 128, height: 128),
+            const SizedBox(height: 32),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 24),
+            const Text(
+              'Downloading ROM lists...',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'This may take a few minutes on first run',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ErrorScreen extends StatelessWidget {
+  final String message;
+
+  const ErrorScreen({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Error')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 24),
+              const Text(
+                'Initialization Error',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Text(message, textAlign: TextAlign.center),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  // Restart the app
+                  // On web/desktop, user needs to manually refresh
+                  // On mobile, this would work with hot restart
+                },
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -150,7 +299,7 @@ class ConfigurationErrorScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Please create a .env file in the project root with the following variables:',
+                'Please create a .env file in the project root with at least one ROM source:',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -161,7 +310,7 @@ class ConfigurationErrorScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text(
-                  'ROMS_PATH=/path/to/roms\nMEDIA_PATH=/path/to/media',
+                  'Option 1 - JSONL ROMs:\nJSONL_ROMS_PATH=/path/to/jsonl\nMEDIA_PATH=/path/to/media\n\nOption 2 - File-based ROMs:\nROMS_PATH=/path/to/roms\nMEDIA_PATH=/path/to/media',
                   style: TextStyle(fontFamily: 'monospace'),
                 ),
               ),

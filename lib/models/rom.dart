@@ -8,6 +8,7 @@ class Rom {
   final String urlFilePath;
   String? downloadUrl;
   String? localPath;
+  String? subdirectory;
   bool isDownloading = false;
   double downloadProgress = 0.0;
 
@@ -18,6 +19,7 @@ class Rom {
     required this.urlFilePath,
     this.downloadUrl,
     this.localPath,
+    this.subdirectory,
   });
 
   Future<String?> loadDownloadUrl() async {
@@ -29,7 +31,11 @@ class Rom {
         return downloadUrl;
       }
     } catch (e) {
-      DebugService.instance.error('Error loading download URL for $name', tag: 'Rom', error: e);
+      DebugService.instance.error(
+        'Error loading download URL for $name',
+        tag: 'Rom',
+        error: e,
+      );
     }
     return null;
   }
