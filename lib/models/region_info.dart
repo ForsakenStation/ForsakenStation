@@ -13,11 +13,11 @@ class RegionInfo {
   const RegionInfo(this.regions);
 
   /// Extract regions from ROM name
-  /// Looks for patterns like (USA), (Europe), (Japan), etc.
+  /// Looks for patterns like (USA), (Europe), (Japan), (USA, Europe), etc.
   static RegionInfo? fromRomName(String romName) {
     // Pattern matches region codes in parentheses
-    // Examples: (USA), (Europe), (Japan), (World), (Spain), (Germany)
-    final regionPattern = RegExp(r'\(([A-Za-z]+(?:\s+[A-Za-z]+)*)\)');
+    // Examples: (USA), (Europe), (Japan), (World), (USA, Europe)
+    final regionPattern = RegExp(r'\(([^)]+)\)');
     final matches = regionPattern.allMatches(romName);
 
     final List<String> extractedRegions = [];
@@ -25,10 +25,14 @@ class RegionInfo {
     for (final match in matches) {
       final regionText = match.group(1);
       if (regionText != null) {
-        final normalized = regionText.trim();
-        // Only add if it looks like a region (not other tags)
-        if (_isValidRegion(normalized)) {
-          extractedRegions.add(normalized);
+        // Handle comma-separated regions like (USA, Europe)
+        final parts = regionText.split(',').map((s) => s.trim());
+
+        for (final part in parts) {
+          // Only add if it looks like a region (not other tags)
+          if (_isValidRegion(part)) {
+            extractedRegions.add(part);
+          }
         }
       }
     }
@@ -38,23 +42,31 @@ class RegionInfo {
 
   /// Check if a string is a valid region code
   static bool _isValidRegion(String text) {
+    final textLower = text.toLowerCase().trim();
+
+    // Empty or too long is not a region
+    if (textLower.isEmpty || textLower.length > 20) {
+      return false;
+    }
+
     final knownRegions = {
       // Main regions
-      'USA', 'Europe', 'Japan', 'World', 'Asia',
+      'usa', 'us', 'europe', 'eu', 'japan', 'jp', 'jap', 'world', 'asia',
       // Countries
-      'Australia', 'Brazil', 'Canada', 'China', 'France', 'Germany',
-      'Italy', 'Korea', 'Netherlands', 'Spain', 'Sweden', 'UK',
-      'United Kingdom', 'United States', 'Russia',
-      // Special
-      'Proto', 'Beta', 'Sample', 'Demo', 'Promo', 'Unl',
+      'australia', 'au', 'brazil', 'br', 'canada', 'ca', 'china', 'cn',
+      'france', 'fr', 'germany', 'de', 'italy', 'it', 'korea', 'kr',
+      'netherlands', 'nl', 'spain', 'es', 'sweden', 'se', 'uk', 'gb',
+      'united kingdom', 'united states', 'russia', 'ru',
+      // TV standards (these are truly region-related)
+      'pal', 'ntsc', 'unl',
     };
 
     // Check exact match (case insensitive)
-    if (knownRegions.any((r) => r.toLowerCase() == text.toLowerCase())) {
+    if (knownRegions.contains(textLower)) {
       return true;
     }
 
-    // Reject common non-region tags
+    // Reject common non-region tags (be more strict)
     final nonRegions = {
       'hack',
       'original',
@@ -62,21 +74,103 @@ class RegionInfo {
       'version',
       'v1',
       'v2',
+      'v3',
       'disc',
       'disk',
       'side',
       'collection',
       'edition',
+      'remaster',
+      'enhanced',
+      'deluxe',
+      'final',
+      'complete',
+      'director',
+      'alternate',
+      'alt',
+      'translation',
+      'fixed',
+      'trainer',
+      'uncut',
+      'censored',
+      'uncensored',
+      'retail',
+      'digital',
+      'physical',
+      'limited',
+      'special',
+      'goty',
+      'patched',
+      // Version/build tags (NOT regions)
+      'demo',
+      'beta',
+      'alpha',
+      'proto',
+      'prototype',
+      'sample',
+      'promo',
+      'preview',
+      'trial',
+      // Magazine/media related
+      'coverdisk',
+      'covertape',
+      'magazine',
+      'action',
+      'issue',
+      'number',
+      'vol',
+      'volume',
     };
 
-    if (nonRegions.any((nr) => text.toLowerCase().contains(nr))) {
+    // Check if the text contains any non-region keywords
+    for (final nonRegion in nonRegions) {
+      if (textLower.contains(nonRegion)) {
+        return false;
+      }
+    }
+
+    // Reject if it starts with common tag prefixes
+    if (textLower.startsWith('v') && RegExp(r'^v\d').hasMatch(textLower)) {
+      return false; // Version tags like v1.0, v2
+    }
+    if (textLower.startsWith('rev') || textLower.startsWith('revision')) {
+      return false; // Revision tags
+    }
+
+    // Reject if it's a number or contains only numbers
+    if (RegExp(r'^\d+$').hasMatch(textLower)) {
       return false;
     }
 
-    // If it's a short word (likely abbreviation) or capitalized properly, consider it valid
-    if (text.length <= 4 ||
-        text == text.toUpperCase() ||
-        text[0] == text[0].toUpperCase()) {
+    // Reject multi-word phrases that are likely not regions (except known ones)
+    // Also check for text with hyphens, colons, or other separators
+    final words = textLower
+        .split(RegExp(r'[\s\-:]+'))
+        .where((w) => w.isNotEmpty)
+        .toList();
+    if (words.length > 2) {
+      return false; // Most regions are 1-2 words
+    }
+
+    // Reject if it contains special characters that regions don't have
+    if (textLower.contains('-') ||
+        textLower.contains(':') ||
+        textLower.contains('/') ||
+        textLower.contains('\\')) {
+      return false;
+    }
+
+    // If it's a very short word (1-2 chars) and not in known regions, reject
+    // This prevents single letters or abbreviations from being regions
+    if (textLower.length <= 2 && !knownRegions.contains(textLower)) {
+      return false;
+    }
+
+    // If it's capitalized properly (first letter uppercase) or all caps,
+    // and it's a reasonable length, consider it valid
+    if ((text[0] == text[0].toUpperCase() &&
+        text.length >= 3 &&
+        text.length <= 15)) {
       return true;
     }
 
@@ -113,12 +207,9 @@ class RegionInfo {
       'united kingdom': 'GB',
       'russia': 'RU',
 
-      // Special regions
-      'proto': '🔧',
-      'beta': '🔧',
-      'sample': '📦',
-      'demo': '🎮',
-      'promo': '🎁',
+      // TV standards
+      'pal': '📺',
+      'ntsc': '📺',
       'unl': '🔓',
     };
 
@@ -132,10 +223,7 @@ class RegionInfo {
     // If it's already an emoji, return it
     if (countryCode.startsWith('🌐') ||
         countryCode.startsWith('🌏') ||
-        countryCode.startsWith('🔧') ||
-        countryCode.startsWith('📦') ||
-        countryCode.startsWith('🎮') ||
-        countryCode.startsWith('🎁') ||
+        countryCode.startsWith('📺') ||
         countryCode.startsWith('🔓')) {
       return countryCode;
     }
@@ -177,11 +265,8 @@ class RegionInfo {
       'uk': 'United Kingdom',
       'united kingdom': 'United Kingdom',
       'russia': 'Russia',
-      'proto': 'Prototype',
-      'beta': 'Beta Version',
-      'sample': 'Sample',
-      'demo': 'Demo',
-      'promo': 'Promotional',
+      'pal': 'PAL',
+      'ntsc': 'NTSC',
       'unl': 'Unlicensed',
     };
 

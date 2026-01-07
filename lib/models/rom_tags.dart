@@ -50,23 +50,66 @@ class RomTags {
   }
 
   static bool _isTagNotRegionOrLanguage(String text) {
+    final lower = text.toLowerCase().trim();
+
+    // Skip empty or very short text
+    if (lower.isEmpty || lower.length <= 1) {
+      return false;
+    }
+
     // Skip if it looks like a region
     final regionKeywords = [
       'usa',
+      'us',
       'europe',
+      'eu',
       'japan',
+      'jp',
+      'jap',
       'world',
       'asia',
-      'spain',
-      'germany',
-      'france',
-      'italy',
+      'australia',
+      'au',
+      'brazil',
+      'br',
       'canada',
+      'ca',
+      'china',
+      'cn',
+      'spain',
+      'es',
+      'germany',
+      'de',
+      'france',
+      'fr',
+      'italy',
+      'it',
+      'uk',
+      'gb',
+      'korea',
+      'kr',
+      'netherlands',
+      'nl',
+      'sweden',
+      'se',
+      'russia',
+      'ru',
+      'pal',
+      'ntsc',
     ];
 
-    final lower = text.toLowerCase();
-    if (regionKeywords.any((r) => lower == r)) {
+    // Exact match check
+    if (regionKeywords.contains(lower)) {
       return false;
+    }
+
+    // Check if it's a comma-separated list of regions
+    if (lower.contains(',')) {
+      final parts = lower.split(',').map((s) => s.trim());
+      // If all parts are regions, skip this
+      if (parts.every((part) => regionKeywords.contains(part))) {
+        return false;
+      }
     }
 
     // Skip if it's language codes (2-letter codes separated by commas)
@@ -74,6 +117,11 @@ class RomTags {
       r'^[a-z]{2}(,[a-z]{2})*$',
       caseSensitive: false,
     ).hasMatch(text)) {
+      return false;
+    }
+
+    // Skip if it's just a number (like disc numbers without text)
+    if (RegExp(r'^\d+$').hasMatch(lower)) {
       return false;
     }
 
