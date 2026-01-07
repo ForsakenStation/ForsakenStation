@@ -78,12 +78,14 @@ class PlatformNames {
 
     // Classic Computers
     'amiga': 'Commodore Amiga',
+    'amiga500': 'Commodore Amiga',
     'amiga600': 'Commodore Amiga 600',
     'amiga1200': 'Commodore Amiga 1200',
     'c64': 'Commodore 64',
     'c128': 'Commodore 128',
     'vic20': 'Commodore VIC-20',
     'cdtv': 'Commodore CDTV',
+    'cplus4': 'Commodore Plus/4',
     'zxspectrum': 'ZX Spectrum',
     'spectrum': 'ZX Spectrum',
     'msx': 'MSX',

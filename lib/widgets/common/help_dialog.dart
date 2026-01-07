@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 /// Can be configured for different screens (Platforms or ROMs)
 class HelpDialog extends StatelessWidget {
   final bool showSearchShortcut;
+  final bool showPlatformInfoShortcut;
 
-  const HelpDialog({super.key, this.showSearchShortcut = false});
+  const HelpDialog({
+    super.key,
+    this.showSearchShortcut = false,
+    this.showPlatformInfoShortcut = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +96,8 @@ class HelpDialog extends StatelessWidget {
                       ),
                       _ShortcutItem('Y Button', 'Gamepad view toggle'),
                       _ShortcutItem('R', 'Refresh current view'),
+                      if (showPlatformInfoShortcut)
+                        _ShortcutItem('I', 'Show platform information'),
                       if (showSearchShortcut)
                         _ShortcutItem('S', 'Activate search'),
                       if (showSearchShortcut)
@@ -246,10 +253,17 @@ class HelpDialog extends StatelessWidget {
   }
 
   /// Show help dialog
-  static void show(BuildContext context, {bool showSearchShortcut = false}) {
+  static void show(
+    BuildContext context, {
+    bool showSearchShortcut = false,
+    bool showPlatformInfoShortcut = false,
+  }) {
     showDialog(
       context: context,
-      builder: (context) => HelpDialog(showSearchShortcut: showSearchShortcut),
+      builder: (context) => HelpDialog(
+        showSearchShortcut: showSearchShortcut,
+        showPlatformInfoShortcut: showPlatformInfoShortcut,
+      ),
     );
   }
 }

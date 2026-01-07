@@ -28,6 +28,22 @@ class _MediaCarouselState extends State<MediaCarousel> {
     _loadMediaItems();
   }
 
+  @override
+  void didUpdateWidget(MediaCarousel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Reload media items if the media changed
+    if (oldWidget.media != widget.media) {
+      setState(() {
+        _currentPage = 0;
+        _loadMediaItems();
+      });
+      // Reset page controller to first page
+      if (_pageController.hasClients) {
+        _pageController.jumpToPage(0);
+      }
+    }
+  }
+
   void _loadMediaItems() {
     final debug = DebugService.instance;
     _mediaItems = widget.media.allMedia;
@@ -206,7 +222,11 @@ class _MediaCarouselState extends State<MediaCarousel> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.file(File(media.path), fit: BoxFit.contain),
+            child: Image.file(
+              File(media.path),
+              key: ValueKey(media.path), // Force reload when path changes
+              fit: BoxFit.contain,
+            ),
           ),
           Positioned(
             top: 8,

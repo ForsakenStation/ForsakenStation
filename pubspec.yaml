@@ -37,6 +37,7 @@ flutter:
   assets:
     - .env
     - assets/config.json
+    - assets/data/platforms_info.json
     - assets/theme/images/logos/
     - assets/theme/images/clogos/
     - assets/theme/images/backgrounds/

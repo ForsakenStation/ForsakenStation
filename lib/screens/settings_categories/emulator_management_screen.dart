@@ -412,7 +412,11 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
         _commandControllers.add(TextEditingController(text: command));
       } else if (command is List) {
         for (final cmd in command) {
-          _commandControllers.add(TextEditingController(text: cmd as String));
+          if (cmd is String) {
+            _commandControllers.add(TextEditingController(text: cmd));
+          } else if (cmd is Map<String, dynamic>) {
+            _commandControllers.add(TextEditingController(text: cmd['command'] as String));
+          }
         }
       }
     }
@@ -455,24 +459,49 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
       return;
     }
 
-    final commands = _commandControllers
+    final commandStrings = _commandControllers
         .map((c) => c.text.trim())
         .where((cmd) => cmd.isNotEmpty)
         .toList();
 
-    if (commands.isEmpty) {
+    if (commandStrings.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('At least one command is required')),
       );
       return;
     }
 
-    // If only one command, store as string, otherwise as array
-    final commandValue = commands.length == 1 ? commands.first : commands;
+    // Helper to extract name from command string (replicates Python script logic)
+    String extractName(String cmd) {
+      if (cmd.contains("retroarch.AppImage")) {
+        final regExp = RegExp(r'/([^/]+)_libretro\.so');
+        final match = regExp.firstMatch(cmd);
+        if (match != null) {
+          return match.group(1)!;
+        }
+        return "RetroArch";
+      }
+      final exePart = cmd.split(' ').first;
+      var exeName = exePart.split(RegExp(r'[\\/]')).last;
+      for (final ext in ['.AppImage', '.exe', '.EXE']) {
+        if (exeName.endsWith(ext)) {
+          exeName = exeName.substring(0, exeName.length - ext.length);
+          break;
+        }
+      }
+      return exeName;
+    }
+
+    final List<Map<String, dynamic>> commands = commandStrings.map((cmd) {
+      return {
+        'name': extractName(cmd),
+        'command': cmd,
+      };
+    }).toList();
 
     final emulator = {
       'system': system,
-      'command': commandValue,
+      'command': commands,
       'useForeverMode': _useForeverMode,
       'acceptZipFiles': _acceptZipFiles,
       'corePreferences': {},

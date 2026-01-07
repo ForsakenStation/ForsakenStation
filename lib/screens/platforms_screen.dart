@@ -11,8 +11,10 @@ import '../services/rom_service.dart';
 import '../services/media_service.dart';
 import '../services/keyboard_service.dart';
 import '../services/gamepad_service.dart';
+import '../services/platform_info_service.dart';
 import '../utils/platform_icons.dart';
 import '../widgets/platforms/platform_card.dart';
+import '../widgets/platforms/platform_info_dialog.dart';
 import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
 import 'roms_screen.dart';
@@ -36,6 +38,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
   late MediaService _mediaService;
   late KeyboardService _keyboardService;
   late GamepadService _gamepadService;
+  late PlatformInfoService _platformInfoService;
   Timer? _gamepadPollTimer;
   final Map<String, String?> _systemImagesCache = {};
   final Map<String, String?> _systemLogosCache = {};
@@ -56,6 +59,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     _mediaService = MediaService(mediaBasePath: mediaPath);
     _keyboardService = KeyboardService.instance;
     _gamepadService = GamepadService.instance;
+    _platformInfoService = PlatformInfoService.instance;
     _carouselController = PageController();
     _gridScrollController = ScrollController();
     _carouselFocusNode = FocusNode();
@@ -308,7 +312,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     }
   }
 
-  /// Handles common keyboard shortcuts (R, V) that work across all view modes
+  /// Handles common keyboard shortcuts (R, V, I) that work across all view modes
   /// Returns true if the key was handled, false otherwise
   bool _handleCommonShortcuts(LogicalKeyboardKey key) {
     if (key == KeyboardService.keyRefresh) {
@@ -317,6 +321,10 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     }
     if (key == KeyboardService.keyToggleView) {
       _toggleViewMode();
+      return true;
+    }
+    if (key == LogicalKeyboardKey.keyI) {
+      _showPlatformInfo();
       return true;
     }
     return false;
@@ -363,7 +371,34 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
 
   /// Show help dialog with keyboard shortcuts
   void _showHelpDialog() {
-    HelpDialog.show(context, showSearchShortcut: false);
+    HelpDialog.show(
+      context,
+      showSearchShortcut: false,
+      showPlatformInfoShortcut: true,
+    );
+  }
+
+  /// Show platform information dialog
+  Future<void> _showPlatformInfo() async {
+    final selectedPlatform = _viewMode == ViewMode.grid
+        ? _platforms[_gridSelectedIndex]
+        : _platforms[_carouselCurrentIndex];
+
+    final platformInfo = await _platformInfoService.getPlatformInfo(
+      selectedPlatform.name,
+    );
+
+    if (platformInfo != null && mounted) {
+      PlatformInfoDialog.show(context, selectedPlatform.name, platformInfo);
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'No hay información disponible para ${selectedPlatform.displayName}',
+          ),
+        ),
+      );
+    }
   }
 
   /// Handle alphabetical jump based on current view mode
@@ -479,6 +514,12 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
         ),
         actions: [
           const ThemeSelector(),
+          if (_platforms.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.info_outline),
+              onPressed: _showPlatformInfo,
+              tooltip: 'Platform Info (I)',
+            ),
           IconButton(
             icon: Icon(
               _viewMode == ViewMode.grid

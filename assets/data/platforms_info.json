@@ -1,0 +1,542 @@
+{
+  "nes": {
+    "fullName": "Nintendo Entertainment System",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1983,
+    "generation": 3,
+    "description": "La NES revolucionó la industria de los videojuegos tras la crisis de 1983, estableciendo estándares de calidad y presentando franquicias icónicas como Super Mario Bros., The Legend of Zelda y Metroid.",
+    "cpu": "Ricoh 2A03 (MOS 6502) a 1.79 MHz",
+    "resolution": "256x240",
+    "colors": "54 colores disponibles"
+  },
+  "snes": {
+    "fullName": "Super Nintendo Entertainment System",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1990,
+    "generation": 4,
+    "description": "El sucesor de la NES que introdujo gráficos de 16 bits, el chip Mode 7 para efectos pseudo-3D y algunos de los mejores juegos de la historia como Super Mario World, A Link to the Past y Super Metroid.",
+    "cpu": "Ricoh 5A22 (65C816) a 3.58 MHz",
+    "resolution": "256x224 a 512x448",
+    "colors": "32,768 colores disponibles"
+  },
+  "n64": {
+    "fullName": "Nintendo 64",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1996,
+    "generation": 5,
+    "description": "La primera consola de Nintendo en ofrecer gráficos 3D reales. Famosa por títulos innovadores como Super Mario 64, The Legend of Zelda: Ocarina of Time y GoldenEye 007. Utilizaba cartuchos en lugar de CDs.",
+    "cpu": "NEC VR4300 a 93.75 MHz",
+    "resolution": "Hasta 640x480",
+    "colors": "16.8 millones de colores"
+  },
+  "gamecube": {
+    "fullName": "Nintendo GameCube",
+    "manufacturer": "Nintendo",
+    "releaseYear": 2001,
+    "generation": 6,
+    "description": "Consola compacta con un diseño distintivo y controles ergonómicos. Destacó por su potente hardware y excelentes juegos first-party como Super Smash Bros. Melee, Metroid Prime y The Legend of Zelda: Wind Waker.",
+    "cpu": "IBM PowerPC Gekko a 486 MHz",
+    "resolution": "Hasta 640x480",
+    "colors": "16.8 millones de colores"
+  },
+  "wii": {
+    "fullName": "Nintendo Wii",
+    "manufacturer": "Nintendo",
+    "releaseYear": 2006,
+    "generation": 7,
+    "description": "Revolucionó el gaming con controles por movimiento, haciéndolo accesible para toda la familia. Su biblioteca incluye Wii Sports, Super Mario Galaxy y The Legend of Zelda: Twilight Princess.",
+    "cpu": "IBM PowerPC Broadway a 729 MHz",
+    "resolution": "Hasta 480p",
+    "colors": "16.8 millones de colores"
+  },
+  "wiiu": {
+    "fullName": "Nintendo Wii U",
+    "manufacturer": "Nintendo",
+    "releaseYear": 2012,
+    "generation": 8,
+    "description": "Introdujo el innovador GamePad con pantalla táctil, permitiendo juego asimétrico y off-TV. Hogar de títulos excepcionales como Super Mario 3D World, Splatoon y The Legend of Zelda: Breath of the Wild.",
+    "cpu": "IBM PowerPC Espresso a 1.24 GHz",
+    "resolution": "Hasta 1080p",
+    "colors": "16.8 millones de colores"
+  },
+  "switch": {
+    "fullName": "Nintendo Switch",
+    "manufacturer": "Nintendo",
+    "releaseYear": 2017,
+    "generation": 8,
+    "description": "Consola híbrida que funciona como portátil y de sobremesa. Ha sido un éxito masivo con juegos como The Legend of Zelda: Tears of the Kingdom, Animal Crossing: New Horizons y Super Mario Odyssey.",
+    "cpu": "NVIDIA Custom Tegra X1",
+    "resolution": "Hasta 1080p (dock), 720p (portátil)",
+    "colors": "16.8 millones de colores"
+  },
+  "gb": {
+    "fullName": "Game Boy",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1989,
+    "generation": 4,
+    "description": "La portátil que definió el gaming móvil. Su larga duración de batería y biblioteca de juegos clásicos como Tetris, Pokémon y Super Mario Land la convirtieron en un fenómeno cultural.",
+    "cpu": "Sharp LR35902 a 4.19 MHz",
+    "resolution": "160x144",
+    "colors": "4 tonos de gris"
+  },
+  "gbc": {
+    "fullName": "Game Boy Color",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1998,
+    "generation": 5,
+    "description": "Evolución de la Game Boy con pantalla a color. Compatible con juegos de Game Boy original y con una biblioteca propia que incluye Pokémon Crystal y The Legend of Zelda: Oracle series.",
+    "cpu": "Sharp LR35902 a 8.38 MHz",
+    "resolution": "160x144",
+    "colors": "32,768 colores disponibles"
+  },
+  "gba": {
+    "fullName": "Game Boy Advance",
+    "manufacturer": "Nintendo",
+    "releaseYear": 2001,
+    "generation": 6,
+    "description": "Portátil de 32 bits con capacidades similares a la SNES. Su catálogo incluye obras maestras como Advance Wars, Metroid Fusion y remakes de clásicos de NES y SNES.",
+    "cpu": "ARM7TDMI a 16.78 MHz",
+    "resolution": "240x160",
+    "colors": "32,768 colores disponibles"
+  },
+  "nds": {
+    "fullName": "Nintendo DS",
+    "manufacturer": "Nintendo",
+    "releaseYear": 2004,
+    "generation": 7,
+    "description": "Revolucionaria consola con doble pantalla y táctil. Introdujo formas innovadoras de jugar con títulos como Brain Age, Nintendogs y New Super Mario Bros.",
+    "cpu": "ARM946E-S a 67 MHz + ARM7TDMI a 33 MHz",
+    "resolution": "256x192 (cada pantalla)",
+    "colors": "262,144 colores"
+  },
+  "3ds": {
+    "fullName": "Nintendo 3DS",
+    "manufacturer": "Nintendo",
+    "releaseYear": 2011,
+    "generation": 8,
+    "description": "Primera consola portátil con 3D estereoscópico sin gafas. Amplia biblioteca con juegos como Pokémon X/Y, Super Mario 3D Land y The Legend of Zelda: A Link Between Worlds.",
+    "cpu": "Dual-core ARM11 MPCore a 268 MHz",
+    "resolution": "400x240 (pantalla superior), 320x240 (inferior)",
+    "colors": "16.8 millones de colores"
+  },
+  "genesis": {
+    "fullName": "Sega Genesis / Mega Drive",
+    "manufacturer": "Sega",
+    "releaseYear": 1988,
+    "generation": 4,
+    "description": "La consola que desafió a Nintendo en los 90s con su actitud 'cool' y Sonic the Hedgehog. Hogar de clásicos como Streets of Rage, Golden Axe y Phantasy Star.",
+    "cpu": "Motorola 68000 a 7.6 MHz",
+    "resolution": "320x224",
+    "colors": "512 colores disponibles"
+  },
+  "segacd": {
+    "fullName": "Sega CD / Mega-CD",
+    "manufacturer": "Sega",
+    "releaseYear": 1991,
+    "generation": 4,
+    "description": "Expansión de CD-ROM para Mega Drive que permitía gráficos mejorados, audio de calidad CD y animaciones FMV. Destacó por juegos como Sonic CD y Snatcher.",
+    "cpu": "Motorola 68000 a 12.5 MHz",
+    "resolution": "320x224",
+    "colors": "512 colores disponibles"
+  },
+  "sega32x": {
+    "fullName": "Sega 32X",
+    "manufacturer": "Sega",
+    "releaseYear": 1994,
+    "generation": 4,
+    "description": "Expansión de 32 bits para Genesis que mejoró significativamente los gráficos. A pesar de su corta vida, ofreció ports notables como Doom y Virtua Fighter.",
+    "cpu": "Dual Hitachi SH-2 a 23 MHz",
+    "resolution": "320x224",
+    "colors": "32,768 colores disponibles"
+  },
+  "saturn": {
+    "fullName": "Sega Saturn",
+    "manufacturer": "Sega",
+    "releaseYear": 1994,
+    "generation": 5,
+    "description": "Consola de 32 bits conocida por su excelente biblioteca de juegos 2D y arcade ports. Títulos destacados incluyen Panzer Dragoon Saga, Nights into Dreams y Virtua Fighter 2.",
+    "cpu": "Dual Hitachi SH-2 a 28.6 MHz",
+    "resolution": "Hasta 704x480",
+    "colors": "16.8 millones de colores"
+  },
+  "dreamcast": {
+    "fullName": "Sega Dreamcast",
+    "manufacturer": "Sega",
+    "releaseYear": 1998,
+    "generation": 6,
+    "description": "La última consola de Sega y la primera con módem integrado. Adelantada a su tiempo con juegos innovadores como Shenmue, Jet Set Radio y Phantasy Star Online.",
+    "cpu": "Hitachi SH-4 a 200 MHz",
+    "resolution": "Hasta 640x480",
+    "colors": "16.8 millones de colores"
+  },
+  "gamegear": {
+    "fullName": "Sega Game Gear",
+    "manufacturer": "Sega",
+    "releaseYear": 1990,
+    "generation": 4,
+    "description": "Portátil a color que competía con Game Boy. Pantalla retroiluminada y biblioteca de juegos de calidad, pero con menor duración de batería. Destacó por Sonic y Shinobi.",
+    "cpu": "Zilog Z80 a 3.58 MHz",
+    "resolution": "160x144",
+    "colors": "4,096 colores disponibles"
+  },
+  "psx": {
+    "fullName": "Sony PlayStation",
+    "manufacturer": "Sony",
+    "releaseYear": 1994,
+    "generation": 5,
+    "description": "La consola que llevó a Sony al mercado de videojuegos y popularizó los CD-ROMs. Biblioteca masiva con clásicos como Final Fantasy VII, Metal Gear Solid y Crash Bandicoot.",
+    "cpu": "MIPS R3000A a 33.87 MHz",
+    "resolution": "Hasta 640x480",
+    "colors": "16.8 millones de colores"
+  },
+  "ps2": {
+    "fullName": "Sony PlayStation 2",
+    "manufacturer": "Sony",
+    "releaseYear": 2000,
+    "generation": 6,
+    "description": "La consola más vendida de la historia. Reproductor de DVD incorporado y biblioteca incomparable con títulos como God of War, Shadow of the Colossus y Grand Theft Auto: San Andreas.",
+    "cpu": "Emotion Engine a 294.91 MHz",
+    "resolution": "Hasta 1280x720",
+    "colors": "16.8 millones de colores"
+  },
+  "ps3": {
+    "fullName": "Sony PlayStation 3",
+    "manufacturer": "Sony",
+    "releaseYear": 2006,
+    "generation": 7,
+    "description": "Potente consola con Cell Processor y Blu-ray. Introdujo PlayStation Network y trofeos. Destacó con The Last of Us, Uncharted series y God of War III.",
+    "cpu": "Cell Broadband Engine a 3.2 GHz",
+    "resolution": "Hasta 1080p",
+    "colors": "16.8 millones de colores"
+  },
+  "ps4": {
+    "fullName": "Sony PlayStation 4",
+    "manufacturer": "Sony",
+    "releaseYear": 2013,
+    "generation": 8,
+    "description": "Consola enfocada en gaming con arquitectura x86. Gran éxito con exclusivos como Bloodborne, Spider-Man, Horizon Zero Dawn y God of War (2018).",
+    "cpu": "AMD Jaguar 8-core a 1.6 GHz",
+    "resolution": "Hasta 1080p (4K en PS4 Pro)",
+    "colors": "16.8 millones de colores"
+  },
+  "ps5": {
+    "fullName": "Sony PlayStation 5",
+    "manufacturer": "Sony",
+    "releaseYear": 2020,
+    "generation": 9,
+    "description": "Consola de nueva generación con SSD ultra rápido, ray tracing y el innovador DualSense con feedback háptico. Juegos destacados incluyen Demon's Souls Remake y Returnal.",
+    "cpu": "AMD Zen 2 8-core a 3.5 GHz",
+    "resolution": "Hasta 4K (8K soportado)",
+    "colors": "16.8 millones de colores con HDR"
+  },
+  "psp": {
+    "fullName": "PlayStation Portable",
+    "manufacturer": "Sony",
+    "releaseYear": 2004,
+    "generation": 7,
+    "description": "Portátil multimedia con pantalla widescreen y capacidades multimedia avanzadas. Biblioteca de calidad con God of War: Chains of Olympus, Monster Hunter y Lumines.",
+    "cpu": "MIPS R4000 a 333 MHz",
+    "resolution": "480x272",
+    "colors": "16.8 millones de colores"
+  },
+  "psvita": {
+    "fullName": "PlayStation Vita",
+    "manufacturer": "Sony",
+    "releaseYear": 2011,
+    "generation": 8,
+    "description": "Sucesora de PSP con pantalla OLED táctil y touchpad trasero. A pesar de su corta vida comercial, cultivó una base de fans dedicada con títulos como Persona 4 Golden y Uncharted: Golden Abyss.",
+    "cpu": "ARM Cortex-A9 MPCore quad-core",
+    "resolution": "960x544",
+    "colors": "16.8 millones de colores"
+  },
+  "xbox": {
+    "fullName": "Microsoft Xbox",
+    "manufacturer": "Microsoft",
+    "releaseYear": 2001,
+    "generation": 6,
+    "description": "Primera incursión de Microsoft en consolas con hardware potente basado en PC. Introdujo Xbox Live y Halo: Combat Evolved, que revolucionó los FPS en consolas.",
+    "cpu": "Intel Pentium III a 733 MHz",
+    "resolution": "Hasta 1080i",
+    "colors": "16.8 millones de colores"
+  },
+  "xbox360": {
+    "fullName": "Microsoft Xbox 360",
+    "manufacturer": "Microsoft",
+    "releaseYear": 2005,
+    "generation": 7,
+    "description": "Perfeccionó el gaming online con Xbox Live mejorado y sistema de logros. Biblioteca excepcional con Halo 3, Gears of War y Mass Effect.",
+    "cpu": "PowerPC Tri-Core Xenon a 3.2 GHz",
+    "resolution": "Hasta 1080p",
+    "colors": "16.8 millones de colores"
+  },
+  "xboxone": {
+    "fullName": "Microsoft Xbox One",
+    "manufacturer": "Microsoft",
+    "releaseYear": 2013,
+    "generation": 8,
+    "description": "Consola multimedia all-in-one con enfoque en entretenimiento. Destacó por su retrocompatibilidad y servicios como Xbox Game Pass. Títulos clave incluyen Forza Horizon series y Halo 5.",
+    "cpu": "AMD Jaguar 8-core a 1.75 GHz",
+    "resolution": "Hasta 1080p (4K en Xbox One X)",
+    "colors": "16.8 millones de colores con HDR"
+  },
+  "xboxseriesx": {
+    "fullName": "Microsoft Xbox Series X/S",
+    "manufacturer": "Microsoft",
+    "releaseYear": 2020,
+    "generation": 9,
+    "description": "Consolas de nueva generación enfocadas en rendimiento y velocidad. Series X ofrece 4K nativo y ray tracing, mientras Series S es más compacta y económica. Ambas con Quick Resume y Game Pass.",
+    "cpu": "AMD Zen 2 8-core a 3.8 GHz",
+    "resolution": "Hasta 4K (8K soportado en Series X)",
+    "colors": "16.8 millones de colores con HDR"
+  },
+  "atari2600": {
+    "fullName": "Atari 2600",
+    "manufacturer": "Atari",
+    "releaseYear": 1977,
+    "generation": 2,
+    "description": "Una de las primeras consolas exitosas con cartuchos intercambiables. Popularizó clásicos arcade en el hogar como Space Invaders, Pac-Man y Pitfall!",
+    "cpu": "MOS 6507 a 1.19 MHz",
+    "resolution": "160x192",
+    "colors": "128 colores disponibles"
+  },
+  "atari5200": {
+    "fullName": "Atari 5200",
+    "manufacturer": "Atari",
+    "releaseYear": 1982,
+    "generation": 3,
+    "description": "Sucesor del 2600 con mejores gráficos y sonido. Basado en el hardware de las computadoras Atari 8-bit. Destacó por sus ports arcade y controladores analógicos.",
+    "cpu": "MOS 6502C a 1.79 MHz",
+    "resolution": "320x192",
+    "colors": "256 colores disponibles"
+  },
+  "atari7800": {
+    "fullName": "Atari 7800",
+    "manufacturer": "Atari",
+    "releaseYear": 1986,
+    "generation": 3,
+    "description": "Consola retrocompatible con Atari 2600 diseñada para competir con NES. Mejoró significativamente los gráficos y ofreció excelentes versiones de juegos arcade.",
+    "cpu": "Atari SALLY (6502) a 1.79 MHz",
+    "resolution": "320x240",
+    "colors": "256 colores disponibles"
+  },
+  "atarilynx": {
+    "fullName": "Atari Lynx",
+    "manufacturer": "Atari",
+    "releaseYear": 1989,
+    "generation": 4,
+    "description": "Primera consola portátil a color con pantalla retroiluminada. Técnicamente superior a Game Boy pero con menor éxito comercial. Destacó por su capacidad de juego multijugador.",
+    "cpu": "MOS 65SC02 a 4 MHz",
+    "resolution": "160x102",
+    "colors": "4,096 colores disponibles"
+  },
+  "atarijaguar": {
+    "fullName": "Atari Jaguar",
+    "manufacturer": "Atari",
+    "releaseYear": 1993,
+    "generation": 5,
+    "description": "Autoproclamada como la primera consola de 64 bits. La última consola de Atari tuvo una biblioteca limitada pero incluye títulos de culto como Tempest 2000 y Alien vs Predator.",
+    "cpu": "Motorola 68000 a 13.3 MHz",
+    "resolution": "Hasta 720x576",
+    "colors": "16.8 millones de colores"
+  },
+  "colecovision": {
+    "fullName": "ColecoVision",
+    "manufacturer": "Coleco",
+    "releaseYear": 1982,
+    "generation": 3,
+    "description": "Consola que destacó por sus excelentes adaptaciones de juegos arcade. Ofrecía gráficos superiores a sus competidores de la época como Donkey Kong y Zaxxon.",
+    "cpu": "Zilog Z80A a 3.58 MHz",
+    "resolution": "256x192",
+    "colors": "16 colores disponibles"
+  },
+  "intellivision": {
+    "fullName": "Intellivision",
+    "manufacturer": "Mattel Electronics",
+    "releaseYear": 1979,
+    "generation": 2,
+    "description": "Primera consola de 16 bits que rivalizó con Atari 2600. Innovador controlador con teclado numérico y disco direccional. Biblioteca diversa de juegos deportivos y estrategia.",
+    "cpu": "General Instrument CP1610 a 0.89 MHz",
+    "resolution": "159x96",
+    "colors": "16 colores disponibles"
+  },
+  "neogeo": {
+    "fullName": "SNK Neo Geo",
+    "manufacturer": "SNK",
+    "releaseYear": 1990,
+    "generation": 4,
+    "description": "Sistema arcade y doméstico con hardware idéntico. Conocida por sus juegos de lucha y run-and-gun de alta calidad como Metal Slug, The King of Fighters y Samurai Shodown.",
+    "cpu": "Motorola 68000 a 12 MHz",
+    "resolution": "320x224",
+    "colors": "65,536 colores disponibles"
+  },
+  "neogeocd": {
+    "fullName": "SNK Neo Geo CD",
+    "manufacturer": "SNK",
+    "releaseYear": 1994,
+    "generation": 4,
+    "description": "Versión más económica del Neo Geo que utilizaba CDs. Mismos juegos pero con largos tiempos de carga. Popular por hacer accesibles los costosos juegos de Neo Geo.",
+    "cpu": "Motorola 68000 a 12 MHz",
+    "resolution": "320x224",
+    "colors": "65,536 colores disponibles"
+  },
+  "ngp": {
+    "fullName": "Neo Geo Pocket",
+    "manufacturer": "SNK",
+    "releaseYear": 1998,
+    "generation": 5,
+    "description": "Portátil de SNK con pantalla monocromática. Destacó por su excelente stick analógico y versiones portátiles de franchisias Neo Geo.",
+    "cpu": "Toshiba TLCS-900H a 6.144 MHz",
+    "resolution": "160x152",
+    "colors": "8 tonos de gris"
+  },
+  "ngpc": {
+    "fullName": "Neo Geo Pocket Color",
+    "manufacturer": "SNK",
+    "releaseYear": 1999,
+    "generation": 5,
+    "description": "Versión a color de NGP con excelentes juegos de lucha y puzzles. Retrocompatible con NGP. A pesar de su calidad, no pudo competir con Game Boy Color.",
+    "cpu": "Toshiba TLCS-900H a 6.144 MHz",
+    "resolution": "160x152",
+    "colors": "4,096 colores disponibles"
+  },
+  "wonderswan": {
+    "fullName": "WonderSwan",
+    "manufacturer": "Bandai",
+    "releaseYear": 1999,
+    "generation": 5,
+    "description": "Portátil japonesa diseñada por el creador de Game Boy. Destacó por su bajo consumo de batería y biblioteca de JRPGs. Popular en Japón pero nunca lanzada internacionalmente.",
+    "cpu": "NEC V30 MZ a 3.072 MHz",
+    "resolution": "224x144",
+    "colors": "8 tonos de gris"
+  },
+  "wonderswancolor": {
+    "fullName": "WonderSwan Color",
+    "manufacturer": "Bandai",
+    "releaseYear": 2000,
+    "generation": 6,
+    "description": "Versión a color de WonderSwan retrocompatible con juegos originales. Biblioteca de calidad con Final Fantasy y ports de juegos clásicos.",
+    "cpu": "NEC V30 MZ a 3.072 MHz",
+    "resolution": "224x144",
+    "colors": "241 colores de 4,096"
+  },
+  "pcengine": {
+    "fullName": "PC Engine / TurboGrafx-16",
+    "manufacturer": "NEC / Hudson Soft",
+    "releaseYear": 1987,
+    "generation": 4,
+    "description": "Consola de 8 bits con chip gráfico de 16 bits que rivalizó con Mega Drive en Japón. Excelente biblioteca de shoot 'em ups y RPGs. Gran éxito en Japón pero limitado en Occidente.",
+    "cpu": "HuC6280 a 7.16 MHz",
+    "resolution": "256x224",
+    "colors": "512 colores disponibles"
+  },
+  "pcenginecd": {
+    "fullName": "PC Engine CD / TurboGrafx-CD",
+    "manufacturer": "NEC / Hudson Soft",
+    "releaseYear": 1988,
+    "generation": 4,
+    "description": "Primera expansión de CD-ROM exitosa para consolas. Permitió audio CD de calidad y gráficos mejorados. Biblioteca destacada con Ys series y Castlevania: Rondo of Blood.",
+    "cpu": "HuC6280 a 7.16 MHz",
+    "resolution": "256x224",
+    "colors": "512 colores disponibles"
+  },
+  "pcfx": {
+    "fullName": "PC-FX",
+    "manufacturer": "NEC",
+    "releaseYear": 1994,
+    "generation": 5,
+    "description": "Sucesor de PC Engine enfocado en anime y FMV. Nunca lanzado fuera de Japón. Biblioteca pequeña pero de culto, principalmente visual novels y anime games.",
+    "cpu": "NEC V810 a 21.5 MHz",
+    "resolution": "Hasta 640x480",
+    "colors": "16.8 millones de colores"
+  },
+  "3do": {
+    "fullName": "3DO Interactive Multiplayer",
+    "manufacturer": "The 3DO Company",
+    "releaseYear": 1993,
+    "generation": 5,
+    "description": "Ambiciosa consola multimedia con tecnología avanzada pero precio prohibitivo. Destacó por juegos innovadores como Gex, Road Rash y The Need for Speed original.",
+    "cpu": "ARM60 a 12.5 MHz",
+    "resolution": "Hasta 640x480",
+    "colors": "16.8 millones de colores"
+  },
+  "amiga": {
+    "fullName": "Commodore Amiga",
+    "manufacturer": "Commodore",
+    "releaseYear": 1985,
+    "generation": null,
+    "description": "Revolucionaria computadora personal con capacidades multimedia avanzadas. Popular para gaming en Europa con títulos legendarios como Lemmings, Monkey Island y Sensible Soccer.",
+    "cpu": "Motorola 68000 a 7.16 MHz",
+    "resolution": "Hasta 640x512",
+    "colors": "4,096 colores disponibles"
+  },
+  "c64": {
+    "fullName": "Commodore 64",
+    "manufacturer": "Commodore",
+    "releaseYear": 1982,
+    "generation": null,
+    "description": "La computadora personal más vendida de todos los tiempos. Masiva biblioteca de juegos y software. Icónico chip de sonido SID. Clásicos como Impossible Mission y The Last Ninja.",
+    "cpu": "MOS 6510 a 1.023 MHz",
+    "resolution": "320x200",
+    "colors": "16 colores disponibles"
+  },
+  "msx": {
+    "fullName": "MSX",
+    "manufacturer": "Microsoft / ASCII",
+    "releaseYear": 1983,
+    "generation": null,
+    "description": "Estándar de computadoras domésticas muy popular en Japón y Europa. Hogar de las primeras entregas de Metal Gear. Biblioteca extensa de juegos, muchos de Konami.",
+    "cpu": "Zilog Z80A a 3.58 MHz",
+    "resolution": "256x192",
+    "colors": "16 colores disponibles"
+  },
+  "zxspectrum": {
+    "fullName": "ZX Spectrum",
+    "manufacturer": "Sinclair Research",
+    "releaseYear": 1982,
+    "generation": null,
+    "description": "Computadora británica icónica que popularizó el gaming en Reino Unido. Biblioteca masiva de juegos de todos los géneros. Definió una generación de programadores y jugadores.",
+    "cpu": "Zilog Z80A a 3.5 MHz",
+    "resolution": "256x192",
+    "colors": "8 colores + 8 brillantes"
+  },
+  "amstradcpc": {
+    "fullName": "Amstrad CPC",
+    "manufacturer": "Amstrad",
+    "releaseYear": 1984,
+    "generation": null,
+    "description": "Serie de computadoras de 8 bits popular en Europa. Monitor integrado y grabadora de cassette. Excelente biblioteca de juegos incluyendo ports de arcade y títulos exclusivos.",
+    "cpu": "Zilog Z80 a 4 MHz",
+    "resolution": "160x200 a 640x200",
+    "colors": "27 colores disponibles"
+  },
+  "dos": {
+    "fullName": "MS-DOS / PC",
+    "manufacturer": "Microsoft / IBM",
+    "releaseYear": 1981,
+    "generation": null,
+    "description": "Plataforma de PC que se convirtió en líder de gaming. Masiva biblioteca con clásicos como Doom, Wolfenstein 3D, Dune II y toda la era dorada de adventure games de LucasArts y Sierra.",
+    "cpu": "Variable (Intel x86)",
+    "resolution": "Variable",
+    "colors": "Variable según hardware"
+  },
+  "scummvm": {
+    "fullName": "ScummVM",
+    "manufacturer": "ScummVM Team",
+    "releaseYear": 2001,
+    "generation": null,
+    "description": "Motor de interpretación para juegos point-and-click clásicos. Permite jugar aventuras gráficas de LucasArts, Sierra, Revolution Software y muchos más en sistemas modernos.",
+    "cpu": "N/A (Software)",
+    "resolution": "Variable",
+    "colors": "Según juego original"
+  },
+  "arcade": {
+    "fullName": "Arcade",
+    "manufacturer": "Varios",
+    "releaseYear": 1971,
+    "generation": null,
+    "description": "Máquinas recreativas que definieron la era dorada de los videojuegos. Desde Pong y Pac-Man hasta Street Fighter II y Metal Slug. Hardware especializado para experiencias óptimas.",
+    "cpu": "Variable según máquina",
+    "resolution": "Variable según máquina",
+    "colors": "Variable según hardware"
+  }
+}

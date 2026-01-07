@@ -193,6 +193,7 @@ class RomsListView extends StatelessWidget {
 
   Widget _buildDetailPanel(RomItem item, BuildContext context) {
     return RomDetailPanel(
+      key: ValueKey(item.path), // Force rebuild when item changes
       item: item,
       media: mediaCache[item.name],
       gameInfo: gameInfoCache[item.name],

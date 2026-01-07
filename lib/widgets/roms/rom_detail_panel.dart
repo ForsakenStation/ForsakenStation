@@ -10,7 +10,7 @@ import '../common/star_rating.dart';
 import '../common/region_flags.dart';
 import '../common/rom_tag_badges.dart';
 
-class RomDetailPanel extends StatelessWidget {
+class RomDetailPanel extends StatefulWidget {
   final RomItem item;
   final RomMedia? media;
   final GameInfo? gameInfo;
@@ -33,23 +33,48 @@ class RomDetailPanel extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  State<RomDetailPanel> createState() => _RomDetailPanelState();
+}
+
+class _RomDetailPanelState extends State<RomDetailPanel> {
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  @override
+  void didUpdateWidget(RomDetailPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Reload data if the item changed
+    if (oldWidget.item.path != widget.item.path) {
+      _loadData();
+    }
+  }
+
+  void _loadData() {
     // Trigger media loading if callback provided and media not loaded
-    if (media == null && onLoadMedia != null) {
+    if (widget.media == null && widget.onLoadMedia != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        onLoadMedia!();
+        if (mounted) {
+          widget.onLoadMedia!();
+        }
       });
     }
 
     // Trigger game info loading if callback provided and info not loaded
-    if (gameInfo == null && onLoadGameInfo != null) {
+    if (widget.gameInfo == null && widget.onLoadGameInfo != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        onLoadGameInfo!();
+        if (mounted) {
+          widget.onLoadGameInfo!();
+        }
       });
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Column(
-      key: ValueKey(item.path), // Force rebuild when ROM changes
       children: [
         // Scrollable content
         Expanded(
@@ -59,12 +84,14 @@ class RomDetailPanel extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Media carousel (optional)
-                if (showMediaCarousel) ...[
-                  if (media != null)
+                if (widget.showMediaCarousel) ...[
+                  if (widget.media != null)
                     MediaCarousel(
-                      key: ValueKey('${item.path}_carousel'),
-                      media: media!,
-                      height: mediaHeight!,
+                      key: ValueKey(
+                        '${widget.item.name}_${widget.media!.romName}_carousel',
+                      ),
+                      media: widget.media!,
+                      height: widget.mediaHeight!,
                     )
                   else
                     Center(child: PlaceholderImage(size: 200)),
@@ -73,7 +100,7 @@ class RomDetailPanel extends StatelessWidget {
 
                 // ROM Name
                 Text(
-                  gameInfo?.name ?? item.displayName,
+                  widget.gameInfo?.name ?? widget.item.displayName,
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -87,15 +114,15 @@ class RomDetailPanel extends StatelessWidget {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     // Star rating
-                    if (gameInfo?.rating != null)
+                    if (widget.gameInfo?.rating != null)
                       StarRating(
-                        rating: gameInfo!.rating,
+                        rating: widget.gameInfo!.rating,
                         size: 20,
                         showRatingText: true,
                       ),
                     // ROM tags (from ROM filename)
-                    if (item.tags != null)
-                      RomTagBadges(romTags: item.tags, fontSize: 11),
+                    if (widget.item.tags != null)
+                      RomTagBadges(romTags: widget.item.tags, fontSize: 11),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -104,7 +131,7 @@ class RomDetailPanel extends StatelessWidget {
                 InfoRow(
                   label: 'Description',
                   value:
-                      gameInfo?.desc ??
+                      widget.gameInfo?.desc ??
                       'No description available for this ROM.',
                 ),
                 const SizedBox(height: 16),
@@ -119,7 +146,9 @@ class RomDetailPanel extends StatelessWidget {
                       child: InfoRow(
                         label: 'Release Date',
                         value:
-                            gameInfo?.releaseDate?.toString().split(' ')[0] ??
+                            widget.gameInfo?.releaseDate?.toString().split(
+                              ' ',
+                            )[0] ??
                             '',
                       ),
                     ),
@@ -127,7 +156,7 @@ class RomDetailPanel extends StatelessWidget {
                     Expanded(
                       child: InfoRow(
                         label: 'Developer',
-                        value: gameInfo?.developer ?? '',
+                        value: widget.gameInfo?.developer ?? '',
                       ),
                     ),
                   ],
@@ -141,14 +170,14 @@ class RomDetailPanel extends StatelessWidget {
                     Expanded(
                       child: InfoRow(
                         label: 'Publisher',
-                        value: gameInfo?.publisher ?? '',
+                        value: widget.gameInfo?.publisher ?? '',
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: InfoRow(
                         label: 'Genre',
-                        value: gameInfo?.genre ?? '',
+                        value: widget.gameInfo?.genre ?? '',
                       ),
                     ),
                   ],
@@ -173,7 +202,10 @@ class RomDetailPanel extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          LanguageFlags(languageInfo: item.languages, size: 24),
+                          LanguageFlags(
+                            languageInfo: widget.item.languages,
+                            size: 24,
+                          ),
                         ],
                       ),
                     ),
@@ -192,7 +224,10 @@ class RomDetailPanel extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          RegionFlags(regionInfo: item.regions, size: 20),
+                          RegionFlags(
+                            regionInfo: widget.item.regions,
+                            size: 20,
+                          ),
                         ],
                       ),
                     ),
@@ -207,14 +242,14 @@ class RomDetailPanel extends StatelessWidget {
                     Expanded(
                       child: InfoRow(
                         label: 'Players',
-                        value: gameInfo?.playersText ?? '',
+                        value: widget.gameInfo?.playersText ?? '',
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: InfoRow(
                         label: 'Rating',
-                        value: gameInfo?.ratingPercentage ?? '--',
+                        value: widget.gameInfo?.ratingPercentage ?? '--',
                       ),
                     ),
                   ],
@@ -242,7 +277,7 @@ class RomDetailPanel extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: onLaunch,
+                onPressed: widget.onLaunch,
                 icon: const Icon(Icons.gamepad),
                 label: const Text('Play'),
                 style: ElevatedButton.styleFrom(

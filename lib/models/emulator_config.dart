@@ -15,12 +15,25 @@ class EmulatorCommand {
   });
 
   factory EmulatorCommand.fromJson(Map<String, dynamic> json) {
+    final commandString = json['command'] as String;
+    // Parse the command string into command and args
+    final parts = commandString.trim().split(RegExp(r'\s+'));
+    final command = parts.isNotEmpty ? parts.first : '';
+    final args = parts.length > 1 ? parts.sublist(1) : <String>[];
+
+    // Add {ROM} placeholder at the end if not present
+    if (args.isEmpty || !args.any((arg) => arg.contains('{ROM}'))) {
+      args.add('{ROM}');
+    }
+
     return EmulatorCommand(
       name: json['name'] as String,
-      command: json['command'] as String,
-      args: json['args'] != null
-          ? List<String>.from(json['args'] as List)
-          : const [],
+      command: command,
+      args: args.isNotEmpty
+          ? args
+          : (json['args'] != null
+              ? List<String>.from(json['args'] as List)
+              : const []),
     );
   }
 
@@ -113,18 +126,21 @@ class EmulatorConfig {
         // Single command as string
         commands = [EmulatorCommand.fromForsakenFormat(system, commandField)];
       } else if (commandField is List) {
-        // Multiple commands as array of strings
-        commands = commandField
-            .asMap()
-            .entries
-            .map(
-              (entry) => EmulatorCommand.fromForsakenFormat(
-                system,
-                entry.value as String,
-                index: entry.key,
-              ),
-            )
-            .toList();
+        // Multiple commands as array of strings or objects
+        commands = commandField.asMap().entries.map((entry) {
+          final value = entry.value;
+          if (value is String) {
+            return EmulatorCommand.fromForsakenFormat(
+              system,
+              value,
+              index: entry.key,
+            );
+          } else if (value is Map<String, dynamic>) {
+            return EmulatorCommand.fromJson(value);
+          } else {
+            throw Exception('Invalid command entry type for system: $system');
+          }
+        }).toList();
       } else {
         throw Exception('Invalid command type for system: $system');
       }
