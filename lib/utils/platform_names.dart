@@ -14,6 +14,7 @@ class PlatformNames {
     'gc': 'Nintendo GameCube',
     'gamecube': 'Nintendo GameCube',
     'wii': 'Nintendo Wii',
+    'wiiware': 'Nintendo Wii Ware',
     'wiiu': 'Nintendo Wii U',
     'switch': 'Nintendo Switch',
 
@@ -23,6 +24,7 @@ class PlatformNames {
     'gba': 'Game Boy Advance',
     'nds': 'Nintendo DS',
     'ds': 'Nintendo DS',
+    'dsi': 'Nintendo DSi',
     '3ds': 'Nintendo 3DS',
     'n3ds': 'Nintendo 3DS',
     'satellaview': 'Nintendo Satella View',
@@ -39,6 +41,8 @@ class PlatformNames {
     'sg1000': 'Sega SG-1000',
     'model2': 'Sega Model 2',
     'model3': 'Sega Model 3',
+    'segastv': 'Sega Titan-Video',
+    'snes-msu1': 'Sega MSU1',
 
     // Sega Handhelds
     'gamegear': 'Sega Game Gear',
@@ -69,9 +73,11 @@ class PlatformNames {
     'atarilynx': 'Atari Lynx',
     'lynx': 'Atari Lynx',
     'atarist': 'Atari ST',
+    'xegs': 'Atari XE',
 
     // Neo Geo
     'neogeo': 'Neo Geo',
+    'neogeo64': 'Neo Geo 64',
     'neogeocs': 'Neo Geo CD',
     'ngp': 'Neo Geo Pocket',
     'ngpc': 'Neo Geo Pocket Color',
@@ -81,6 +87,7 @@ class PlatformNames {
     'amiga500': 'Commodore Amiga',
     'amiga600': 'Commodore Amiga 600',
     'amiga1200': 'Commodore Amiga 1200',
+    'pet': 'Commodore PET',
     'c64': 'Commodore 64',
     'c128': 'Commodore 128',
     'vic20': 'Commodore VIC-20',
@@ -132,6 +139,9 @@ class PlatformNames {
     'virtualboy': 'Virtual Boy',
     'vb': 'Virtual Boy',
     'fmtows': 'FM Towns Marty',
+    'astrocde': 'Bally Astrocade',
+    'vc4000': 'VC 4000',
+    'apfm1000': 'APF MP-1000',
 
     // Mobile/Modern
     'android': 'Android',

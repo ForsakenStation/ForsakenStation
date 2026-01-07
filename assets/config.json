@@ -901,7 +901,6 @@
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
@@ -1070,6 +1069,14 @@
                 {
                     "name": "genesis_plus_gx",
                     "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so"
+                },
+                {
+                    "name": "genesis_plus_gx_wide",
+                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_wide_libretro.so"
+                },
+                {
+                    "name": "genesis_plus_gx_expanded",
+                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_expanded_libretro.so"
                 }
             ],
             "useForeverMode": false,
