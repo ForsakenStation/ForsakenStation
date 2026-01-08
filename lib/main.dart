@@ -22,21 +22,23 @@ Future<void> main() async {
   MediaKit.ensureInitialized();
 
   // Initialize window manager for fullscreen support
-  await windowManager.ensureInitialized();
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    await windowManager.ensureInitialized();
 
-  const windowOptions = WindowOptions(
-    size: Size(1280, 720),
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.normal,
-  );
+    const windowOptions = WindowOptions(
+      size: Size(1280, 720),
+      center: true,
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.normal,
+    );
 
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-    await windowManager.setFullScreen(true);
-  });
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+      await windowManager.setFullScreen(true);
+    });
+  }
 
   // Load environment variables
   try {
@@ -218,7 +220,7 @@ class InitializingScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.file(File('assets/images/logo.png'), width: 128, height: 128),
+            Image.asset('assets/images/logo.png', width: 128, height: 128),
             const SizedBox(height: 32),
             const CircularProgressIndicator(),
             const SizedBox(height: 24),

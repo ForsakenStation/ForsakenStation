@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:forsaken/screens/roms/roms_carousel_view.dart';
@@ -719,8 +718,8 @@ class _RomsScreenState extends State<RomsScreen> {
               Positioned.fill(
                 child: Opacity(
                   opacity: 0.15, // Very attenuated (15% opacity)
-                  child: Image.file(
-                    File(_platformBackgroundPath!),
+                  child: Image.asset(
+                    _platformBackgroundPath!,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return const SizedBox.shrink();
@@ -838,7 +837,7 @@ class _RomsScreenState extends State<RomsScreen> {
       margin: const EdgeInsets.only(right: 1),
       child: Row(
         children: [
-          Image.file(File('assets/images/icon.png'), width: 24, height: 24),
+          Image.asset('assets/images/icon.png', width: 24, height: 24),
           Icon(Icons.chevron_right),
           _platformLogoPath != null
               ? SvgPicture.asset(

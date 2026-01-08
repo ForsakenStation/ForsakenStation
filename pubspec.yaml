@@ -18,11 +18,11 @@ dependencies:
   provider: ^6.1.5+1
   media_kit: ^1.2.6
   media_kit_video: ^2.0.1
-  media_kit_libs_linux: ^1.2.1
+  media_kit_libs_video: ^1.0.7
   shared_preferences: ^2.5.4
   window_manager: ^0.5.1
   file_picker: ^10.3.8
-  google_fonts: ^6.3.3
+  google_fonts: ^7.0.0
   xml: ^6.6.1
   archive: ^4.0.7
   gamepads: ^0.1.9
@@ -38,7 +38,9 @@ flutter:
     - .env
     - assets/config.json
     - assets/data/platforms_info.json
+    - assets/images/
     - assets/theme/images/logos/
     - assets/theme/images/clogos/
     - assets/theme/images/backgrounds/
+    - assets/theme/images/systems/
 

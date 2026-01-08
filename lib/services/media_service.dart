@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as path;
 import '../models/media.dart';
 import '../models/rom.dart';
@@ -393,29 +394,34 @@ class MediaService {
 
     // First, try to find the platform-specific image
     for (var ext in imageExtensions) {
-      final platformImagePath = path.join(systemsPath, '$platformName.$ext');
-      final file = File(platformImagePath);
+      final platformImagePath = '$systemsPath/$platformName.$ext';
 
-      if (await file.exists()) {
+      // Check if asset exists using rootBundle (works on all platforms including Android)
+      try {
+        await rootBundle.load(platformImagePath);
         _debug.debug(
           'Found system image: $platformImagePath',
           tag: 'MediaService',
         );
         return platformImagePath;
+      } catch (e) {
+        // Asset doesn't exist, continue to next
       }
     }
 
     // If platform image not found, try _default
     for (var ext in imageExtensions) {
-      final defaultImagePath = path.join(systemsPath, '_default.$ext');
-      final file = File(defaultImagePath);
+      final defaultImagePath = '$systemsPath/_default.$ext';
 
-      if (await file.exists()) {
+      try {
+        await rootBundle.load(defaultImagePath);
         _debug.debug(
           'Using default system image: $defaultImagePath',
           tag: 'MediaService',
         );
         return defaultImagePath;
+      } catch (e) {
+        // Asset doesn't exist, continue to next
       }
     }
 
@@ -431,26 +437,30 @@ class MediaService {
   /// 2. White logo (assets/theme/images/logos/)
   /// Returns asset path or null if not found
   Future<String?> getSystemLogo(String platformName) async {
-    final imageExtensions = ['svgz','svg'];
+    final imageExtensions = ['svgz', 'svg'];
 
     // Priority 1: Color logo
     for (var ext in imageExtensions) {
       final colorLogoPath = 'assets/theme/images/clogos/$platformName.$ext';
-      // Check if asset file exists in the project structure
-      final colorLogoFile = File(colorLogoPath);
-      if (await colorLogoFile.exists()) {
+      // Check if asset exists using rootBundle (works on all platforms including Android)
+      try {
+        await rootBundle.load(colorLogoPath);
         _debug.debug('Found color logo: $colorLogoPath', tag: 'MediaService');
         return colorLogoPath;
+      } catch (e) {
+        // Asset doesn't exist, continue to next
       }
     }
 
     // Priority 2: White logo
     for (var ext in imageExtensions) {
       final whiteLogoPath = 'assets/theme/images/logos/$platformName.$ext';
-      final whiteLogoFile = File(whiteLogoPath);
-      if (await whiteLogoFile.exists()) {
+      try {
+        await rootBundle.load(whiteLogoPath);
         _debug.debug('Found white logo: $whiteLogoPath', tag: 'MediaService');
         return whiteLogoPath;
+      } catch (e) {
+        // Asset doesn't exist, continue to next
       }
     }
 
@@ -462,11 +472,14 @@ class MediaService {
   /// Returns asset path to background or default.jpg if platform background not found
   Future<String> getSystemBackground(String platformName) async {
     final backgroundPath = 'assets/theme/images/backgrounds/$platformName.jpg';
-    final backgroundFile = File(backgroundPath);
 
-    if (await backgroundFile.exists()) {
+    // Check if asset exists using rootBundle (works on all platforms including Android)
+    try {
+      await rootBundle.load(backgroundPath);
       _debug.debug('Found background: $backgroundPath', tag: 'MediaService');
       return backgroundPath;
+    } catch (e) {
+      // Asset doesn't exist, use default
     }
 
     // Fallback to default background

@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'dart:io';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../models/platform.dart';
 import '../services/rom_service.dart';
@@ -507,11 +506,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
             child: Container(color: Colors.black.withValues(alpha: 0.2)),
           ),
         ),
-        title: Image.file(
-          File('assets/images/icon.png'),
-          width: 24,
-          height: 24,
-        ),
+        title: Image.asset('assets/images/icon.png', width: 24, height: 24),
         actions: [
           const ThemeSelector(),
           if (_platforms.isNotEmpty)
@@ -801,8 +796,8 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(48.0),
                   child: imagePath != null
-                      ? Image.file(
-                          File(imagePath),
+                      ? Image.asset(
+                          imagePath,
                           width: MediaQuery.of(context).size.width * 0.40,
                           errorBuilder: (context, error, stackTrace) {
                             return _buildFallbackIcon(platform.name, 200);

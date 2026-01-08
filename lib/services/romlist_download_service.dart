@@ -266,12 +266,20 @@ class RomlistDownloadService {
   }
 
   // Legacy methods for backward compatibility (not implemented)
-  Future<bool> isGameListsDownloaded() async => false;
+  Future<bool> isGameListsDownloaded() async => isDownloaded();
   Future<bool> isRomsGenerated() async => false;
   Future<void> downloadGameLists({
     Function(double)? onProgress,
     Function(String)? onStatus,
-  }) async {}
+  }) async {
+    onStatus?.call('Downloading...');
+    await downloadAndExtract(
+      onProgress: (progress, received, total) {
+        onProgress?.call(progress);
+      },
+    );
+    onStatus?.call('Completed');
+  }
   Future<void> generateFakeRoms({
     Function(String)? onPlatform,
     Function(double)? onProgress,

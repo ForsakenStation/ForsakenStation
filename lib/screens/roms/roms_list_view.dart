@@ -47,45 +47,42 @@ class RomsListView extends StatelessWidget {
     final isWideScreen = MediaQuery.of(context).size.width > 800;
     RomItem? selectedRom = items[selectedIndex];
 
-    return Padding(
-      padding: EdgeInsets.only(top: 56),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Focus(
-              focusNode: focusNode,
-              autofocus: true,
-              onKeyEvent: (node, event) => onKeyEvent(event),
-              child: ListView.builder(
-                controller: scrollController,
-                padding: const EdgeInsets.all(8),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  final isSelected = index == selectedIndex;
-                  return _buildListItem(
-                    context,
-                    index,
-                    item,
-                    isSelected,
-                    isWideScreen,
-                  );
-                },
-              ),
+    return Row(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Focus(
+            focusNode: focusNode,
+            autofocus: true,
+            onKeyEvent: (node, event) => onKeyEvent(event),
+            child: ListView.builder(
+              controller: scrollController,
+              padding: const EdgeInsets.all(8),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final isSelected = index == selectedIndex;
+                return _buildListItem(
+                  context,
+                  index,
+                  item,
+                  isSelected,
+                  isWideScreen,
+                );
+              },
             ),
           ),
-          isWideScreen
-              ? const VerticalDivider(width: 1)
-              : const SizedBox.shrink(),
-          isWideScreen
-              ? Expanded(
-                  flex: 2,
-                  child: _buildDetailPanel(selectedRom, context),
-                )
-              : const SizedBox.shrink(),
-        ],
-      ),
+        ),
+        isWideScreen
+            ? const VerticalDivider(width: 1)
+            : const SizedBox.shrink(),
+        isWideScreen
+            ? Expanded(
+                flex: 2,
+                child: _buildDetailPanel(selectedRom, context),
+              )
+            : const SizedBox.shrink(),
+      ],
     );
   }
 
