@@ -28,6 +28,7 @@ import 'package:forsaken/widgets/common/theme_selector.dart';
 import 'package:forsaken/widgets/common/help_dialog.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
 import 'package:forsaken/widgets/common/virtual_keyboard.dart';
+import 'package:forsaken/widgets/common/navigation_overlay.dart';
 import 'package:forsaken/widgets/roms/launch_progress_dialog.dart';
 import 'package:forsaken/widgets/roms/save_rom_dialog.dart';
 import 'package:forsaken/services/rom_storage_service.dart';
@@ -78,6 +79,10 @@ class _RomsScreenState extends State<RomsScreen> {
   String? _platformBackgroundPath;
   final _debug = DebugService.instance;
 
+  // Platform navigation support
+  List<Platform>? _allPlatforms;
+  int? _currentPlatformIndex;
+
   // Search/filter functionality
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
@@ -103,7 +108,66 @@ class _RomsScreenState extends State<RomsScreen> {
     _carouselFocusNode = FocusNode();
     _gridFocusNode = FocusNode();
     _listFocusNode = FocusNode();
+    _loadPlatformsList();
     _loadItems();
+  }
+
+  /// Load list of all platforms for lateral navigation
+  Future<void> _loadPlatformsList() async {
+    try {
+      final platforms = await widget.romService.loadPlatforms();
+      setState(() {
+        _allPlatforms = platforms;
+        _currentPlatformIndex = platforms.indexWhere(
+          (p) => p.name == widget.platform.name,
+        );
+      });
+    } catch (e) {
+      _debug.error('Failed to load platforms list', error: e);
+    }
+  }
+
+  /// Navigate to previous platform
+  void _navigateToPreviousPlatform() {
+    if (_allPlatforms == null || _currentPlatformIndex == null) return;
+    if (_currentPlatformIndex! <= 0) return;
+
+    final previousPlatform = _allPlatforms![_currentPlatformIndex! - 1];
+    _navigateToPlatform(previousPlatform);
+  }
+
+  /// Navigate to next platform
+  void _navigateToNextPlatform() {
+    if (_allPlatforms == null || _currentPlatformIndex == null) return;
+    if (_currentPlatformIndex! >= _allPlatforms!.length - 1) return;
+
+    final nextPlatform = _allPlatforms![_currentPlatformIndex! + 1];
+    _navigateToPlatform(nextPlatform);
+  }
+
+  /// Navigate to a specific platform
+  void _navigateToPlatform(Platform platform) {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            RomsScreen(platform: platform, romService: widget.romService),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+          var tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
+    );
   }
 
   @override
@@ -581,6 +645,20 @@ class _RomsScreenState extends State<RomsScreen> {
 
   /// Handle list-specific navigation
   KeyEventResult _handleListNavigation(LogicalKeyboardKey key) {
+    // Check for lateral platform navigation first (only in root, not in subdirectories)
+    if (_currentSubdirectory == null && _pathHistory.isEmpty) {
+      if (key == LogicalKeyboardKey.arrowLeft ||
+          key == LogicalKeyboardKey.keyQ) {
+        _navigateToPreviousPlatform();
+        return KeyEventResult.handled;
+      }
+      if (key == LogicalKeyboardKey.arrowRight ||
+          key == LogicalKeyboardKey.keyE) {
+        _navigateToNextPlatform();
+        return KeyEventResult.handled;
+      }
+    }
+
     final newIndex = _keyboardService.handleListNavigation(
       key: key,
       currentIndex: _selectedIndex,
@@ -739,6 +817,14 @@ class _RomsScreenState extends State<RomsScreen> {
                     },
                   ),
               ],
+            ),
+
+            // Navigation overlay
+            NavigationOverlay(
+              screenName:
+                  '${widget.platform.displayName} - ${_viewMode.name.toUpperCase()} View',
+              keyboardControls: _getKeyboardControls(),
+              gamepadControls: _getGamepadControls(),
             ),
           ],
         ),
@@ -1372,5 +1458,56 @@ class _RomsScreenState extends State<RomsScreen> {
         _scrollToIndexInGrid(_selectedIndex, _calculateCrossAxisCount(context));
         break;
     }
+  }
+
+  /// Get keyboard controls for navigation overlay
+  Map<String, String> _getKeyboardControls() {
+    final baseControls = {
+      '↑↓': 'Navigate ROMs',
+      'Enter': 'Select ROM',
+      'Backspace': 'Go back / Clear search',
+      'R': 'Random ROM',
+      'V': 'Change view mode',
+      'S': 'Search',
+      'Shift+Letter': 'Jump to letter',
+      'Shift+?': 'Show help',
+    };
+
+    if (_viewMode == ViewMode.list &&
+        _pathHistory.isEmpty &&
+        _currentSubdirectory == null) {
+      baseControls['←→ / Q E'] = 'Change platform';
+    }
+
+    if (_viewMode == ViewMode.grid) {
+      baseControls['←→'] = 'Navigate horizontally';
+      baseControls['↑↓'] = 'Navigate vertically';
+    }
+
+    return baseControls;
+  }
+
+  /// Get gamepad controls for navigation overlay
+  Map<String, String> _getGamepadControls() {
+    final baseControls = {
+      'D-Pad': 'Navigate',
+      'A / X': 'Select ROM',
+      'B / Circle': 'Go back',
+      'Y / Square': 'Random ROM',
+      'Start': 'Search',
+      'Select': 'Change view',
+    };
+
+    if (_viewMode == ViewMode.list &&
+        _pathHistory.isEmpty &&
+        _currentSubdirectory == null) {
+      baseControls['L1 / R1'] = 'Change platform';
+    }
+
+    if (_viewMode == ViewMode.grid) {
+      baseControls['D-Pad'] = 'Navigate grid';
+    }
+
+    return baseControls;
   }
 }

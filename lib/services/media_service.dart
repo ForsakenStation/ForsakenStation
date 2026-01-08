@@ -431,7 +431,7 @@ class MediaService {
   /// 2. White logo (assets/theme/images/logos/)
   /// Returns asset path or null if not found
   Future<String?> getSystemLogo(String platformName) async {
-    final imageExtensions = ['svg', 'png', 'jpg', 'jpeg', 'webp'];
+    final imageExtensions = ['svgz','svg'];
 
     // Priority 1: Color logo
     for (var ext in imageExtensions) {

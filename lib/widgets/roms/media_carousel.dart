@@ -305,10 +305,16 @@ class _MediaCarouselState extends State<MediaCarousel> {
   }
 
   void _showFullScreenImage(Media media) {
+    final index = _mediaItems.indexOf(media);
+
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (context) => FullScreenImageViewer(imagePath: media.path),
+        builder: (context) => FullScreenImageViewer(
+          imagePath: media.path,
+          allMedia: _mediaItems,
+          initialIndex: index >= 0 ? index : 0,
+        ),
       ),
     );
   }
