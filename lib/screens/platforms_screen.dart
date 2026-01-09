@@ -409,7 +409,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     final newIndex = _keyboardService.findIndexByLetter(
       letter: letter,
       items: _platforms,
-      getDisplayName: (platform) => platform.displayName,
+      getDisplayName: (platform) => platform.name,
     );
 
     if (newIndex == null) return KeyEventResult.ignored;
