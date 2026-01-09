@@ -17,6 +17,7 @@ import '../widgets/platforms/platform_info_dialog.dart';
 import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
 import '../widgets/common/smart_svg.dart';
+import '../widgets/common/controls_bottom_bar.dart';
 import 'roms_screen.dart';
 import 'settings_screen.dart';
 
@@ -312,7 +313,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     }
   }
 
-  /// Handles common keyboard shortcuts (R, V, I) that work across all view modes
+  /// Handles common keyboard shortcuts (R, V, I, Tab) that work across all view modes
   /// Returns true if the key was handled, false otherwise
   bool _handleCommonShortcuts(LogicalKeyboardKey key) {
     if (key == KeyboardService.keyRefresh) {
@@ -325,6 +326,13 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     }
     if (key == LogicalKeyboardKey.keyI) {
       _showPlatformInfo();
+      return true;
+    }
+    if (key == LogicalKeyboardKey.tab) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+      );
       return true;
     }
     return false;
@@ -629,8 +637,62 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
                 ),
               ],
       ),
-      body: _buildBody(),
+      body: Column(
+        children: [
+          Expanded(child: _buildBody()),
+          // Bottom bar with controls
+          ControlsBottomBar(
+            actions: _getBottomBarActions(),
+            counterText: _platforms.isEmpty
+                ? null
+                : '${_getCurrentIndex() + 1} / ${_platforms.length}',
+          ),
+        ],
+      ),
     );
+  }
+
+  /// Get current selected index based on view mode
+  int _getCurrentIndex() {
+    return _viewMode == ViewMode.carousel
+        ? _carouselCurrentIndex
+        : _gridSelectedIndex;
+  }
+
+  /// Get bottom bar actions based on current view mode
+  List<BottomBarAction> _getBottomBarActions() {
+    return [
+      const BottomBarAction(
+        label: 'Select',
+        keyboardKey: 'Enter',
+        gamepadButton: 'A',
+        icon: Icons.check,
+      ),
+      const BottomBarAction(
+        label: 'Info',
+        keyboardKey: 'I',
+        gamepadButton: 'Y',
+        icon: Icons.info_outline,
+      ),
+      const BottomBarAction(
+        label: 'View',
+        keyboardKey: 'V',
+        gamepadButton: 'R3',
+        icon: Icons.view_carousel,
+      ),
+      const BottomBarAction(
+        label: 'Refresh',
+        keyboardKey: 'R',
+        gamepadButton: 'X',
+        icon: Icons.refresh,
+      ),
+      const BottomBarAction(
+        label: 'Settings',
+        keyboardKey: 'Tab',
+        gamepadButton: 'Start',
+        icon: Icons.settings,
+      ),
+    ];
   }
 
   Widget _buildBody() {
@@ -774,26 +836,6 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
               final platform = _platforms[index];
               return _buildCarouselItem(platform);
             },
-          ),
-          // Position indicator (bottom-right)
-          Positioned(
-            bottom: 20,
-            right: 20,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                '${_carouselCurrentIndex + 1} / ${_platforms.length}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
           ),
           // Navigation hint (only show initially)
           if (_showNavigationHint)

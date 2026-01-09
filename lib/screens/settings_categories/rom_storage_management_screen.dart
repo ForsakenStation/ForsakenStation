@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../services/rom_storage_service.dart';
 import '../../services/debug_service.dart';
+import '../../services/keyboard_service.dart';
 
 /// Screen for managing downloaded ROMs (temporary and permanent storage)
 class RomStorageManagementScreen extends StatefulWidget {
@@ -16,6 +18,8 @@ class _RomStorageManagementScreenState
     extends State<RomStorageManagementScreen> {
   final _storageService = RomStorageService.instance;
   final _debug = DebugService.instance;
+  final _keyboardService = KeyboardService.instance;
+  final _focusNode = FocusNode();
 
   Map<String, dynamic> _storageStats = {};
   Map<String, List<FileSystemEntity>> _tempRoms = {};
@@ -23,9 +27,29 @@ class _RomStorageManagementScreenState
   bool _isLoading = true;
 
   @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _loadStorageData();
+  }
+
+  KeyEventResult _handleKeyEvent(KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+
+    final key = event.logicalKey;
+
+    // Handle back key (ESC or Backspace)
+    if (_keyboardService.isBackKey(key)) {
+      Navigator.pop(context);
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
   }
 
   Future<void> _loadStorageData() async {
@@ -292,168 +316,172 @@ class _RomStorageManagementScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ROM Storage Management'),
-        actions: [
-          if (_storageStats['tempCount'] != null &&
-              _storageStats['tempCount'] > 0)
+    return Focus(
+      focusNode: _focusNode,
+      autofocus: true,
+      onKeyEvent: (node, event) => _handleKeyEvent(event),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('ROM Storage Management'),
+          actions: [
+            if (_storageStats['tempCount'] != null &&
+                _storageStats['tempCount'] > 0)
+              IconButton(
+                icon: const Icon(Icons.delete_sweep),
+                onPressed: _clearAllTempRoms,
+                tooltip: 'Clear all temporary ROMs',
+              ),
             IconButton(
-              icon: const Icon(Icons.delete_sweep),
-              onPressed: _clearAllTempRoms,
-              tooltip: 'Clear all temporary ROMs',
+              icon: const Icon(Icons.refresh),
+              onPressed: _loadStorageData,
+              tooltip: 'Refresh',
             ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadStorageData,
-            tooltip: 'Refresh',
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                // Storage Statistics Card
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.storage,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'Storage Overview',
-                                style: Theme.of(context).textTheme.titleLarge
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            if ((_storageStats['tempCount'] ?? 0) > 0)
-                              IconButton(
-                                icon: const Icon(Icons.cleaning_services),
-                                onPressed: _clearAllTempRoms,
-                                tooltip: 'Clear all temporary ROMs',
-                                iconSize: 20,
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildStatCard(
-                                context,
-                                'Temporary Storage',
-                                Icons.access_time,
-                                _storageStats['tempCount'] ?? 0,
-                                _storageStats['tempSize'] ?? 0,
-                                Colors.orange,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _buildStatCard(
-                                context,
-                                'Permanent Storage',
-                                Icons.cloud_done,
-                                _storageStats['foreverCount'] ?? 0,
-                                _storageStats['foreverSize'] ?? 0,
-                                Colors.green,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Temp path: ${_storageStats['tempPath'] ?? 'Unknown'}',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                fontFamily: 'monospace',
-                                color: Colors.grey,
-                              ),
-                        ),
-                        Text(
-                          'Forever path: ${_storageStats['foreverPath'] ?? 'Unknown'}',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                fontFamily: 'monospace',
-                                color: Colors.grey,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Permanent ROMs Section
-                if (_foreverRoms.isNotEmpty) ...[
-                  Text(
-                    'Permanent ROMs',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  ..._foreverRoms.entries.map(
-                    (entry) => _buildPlatformCard(entry.key, entry.value, true),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-
-                // Temporary ROMs Section
-                if (_tempRoms.isNotEmpty) ...[
-                  Text(
-                    'Temporary ROMs',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  ..._tempRoms.entries.map(
-                    (entry) =>
-                        _buildPlatformCard(entry.key, entry.value, false),
-                  ),
-                ],
-
-                // Empty state
-                if (_foreverRoms.isEmpty && _tempRoms.isEmpty)
-                  Center(
+          ],
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  // Storage Statistics Card
+                  Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(48),
+                      padding: const EdgeInsets.all(16),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.folder_open,
-                            size: 64,
-                            color: Colors.grey[400],
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.storage,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Storage Overview',
+                                  style: Theme.of(context).textTheme.titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              if ((_storageStats['tempCount'] ?? 0) > 0)
+                                IconButton(
+                                  icon: const Icon(Icons.cleaning_services),
+                                  onPressed: _clearAllTempRoms,
+                                  tooltip: 'Clear all temporary ROMs',
+                                  iconSize: 20,
+                                ),
+                            ],
                           ),
                           const SizedBox(height: 16),
-                          Text(
-                            'No downloaded ROMs',
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(color: Colors.grey[600]),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildStatCard(
+                                  context,
+                                  'Temporary Storage',
+                                  Icons.access_time,
+                                  _storageStats['tempCount'] ?? 0,
+                                  _storageStats['tempSize'] ?? 0,
+                                  Colors.orange,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: _buildStatCard(
+                                  context,
+                                  'Permanent Storage',
+                                  Icons.cloud_done,
+                                  _storageStats['foreverCount'] ?? 0,
+                                  _storageStats['foreverSize'] ?? 0,
+                                  Colors.green,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 12),
                           Text(
-                            'ROMs you download will appear here',
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(color: Colors.grey[500]),
+                            'Temp path: ${_storageStats['tempPath'] ?? 'Unknown'}',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  fontFamily: 'monospace',
+                                  color: Colors.grey,
+                                ),
+                          ),
+                          Text(
+                            'Forever path: ${_storageStats['foreverPath'] ?? 'Unknown'}',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  fontFamily: 'monospace',
+                                  color: Colors.grey,
+                                ),
                           ),
                         ],
                       ),
                     ),
                   ),
-              ],
-            ),
+                  const SizedBox(height: 16),
+
+                  // Permanent ROMs Section
+                  if (_foreverRoms.isNotEmpty) ...[
+                    Text(
+                      'Permanent ROMs',
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    ..._foreverRoms.entries.map(
+                      (entry) =>
+                          _buildPlatformCard(entry.key, entry.value, true),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // Temporary ROMs Section
+                  if (_tempRoms.isNotEmpty) ...[
+                    Text(
+                      'Temporary ROMs',
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    ..._tempRoms.entries.map(
+                      (entry) =>
+                          _buildPlatformCard(entry.key, entry.value, false),
+                    ),
+                  ],
+
+                  // Empty state
+                  if (_foreverRoms.isEmpty && _tempRoms.isEmpty)
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(48),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.folder_open,
+                              size: 64,
+                              color: Colors.grey[400],
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'No downloaded ROMs',
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(color: Colors.grey[600]),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'ROMs you download will appear here',
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: Colors.grey[500]),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+      ),
     );
   }
 

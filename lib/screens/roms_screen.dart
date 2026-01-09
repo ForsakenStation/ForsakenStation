@@ -26,11 +26,13 @@ import 'package:forsaken/widgets/common/theme_selector.dart';
 import 'package:forsaken/widgets/common/help_dialog.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
 import 'package:forsaken/widgets/common/virtual_keyboard.dart';
-import 'package:forsaken/widgets/common/navigation_overlay.dart';
+import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
 import 'package:forsaken/widgets/common/smart_svg.dart';
 import 'package:forsaken/widgets/roms/launch_progress_dialog.dart';
 import 'package:forsaken/widgets/roms/save_rom_dialog.dart';
+import 'package:forsaken/widgets/roms/fullscreen_image_viewer.dart';
 import 'package:forsaken/services/rom_storage_service.dart';
+import 'package:forsaken/screens/settings_screen.dart';
 
 enum ViewMode { list, grid, carousel }
 
@@ -504,7 +506,7 @@ class _RomsScreenState extends State<RomsScreen> {
     }
   }
 
-  /// Handles common keyboard shortcuts (R, V, S) that work across all view modes
+  /// Handles common keyboard shortcuts (R, V, S, M, Tab) that work across all view modes
   /// Returns true if the key was handled, false otherwise
   bool _handleCommonShortcuts(LogicalKeyboardKey key) {
     if (key == KeyboardService.keyRefresh) {
@@ -517,6 +519,17 @@ class _RomsScreenState extends State<RomsScreen> {
     }
     if (key == KeyboardService.keySearch) {
       _activateSearchMode();
+      return true;
+    }
+    if (key == LogicalKeyboardKey.keyM) {
+      _showMediaDialog();
+      return true;
+    }
+    if (key == LogicalKeyboardKey.tab) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+      );
       return true;
     }
     return false;
@@ -791,15 +804,15 @@ class _RomsScreenState extends State<RomsScreen> {
                       });
                     },
                   ),
+                // Bottom bar with controls
+                if (!_showVirtualKeyboard)
+                  ControlsBottomBar(
+                    actions: _getBottomBarActions(),
+                    counterText: _filteredItems.isEmpty
+                        ? null
+                        : '${_selectedIndex + 1} / ${_filteredItems.length}',
+                  ),
               ],
-            ),
-
-            // Navigation overlay
-            NavigationOverlay(
-              screenName:
-                  '${widget.platform.displayName} - ${_viewMode.name.toUpperCase()} View',
-              keyboardControls: _getKeyboardControls(),
-              gamepadControls: _getGamepadControls(),
             ),
           ],
         ),
@@ -1214,6 +1227,71 @@ class _RomsScreenState extends State<RomsScreen> {
     });
   }
 
+  /// Show media in fullscreen dialog
+  Future<void> _showMediaDialog() async {
+    if (_filteredItems.isEmpty) return;
+
+    final item = _filteredItems[_selectedIndex];
+    if (item.isFolder) return;
+
+    // Load media if not cached
+    if (!_mediaCache.containsKey(item.name)) {
+      await _loadMediaForItem(item);
+    }
+
+    final media = _mediaCache[item.name];
+
+    // Only show if media exists
+    if (media == null || !media.hasAnyMedia) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No media available for this ROM'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
+
+    if (!mounted) return;
+
+    // Get all media items and find first image to start with
+    final allMediaItems = media.allMedia;
+    final firstImageIndex = allMediaItems.indexWhere((m) => m.isImage);
+
+    if (firstImageIndex == -1) {
+      // No images, only video - show message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Only videos available. Click on media in detail view to play.',
+            ),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
+
+    // Navigate to fullscreen image viewer
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) => FullScreenImageViewer(
+              imagePath: allMediaItems[firstImageIndex].path,
+              allMedia: allMediaItems,
+              initialIndex: firstImageIndex,
+            ),
+          ),
+        )
+        .then((_) {
+          _requestFocusForCurrentViewMode();
+        });
+  }
+
   Future<void> _handleRomLaunch(RomItem item) async {
     final config = await _emulatorService.loadPlatformConfig(
       widget.platform.name,
@@ -1520,54 +1598,67 @@ class _RomsScreenState extends State<RomsScreen> {
     }
   }
 
-  /// Get keyboard controls for navigation overlay
-  Map<String, String> _getKeyboardControls() {
-    final baseControls = {
-      '↑↓': 'Navigate ROMs',
-      'Enter': 'Select ROM',
-      'Backspace': 'Go back / Clear search',
-      'R': 'Random ROM',
-      'V': 'Change view mode',
-      'S': 'Search',
-      'Shift+Letter': 'Jump to letter',
-      'Shift+?': 'Show help',
-    };
+  /// Get bottom bar actions based on current view mode and context
+  List<BottomBarAction> _getBottomBarActions() {
+    final actions = <BottomBarAction>[
+      const BottomBarAction(
+        label: 'Select',
+        keyboardKey: 'Enter',
+        gamepadButton: 'A',
+        icon: Icons.check,
+      ),
+      const BottomBarAction(
+        label: 'Back',
+        keyboardKey: 'Esc',
+        gamepadButton: 'B',
+      ),
+      const BottomBarAction(
+        label: 'Refresh',
+        keyboardKey: 'R',
+        gamepadButton: 'Y',
+        icon: Icons.shuffle,
+      ),
+      const BottomBarAction(
+        label: 'View',
+        keyboardKey: 'V',
+        gamepadButton: 'R3',
+        icon: Icons.view_carousel,
+      ),
+      const BottomBarAction(
+        label: 'Search',
+        keyboardKey: 'S',
+        gamepadButton: 'X',
+        icon: Icons.search,
+      ),
+      const BottomBarAction(
+        label: 'Media',
+        keyboardKey: 'M',
+        gamepadButton: 'L1',
+        icon: Icons.photo_library,
+      ),
+      const BottomBarAction(
+        label: 'Settings',
+        keyboardKey: 'Tab',
+        gamepadButton: 'Start',
+        icon: Icons.settings,
+      ),
+    ];
 
+    // Add platform navigation for list view at root
     if (_viewMode == ViewMode.list &&
         _pathHistory.isEmpty &&
         _currentSubdirectory == null) {
-      baseControls['←→ / Q E'] = 'Change platform';
+      actions.insert(
+        1,
+        const BottomBarAction(
+          label: 'Platforms',
+          keyboardKey: 'Q/E',
+          gamepadButton: 'L1/R1',
+          icon: Icons.swap_horiz,
+        ),
+      );
     }
 
-    if (_viewMode == ViewMode.grid) {
-      baseControls['←→'] = 'Navigate horizontally';
-      baseControls['↑↓'] = 'Navigate vertically';
-    }
-
-    return baseControls;
-  }
-
-  /// Get gamepad controls for navigation overlay
-  Map<String, String> _getGamepadControls() {
-    final baseControls = {
-      'D-Pad': 'Navigate',
-      'A / X': 'Select ROM',
-      'B / Circle': 'Go back',
-      'Y / Square': 'Random ROM',
-      'Start': 'Search',
-      'Select': 'Change view',
-    };
-
-    if (_viewMode == ViewMode.list &&
-        _pathHistory.isEmpty &&
-        _currentSubdirectory == null) {
-      baseControls['L1 / R1'] = 'Change platform';
-    }
-
-    if (_viewMode == ViewMode.grid) {
-      baseControls['D-Pad'] = 'Navigate grid';
-    }
-
-    return baseControls;
+    return actions;
   }
 }
