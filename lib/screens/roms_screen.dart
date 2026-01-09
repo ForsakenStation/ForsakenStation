@@ -6,7 +6,6 @@ import 'package:forsaken/screens/roms/roms_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:path/path.dart' as path;
 import 'package:forsaken/models/platform.dart';
 import 'package:forsaken/models/rom.dart';

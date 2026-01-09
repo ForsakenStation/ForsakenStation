@@ -1,12 +1,12 @@
 {
-    "name": "emulator",
-    "short_name": "emulator",
+    "name": "Forsaken - Retro Gaming Frontend",
+    "short_name": "Forsaken",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "description": "A beautiful multi-platform retro gaming frontend for managing and launching emulators.",
+    "orientation": "landscape-primary",
     "prefer_related_applications": false,
     "icons": [
         {

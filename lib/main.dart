@@ -6,6 +6,8 @@ import 'package:window_manager/window_manager.dart';
 import 'package:media_kit/media_kit.dart';
 
 import 'screens/platforms_screen.dart';
+import 'screens/initializing_screen.dart';
+import 'screens/error_screen.dart';
 import 'services/rom_service.dart';
 import 'services/debug_service.dart';
 import 'services/config_service.dart';
@@ -205,125 +207,6 @@ class _EmulatorAppState extends State<EmulatorApp> {
             home: PlatformsScreen(romService: romService),
           );
         },
-      ),
-    );
-  }
-}
-
-class InitializingScreen extends StatelessWidget {
-  const InitializingScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/images/logo.png', width: 128, height: 128),
-            const SizedBox(height: 32),
-            const CircularProgressIndicator(),
-            const SizedBox(height: 24),
-            const Text(
-              'Downloading ROM lists...',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'This may take a few minutes on first run',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ErrorScreen extends StatelessWidget {
-  final String message;
-
-  const ErrorScreen({super.key, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Error')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 24),
-              const Text(
-                'Initialization Error',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Text(message, textAlign: TextAlign.center),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  // Restart the app
-                  // On web/desktop, user needs to manually refresh
-                  // On mobile, this would work with hot restart
-                },
-                child: const Text('Retry'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ConfigurationErrorScreen extends StatelessWidget {
-  const ConfigurationErrorScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Configuration Error')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 24),
-              const Text(
-                'Configuration Error',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Please create a .env file in the project root with at least one ROM source:',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Text(
-                  'Option 1 - JSONL ROMs:\nJSONL_ROMS_PATH=/path/to/jsonl\nMEDIA_PATH=/path/to/media\n\nOption 2 - File-based ROMs:\nROMS_PATH=/path/to/roms\nMEDIA_PATH=/path/to/media',
-                  style: TextStyle(fontFamily: 'monospace'),
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'See .env.example for more details',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

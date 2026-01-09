@@ -167,14 +167,34 @@ class RomCard extends StatelessWidget {
 ### File Organization
 ```
 lib/
-  main.dart                 # App entry point
-  models/                   # Data models (Rom, Platform, Media)
-  services/                 # Business logic (RomService, EmulatorService)
-  screens/                  # Full-screen pages
-  widgets/                  # Reusable UI components
-  utils/                    # Helper functions
-  constants/                # App constants
+  main.dart                          # App entry point and initialization logic only
+  models/                            # Data models (Rom, Platform, Media)
+  services/                          # Business logic (RomService, EmulatorService)
+  screens/                           # Full-screen pages (NEVER in main.dart)
+    platforms_screen.dart            # Platform selection screen
+    roms_screen.dart                 # ROM listing screen
+    initializing_screen.dart         # App loading/splash screen
+    error_screen.dart                # Error display screen
+    configuration_error_screen.dart  # Configuration error screen
+    settings_screen.dart             # Settings screen
+    settings_categories/             # Settings subscreens
+    roms/                            # ROM screen components
+  widgets/                           # Reusable UI components
+    common/                          # Shared widgets
+    platforms/                       # Platform-specific widgets
+  providers/                         # State management (Provider/Riverpod)
+  utils/                             # Helper functions
+  constants/                         # App constants
 ```
+
+**IMPORTANT**: 
+- **NEVER** define screen classes in `main.dart`
+- `main.dart` should ONLY contain:
+  - `main()` function
+  - App initialization logic
+  - Root `EmulatorApp` widget
+- ALL screens (StatelessWidget/StatefulWidget for full pages) MUST be in separate files under `screens/`
+- When creating new screens, always create a new file in `screens/` directory
 
 ## Project-Specific Guidelines
 
