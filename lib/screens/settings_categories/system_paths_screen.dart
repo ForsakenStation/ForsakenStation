@@ -378,86 +378,6 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                       style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                     const SizedBox(height: 16),
-                    // Storage statistics card
-                    if (_storageStats.isNotEmpty)
-                      Card(
-                        color: Colors.purple.shade50,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.storage,
-                                    color: Colors.purple.shade700,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    'Storage Statistics',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.purple.shade700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'Temporary Storage:',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${_storageStats['tempCount'] ?? 0} files • ${_formatBytes(_storageStats['tempSize'] ?? 0)}',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'Permanent Storage:',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${_storageStats['foreverCount'] ?? 0} files • ${_formatBytes(_storageStats['foreverSize'] ?? 0)}',
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    const SizedBox(height: 16),
                     _PathField(
                       label: 'Temporary ROM Storage (Optional)',
                       hint: _tempPathDisplay.isEmpty
@@ -523,13 +443,14 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                                         'Source:',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Colors.grey,
+                                          color: Colors.black,
                                         ),
                                       ),
                                       Text(
                                         _configService.configPath,
                                         style: const TextStyle(
                                           fontSize: 14,
+                                          color: Colors.black,
                                           fontFamily: 'monospace',
                                         ),
                                       ),
@@ -594,7 +515,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                               'Emulators Path: EMULATORS_PATH/emulator_binary',
                               style: TextStyle(
                                 fontSize: 12,
-                                fontFamily: 'monospace',
+                                color: Colors.black,         fontFamily: 'monospace',
                               ),
                             ),
                           ],

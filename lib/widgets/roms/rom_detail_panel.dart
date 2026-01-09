@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forsaken/widgets/roms/folder_widget.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../models/game_info.dart';
@@ -91,10 +92,10 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.folder,
-                  size: 100,
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
+                FolderWidget(
+                  width: 200,
+                  height: 200,
+                  iconSize: 200,
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -109,7 +110,6 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                   Text(
                     '${widget.item.romCount} ROM${widget.item.romCount == 1 ? '' : 's'}',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

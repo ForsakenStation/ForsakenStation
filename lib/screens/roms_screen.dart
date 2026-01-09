@@ -773,31 +773,7 @@ class _RomsScreenState extends State<RomsScreen> {
                           onChanged: _onSearchChanged,
                         )
                       : _buildTitile(),
-                  actions: [
-                    if (!_isSearchMode)
-                      IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: _activateSearchMode,
-                        tooltip: 'Search',
-                      )
-                    else
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: _clearSearch,
-                        tooltip: 'Clear search',
-                      ),
-                    const ThemeSelector(),
-                    IconButton(
-                      icon: Icon(_getViewModeIcon()),
-                      onPressed: _toggleViewMode,
-                      tooltip: _getViewModeTooltip(),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.refresh),
-                      onPressed: _loadItems,
-                      tooltip: 'Refresh',
-                    ),
-                  ],
+                  actions: _buildAppBarActions(context),
                 ),
                 // Body
                 Expanded(
@@ -851,6 +827,91 @@ class _RomsScreenState extends State<RomsScreen> {
         ],
       ),
     );
+  }
+
+  List<Widget> _buildAppBarActions(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    if (isMobile) {
+      // Mobile: Only search button + hamburger menu
+      return [
+        if (!_isSearchMode)
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: _activateSearchMode,
+            tooltip: 'Search',
+          )
+        else
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: _clearSearch,
+            tooltip: 'Clear search',
+          ),
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert),
+          tooltip: 'Menu',
+          onSelected: (value) {
+            switch (value) {
+              case 'toggle_view':
+                _toggleViewMode();
+                break;
+              case 'refresh':
+                _loadItems();
+                break;
+            }
+          },
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 'toggle_view',
+              child: Row(
+                children: [
+                  Icon(_getViewModeIcon()),
+                  const SizedBox(width: 12),
+                  Text(_getViewModeTooltip()),
+                ],
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'refresh',
+              child: Row(
+                children: [
+                  Icon(Icons.refresh),
+                  SizedBox(width: 12),
+                  Text('Refresh'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ];
+    } else {
+      // Desktop: Show all actions as icon buttons
+      return [
+        if (!_isSearchMode)
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: _activateSearchMode,
+            tooltip: 'Search',
+          )
+        else
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: _clearSearch,
+            tooltip: 'Clear search',
+          ),
+        const ThemeSelector(),
+        IconButton(
+          icon: Icon(_getViewModeIcon()),
+          onPressed: _toggleViewMode,
+          tooltip: _getViewModeTooltip(),
+        ),
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: _loadItems,
+          tooltip: 'Refresh',
+        ),
+      ];
+    }
   }
 
   Widget _buildBody() {

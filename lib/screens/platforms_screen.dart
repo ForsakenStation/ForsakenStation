@@ -495,6 +495,8 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -508,39 +510,124 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
           ),
         ),
         title: Image.asset('assets/images/icon.png', width: 24, height: 24),
-        actions: [
-          const ThemeSelector(),
-          if (_platforms.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.info_outline),
-              onPressed: _showPlatformInfo,
-              tooltip: 'Platform Info (I)',
-            ),
-          IconButton(
-            icon: Icon(
-              _viewMode == ViewMode.grid
-                  ? Icons.view_carousel
-                  : Icons.grid_view,
-            ),
-            onPressed: _toggleViewMode,
-            tooltip: _viewMode == ViewMode.grid ? 'Carousel View' : 'Grid View',
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadPlatforms,
-            tooltip: 'Refresh',
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsScreen()),
-              );
-            },
-            tooltip: 'Settings',
-          ),
-        ],
+        actions: isMobile
+            ? [
+                // Mobile: Only hamburger menu
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert),
+                  tooltip: 'Menu',
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'platform_info':
+                        _showPlatformInfo();
+                        break;
+                      case 'toggle_view':
+                        _toggleViewMode();
+                        break;
+                      case 'refresh':
+                        _loadPlatforms();
+                        break;
+                      case 'settings':
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsScreen(),
+                          ),
+                        );
+                        break;
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    if (_platforms.isNotEmpty)
+                      const PopupMenuItem(
+                        value: 'platform_info',
+                        child: Row(
+                          children: [
+                            Icon(Icons.info_outline),
+                            SizedBox(width: 12),
+                            Text('Platform Info'),
+                          ],
+                        ),
+                      ),
+                    PopupMenuItem(
+                      value: 'toggle_view',
+                      child: Row(
+                        children: [
+                          Icon(
+                            _viewMode == ViewMode.grid
+                                ? Icons.view_carousel
+                                : Icons.grid_view,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            _viewMode == ViewMode.grid
+                                ? 'Carousel View'
+                                : 'Grid View',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'refresh',
+                      child: Row(
+                        children: [
+                          Icon(Icons.refresh),
+                          SizedBox(width: 12),
+                          Text('Refresh'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'settings',
+                      child: Row(
+                        children: [
+                          Icon(Icons.settings),
+                          SizedBox(width: 12),
+                          Text('Settings'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ]
+            : [
+                // Desktop: Show all actions as icon buttons
+                const ThemeSelector(),
+                if (_platforms.isNotEmpty)
+                  IconButton(
+                    icon: const Icon(Icons.info_outline),
+                    onPressed: _showPlatformInfo,
+                    tooltip: 'Platform Info (I)',
+                  ),
+                IconButton(
+                  icon: Icon(
+                    _viewMode == ViewMode.grid
+                        ? Icons.view_carousel
+                        : Icons.grid_view,
+                  ),
+                  onPressed: _toggleViewMode,
+                  tooltip: _viewMode == ViewMode.grid
+                      ? 'Carousel View'
+                      : 'Grid View',
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: _loadPlatforms,
+                  tooltip: 'Refresh',
+                ),
+                IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsScreen(),
+                      ),
+                    );
+                  },
+                  tooltip: 'Settings',
+                ),
+              ],
       ),
       body: _buildBody(),
     );

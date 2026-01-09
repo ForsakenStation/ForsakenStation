@@ -45,8 +45,8 @@ class FolderWidget extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
-        child: Image.file(
-          File(_folderImagePath),
+        child: Image.asset(
+          _folderImagePath,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
             // Fallback to icon if image not found
