@@ -25,7 +25,7 @@ class FolderWidget extends StatelessWidget {
 
   /// Constant path to the default folder image
   static const String _folderImagePath =
-      'assets/theme/images/systems/_default.png';
+      'assets/theme/images/systems/_default.webp';
 
   const FolderWidget({
     super.key,
