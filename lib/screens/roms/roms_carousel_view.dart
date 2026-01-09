@@ -65,6 +65,7 @@ class RomsCarouselView extends StatelessWidget {
 
   Widget _buildDetailPanel(BuildContext context) {
     final item = items[selectedIndex];
+    final isMobile = MediaQuery.of(context).size.width < 600;
 
     if (item.isFolder) {
       return Center(
@@ -122,6 +123,12 @@ class RomsCarouselView extends StatelessWidget {
     final media = mediaCache[item.name];
     final gameInfo = gameInfoCache[item.name];
 
+    // Mobile layout: vertical (image, details, play button)
+    if (isMobile) {
+      return _buildMobileDetailPanel(context, item, media, gameInfo);
+    }
+
+    // Desktop layout: horizontal (media left, details right)
     return LayoutBuilder(
       key: ValueKey('detail_${item.path}'),
       builder: (context, constraints) {
@@ -164,6 +171,69 @@ class RomsCarouselView extends StatelessWidget {
     );
   }
 
+  Widget _buildMobileDetailPanel(
+    BuildContext context,
+    RomItem item,
+    RomMedia? media,
+    GameInfo? gameInfo,
+  ) {
+    return Column(
+      key: ValueKey('mobile_detail_${item.path}'),
+      children: [
+        // Media carousel at top
+        Expanded(
+          flex: 3,
+          child: media != null
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MediaCarousel(
+                    key: ValueKey('carousel_${item.path}'),
+                    media: media,
+                    height: double.infinity,
+                  ),
+                )
+              : Center(child: PlaceholderImage(size: 200)),
+        ),
+
+        // Scrollable details in middle (without Play button)
+        Expanded(
+          flex: 2,
+          child: RomDetailPanel(
+            item: item,
+            media: media,
+            gameInfo: gameInfo,
+            onLaunch: () => onRomLaunch(item),
+            onLoadMedia: () => loadMediaForItem(item),
+            onLoadGameInfo: () => loadGameInfoForItem(item),
+            showMediaCarousel: false, // Media shows above
+            showPlayButton: false, // Hide Play button, we'll show it below
+          ),
+        ),
+
+        // Centered Play button at bottom
+        SafeArea(
+          top: false,
+          child: Center(
+            child: SizedBox(
+              width: 200, // Fixed width for centered appearance
+              child: ElevatedButton.icon(
+                onPressed: () => onRomLaunch(item),
+                icon: const Icon(Icons.gamepad),
+                label: const Text('Play'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildCarouselCards(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -178,26 +248,6 @@ class RomsCarouselView extends StatelessWidget {
               final isSelected = index == selectedIndex;
               return _buildCarouselCard(context, item, isSelected, index);
             },
-          ),
-          // Position indicator
-          Positioned(
-            bottom: 8,
-            right: 16,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Text(
-                '${selectedIndex + 1} / ${items.length}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
           ),
           // Navigation hint
           if (showNavigationHint)

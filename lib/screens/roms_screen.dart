@@ -95,6 +95,17 @@ class _RomsScreenState extends State<RomsScreen> {
     super.initState();
     _currentPath = widget.platform.path;
     _currentSubdirectory = null; // Start at root for JSONL platforms
+
+    // Set default view mode based on screen size
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final width = MediaQuery.of(context).size.width;
+        setState(() {
+          _viewMode = width < 600 ? ViewMode.carousel : ViewMode.list;
+        });
+      }
+    });
+
     final mediaPath = dotenv.env['MEDIA_PATH'] ?? '';
     final gamelistPath = dotenv.env['GAMELIST_PATH'] ?? '';
 

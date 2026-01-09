@@ -20,6 +20,7 @@ class RomDetailPanel extends StatefulWidget {
   final VoidCallback? onLoadGameInfo;
   final bool showMediaCarousel;
   final double? mediaHeight;
+  final bool showPlayButton;
 
   const RomDetailPanel({
     super.key,
@@ -31,6 +32,7 @@ class RomDetailPanel extends StatefulWidget {
     this.onLoadGameInfo,
     this.showMediaCarousel = true,
     this.mediaHeight = 300,
+    this.showPlayButton = true,
   });
 
   @override
@@ -92,11 +94,7 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FolderWidget(
-                  width: 200,
-                  height: 200,
-                  iconSize: 200,
-                ),
+                FolderWidget(width: 200, height: 200, iconSize: 200),
                 const SizedBox(height: 24),
                 Text(
                   widget.item.displayName,
@@ -339,20 +337,9 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
           ),
         ),
 
-        // Fixed Play button at bottom
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 4,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
-          child: SafeArea(
+        // Fixed Play button at bottom (only if showPlayButton is true)
+        if (widget.showPlayButton)
+          SafeArea(
             top: false,
             child: SizedBox(
               width: double.infinity,
@@ -369,7 +356,6 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
               ),
             ),
           ),
-        ),
       ],
     );
   }
