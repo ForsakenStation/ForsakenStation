@@ -4,7 +4,6 @@ import 'settings_categories/system_paths_screen.dart';
 import 'settings_categories/rom_database_screen.dart';
 import 'settings_categories/rom_storage_management_screen.dart';
 import 'settings_categories/download_manager_screen.dart';
-import 'settings_categories/system_utilities_screen.dart';
 import 'settings_categories/system_check_screen.dart';
 import '../../services/debug_service.dart';
 
@@ -113,7 +112,8 @@ class SettingsScreen extends StatelessWidget {
             context,
             icon: Icons.folder_special,
             title: 'ROM Storage',
-            description: 'Manage downloaded ROMs and storage space',
+            description:
+                'Manage downloaded ROMs, storage, and temp files cleanup',
             onTap: () {
               Navigator.push(
                 context,
@@ -135,22 +135,6 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const DownloadManagerScreen(),
-                ),
-              );
-            },
-          ),
-          const SizedBox(height: 12),
-
-          _buildCategoryCard(
-            context,
-            icon: Icons.build,
-            title: 'System Utilities',
-            description: 'Cleanup, verification, and maintenance tools',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SystemUtilitiesScreen(),
                 ),
               );
             },

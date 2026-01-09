@@ -155,6 +155,103 @@ class _RomStorageManagementScreenState
     }
   }
 
+  Future<void> _moveToForever(String platform, String fileName) async {
+    // Show confirmation dialog
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Save to Permanent Storage?'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('This will move the ROM to permanent storage:'),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.gamepad, size: 16, color: Colors.green),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          fileName,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.folder, size: 16, color: Colors.green),
+                      const SizedBox(width: 8),
+                      Text('Platform: ${platform.toUpperCase()}'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'The ROM will be kept permanently and won\'t be deleted automatically.',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.green),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true || !mounted) return;
+
+    setState(() => _isLoading = true);
+
+    // Move from temp to forever storage
+    final newPath = await _storageService.moveToForeverStorage(
+      platform,
+      fileName,
+    );
+
+    if (mounted) {
+      if (newPath != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Saved to permanent storage: $fileName'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        await _loadStorageData();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to move ROM to permanent storage'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   Future<void> _clearAllTempRoms() async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -232,11 +329,20 @@ class _RomStorageManagementScreenState
                               color: Theme.of(context).colorScheme.primary,
                             ),
                             const SizedBox(width: 8),
-                            Text(
-                              'Storage Overview',
-                              style: Theme.of(context).textTheme.titleLarge
-                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            Expanded(
+                              child: Text(
+                                'Storage Overview',
+                                style: Theme.of(context).textTheme.titleLarge
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
                             ),
+                            if ((_storageStats['tempCount'] ?? 0) > 0)
+                              IconButton(
+                                icon: const Icon(Icons.cleaning_services),
+                                onPressed: _clearAllTempRoms,
+                                tooltip: 'Clear all temporary ROMs',
+                                iconSize: 20,
+                              ),
                           ],
                         ),
                         const SizedBox(height: 16),
@@ -362,9 +468,9 @@ class _RomStorageManagementScreenState
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -441,10 +547,22 @@ class _RomStorageManagementScreenState
                 _formatBytes(fileSize),
                 style: const TextStyle(fontSize: 12),
               ),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete_outline, size: 20),
-                onPressed: () => _deleteRom(platform, fileName, isForever),
-                tooltip: 'Delete',
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Show "Save to Forever" button only for temp ROMs
+                  if (!isForever)
+                    IconButton(
+                      icon: const Icon(Icons.save, size: 20),
+                      onPressed: () => _moveToForever(platform, fileName),
+                      tooltip: 'Save to permanent storage',
+                    ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline, size: 20),
+                    onPressed: () => _deleteRom(platform, fileName, isForever),
+                    tooltip: 'Delete',
+                  ),
+                ],
               ),
             );
           }
