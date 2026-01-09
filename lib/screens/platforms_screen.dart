@@ -16,6 +16,7 @@ import '../widgets/platforms/platform_card.dart';
 import '../widgets/platforms/platform_info_dialog.dart';
 import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
+import '../widgets/common/smart_svg.dart';
 import 'roms_screen.dart';
 import 'settings_screen.dart';
 
@@ -886,10 +887,12 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     Color? color,
     Widget? fallback,
   }) {
-    final isSvg = logoPath.toLowerCase().endsWith('.svg');
+    final isSvg =
+        logoPath.toLowerCase().endsWith('.svg') ||
+        logoPath.toLowerCase().endsWith('.svgz');
 
     if (isSvg) {
-      return SvgPicture.asset(
+      return SmartSvg.asset(
         logoPath,
         height: height,
         fit: BoxFit.contain,

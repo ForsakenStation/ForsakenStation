@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../services/media_service.dart';
 import '../../utils/platform_icons.dart';
+import 'smart_svg.dart';
 
 /// Widget that displays a platform logo with icon fallback
 ///
@@ -75,10 +75,12 @@ class _PlatformLogoState extends State<PlatformLogo> {
   }
 
   Widget _buildLogoFromPath(String path) {
-    final isSvg = path.toLowerCase().endsWith('.svg');
+    final isSvg =
+        path.toLowerCase().endsWith('.svg') ||
+        path.toLowerCase().endsWith('.svgz');
 
     if (isSvg) {
-      return SvgPicture.asset(
+      return SmartSvg.asset(
         path,
         width: widget.size,
         placeholderBuilder: (context) => _buildFallbackIcon(),

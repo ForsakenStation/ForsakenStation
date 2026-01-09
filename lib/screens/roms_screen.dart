@@ -28,6 +28,7 @@ import 'package:forsaken/widgets/common/help_dialog.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
 import 'package:forsaken/widgets/common/virtual_keyboard.dart';
 import 'package:forsaken/widgets/common/navigation_overlay.dart';
+import 'package:forsaken/widgets/common/smart_svg.dart';
 import 'package:forsaken/widgets/roms/launch_progress_dialog.dart';
 import 'package:forsaken/widgets/roms/save_rom_dialog.dart';
 import 'package:forsaken/services/rom_storage_service.dart';
@@ -840,7 +841,7 @@ class _RomsScreenState extends State<RomsScreen> {
           Image.asset('assets/images/icon.png', width: 24, height: 24),
           Icon(Icons.chevron_right),
           _platformLogoPath != null
-              ? SvgPicture.asset(
+              ? SmartSvg.asset(
                   _platformLogoPath!,
                   height: 24,
                   fit: BoxFit.contain,

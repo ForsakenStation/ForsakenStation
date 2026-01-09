@@ -1,223 +1,466 @@
-# Emulator Frontend
+# Forsaken - Multi-Platform Retro Gaming Frontend
 
-Multi-platform emulator frontend built with Flutter. Manages ROM files, downloads them on-demand, and launches emulators with the downloaded ROMs.
+<div align="center">
 
-## Features
+**A beautiful, feature-rich Flutter-based frontend for managing and launching retro game emulators**
 
-- Multi-platform support (Android, iOS, Linux, Windows, macOS, Web)
-- Automatic ROM discovery from configured directory
-- On-demand ROM downloading from URLs
-- Media support (boxart, screenshots, videos)
-- Clean temporary file management
-- Simple configuration via environment variables
+[![Flutter](https://img.shields.io/badge/Flutter-3.9.2+-02569B?logo=flutter)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.9.2+-0175C2?logo=dart)](https://dart.dev)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## Project Structure
+</div>
 
-```
-lib/
-├── main.dart                    # App entry point
-├── models/                      # Data models
-│   ├── rom.dart                 # ROM model
-│   ├── platform.dart            # Platform model
-│   └── media.dart               # Media model
-├── services/                    # Business logic
-│   ├── rom_service.dart         # ROM file reading
-│   ├── download_service.dart    # ROM downloading
-│   ├── media_service.dart       # Media file management
-│   └── emulator_service.dart    # Emulator launching
-├── screens/                     # UI screens
-│   ├── platforms_screen.dart    # Platform selection
-│   └── roms_screen.dart         # ROM listing
-└── widgets/                     # Reusable UI components
-    └── rom_card.dart            # ROM display card
-```
+---
 
-## Setup
+## 🎮 Overview
 
-### 1. Install Flutter
+Forsaken is a modern, cross-platform retro gaming frontend built with Flutter. It provides a polished interface for browsing, organizing, and launching ROMs across multiple gaming platforms, with support for custom emulators, media management, and an intuitive navigation system.
 
-Follow the [official Flutter installation guide](https://docs.flutter.dev/get-started/install) for your platform.
+### Key Features
 
-### 2. Install Dependencies
+- 🎯 **Multi-Platform Support** - Works on Android, iOS, Linux, Windows, macOS, and Web
+- 🎨 **Beautiful UI** - Gorgeous themes with custom backgrounds, logos, and platform-specific artwork
+- 🕹️ **Multiple View Modes** - Grid, List, and Carousel views for browsing your game library
+- 🎮 **Gamepad Support** - Full controller navigation with customizable button mappings
+- ⌨️ **Keyboard Navigation** - Comprehensive keyboard shortcuts for power users
+- 🖼️ **Rich Media Display** - Box art, screenshots, videos, marquees, and fan art support
+- 📥 **ROM Download Management** - Built-in download manager with queue and progress tracking
+- 🔍 **Advanced Search** - Quick search with letter jumping and filtering
+- 🎲 **Random Game Selection** - Discover games you haven't played in a while
+- 📊 **Platform Information** - Detailed specs and history for each gaming platform
+- ⚙️ **Emulator Management** - Configure and manage multiple emulators per platform
+- 🌐 **GameList Support** - Compatible with popular frontend formats (EmulationStation XML)
+- 🎬 **Fullscreen Media Viewer** - Browse game media in an immersive fullscreen mode
+- 🎯 **Smart Navigation** - Context-aware controls and navigation overlay
+
+---
+
+## 📸 Screenshots
+
+*(Add screenshots here showing different views and features)*
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Flutter SDK** 3.9.2 or higher
+- **FVM** (Flutter Version Management) - recommended
+- **Dart SDK** 3.9.2 or higher
+- Platform-specific build tools (for mobile/desktop builds)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/forsaken.git
+   cd forsaken
+   ```
+
+2. **Install Flutter dependencies**
+   ```bash
+   fvm flutter pub get
+   ```
+
+3. **Set up environment variables**
+   
+   Copy the example environment file and configure your paths:
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edit `.env` with your settings:
+   ```env
+   ROMS_PATH=/path/to/your/roms
+   MEDIA_PATH=/path/to/your/media
+   GAMELIST_PATH=/path/to/gamelists
+   EMULATOR_CONFIG_PATH=/path/to/emulator/configs
+   ```
+
+4. **Set up directory structure**
+   
+   Organize your ROMs and media following this structure:
+   ```
+   ROMS_PATH/
+     ├── nes/
+     │   ├── game1.nes
+     │   └── game2.nes
+     ├── snes/
+     │   ├── game1.sfc
+     │   └── game2.sfc
+     └── ...
+   
+   MEDIA_PATH/
+     ├── nes/
+     │   ├── boxart/
+     │   ├── screenshots/
+     │   ├── videos/
+     │   ├── marquee/
+     │   └── fanart/
+     └── ...
+   ```
+
+5. **Run the app**
+   ```bash
+   # Desktop (Linux/macOS/Windows)
+   fvm flutter run -d linux
+   fvm flutter run -d macos
+   fvm flutter run -d windows
+   
+   # Mobile
+   fvm flutter run -d android
+   fvm flutter run -d ios
+   
+   # Web
+   fvm flutter run -d chrome
+   ```
+
+---
+
+## 🏗️ Building
+
+### Desktop
 
 ```bash
-flutter pub get
-```
+# Linux
+fvm flutter build linux --release
 
-### 3. Configure Environment Variables
+# macOS
+fvm flutter build macos --release
 
-Copy the example environment file:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your paths:
-
-```bash
-# Path to ROMs directory
-ROMS_PATH=/path/to/your/roms
-
-# Path to media directory
-MEDIA_PATH=/path/to/your/media
-
-# Optional: Configure emulator paths per platform
-EMULATOR_SNES=/usr/bin/snes9x
-EMULATOR_NES=/usr/bin/fceux
-EMULATOR_N64=/usr/bin/mupen64plus
-EMULATOR_PS1=/usr/bin/duckstation-qt
-EMULATOR_GBA=/usr/bin/mgba
-```
-
-### 4. Directory Structure
-
-Organize your ROMs and media files as follows:
-
-```
-ROMS_PATH/
-├── snes/
-│   ├── super_mario_world.txt
-│   ├── zelda_alttp.txt
-│   └── ...
-├── nes/
-│   ├── super_mario_bros.txt
-│   └── ...
-└── gba/
-    └── ...
-
-MEDIA_PATH/
-├── snes/
-│   ├── boxart/
-│   │   ├── super_mario_world.png
-│   │   └── zelda_alttp.png
-│   ├── screenshots/
-│   │   └── super_mario_world.png
-│   └── videos/
-│       └── super_mario_world.mp4
-├── nes/
-│   └── ...
-└── gba/
-    └── ...
-```
-
-**ROM Files**: Each ROM is represented by a `.txt` file containing the download URL:
-
-```
-super_mario_world.txt:
-https://example.com/roms/super_mario_world.sfc
-```
-
-**Media Files**: Images and videos should have the same name as the ROM file (without `.txt` extension).
-
-## Running the App
-
-### Desktop (Linux/Windows/macOS)
-
-```bash
-flutter run -d linux      # Linux
-flutter run -d windows    # Windows
-flutter run -d macos      # macOS
+# Windows
+fvm flutter build windows --release
 ```
 
 ### Mobile
 
 ```bash
-flutter run -d android    # Android
-flutter run -d ios        # iOS (macOS only)
+# Android APK
+fvm flutter build apk --release
+
+# Android App Bundle
+fvm flutter build appbundle --release
+
+# iOS
+fvm flutter build ios --release
 ```
 
 ### Web
 
 ```bash
-flutter run -d chrome
+fvm flutter build web --release
 ```
 
-## Building
+---
 
-### Release Builds
+## 🎯 Usage
 
-```bash
-flutter build apk           # Android APK
-flutter build appbundle     # Android App Bundle
-flutter build linux         # Linux
-flutter build windows       # Windows
-flutter build macos         # macOS
-flutter build ios           # iOS
-flutter build web           # Web
+### Navigation
+
+#### Keyboard Controls
+
+**Platform Selection:**
+- `↑/↓` - Navigate platforms
+- `Enter` - Select platform
+- `Esc` - Go back
+- `Q` - Quit application
+- `S` - Open settings
+- `F` - Toggle fullscreen
+- `1-4` - Switch themes
+
+**ROM Browsing (List View at Root):**
+- `↑/↓` - Navigate ROMs
+- `←/→` or `Q/E` - Switch between platforms (with slide animation)
+- `Enter` - Launch ROM
+- `R` - Random game selection
+- `V` - Change view mode (Grid/List/Carousel)
+- `S` - Search ROMs
+- `Shift + Letter` - Jump to ROMs starting with that letter
+- `Esc` - Back to platforms
+
+**ROM Browsing (in Subdirectories):**
+- `↑/↓` - Navigate ROMs
+- `Enter` - Launch ROM or enter folder
+- `Esc` - Go back to parent folder
+- `R` - Random game
+- `V` - Change view
+- `S` - Search
+
+**Fullscreen Media Viewer:**
+- `←/→` - Navigate between images
+- `Space` - Toggle controls overlay
+- `Esc` - Exit fullscreen
+
+#### Gamepad Controls
+
+- **D-Pad/Left Stick** - Navigate
+- **A Button** - Select/Launch
+- **B Button** - Back
+- **X Button** - Random game
+- **Y Button** - Search
+- **Start** - Settings
+- **L1/R1 or L2/R2** - Switch platforms (in List View at root)
+
+### View Modes
+
+1. **Grid View** - Display games in a grid with box art
+2. **List View** - Compact list with icons and game names
+3. **Carousel View** - Cinematic 3D carousel with large preview images
+
+Press `V` or click the view button to cycle between modes.
+
+### Settings
+
+Access the settings screen to configure:
+
+- **ROM Storage Management** - Manage ROM paths and directories
+- **Emulator Configuration** - Add and configure emulators per platform
+- **Download Manager** - View and manage ROM downloads
+- **Media Paths** - Configure media asset directories
+- **GameList Settings** - Import/export EmulationStation XML files
+- **Appearance** - Theme selection and customization
+- **Controls** - Customize keyboard and gamepad mappings
+
+---
+
+## 🏗️ Project Structure
+
+```
+lib/
+├── main.dart                      # App entry point
+├── models/                        # Data models
+│   ├── platform.dart             # Platform model
+│   ├── rom.dart                  # ROM model
+│   ├── rom_item.dart             # ROM item for display
+│   ├── media.dart                # Media assets model
+│   └── ...
+├── screens/                       # UI screens
+│   ├── platforms_screen.dart     # Platform selection
+│   ├── roms_screen.dart          # ROM browser
+│   ├── settings_screen.dart      # Settings hub
+│   ├── settings_categories/      # Settings sub-screens
+│   └── roms/                     # ROM view implementations
+├── services/                      # Business logic
+│   ├── rom_service.dart          # ROM management
+│   ├── media_service.dart        # Media asset management
+│   ├── emulator_service.dart     # Emulator launching
+│   ├── download_service.dart     # Download management
+│   ├── keyboard_service.dart     # Keyboard input handling
+│   ├── gamepad_service.dart      # Gamepad input handling
+│   ├── platform_info_service.dart # Platform information
+│   └── ...
+├── widgets/                       # Reusable UI components
+│   ├── common/                   # Common widgets
+│   │   ├── navigation_overlay.dart
+│   │   └── platform_logo.dart
+│   └── roms/                     # ROM-specific widgets
+│       ├── media_carousel.dart
+│       ├── fullscreen_image_viewer.dart
+│       └── ...
+├── utils/                         # Helper functions
+│   ├── platform_icons.dart
+│   └── ...
+└── constants/                     # App constants
+
+assets/
+├── config.json                    # App configuration
+├── data/
+│   └── platforms_info.json       # Platform metadata
+├── images/                        # App images (logo, icon)
+└── theme/
+    └── images/
+        ├── logos/                # Platform logos (white)
+        ├── clogos/               # Platform logos (color)
+        ├── backgrounds/          # Platform backgrounds
+        └── systems/              # Platform system images
 ```
 
-## How It Works
+---
 
-1. **Platform Discovery**: The app scans `ROMS_PATH` for subdirectories (each represents a platform)
-2. **ROM Discovery**: Within each platform directory, `.txt` files are discovered (each represents a ROM)
-3. **Media Loading**: Corresponding media files are loaded from `MEDIA_PATH/platform/type/romname.ext`
-4. **ROM Launch**:
-   - User selects a ROM
-   - App reads the download URL from the `.txt` file
-   - ROM is downloaded to temporary directory
-   - Emulator is launched with the downloaded ROM path
-   - Temporary file is cleaned up after emulator closes
+## 🔧 Configuration
 
-## Configuration
+### Platform Configuration
 
-### Emulator Paths
+Platforms are automatically detected from directories in your `ROMS_PATH`. Each platform directory should match the standard naming convention (e.g., `nes`, `snes`, `genesis`, `psx`).
 
-Configure emulator executables via environment variables:
+Platform information is loaded from `assets/data/platforms_info.json`, which includes:
+- Display names
+- Manufacturer
+- Generation
+- Release year
+- CPU/GPU specs
+- Description and history
 
-```bash
-EMULATOR_<PLATFORM>=<path_to_emulator>
+### Emulator Configuration
+
+Configure emulators through the Settings > Emulator Management screen:
+1. Add a new emulator
+2. Specify the executable path
+3. Configure command-line arguments
+4. Set file extension filters
+5. Test with a sample ROM
+
+### Media Assets
+
+Media files should be organized by platform and type:
+```
+MEDIA_PATH/
+  └── <platform>/
+      ├── boxart/     # Box art images (PNG/JPG)
+      ├── screenshots/ # In-game screenshots
+      ├── videos/      # Video previews (MP4)
+      ├── marquee/     # Arcade marquee images
+      ├── titlescreen/ # Title screen captures
+      └── fanart/      # Fan-created artwork
 ```
 
-Platform names should match your directory names in uppercase.
+File names should match the ROM filename (without extension).
 
-### Supported Media Extensions
+---
 
-- **Images** (boxart/screenshots): `.png`, `.jpg`, `.jpeg`, `.webp`
-- **Videos**: `.mp4`, `.webm`, `.mkv`, `.avi`
+## 🛠️ Development
 
-## Development
+### Code Style
 
-### Run Tests
+This project follows the [Flutter Style Guide](https://flutter.dev/docs/development/tools/formatting) and conventions outlined in `AGENTS.md`.
+
+Key points:
+- Use `dart format` for consistent formatting
+- Run `fvm flutter analyze` before committing
+- Write meaningful commit messages
+- Keep widgets small and focused
+- Extract reusable components
+
+### Running Tests
 
 ```bash
-flutter test
+# Run all tests
+fvm flutter test
+
+# Run with coverage
+fvm flutter test --coverage
+
+# Run specific test file
+fvm flutter test test/widget_test.dart
 ```
 
 ### Code Analysis
 
 ```bash
-flutter analyze
-```
+# Static analysis
+fvm flutter analyze
 
-### Format Code
-
-```bash
+# Format code
 dart format -o write .
+
+# Check formatting
+dart format --set-exit-if-changed .
 ```
 
-## Troubleshooting
+---
 
-### "No platforms found"
+## 📦 Dependencies
 
-- Verify `ROMS_PATH` in `.env` is correct
-- Ensure the directory exists and contains platform subdirectories
+### Core
+- **flutter** - UI framework
+- **provider** - State management
+- **path_provider** - File system paths
+- **shared_preferences** - Local settings storage
 
-### "Failed to launch emulator"
+### Media & Assets
+- **flutter_svg** - SVG rendering for logos
+- **media_kit** - Video playback support
+- **media_kit_video** - Video player UI
+- **media_kit_libs_video** - Video codecs
 
-- Check that an emulator executable path is configured in `.env`
-- Verify the emulator executable exists and is executable
-- Check console output for error messages
+### Input
+- **gamepads** - Gamepad/controller support
 
-### Media not showing
+### UI & Theming
+- **google_fonts** - Custom fonts
+- **cupertino_icons** - iOS-style icons
 
-- Verify `MEDIA_PATH` in `.env` is correct
-- Ensure media files have the same name as ROM files (without `.txt`)
-- Check file extensions are supported
+### Utilities
+- **flutter_dotenv** - Environment variable management
+- **http** - HTTP requests for downloads
+- **xml** - GameList XML parsing
+- **archive** - Archive extraction (ZIP, 7Z)
+- **file_picker** - File selection dialogs
+- **window_manager** - Desktop window management
 
-## License
+---
 
-This project is open source.
+## 🎨 Themes
 
+Forsaken includes multiple built-in themes:
+1. **Cyber Blue** - Modern blue/cyan aesthetic
+2. **Neon Pink** - Vibrant pink/purple palette
+3. **Retro Green** - Classic CRT green terminal
+4. **Sunset Orange** - Warm orange/red gradient
 
-## Thanks
-[https://github.com/dm2912/Crystal](https://github.com/dm2912/Crystal) for the images
+Switch themes from the platform screen using number keys (1-4) or through Settings.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests and analysis
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+Please ensure your code follows the project style guidelines and includes appropriate tests.
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Flutter team for the amazing framework
+- Retro gaming community for inspiration
+- EmulationStation for the GameList XML format
+- All contributors and testers
+
+---
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/yourusername/forsaken/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/forsaken/discussions)
+- **Documentation**: [Wiki](https://github.com/yourusername/forsaken/wiki)
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Online scraper integration (ScreenScraper.fr, TheGamesDB)
+- [ ] Cloud save sync
+- [ ] Achievement tracking
+- [ ] Play time statistics
+- [ ] Favorites and collections
+- [ ] Multi-language support
+- [ ] Custom theme editor
+- [ ] Shader support for enhanced visuals
+- [ ] Network multiplayer lobby
+- [ ] Plugin system for extensions
+
+---
+
+<div align="center">
+
+**Made with ❤️ by the retro gaming community**
+
+[⬆ back to top](#forsaken---multi-platform-retro-gaming-frontend)
+
+</div>

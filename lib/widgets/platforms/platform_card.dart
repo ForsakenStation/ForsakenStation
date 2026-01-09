@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../models/platform.dart';
 import '../../utils/platform_icons.dart';
+import '../common/smart_svg.dart';
 
 /// Card widget for displaying a platform in grid view
 class PlatformCard extends StatefulWidget {
@@ -177,10 +177,12 @@ class _PlatformCardState extends State<PlatformCard> {
   }
 
   Widget _buildLogoImage(String logoPath, {required double height}) {
-    final isSvg = logoPath.toLowerCase().endsWith('.svg');
+    final isSvg =
+        logoPath.toLowerCase().endsWith('.svg') ||
+        logoPath.toLowerCase().endsWith('.svgz');
 
     if (isSvg) {
-      return SvgPicture.asset(
+      return SmartSvg.asset(
         logoPath,
         height: height,
         fit: BoxFit.contain,
