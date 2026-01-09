@@ -290,11 +290,13 @@ class RomService {
       // Add subdirectories as folders (only at root level)
       if (currentSubdirectory == null) {
         for (final subdirName in romsBySubdir.keys) {
+          final romsInFolder = romsBySubdir[subdirName]!;
           items.add(
             RomItem(
               name: subdirName,
               path: subdirName, // Use subdirectory name as path
               type: RomItemType.folder,
+              romCount: romsInFolder.length,
             ),
           );
         }

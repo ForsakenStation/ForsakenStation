@@ -74,6 +74,86 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
 
   @override
   Widget build(BuildContext context) {
+    // If item is a folder, show simplified view
+    if (widget.item.isFolder) {
+      return _buildFolderDetailPanel(context);
+    }
+
+    // Otherwise, show full ROM details
+    return _buildRomDetailPanel(context);
+  }
+
+  Widget _buildFolderDetailPanel(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.folder,
+                  size: 100,
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  widget.item.displayName,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                if (widget.item.romCount != null) ...[
+                  Text(
+                    '${widget.item.romCount} ROM${widget.item.romCount == 1 ? '' : 's'}',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+        // Fixed Open button at bottom
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 4,
+                offset: const Offset(0, -2),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            top: false,
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: widget.onLaunch,
+                icon: const Icon(Icons.folder_open),
+                label: const Text('Open Folder'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRomDetailPanel(BuildContext context) {
     return Column(
       children: [
         // Scrollable content
