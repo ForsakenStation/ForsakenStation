@@ -33,6 +33,8 @@ import 'package:forsaken/widgets/roms/save_rom_dialog.dart';
 import 'package:forsaken/widgets/roms/fullscreen_image_viewer.dart';
 import 'package:forsaken/services/rom_storage_service.dart';
 import 'package:forsaken/screens/settings_screen.dart';
+import 'package:forsaken/screens/torrent_download_manager_screen.dart';
+import 'package:forsaken/services/torrent_download_manager.dart';
 
 enum ViewMode { list, grid, carousel }
 
@@ -122,6 +124,31 @@ class _RomsScreenState extends State<RomsScreen> {
     _listFocusNode = FocusNode();
     _loadPlatformsList();
     _loadItems();
+
+    // Setup torrent download completion notifications
+    TorrentDownloadManager.instance.onDownloadCompleted = (download) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Download completed: ${download.romName}'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: 'View',
+              textColor: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TorrentDownloadManagerScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      }
+    };
   }
 
   /// Load list of all platforms for lateral navigation
@@ -924,6 +951,49 @@ class _RomsScreenState extends State<RomsScreen> {
             tooltip: 'Clear search',
           ),
         const ThemeSelector(),
+        // Torrent downloads button
+        IconButton(
+          icon: Stack(
+            children: [
+              const Icon(Icons.download),
+              // Badge for active downloads
+              if (TorrentDownloadManager.instance.activeDownloads.isNotEmpty)
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      '${TorrentDownloadManager.instance.activeDownloads.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const TorrentDownloadManagerScreen(),
+              ),
+            );
+          },
+          tooltip: 'Torrent Downloads',
+        ),
         IconButton(
           icon: Icon(_getViewModeIcon()),
           onPressed: _toggleViewMode,
@@ -1364,6 +1434,13 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   Future<void> _launchWithCommand(RomItem item, EmulatorCommand command) async {
+    // Check if this is a torrent download
+    if (item.downloadUrl != null &&
+        item.downloadUrl!.toLowerCase().endsWith('.torrent')) {
+      await _handleTorrentDownload(item);
+      return;
+    }
+
     // Get media for this ROM to show marquee/boxart
     final media = _mediaCache[item.name];
     final imagePath = media != null
@@ -1543,6 +1620,104 @@ class _RomsScreenState extends State<RomsScreen> {
     }
 
     _requestFocusForCurrentViewMode();
+  }
+
+  /// Handle torrent download for a ROM
+  Future<void> _handleTorrentDownload(RomItem item) async {
+    try {
+      // First, download the .torrent file itself
+      final torrentUrl = item.downloadUrl!;
+      _debug.info('Downloading torrent file: $torrentUrl', tag: 'RomsScreen');
+
+      // Download the .torrent file to temp directory
+      final tempDir = await RomStorageService.instance.getPlatformTempDirectory(
+        widget.platform.name,
+      );
+      final torrentFileName = '${item.name}.torrent';
+      final torrentFilePath = path.join(tempDir.path, torrentFileName);
+
+      // Show loading dialog while downloading .torrent file
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Downloading torrent file...'),
+            ],
+          ),
+        ),
+      );
+
+      // Download the .torrent file
+      final response = await _downloadService.downloadTorrent(
+        torrentUrl,
+        torrentFilePath,
+      );
+
+      if (!mounted) return;
+      Navigator.pop(context); // Close loading dialog
+
+      if (response == null) {
+        _showErrorDialog(
+          'Failed to download torrent file.\n\n'
+          'Possible causes:\n'
+          '• URL does not point to a valid .torrent file\n'
+          '• URL returned HTML instead of torrent data\n'
+          '• Network/firewall blocking torrent access\n\n'
+          'Check the debug logs for more details.',
+        );
+        return;
+      }
+
+      // Add download to manager
+      final savePath = await RomStorageService.instance
+          .getPlatformForeverDirectory(widget.platform.name);
+
+      await TorrentDownloadManager.instance.addDownload(
+        romName: item.displayName,
+        torrentFilePath: torrentFilePath,
+        savePath: savePath.path,
+      );
+
+      if (!mounted) return;
+
+      // Show success message and navigate to downloads screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Started downloading: ${item.displayName}'),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(
+            label: 'View',
+            textColor: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TorrentDownloadManagerScreen(),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      _requestFocusForCurrentViewMode();
+    } catch (e) {
+      _debug.error(
+        'Error handling torrent download',
+        tag: 'RomsScreen',
+        error: e,
+      );
+      if (mounted) {
+        _showErrorDialog('Failed to start torrent download: $e');
+      }
+    }
   }
 
   /// Check if a ROM is already downloaded (in temp or forever storage)

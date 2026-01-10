@@ -246,4 +246,70 @@ class DownloadService {
       );
     }
   }
+
+  /// Download a torrent file (not the actual ROM, just the .torrent metadata file)
+  Future<String?> downloadTorrent(String url, String savePath) async {
+    try {
+      _debug.info('Downloading torrent file: $url', tag: 'DownloadService');
+
+      // Resolve URL (handles MediaFire, Google Drive, Dropbox, etc.)
+      final resolvedUrl = await _resolver.resolveDownloadUrl(url);
+
+      if (resolvedUrl == null) {
+        _debug.error('Failed to resolve torrent URL', tag: 'DownloadService');
+        return null;
+      }
+
+      if (resolvedUrl != url) {
+        _debug.info(
+          'Resolved torrent URL: $resolvedUrl',
+          tag: 'DownloadService',
+        );
+      }
+
+      final response = await http.get(Uri.parse(resolvedUrl));
+
+      if (response.statusCode != 200) {
+        _debug.error(
+          'Failed to download torrent file. Status: ${response.statusCode}',
+          tag: 'DownloadService',
+        );
+        return null;
+      }
+
+      // Check if response is actually a torrent file (should start with 'd' in bencode)
+      if (response.bodyBytes.isEmpty || response.bodyBytes[0] != 0x64) {
+        _debug.error(
+          'Downloaded file is not a valid torrent file (does not start with bencode "d")',
+          tag: 'DownloadService',
+        );
+
+        // Log first 200 bytes to help debug
+        final preview = response.bodyBytes.take(200).toList();
+        final previewString = String.fromCharCodes(preview);
+        _debug.error('File preview: $previewString', tag: 'DownloadService');
+
+        return null;
+      }
+
+      // Save the .torrent file
+      final file = File(savePath);
+      await file.writeAsBytes(response.bodyBytes);
+
+      _debug.info('Torrent file saved: $savePath', tag: 'DownloadService');
+      _debug.info(
+        'File size: ${response.bodyBytes.length} bytes',
+        tag: 'DownloadService',
+      );
+
+      return savePath;
+    } catch (e) {
+      _debug.error(
+        'Error downloading torrent file',
+        tag: 'DownloadService',
+        error: e,
+      );
+      return null;
+    }
+  }
 }
