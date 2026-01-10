@@ -341,16 +341,19 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
         if (widget.showPlayButton)
           SafeArea(
             top: false,
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: widget.onLaunch,
-                icon: const Icon(Icons.gamepad),
-                label: const Text('Play'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: widget.onLaunch,
+                  icon: const Icon(Icons.gamepad),
+                  label: const Text('Play'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
                   ),
                 ),
               ),

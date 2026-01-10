@@ -46,7 +46,6 @@
                 }
             ],
             "useForeverMode": false,
-            "todo": true,
             "acceptZipFiles": true,
             "corePreferences": {}
         },
@@ -152,7 +151,6 @@
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
@@ -1174,12 +1172,11 @@
             "command": [
                 {
                     "name": "mame",
-                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/geneis_plus_gx_libretro.so"
                 }
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
@@ -1306,13 +1303,12 @@
             "system": "neogeo64",
             "command": [
                 {
-                    "name": "mame",
-                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                    "name": "fbneo",
+                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/fbneo_libretro.so"
                 }
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
@@ -1415,8 +1411,8 @@
             "system": "oricatmos",
             "command": [
                 {
-                    "name": "mame",
-                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                    "name": "clx",
+                    "command": "clx"
                 }
             ],
             "useForeverMode": false,
@@ -1510,7 +1506,6 @@
             ],
             "useForeverMode": false,
             "acceptZipFiles": null,
-            "todo": true,
             "corePreferences": {}
         },
         {
@@ -1623,14 +1618,13 @@
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
-            "system": "revistas",
+            "system": "ebooks",
             "command": [
                 {
-                    "name": "pdf",
+                    "name": "Pdf viwer",
                     "command": "pdf.AppImage"
                 }
             ],
@@ -1642,13 +1636,12 @@
             "system": "samcoupe",
             "command": [
                 {
-                    "name": "mame",
-                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                    "name": "SimCoupe",
+                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/simcp_libretro.so"
                 }
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
@@ -1691,13 +1684,12 @@
             "system": "scv",
             "command": [
                 {
-                    "name": "mame",
-                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                    "name": "EmuSCV",
+                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/emuscv_libretro.so"
                 }
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
@@ -1891,7 +1883,6 @@
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
@@ -1946,13 +1937,12 @@
             "system": "vsmile",
             "command": [
                 {
-                    "name": "mame",
-                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                    "name": "Mess",
+                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mess_libretro.so"
                 }
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
             "corePreferences": {}
         },
         {
@@ -2015,8 +2005,8 @@
             "system": "windows",
             "command": [
                 {
-                    "name": "mame",
-                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+                    "name": "Wine",
+                    "command": "wine"
                 }
             ],
             "useForeverMode": false,

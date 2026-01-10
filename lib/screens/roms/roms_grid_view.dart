@@ -73,9 +73,9 @@ class RomsGridView extends StatelessWidget {
     if (item.isFolder) {
       return _buildFolderCard(context, index, item);
     }
-    if (!mediaCache.containsKey(item.name)) {
-      loadMediaForItem(item);
-    }
+
+    // Don't load media eagerly - let the debouncing system handle it
+    // Only use cache if it exists
     RomItem? selectedRom = items[selectedIndex];
 
     final media = mediaCache[item.name];

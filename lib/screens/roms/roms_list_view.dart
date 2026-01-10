@@ -59,6 +59,7 @@ class RomsListView extends StatelessWidget {
               controller: scrollController,
               padding: const EdgeInsets.all(8),
               itemCount: items.length,
+              itemExtent: 56.0,
               itemBuilder: (context, index) {
                 final item = items[index];
                 final isSelected = index == selectedIndex;
@@ -77,10 +78,7 @@ class RomsListView extends StatelessWidget {
             ? const VerticalDivider(width: 1)
             : const SizedBox.shrink(),
         isWideScreen
-            ? Expanded(
-                flex: 2,
-                child: _buildDetailPanel(selectedRom, context),
-              )
+            ? Expanded(flex: 2, child: _buildDetailPanel(selectedRom, context))
             : const SizedBox.shrink(),
       ],
     );
@@ -93,10 +91,8 @@ class RomsListView extends StatelessWidget {
     bool isSelected,
     bool isWideScreen,
   ) {
-    if (item.isRom && !mediaCache.containsKey(item.name)) {
-      loadMediaForItem(item);
-    }
-
+    // Don't load media eagerly - let the debouncing system handle it
+    // Only use cache if it exists
     final media = mediaCache[item.name];
     final imagePath = media != null
         ? mediaService.getBestImagePath(media)

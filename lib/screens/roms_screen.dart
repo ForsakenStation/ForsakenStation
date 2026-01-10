@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:forsaken/screens/roms/roms_carousel_view.dart';
@@ -60,9 +61,9 @@ class _RomsScreenState extends State<RomsScreen> {
   List<Rom>? _platformRoms; // Cached ROMs for JSONL platform
   ViewMode _viewMode = ViewMode.list;
   int _selectedIndex = 0;
-  Map<String, RomMedia> _mediaCache = {};
-  Map<String, GameInfo> _gameInfoCache = {};
-  Map<String, bool> _downloadedRomsCache =
+  final Map<String, RomMedia> _mediaCache = {};
+  final Map<String, GameInfo> _gameInfoCache = {};
+  final Map<String, bool> _downloadedRomsCache =
       {}; // Cache for downloaded ROM status
   late MediaService _mediaService;
   late EmulatorService _emulatorService;
@@ -89,6 +90,12 @@ class _RomsScreenState extends State<RomsScreen> {
   final FocusNode _searchFocusNode = FocusNode();
   bool _isSearchMode = false;
   bool _showVirtualKeyboard = false;
+
+  // Media loading control with debouncing
+  Timer? _mediaLoadTimer;
+  bool _isNavigating = false;
+  int? _lastLoadedMediaIndex;
+  final Set<int> _preloadedThumbnailIndices = {};
 
   @override
   void initState() {
@@ -184,6 +191,9 @@ class _RomsScreenState extends State<RomsScreen> {
 
   @override
   void dispose() {
+    // Cancel media load timer
+    _mediaLoadTimer?.cancel();
+
     // Clear platform cache when leaving the screen to free up memory
     if (widget.platform.isJsonlPlatform) {
       widget.romService.clearPlatformCache(widget.platform.name);
@@ -240,6 +250,8 @@ class _RomsScreenState extends State<RomsScreen> {
         _isLoading = false;
         _selectedIndex = 0;
         _mediaCache.clear();
+        _preloadedThumbnailIndices.clear();
+        _lastLoadedMediaIndex = null;
       });
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -286,7 +298,7 @@ class _RomsScreenState extends State<RomsScreen> {
     });
   }
 
-  void _scrollToIndexInGrid(int index, int columns) {
+  void _scrollToIndexInGrid(int index, int columns, {bool centerItem = false}) {
     if (!_gridScrollController.hasClients) return;
 
     // Calculate item dimensions
@@ -303,57 +315,59 @@ class _RomsScreenState extends State<RomsScreen> {
     final currentScroll = _gridScrollController.offset;
     final maxScroll = _gridScrollController.position.maxScrollExtent;
 
-    // Calculate item position
-    final itemTop = rowOffset;
-    final itemBottom = rowOffset + itemHeight;
+    double targetScroll;
 
-    // Scroll if needed
-    if (itemTop < currentScroll) {
-      _gridScrollController.animateTo(
-        itemTop - 16,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
-    } else if (itemBottom > currentScroll + viewportHeight) {
-      final targetScroll = itemBottom - viewportHeight + 16;
-      _gridScrollController.animateTo(
-        targetScroll.clamp(0.0, maxScroll),
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
+    if (centerItem) {
+      // CENTER: For alphabetical jumps
+      targetScroll = rowOffset - (viewportHeight / 2) + (itemHeight / 2);
+    } else {
+      // MINIMAL: For sequential navigation
+      final itemTop = rowOffset;
+      final itemBottom = rowOffset + itemHeight;
+
+      if (itemTop < currentScroll) {
+        targetScroll = itemTop - 16;
+      } else if (itemBottom > currentScroll + viewportHeight) {
+        targetScroll = itemBottom - viewportHeight + 16;
+      } else {
+        return; // Already visible
+      }
     }
+
+    // Always use jumpTo for instant response
+    _gridScrollController.jumpTo(targetScroll.clamp(0.0, maxScroll));
   }
 
-  void _scrollToIndexInList(int index) {
+  void _scrollToIndexInList(int index, {bool centerItem = false}) {
     if (!_listScrollController.hasClients) return;
+    const listPaddingTop = 8.0;
+    const itemHeight = 56.0;
 
-    // Approximate item height (card height)
-    const itemHeight = 56.0 + 8.0; // ListTile height + margin
-
-    final itemOffset = index * itemHeight;
+    final itemOffset = listPaddingTop + (index * itemHeight);
     final viewportHeight = _listScrollController.position.viewportDimension;
     final currentScroll = _listScrollController.offset;
     final maxScroll = _listScrollController.position.maxScrollExtent;
 
-    // Calculate item bounds
-    final itemTop = itemOffset;
-    final itemBottom = itemOffset + itemHeight;
+    double targetScroll;
 
-    // Scroll if needed
-    if (itemTop < currentScroll) {
-      _listScrollController.animateTo(
-        itemTop - 8,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
-    } else if (itemBottom > currentScroll + viewportHeight) {
-      final targetScroll = itemBottom - viewportHeight + 8;
-      _listScrollController.animateTo(
-        targetScroll.clamp(0.0, maxScroll),
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
+    if (centerItem) {
+      // CENTER: For alphabetical jumps - center the item in viewport
+      targetScroll = itemOffset - (viewportHeight / 2) + (itemHeight / 2);
+    } else {
+      // MINIMAL: For sequential navigation - only scroll if not visible
+      final itemTop = itemOffset;
+      final itemBottom = itemOffset + itemHeight;
+
+      if (itemTop < currentScroll) {
+        targetScroll = itemTop - 16;
+      } else if (itemBottom > currentScroll + viewportHeight) {
+        targetScroll = itemBottom - viewportHeight + 16;
+      } else {
+        return;
+      }
     }
+
+    _listScrollController.jumpTo(targetScroll.clamp(0.0, maxScroll));
   }
 
   Future<void> _loadMediaForItem(RomItem item) async {
@@ -400,6 +414,109 @@ class _RomsScreenState extends State<RomsScreen> {
         tag: 'RomsScreen',
       );
     }
+  }
+
+  /// Schedule media loading after debounce delay (500ms)
+  /// Loads full media for selected item and neighbors, thumbnails for wider range
+  void _scheduleMediaLoad() {
+    // Cancel any pending load
+    _mediaLoadTimer?.cancel();
+
+    // Mark as navigating
+    if (!_isNavigating) {
+      setState(() {
+        _isNavigating = true;
+      });
+    }
+
+    // Schedule load after 500ms debounce delay
+    _mediaLoadTimer = Timer(const Duration(milliseconds: 500), () async {
+      if (!mounted) return;
+
+      // Reset navigation flag
+      setState(() {
+        _isNavigating = false;
+      });
+
+      // Validate index
+      if (_filteredItems.isEmpty || _selectedIndex >= _filteredItems.length) {
+        return;
+      }
+
+      // Load media for selected item and immediate neighbors (±1)
+      await _loadMediaForSelectedAndNeighbors();
+
+      // Schedule thumbnail preloading for wider range (±10)
+      _scheduleThumbnailPreload();
+    });
+  }
+
+  /// Load full media for selected item and immediate neighbors (±1)
+  Future<void> _loadMediaForSelectedAndNeighbors() async {
+    if (_filteredItems.isEmpty) return;
+
+    // Selected item
+    final selectedItem = _filteredItems[_selectedIndex];
+    if (selectedItem.isRom) {
+      _loadMediaForItem(selectedItem);
+      _loadGameInfoForItem(selectedItem);
+      _lastLoadedMediaIndex = _selectedIndex;
+    }
+
+    // Previous item
+    if (_selectedIndex > 0) {
+      final prevItem = _filteredItems[_selectedIndex - 1];
+      if (prevItem.isRom) {
+        _loadMediaForItem(prevItem);
+      }
+    }
+
+    // Next item
+    if (_selectedIndex < _filteredItems.length - 1) {
+      final nextItem = _filteredItems[_selectedIndex + 1];
+      if (nextItem.isRom) {
+        _loadMediaForItem(nextItem);
+      }
+    }
+  }
+
+  /// Preload thumbnails for items in range ±10 (background, low priority)
+  void _scheduleThumbnailPreload() {
+    // For very large lists (>5000 items), reduce preload range to avoid performance issues
+    final preloadRange = _filteredItems.length > 5000 ? 5 : 10;
+
+    // Wait additional 500ms before starting background preload
+    Timer(const Duration(milliseconds: 500), () async {
+      if (!mounted || _isNavigating) return;
+
+      final startIndex = (_selectedIndex - preloadRange).clamp(
+        0,
+        _filteredItems.length - 1,
+      );
+      final endIndex = (_selectedIndex + preloadRange).clamp(
+        0,
+        _filteredItems.length - 1,
+      );
+
+      // Load thumbnails for items not already loaded
+      for (int i = startIndex; i <= endIndex; i++) {
+        // Skip if navigating started again
+        if (_isNavigating) break;
+
+        // Skip if already preloaded
+        if (_preloadedThumbnailIndices.contains(i)) continue;
+
+        final item = _filteredItems[i];
+        if (item.isRom && !_mediaCache.containsKey(item.name)) {
+          await _loadMediaForItem(item);
+          _preloadedThumbnailIndices.add(i);
+
+          // Larger delay for very large lists to avoid I/O saturation
+          final delayMs = _filteredItems.length > 5000 ? 100 : 50;
+          await Future.delayed(Duration(milliseconds: delayMs));
+        }
+      }
+    });
   }
 
   void _navigateToFolder(RomItem folder) {
@@ -610,12 +727,14 @@ class _RomsScreenState extends State<RomsScreen> {
     });
     if (_viewMode == ViewMode.grid) {
       final columns = _calculateCrossAxisCount(context);
-      _scrollToIndexInGrid(newIndex, columns);
+      _scrollToIndexInGrid(newIndex, columns, centerItem: true);
     } else if (_viewMode == ViewMode.list) {
-      _scrollToIndexInList(newIndex);
+      _scrollToIndexInList(newIndex, centerItem: true);
     } else {
-      _scrollToCarouselIndex(newIndex);
+      _scrollToCarouselIndex(newIndex, centerItem: true);
     }
+
+    _scheduleMediaLoad();
 
     return KeyEventResult.handled;
   }
@@ -660,6 +779,7 @@ class _RomsScreenState extends State<RomsScreen> {
         _selectedIndex = newIndex;
       });
       _scrollToIndexInGrid(newIndex, columns);
+      _scheduleMediaLoad();
       return KeyEventResult.handled;
     }
 
@@ -693,6 +813,7 @@ class _RomsScreenState extends State<RomsScreen> {
         _selectedIndex = newIndex;
       });
       _scrollToIndexInList(newIndex);
+      _scheduleMediaLoad();
       return KeyEventResult.handled;
     }
 
@@ -718,6 +839,7 @@ class _RomsScreenState extends State<RomsScreen> {
         _selectedIndex = newIndex;
       });
       _scrollToCarouselIndex(_selectedIndex);
+      _scheduleMediaLoad();
       return KeyEventResult.handled;
     }
 
@@ -987,6 +1109,7 @@ class _RomsScreenState extends State<RomsScreen> {
           _selectedIndex = index;
         });
         _scrollToIndexInList(index);
+        _scheduleMediaLoad();
       },
       onKeyEvent: _handleKeyEvent,
       mediaCache: _mediaCache,
@@ -1011,6 +1134,7 @@ class _RomsScreenState extends State<RomsScreen> {
           _selectedIndex = index;
         });
         _showRomDetailDialog(item);
+        _scheduleMediaLoad();
       },
       onKeyEvent: _handleKeyEvent,
       mediaCache: _mediaCache,
@@ -1047,6 +1171,7 @@ class _RomsScreenState extends State<RomsScreen> {
           _selectedIndex = index;
         });
         _scrollToCarouselIndex(index);
+        _scheduleMediaLoad();
       },
       showNavigationHint: _showNavigationHint,
       loadGameInfoForItem: _loadGameInfoForItem,
@@ -1055,7 +1180,7 @@ class _RomsScreenState extends State<RomsScreen> {
     );
   }
 
-  void _scrollToCarouselIndex(int index) {
+  void _scrollToCarouselIndex(int index, {bool centerItem = false}) {
     if (!_carouselController.hasClients) return;
 
     const cardWidth = 180.0 + 16.0; // Card width + padding
@@ -1064,25 +1189,27 @@ class _RomsScreenState extends State<RomsScreen> {
     final currentScroll = _carouselController.offset;
     final maxScroll = _carouselController.position.maxScrollExtent;
 
-    // Calculate item bounds
-    final itemLeft = itemOffset;
-    final itemRight = itemOffset + cardWidth;
+    double targetScroll;
 
-    // Scroll if needed
-    if (itemLeft < currentScroll) {
-      _carouselController.animateTo(
-        itemLeft,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    } else if (itemRight > currentScroll + viewportWidth) {
-      final targetScroll = itemRight - viewportWidth;
-      _carouselController.animateTo(
-        targetScroll.clamp(0.0, maxScroll),
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+    if (centerItem) {
+      // CENTER: For alphabetical jumps
+      targetScroll = itemOffset - (viewportWidth / 2) + (cardWidth / 2);
+    } else {
+      // MINIMAL: For sequential navigation
+      final itemLeft = itemOffset;
+      final itemRight = itemOffset + cardWidth;
+
+      if (itemLeft < currentScroll) {
+        targetScroll = itemLeft;
+      } else if (itemRight > currentScroll + viewportWidth) {
+        targetScroll = itemRight - viewportWidth;
+      } else {
+        return; // Already visible
+      }
     }
+
+    // Always use jumpTo for instant response
+    _carouselController.jumpTo(targetScroll.clamp(0.0, maxScroll));
   }
 
   void _showRomDetailDialog(RomItem item) async {

@@ -104,21 +104,9 @@ class RomsCarouselView extends StatelessWidget {
       );
     }
 
-    // Trigger lazy loading of media
-    if (!mediaCache.containsKey(item.name)) {
-      loadMediaForItem(item);
-      return Center(
-        key: ValueKey('loading_${item.path}'),
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Loading media...'),
-          ],
-        ),
-      );
-    }
+    // Don't load media eagerly - let the debouncing system handle it
+    // Only use cache if it exists
+    // Game info is lighter, so we can still load it
     loadGameInfoForItem(item);
     final media = mediaCache[item.name];
     final gameInfo = gameInfoCache[item.name];
@@ -243,6 +231,9 @@ class RomsCarouselView extends StatelessWidget {
             controller: scrollController,
             scrollDirection: Axis.horizontal,
             itemCount: items.length,
+            // CRITICAL: Fixed item extent for performance with large lists
+            // Width = card (180px) + horizontal padding (16px) = 196px
+            itemExtent: 196.0,
             itemBuilder: (context, index) {
               final item = items[index];
               final isSelected = index == selectedIndex;
@@ -290,11 +281,8 @@ class RomsCarouselView extends StatelessWidget {
       return _buildFolderCard(context, item, isSelected, cardWidth, cardHeight);
     }
 
-    // Trigger lazy loading of media
-    if (!mediaCache.containsKey(item.name)) {
-      loadMediaForItem(item);
-    }
-
+    // Don't load media eagerly - let the debouncing system handle it
+    // Only use cache if it exists
     final media = mediaCache[item.name];
 
     return Padding(
