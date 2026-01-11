@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 /// Smart SVG widget that handles both .svg and .svgz (gzip-compressed) files
 /// Automatically detects format and decompresses SVGZ in memory
-class SmartSvg extends StatelessWidget {
+class SmartSvg extends StatefulWidget {
   final String assetPath;
   final double? width;
   final double? height;
@@ -63,22 +63,47 @@ class SmartSvg extends StatelessWidget {
     );
   }
 
+  @override
+  State<SmartSvg> createState() => _SmartSvgState();
+}
+
+class _SmartSvgState extends State<SmartSvg> {
+  Future<String>? _decompressFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // Cache the future on initialization to prevent rebuilds
+    if (_isSvgz(widget.assetPath)) {
+      _decompressFuture = _loadAndDecompressSvgz(widget.assetPath);
+    }
+  }
+
+  @override
+  void didUpdateWidget(SmartSvg oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Only recreate the future if the asset path changed
+    if (oldWidget.assetPath != widget.assetPath && _isSvgz(widget.assetPath)) {
+      _decompressFuture = _loadAndDecompressSvgz(widget.assetPath);
+    }
+  }
+
   bool _isSvgz(String path) {
     return path.toLowerCase().endsWith('.svgz');
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isSvgz(assetPath)) {
-      // Handle SVGZ - load and decompress
+    if (_isSvgz(widget.assetPath)) {
+      // Handle SVGZ - load and decompress using cached future
       return FutureBuilder<String>(
-        future: _loadAndDecompressSvgz(assetPath),
+        future: _decompressFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return placeholderBuilder?.call(context) ??
+            return widget.placeholderBuilder?.call(context) ??
                 SizedBox(
-                  width: width,
-                  height: height,
+                  width: widget.width,
+                  height: widget.height,
                   child: const Center(
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
@@ -97,36 +122,36 @@ class SmartSvg extends StatelessWidget {
           // Render decompressed SVG string
           return SvgPicture.string(
             snapshot.data!,
-            width: width,
-            height: height,
-            fit: fit,
-            colorFilter: colorFilter,
-            alignment: alignment,
-            semanticsLabel: semanticsLabel,
-            matchTextDirection: matchTextDirection,
+            width: widget.width,
+            height: widget.height,
+            fit: widget.fit,
+            colorFilter: widget.colorFilter,
+            alignment: widget.alignment,
+            semanticsLabel: widget.semanticsLabel,
+            matchTextDirection: widget.matchTextDirection,
           );
         },
       );
     } else {
       // Handle regular SVG
       return SvgPicture.asset(
-        assetPath,
-        width: width,
-        height: height,
-        fit: fit,
-        colorFilter: colorFilter,
-        alignment: alignment,
-        semanticsLabel: semanticsLabel,
-        matchTextDirection: matchTextDirection,
-        placeholderBuilder: placeholderBuilder,
+        widget.assetPath,
+        width: widget.width,
+        height: widget.height,
+        fit: widget.fit,
+        colorFilter: widget.colorFilter,
+        alignment: widget.alignment,
+        semanticsLabel: widget.semanticsLabel,
+        matchTextDirection: widget.matchTextDirection,
+        placeholderBuilder: widget.placeholderBuilder,
       );
     }
   }
 
   Widget _buildErrorWidget() {
     return SizedBox(
-      width: width,
-      height: height,
+      width: widget.width,
+      height: widget.height,
       child: const Icon(Icons.broken_image, color: Colors.grey),
     );
   }

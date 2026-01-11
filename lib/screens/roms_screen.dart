@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:forsaken/screens/roms/roms_carousel_view.dart';
 import 'package:forsaken/screens/roms/roms_grid_view.dart';
 import 'package:forsaken/screens/roms/roms_list_view.dart';
+import 'package:forsaken/screens/roms/utils/scroll_utils.dart';
+import 'package:forsaken/screens/roms/utils/bottom_bar_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,17 +23,17 @@ import 'package:forsaken/services/emulator_service.dart';
 import 'package:forsaken/services/download_service.dart';
 import 'package:forsaken/services/keyboard_service.dart';
 import 'package:forsaken/services/gamelist_service.dart';
-import 'package:forsaken/widgets/common/info_row.dart';
-import 'package:forsaken/widgets/roms/media_carousel.dart';
 import 'package:forsaken/widgets/common/theme_selector.dart';
 import 'package:forsaken/widgets/common/help_dialog.dart';
-import 'package:forsaken/widgets/common/placeholder_image.dart';
 import 'package:forsaken/widgets/common/virtual_keyboard.dart';
 import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
 import 'package:forsaken/widgets/common/smart_svg.dart';
+import 'package:forsaken/widgets/common/error_dialog.dart';
 import 'package:forsaken/widgets/roms/launch_progress_dialog.dart';
 import 'package:forsaken/widgets/roms/save_rom_dialog.dart';
 import 'package:forsaken/widgets/roms/fullscreen_image_viewer.dart';
+import 'package:forsaken/widgets/roms/rom_detail_dialog.dart';
+import 'package:forsaken/widgets/roms/emulator_selection_dialog.dart';
 import 'package:forsaken/services/rom_storage_service.dart';
 import 'package:forsaken/screens/settings_screen.dart';
 
@@ -256,6 +258,10 @@ class _RomsScreenState extends State<RomsScreen> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _requestFocusForCurrentViewMode();
+        // Load initial media for visible items
+        if (_filteredItems.isNotEmpty) {
+          _scheduleMediaLoad();
+        }
       });
     }
   }
@@ -276,6 +282,10 @@ class _RomsScreenState extends State<RomsScreen> {
       _filteredItems = _filterItems(_items, query);
       _selectedIndex = 0;
     });
+    // Load media for newly filtered items
+    if (_filteredItems.isNotEmpty) {
+      _scheduleMediaLoad();
+    }
   }
 
   void _clearSearch() {
@@ -286,6 +296,10 @@ class _RomsScreenState extends State<RomsScreen> {
       _filteredItems = _items;
       _selectedIndex = 0;
     });
+    // Load media after clearing search
+    if (_filteredItems.isNotEmpty) {
+      _scheduleMediaLoad();
+    }
   }
 
   void _activateSearchMode() {
@@ -299,75 +313,21 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   void _scrollToIndexInGrid(int index, int columns, {bool centerItem = false}) {
-    if (!_gridScrollController.hasClients) return;
-
-    // Calculate item dimensions
-    final screenWidth = MediaQuery.of(context).size.width;
-    final itemWidth = (screenWidth - 16 * 2 - 16 * (columns - 1)) / columns;
-    final itemHeight = itemWidth / 0.7; // Based on childAspectRatio
-
-    // Calculate row
-    final row = index ~/ columns;
-    final rowOffset = row * (itemHeight + 16);
-
-    // Get viewport height
-    final viewportHeight = _gridScrollController.position.viewportDimension;
-    final currentScroll = _gridScrollController.offset;
-    final maxScroll = _gridScrollController.position.maxScrollExtent;
-
-    double targetScroll;
-
-    if (centerItem) {
-      // CENTER: For alphabetical jumps
-      targetScroll = rowOffset - (viewportHeight / 2) + (itemHeight / 2);
-    } else {
-      // MINIMAL: For sequential navigation
-      final itemTop = rowOffset;
-      final itemBottom = rowOffset + itemHeight;
-
-      if (itemTop < currentScroll) {
-        targetScroll = itemTop - 16;
-      } else if (itemBottom > currentScroll + viewportHeight) {
-        targetScroll = itemBottom - viewportHeight + 16;
-      } else {
-        return; // Already visible
-      }
-    }
-
-    // Always use jumpTo for instant response
-    _gridScrollController.jumpTo(targetScroll.clamp(0.0, maxScroll));
+    ScrollUtils.scrollToIndexInGrid(
+      _gridScrollController,
+      context,
+      index,
+      columns,
+      centerItem: centerItem,
+    );
   }
 
   void _scrollToIndexInList(int index, {bool centerItem = false}) {
-    if (!_listScrollController.hasClients) return;
-    const listPaddingTop = 8.0;
-    const itemHeight = 56.0;
-
-    final itemOffset = listPaddingTop + (index * itemHeight);
-    final viewportHeight = _listScrollController.position.viewportDimension;
-    final currentScroll = _listScrollController.offset;
-    final maxScroll = _listScrollController.position.maxScrollExtent;
-
-    double targetScroll;
-
-    if (centerItem) {
-      // CENTER: For alphabetical jumps - center the item in viewport
-      targetScroll = itemOffset - (viewportHeight / 2) + (itemHeight / 2);
-    } else {
-      // MINIMAL: For sequential navigation - only scroll if not visible
-      final itemTop = itemOffset;
-      final itemBottom = itemOffset + itemHeight;
-
-      if (itemTop < currentScroll) {
-        targetScroll = itemTop - 16;
-      } else if (itemBottom > currentScroll + viewportHeight) {
-        targetScroll = itemBottom - viewportHeight + 16;
-      } else {
-        return;
-      }
-    }
-
-    _listScrollController.jumpTo(targetScroll.clamp(0.0, maxScroll));
+    ScrollUtils.scrollToIndexInList(
+      _listScrollController,
+      index,
+      centerItem: centerItem,
+    );
   }
 
   Future<void> _loadMediaForItem(RomItem item) async {
@@ -483,10 +443,10 @@ class _RomsScreenState extends State<RomsScreen> {
   /// Preload thumbnails for items in range ±10 (background, low priority)
   void _scheduleThumbnailPreload() {
     // For very large lists (>5000 items), reduce preload range to avoid performance issues
-    final preloadRange = _filteredItems.length > 5000 ? 5 : 10;
+    final preloadRange = _filteredItems.length > 5000 ? 20 : 100;
 
     // Wait additional 500ms before starting background preload
-    Timer(const Duration(milliseconds: 500), () async {
+    Timer(const Duration(milliseconds: 100), () async {
       if (!mounted || _isNavigating) return;
 
       final startIndex = (_selectedIndex - preloadRange).clamp(
@@ -610,6 +570,10 @@ class _RomsScreenState extends State<RomsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _requestFocusForCurrentViewMode();
       _requestScrollToIndexCurrentViewMode();
+      // Load media for the new view
+      if (_filteredItems.isNotEmpty) {
+        _scheduleMediaLoad();
+      }
     });
   }
 
@@ -966,6 +930,8 @@ class _RomsScreenState extends State<RomsScreen> {
                   _platformLogoPath!,
                   height: 24,
                   fit: BoxFit.contain,
+                  placeholderBuilder: (context) =>
+                      Text(widget.platform.displayName),
                 )
               : Text(widget.platform.displayName),
           if (subFolder != null) Icon(Icons.chevron_right),
@@ -1146,12 +1112,7 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   int _calculateCrossAxisCount(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    if (width > 1200) return 6;
-    if (width > 900) return 5;
-    if (width > 600) return 4;
-    if (width > 400) return 3;
-    return 2;
+    return ScrollUtils.calculateCrossAxisCount(context);
   }
 
   Widget _buildCarouselView() {
@@ -1181,35 +1142,11 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   void _scrollToCarouselIndex(int index, {bool centerItem = false}) {
-    if (!_carouselController.hasClients) return;
-
-    const cardWidth = 180.0 + 16.0; // Card width + padding
-    final itemOffset = index * cardWidth;
-    final viewportWidth = _carouselController.position.viewportDimension;
-    final currentScroll = _carouselController.offset;
-    final maxScroll = _carouselController.position.maxScrollExtent;
-
-    double targetScroll;
-
-    if (centerItem) {
-      // CENTER: For alphabetical jumps
-      targetScroll = itemOffset - (viewportWidth / 2) + (cardWidth / 2);
-    } else {
-      // MINIMAL: For sequential navigation
-      final itemLeft = itemOffset;
-      final itemRight = itemOffset + cardWidth;
-
-      if (itemLeft < currentScroll) {
-        targetScroll = itemLeft;
-      } else if (itemRight > currentScroll + viewportWidth) {
-        targetScroll = itemRight - viewportWidth;
-      } else {
-        return; // Already visible
-      }
-    }
-
-    // Always use jumpTo for instant response
-    _carouselController.jumpTo(targetScroll.clamp(0.0, maxScroll));
+    ScrollUtils.scrollToCarouselIndex(
+      _carouselController,
+      index,
+      centerItem: centerItem,
+    );
   }
 
   void _showRomDetailDialog(RomItem item) async {
@@ -1218,151 +1155,17 @@ class _RomsScreenState extends State<RomsScreen> {
       return;
     }
 
-    // Load media if not cached
-    if (!_mediaCache.containsKey(item.name)) {
-      _loadMediaForItem(item);
-    }
+    _loadMediaForItem(item);
+    _loadGameInfoForItem(item);
 
-    // Load game info if not cached (lazy loading)
-    if (!_gameInfoCache.containsKey(item.name)) {
-      _loadGameInfoForItem(item);
-    }
-
-    final media = _mediaCache[item.name];
-    final gameInfo = _gameInfoCache[item.name];
-
-    showDialog(
+    await RomDetailDialog.show(
       context: context,
-      builder: (context) => Dialog(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700),
-          child: Column(
-            children: [
-              // Header
-              AppBar(
-                title: Text(gameInfo?.name ?? item.displayName),
-                leading: IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                automaticallyImplyLeading: false,
-              ),
-              // Content
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (media != null)
-                        MediaCarousel(media: media, height: 400)
-                      else
-                        Center(child: PlaceholderImage(size: 300)),
-                      const SizedBox(height: 16),
-                      InfoRow(
-                        label: 'Description',
-                        value:
-                            gameInfo?.desc ??
-                            'No description available for this ROM.',
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Release Date',
-                              value:
-                                  gameInfo?.releaseDate?.toString().split(
-                                    ' ',
-                                  )[0] ??
-                                  '',
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Developer',
-                              value: gameInfo?.developer ?? '',
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Publisher',
-                              value: gameInfo?.publisher ?? '',
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Genre',
-                              value: gameInfo?.genre ?? '',
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Players',
-                              value: gameInfo?.playersText ?? '',
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Expanded(
-                            child: InfoRow(
-                              label: 'Rating',
-                              value: gameInfo?.ratingPercentage ?? '--',
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
-                ),
-              ),
-              // Actions
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
-                    ),
-                    const SizedBox(width: 16),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _handleRomLaunch(item);
-                      },
-                      icon: Icon(Icons.gamepad),
-                      label: Text('Play'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ).then((_) {
-      _requestFocusForCurrentViewMode();
-    });
+      item: item,
+      media: _mediaCache[item.name],
+      gameInfo: _gameInfoCache[item.name],
+      onPlay: () => _handleRomLaunch(item),
+      onClose: _requestFocusForCurrentViewMode,
+    );
   }
 
   /// Show media in fullscreen dialog
@@ -1460,34 +1263,11 @@ class _RomsScreenState extends State<RomsScreen> {
   Future<EmulatorCommand?> _showEmulatorSelectionDialog(
     EmulatorConfig config,
   ) async {
-    final result = await showDialog<EmulatorCommand>(
+    return await EmulatorSelectionDialog.show(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Select Emulator'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: config.commands.map((command) {
-            return ListTile(
-              leading: const Icon(Icons.videogame_asset),
-              title: Text(command.name),
-              subtitle: Text(command.command),
-              onTap: () => Navigator.pop(context, command),
-            );
-          }).toList(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
+      config: config,
+      onClose: _requestFocusForCurrentViewMode,
     );
-
-    // Request focus back after dialog closes
-    _requestFocusForCurrentViewMode();
-
-    return result;
   }
 
   Future<void> _launchWithCommand(RomItem item, EmulatorCommand command) async {
@@ -1705,21 +1485,11 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   void _showErrorDialog(String message) {
-    showDialog(
+    ErrorDialog.show(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    ).then((_) {
-      _requestFocusForCurrentViewMode();
-    });
+      message: message,
+      onClose: _requestFocusForCurrentViewMode,
+    );
   }
 
   void _requestScrollToIndexCurrentViewMode() {
@@ -1738,65 +1508,9 @@ class _RomsScreenState extends State<RomsScreen> {
 
   /// Get bottom bar actions based on current view mode and context
   List<BottomBarAction> _getBottomBarActions() {
-    final actions = <BottomBarAction>[
-      const BottomBarAction(
-        label: 'Select',
-        keyboardKey: 'Enter',
-        gamepadButton: 'A',
-        icon: Icons.check,
-      ),
-      const BottomBarAction(
-        label: 'Back',
-        keyboardKey: 'Esc',
-        gamepadButton: 'B',
-      ),
-      const BottomBarAction(
-        label: 'Refresh',
-        keyboardKey: 'R',
-        gamepadButton: 'Y',
-        icon: Icons.shuffle,
-      ),
-      const BottomBarAction(
-        label: 'View',
-        keyboardKey: 'V',
-        gamepadButton: 'R3',
-        icon: Icons.view_carousel,
-      ),
-      const BottomBarAction(
-        label: 'Search',
-        keyboardKey: 'S',
-        gamepadButton: 'X',
-        icon: Icons.search,
-      ),
-      const BottomBarAction(
-        label: 'Media',
-        keyboardKey: 'M',
-        gamepadButton: 'L1',
-        icon: Icons.photo_library,
-      ),
-      const BottomBarAction(
-        label: 'Settings',
-        keyboardKey: 'Tab',
-        gamepadButton: 'Start',
-        icon: Icons.settings,
-      ),
-    ];
-
-    // Add platform navigation for list view at root
-    if (_viewMode == ViewMode.list &&
-        _pathHistory.isEmpty &&
-        _currentSubdirectory == null) {
-      actions.insert(
-        1,
-        const BottomBarAction(
-          label: 'Platforms',
-          keyboardKey: 'Q/E',
-          gamepadButton: 'L1/R1',
-          icon: Icons.swap_horiz,
-        ),
-      );
-    }
-
-    return actions;
+    return RomsScreenBottomBarActions.getActions(
+      isListView: _viewMode == ViewMode.list,
+      isAtRoot: _pathHistory.isEmpty && _currentSubdirectory == null,
+    );
   }
 }
