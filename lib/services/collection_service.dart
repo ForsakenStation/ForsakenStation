@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'dart:convert';
+import 'package:path/path.dart' as path;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/collection.dart';
 import '../models/rom.dart';
 import 'debug_service.dart';
+import 'rom_storage_service.dart';
 
 /// Service to manage ROM collections (Recently Played, Downloaded, etc.)
 class CollectionService {
@@ -12,10 +15,10 @@ class CollectionService {
   CollectionService._internal();
 
   final _debug = DebugService.instance;
+  final _storageService = RomStorageService.instance;
 
   // Storage keys
   static const String _recentlyPlayedKey = 'recently_played';
-  static const String _downloadedRomsKey = 'downloaded_roms';
   static const int _maxRecentlyPlayed = 50; // Keep last 50 played ROMs
 
   /// Get all available collections
@@ -111,77 +114,32 @@ class CollectionService {
     }
   }
 
-  /// Track a ROM as downloaded
-  Future<void> addToDownloaded(Rom rom) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final existing = await getDownloadedRoms();
-
-      // Add if not already exists
-      final alreadyExists = existing.any(
-        (r) => r.name == rom.name && r.platform == rom.platform,
-      );
-
-      if (!alreadyExists) {
-        existing.add(rom);
-
-        // Save
-        final romsJson = existing.map((r) => _romToJson(r)).toList();
-        await prefs.setString(_downloadedRomsKey, json.encode(romsJson));
-
-        _debug.info(
-          'Added ${rom.name} to downloaded (total: ${existing.length})',
-          tag: 'CollectionService',
-        );
-      }
-    } catch (e) {
-      _debug.error(
-        'Failed to add ROM to downloaded',
-        tag: 'CollectionService',
-        error: e,
-      );
-    }
-  }
-
-  /// Remove a ROM from downloaded collection
-  Future<void> removeFromDownloaded(Rom rom) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final existing = await getDownloadedRoms();
-
-      existing.removeWhere(
-        (r) => r.name == rom.name && r.platform == rom.platform,
-      );
-
-      // Save
-      final romsJson = existing.map((r) => _romToJson(r)).toList();
-      await prefs.setString(_downloadedRomsKey, json.encode(romsJson));
-
-      _debug.info(
-        'Removed ${rom.name} from downloaded (remaining: ${existing.length})',
-        tag: 'CollectionService',
-      );
-    } catch (e) {
-      _debug.error(
-        'Failed to remove ROM from downloaded',
-        tag: 'CollectionService',
-        error: e,
-      );
-    }
-  }
-
-  /// Get downloaded ROMs
+  /// Get downloaded ROMs by scanning storage directories
+  /// Scans both roms_temp and roms_forever directories
   Future<List<Rom>> getDownloadedRoms() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final jsonString = prefs.getString(_downloadedRomsKey);
+      final List<Rom> downloadedRoms = [];
 
-      if (jsonString == null || jsonString.isEmpty) {
-        return [];
+      // Get storage directories
+      final tempDir = await _storageService.getTempStorageDirectory();
+      final foreverDir = await _storageService.getForeverStorageDirectory();
+
+      // Scan temp directory
+      if (await tempDir.exists()) {
+        await _scanDirectoryForRoms(tempDir, downloadedRoms, isTemp: true);
       }
 
-      final List<dynamic> romsJson = json.decode(jsonString);
-      return romsJson.map((j) => _romFromJson(j)).toList();
+      // Scan forever directory
+      if (await foreverDir.exists()) {
+        await _scanDirectoryForRoms(foreverDir, downloadedRoms, isTemp: false);
+      }
+
+      _debug.info(
+        'Found ${downloadedRoms.length} downloaded ROMs',
+        tag: 'CollectionService',
+      );
+
+      return downloadedRoms;
     } catch (e) {
       _debug.error(
         'Failed to load downloaded ROMs',
@@ -190,6 +148,67 @@ class CollectionService {
       );
       return [];
     }
+  }
+
+  /// Scan a directory recursively for ROM files
+  Future<void> _scanDirectoryForRoms(
+    Directory dir,
+    List<Rom> roms, {
+    required bool isTemp,
+  }) async {
+    try {
+      final entities = dir.listSync(recursive: true);
+
+      for (final entity in entities) {
+        if (entity is File) {
+          final fileName = path.basename(entity.path);
+          final extension = path.extension(fileName).toLowerCase();
+
+          // Check if it's a ROM file (common ROM extensions)
+          if (_isRomFile(extension)) {
+            // Extract platform from directory structure
+            // Expected: roms_temp/platform/romfile.ext or roms_forever/platform/romfile.ext
+            final platformDir = path.basename(path.dirname(entity.path));
+
+            // Create ROM object
+            final rom = Rom(
+              name: fileName,
+              fileName: fileName,
+              platform: platformDir,
+              urlFilePath: entity.path,
+              localPath: entity.path,
+            );
+
+            roms.add(rom);
+          }
+        }
+      }
+    } catch (e) {
+      _debug.error(
+        'Error scanning directory ${dir.path}',
+        tag: 'CollectionService',
+        error: e,
+      );
+    }
+  }
+
+  /// Check if a file extension is a ROM file
+  bool _isRomFile(String extension) {
+    const romExtensions = [
+      '.zip', '.7z', '.rar', // Archives
+      '.iso', '.cue', '.bin', '.img', '.ccd', '.mds', // Disc images
+      '.nes', '.sfc', '.smc', '.gb', '.gbc', '.gba', // Nintendo
+      '.gen', '.md', '.smd', '.gg', '.sms', // Sega
+      '.psx', '.ps1', '.ps2', // PlayStation
+      '.n64', '.z64', '.v64', // N64
+      '.nds', '.3ds', '.cia', // DS/3DS
+      '.wad', '.wbfs', '.rvz', // Wii
+      '.xbe', '.xex', // Xbox
+      '.chd', '.pbp', '.cso', // Other formats
+      '.rom', '.a26', '.lnx', // Various
+    ];
+
+    return romExtensions.contains(extension);
   }
 
   /// Check if a ROM is in downloaded collection
