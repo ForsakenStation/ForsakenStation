@@ -12,6 +12,7 @@ class RomItem {
   final RomItemType type;
   final String? downloadUrl;
   final int? romCount; // Number of ROMs inside folder (only for folders)
+  final String? platform; // Platform name (for collection views)
 
   // Cached extracted info from filename
   LanguageInfo? _languages;
@@ -24,6 +25,7 @@ class RomItem {
     required this.type,
     this.downloadUrl,
     this.romCount,
+    this.platform,
   });
 
   String get displayName {

@@ -1624,7 +1624,7 @@
             "system": "ebooks",
             "command": [
                 {
-                    "name": "Pdf viwer",
+                    "name": "Pdf viewer",
                     "command": "pdf.AppImage"
                 }
             ],

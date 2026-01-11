@@ -25,6 +25,7 @@ class RomsCarouselView extends StatelessWidget {
   final Future<void> Function(RomItem item) loadGameInfoForItem;
   final Map<String, GameInfo> gameInfoCache;
   final Future<bool> Function(RomItem)? isRomDownloaded;
+  final bool isCollection; // Show platform info for collection views
 
   const RomsCarouselView({
     super.key,
@@ -43,6 +44,7 @@ class RomsCarouselView extends StatelessWidget {
     required this.loadGameInfoForItem,
     required this.gameInfoCache,
     this.isRomDownloaded,
+    this.isCollection = false,
   });
 
   @override
@@ -289,13 +291,12 @@ class RomsCarouselView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
       child: RomCard(
         item: item,
-        isSelected: isSelected,
+        isSelected: index == selectedIndex,
         onTap: () => onCardTap(index),
-        media: media,
+        media: mediaCache[item.name],
         mediaService: mediaService,
         isRomDownloaded: isRomDownloaded,
-        width: cardWidth,
-        height: cardHeight,
+        showPlatform: isCollection,
       ),
     );
   }

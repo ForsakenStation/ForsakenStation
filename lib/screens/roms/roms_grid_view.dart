@@ -17,6 +17,7 @@ class RomsGridView extends StatelessWidget {
   final Function(RomItem) loadMediaForItem;
   final Future<bool> Function(RomItem)? isRomDownloaded;
   final String platformName;
+  final bool isCollection; // Show platform info for collection views
 
   const RomsGridView({
     super.key,
@@ -31,6 +32,7 @@ class RomsGridView extends StatelessWidget {
     required this.loadMediaForItem,
     this.isRomDownloaded,
     required this.platformName,
+    this.isCollection = false,
   });
 
   @override
@@ -83,11 +85,12 @@ class RomsGridView extends StatelessWidget {
 
     return RomCard(
       item: item,
-      isSelected: isSelected,
+      isSelected: index == selectedIndex,
       onTap: () => onItemTap(index, item),
-      media: media,
+      media: mediaCache[item.name],
       mediaService: mediaService,
       isRomDownloaded: isRomDownloaded,
+      showPlatform: isCollection,
     );
   }
 

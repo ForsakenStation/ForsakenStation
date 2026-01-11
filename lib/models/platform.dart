@@ -16,6 +16,11 @@ class Platform {
   }) : _romCount = romCount;
 
   String get displayName {
+    // Check if this is a collection
+    if (name == 'recently_played') return 'Jugados Recientemente';
+    if (name == 'downloaded') return 'Descargados';
+    if (name == 'favorites') return 'Favoritos';
+
     return PlatformNames.getDisplayName(name);
   }
 

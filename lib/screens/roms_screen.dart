@@ -42,11 +42,13 @@ enum ViewMode { list, grid, carousel }
 class RomsScreen extends StatefulWidget {
   final Platform platform;
   final RomService romService;
+  final bool isCollection; // True if this is a collection view
 
   const RomsScreen({
     super.key,
     required this.platform,
     required this.romService,
+    this.isCollection = false,
   });
 
   @override
@@ -221,8 +223,22 @@ class _RomsScreenState extends State<RomsScreen> {
     );
 
     List<RomItem> items;
+
+    // Check if this is a collection view
+    if (widget.isCollection) {
+      // Convert ROMs from collection to RomItems
+      items = widget.platform.roms.map((rom) {
+        return RomItem(
+          name: rom.name,
+          path: rom.localPath ?? rom.urlFilePath,
+          type: RomItemType.rom,
+          downloadUrl: rom.downloadUrl,
+          platform: rom.platform, // Include platform info for collection views
+        );
+      }).toList();
+    }
     // Check if this is a JSONL platform (lazy-loaded)
-    if (widget.platform.isJsonlPlatform) {
+    else if (widget.platform.isJsonlPlatform) {
       // Load ROMs from JSONL file if not already loaded
       _platformRoms ??= await widget.romService.loadRomsForJsonlPlatform(
         widget.platform.name,
@@ -1081,6 +1097,7 @@ class _RomsScreenState extends State<RomsScreen> {
       loadGameInfoForItem: _loadGameInfoForItem,
       gameInfoCache: _gameInfoCache,
       isRomDownloaded: _isRomDownloaded,
+      isCollection: widget.isCollection,
     );
   }
 
@@ -1094,7 +1111,8 @@ class _RomsScreenState extends State<RomsScreen> {
         setState(() {
           _selectedIndex = index;
         });
-        _showRomDetailDialog(item);
+        final columns = _calculateCrossAxisCount(context);
+        _scrollToIndexInGrid(index, columns);
         _scheduleMediaLoad();
       },
       onKeyEvent: _handleKeyEvent,
@@ -1103,6 +1121,7 @@ class _RomsScreenState extends State<RomsScreen> {
       loadMediaForItem: _loadMediaForItem,
       isRomDownloaded: _isRomDownloaded,
       platformName: widget.platform.name,
+      isCollection: widget.isCollection,
     );
   }
 
@@ -1133,6 +1152,7 @@ class _RomsScreenState extends State<RomsScreen> {
       loadGameInfoForItem: _loadGameInfoForItem,
       gameInfoCache: _gameInfoCache,
       isRomDownloaded: _isRomDownloaded,
+      isCollection: widget.isCollection,
     );
   }
 

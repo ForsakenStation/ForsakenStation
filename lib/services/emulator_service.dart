@@ -8,6 +8,7 @@ import '../models/launch_result.dart';
 import 'download_service.dart';
 import 'debug_service.dart';
 import 'config_service.dart';
+import 'collection_service.dart';
 
 class EmulatorService {
   static EmulatorService? _instance;
@@ -16,6 +17,7 @@ class EmulatorService {
   final DownloadService downloadService;
   final _debug = DebugService.instance;
   final _configService = ConfigService.instance;
+  final _collectionService = CollectionService.instance;
 
   EmulatorsConfig? _config;
   DateTime? _configLoadTime;
@@ -348,6 +350,17 @@ class EmulatorService {
       );
 
       if (success) {
+        // Track as recently played
+        final rom = Rom(
+          name: romItem.name,
+          fileName: romItem.name,
+          platform: platform,
+          urlFilePath: romItem.path,
+          downloadUrl: romItem.downloadUrl,
+          localPath: romPath,
+        );
+        await _collectionService.addToRecentlyPlayed(rom);
+
         return LaunchResult.success(filePath: romPath);
       } else {
         return LaunchResult.failure('Failed to launch emulator');

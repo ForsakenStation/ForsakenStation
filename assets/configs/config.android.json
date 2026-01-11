@@ -21,7 +21,7 @@
                     "command": "retroarch://org.libretro.android/LOAD/citra"
                 }
             ],
-            "useForeverMode": false,
+            "useForeverMode": false,https://f-droid.org/packages/com.retroarch/
             "acceptZipFiles": true,
             "corePreferences": {}
         },

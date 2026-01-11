@@ -11,6 +11,7 @@ import '../services/media_service.dart';
 import '../services/keyboard_service.dart';
 import '../services/gamepad_service.dart';
 import '../services/platform_info_service.dart';
+import '../services/collection_service.dart';
 import '../utils/platform_icons.dart';
 import '../widgets/platforms/platform_card.dart';
 import '../widgets/platforms/platform_info_dialog.dart';
@@ -40,6 +41,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
   late KeyboardService _keyboardService;
   late GamepadService _gamepadService;
   late PlatformInfoService _platformInfoService;
+  late CollectionService _collectionService;
   Timer? _gamepadPollTimer;
   final Map<String, String?> _systemImagesCache = {};
   final Map<String, String?> _systemLogosCache = {};
@@ -61,6 +63,7 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     _keyboardService = KeyboardService.instance;
     _gamepadService = GamepadService.instance;
     _platformInfoService = PlatformInfoService.instance;
+    _collectionService = CollectionService.instance;
     _carouselController = PageController();
     _gridScrollController = ScrollController();
     _carouselFocusNode = FocusNode();
@@ -169,10 +172,26 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     });
 
     try {
+      // Load collections first
+      final collections = await _collectionService.getCollections();
+
+      // Load regular platforms
       final platforms = await widget.romService.loadPlatforms();
+
+      // Convert collections to "virtual" platforms
+      final collectionPlatforms = collections.map((collection) {
+        return Platform(
+          name: collection.id, // Use collection ID as platform name
+          path: '', // Collections don't have paths
+          roms: collection.roms,
+          romCount: collection.romCount,
+        );
+      }).toList();
+
       if (mounted) {
         setState(() {
-          _platforms = platforms;
+          // Combine collections + platforms
+          _platforms = [...collectionPlatforms, ...platforms];
           _isLoading = false;
         });
 
@@ -189,6 +208,13 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
         });
       }
     }
+  }
+
+  /// Check if a platform is actually a collection
+  bool _isCollection(Platform platform) {
+    return platform.name == 'recently_played' ||
+        platform.name == 'downloaded' ||
+        platform.name == 'favorites';
   }
 
   Future<void> _loadSystemImage(String platformName) async {
@@ -783,11 +809,15 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
   }
 
   void _navigateToRoms(Platform platform) {
+    final isCollection = _isCollection(platform);
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            RomsScreen(platform: platform, romService: widget.romService),
+        builder: (context) => RomsScreen(
+          platform: platform,
+          romService: widget.romService,
+          isCollection: isCollection,
+        ),
       ),
     );
   }

@@ -23,6 +23,7 @@ class RomsListView extends StatelessWidget {
   final Future<void> Function(RomItem item) loadGameInfoForItem;
   final Map<String, GameInfo> gameInfoCache;
   final Future<bool> Function(RomItem)? isRomDownloaded;
+  final bool isCollection; // Show platform info for collection views
 
   const RomsListView({
     super.key,
@@ -40,6 +41,7 @@ class RomsListView extends StatelessWidget {
     required this.loadGameInfoForItem,
     required this.gameInfoCache,
     this.isRomDownloaded,
+    this.isCollection = false,
   });
 
   @override
@@ -156,6 +158,12 @@ class RomsListView extends StatelessWidget {
           item.displayName,
           style: const TextStyle(fontWeight: FontWeight.w500),
         ),
+        subtitle: isCollection && item.platform != null
+            ? Text(
+                item.platform!,
+                style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+              )
+            : null,
         trailing: Icon(
           item.isFolder ? Icons.chevron_right : Icons.play_arrow,
           color: Colors.grey[600],

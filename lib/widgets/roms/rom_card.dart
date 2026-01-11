@@ -21,6 +21,7 @@ class RomCard extends StatelessWidget {
   final Future<bool> Function(RomItem)? isRomDownloaded;
   final double? width;
   final double? height;
+  final bool showPlatform; // Show platform info for collection views
 
   const RomCard({
     super.key,
@@ -32,6 +33,7 @@ class RomCard extends StatelessWidget {
     this.isRomDownloaded,
     this.width,
     this.height,
+    this.showPlatform = false,
   });
 
   @override
@@ -70,15 +72,32 @@ class RomCard extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    item.displayName,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
+                  child: Column(
+                    children: [
+                      Text(
+                        item.displayName,
+                        maxLines: showPlatform && item.platform != null ? 1 : 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                        ),
+                      ),
+                      if (showPlatform && item.platform != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          item.platform!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ],
