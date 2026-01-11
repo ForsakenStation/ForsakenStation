@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/game_info.dart';
+import 'package:forsaken/screens/pdf_viewer_screen.dart';
 import 'package:forsaken/widgets/roms/media_carousel.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
 import 'package:forsaken/widgets/common/info_row.dart';
@@ -151,26 +152,57 @@ class RomDetailDialog extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
-                  ),
-                  const SizedBox(width: 16),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      onPlay();
-                    },
-                    icon: const Icon(Icons.gamepad),
-                    label: const Text('Play'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
+                  // Manual button (if manual PDF exists)
+                  if (media?.manualPath != null &&
+                      media!.manualPath!.toLowerCase().endsWith('.pdf'))
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PdfViewerScreen(
+                              pdfPath: media!.manualPath!,
+                              title: '${item.displayName} - Manual',
+                            ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.menu_book),
+                      label: const Text('View Manual'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
                       ),
-                    ),
+                    )
+                  else
+                    const SizedBox.shrink(),
+                  // Right side buttons
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          onPlay();
+                        },
+                        icon: const Icon(Icons.gamepad),
+                        label: const Text('Play'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -56,6 +56,11 @@ class MediaService {
       romNameWithoutExt,
       MediaType.titlescreen,
     );
+    romMedia.manual = await _findMedia(
+      rom.platform,
+      romNameWithoutExt,
+      MediaType.manual,
+    );
 
     return romMedia;
   }
@@ -155,6 +160,18 @@ class MediaService {
     if (romMedia.titlescreen != null) {
       _debug.debug(
         'Found titlescreen: ${romMedia.titlescreen!.path}',
+        tag: 'MediaService',
+      );
+    }
+
+    romMedia.manual = await _findMedia(
+      platformName,
+      romNameWithoutExt,
+      MediaType.manual,
+    );
+    if (romMedia.manual != null) {
+      _debug.debug(
+        'Found manual: ${romMedia.manual!.path}',
         tag: 'MediaService',
       );
     }

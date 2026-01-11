@@ -1,0 +1,2162 @@
+{
+    "ask_to_save": true,
+    "emulators": [
+        {
+            "system": "3do",
+            "command": [
+                {
+                    "name": "opera",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/opera_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "3ds",
+            "command": [
+                {
+                    "name": "citra",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/citra_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "adam",
+            "command": [
+                {
+                    "name": "gearcoleco",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/gearcoleco_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "advision",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amiga",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae_libretro.dylib"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae2021_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amiga1200",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae_libretro.dylib"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae2021_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amiga500",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae_libretro.dylib"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae2021_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amigacd32",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae_libretro.dylib"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae2021_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amigacdtv",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae_libretro.dylib"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae2021_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amstradcpc",
+            "command": [
+                {
+                    "name": "cap32",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/cap32_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "apfm1000",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "apple2",
+            "command": [
+                {
+                    "name": "applewin",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/applewin_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "arcade",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                },
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                },
+                {
+                    "name": "mame2010",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame2010_libretro.dylib"
+                },
+                {
+                    "name": "mame2003_plus",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame2003_plus_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "arcadia",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "arduboy",
+            "command": [
+                {
+                    "name": "arduous",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/arduous_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "astrocde",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atari2600",
+            "command": [
+                {
+                    "name": "stella2023",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/stella2023_libretro.dylib"
+                },
+                {
+                    "name": "stella",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/stella_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atari5200",
+            "command": [
+                {
+                    "name": "a5200",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/a5200_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atari7800",
+            "command": [
+                {
+                    "name": "prosystem",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/prosystem_libretro.dylib"
+                },
+                {
+                    "name": "stella",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/stella_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atari800",
+            "command": [
+                {
+                    "name": "atari800",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/atari800_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarijaguar",
+            "command": [
+                {
+                    "name": "virtualjaguar",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/virtualjaguar_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarijaguarcd",
+            "command": [
+                {
+                    "name": "BigPEmu",
+                    "command": "..\\bigpemu\\BigPEmu.exe"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarilynx",
+            "command": [
+                {
+                    "name": "handy",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/handy_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarist",
+            "command": [
+                {
+                    "name": "hatari",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/hatari_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarixe",
+            "command": [
+                {
+                    "name": "atari800",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/atari800_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atomiswave",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/flycast_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "bbcmicro",
+            "command": [
+                {
+                    "name": "beebem",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/beebem_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "c20",
+            "command": [
+                {
+                    "name": "vice_xvic",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/vice_xvic_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "c64",
+            "command": [
+                {
+                    "name": "vice",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/vice_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "casloopy",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cave",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                },
+                {
+                    "name": "fbalpha",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbalpha_libretro.dylib"
+                },
+                {
+                    "name": "fbalpha2012",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbalpha2012_libretro.dylib"
+                },
+                {
+                    "name": "mame2003_plus",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame2003_plus_libretro.dylib"
+                },
+                {
+                    "name": "mame2016",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame2016_libretro.dylib"
+                },
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cdi",
+            "command": [
+                {
+                    "name": "same_cdi",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/same_cdi_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cdimono",
+            "command": [
+                {
+                    "name": "same_cdi",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/same_cdi_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": null,
+            "corePreferences": {}
+        },
+        {
+            "system": "cdimono1",
+            "command": [
+                {
+                    "name": "cdimono1",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/cdimono1_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cdtv",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/puae_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "channelf",
+            "command": [
+                {
+                    "name": "freechannelf",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/freechannelf_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "colecovision",
+            "command": [
+                {
+                    "name": "gearcoleco",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/gearcoleco_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cplus4",
+            "command": [
+                {
+                    "name": "vice_xplus4",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/vice_xplus4_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cps",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cps1",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cps2",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cps3",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "crvision",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "dos",
+            "command": [
+                {
+                    "name": "dosbox_pure",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/dosbox_pure_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "dreamcast",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/flycast_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "dsi",
+            "command": [
+                {
+                    "name": "melondsds",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/melondsds_libretro.dylib"
+                },
+                {
+                    "name": "melonds",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/melonds_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "easyrpg",
+            "command": [
+                {
+                    "name": "easyrpg",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/easyrpg_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fbneo",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fds",
+            "command": [
+                {
+                    "name": "nestopia",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/nestopia_libretro.dylib"
+                },
+                {
+                    "name": "fceumm",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fceumm_libretro.dylib"
+                },
+                {
+                    "name": "mesen",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mesen_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "flash",
+            "command": [
+                {
+                    "name": "ruffle",
+                    "command": "ruffle.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fm7",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fmtowns",
+            "command": [
+                {
+                    "name": "Tsugaru_CUI",
+                    "command": "..\\tsugaru\\Tsugaru_CUI.exe"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fpinball",
+            "command": [
+                {
+                    "name": "FPLoader",
+                    "command": "..\\fpinball\\BAM\\FPLoader.exe"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gamate",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gameandwatch",
+            "command": [
+                {
+                    "name": "gw",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/gw_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gamecube",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/dolphin_libretro.dylib"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "dolphin.AppImage -e"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "gamegear",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/genesis_plus_gx_libretro.dylib"
+                },
+                {
+                    "name": "picodrive",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/picodrive_libretro.dylib"
+                },
+                {
+                    "name": "smsplus",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/smsplus_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gamepock",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gb",
+            "command": [
+                {
+                    "name": "gambatte",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/gambatte_libretro.dylib"
+                },
+                {
+                    "name": "sameboy",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/sameboy_libretro.dylib"
+                },
+                {
+                    "name": "gearboy",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/gearboy_libretro.dylib"
+                },
+                {
+                    "name": "mgba",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mgba_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gba",
+            "command": [
+                {
+                    "name": "mgba",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mgba_libretro.dylib"
+                },
+                {
+                    "name": "vba_next",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/vba_next_libretro.dylib"
+                },
+                {
+                    "name": "vbam",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/vbam_libretro.dylib"
+                },
+                {
+                    "name": "gpsp",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/gpsp_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gbc",
+            "command": [
+                {
+                    "name": "gambatte",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/gambatte_libretro.dylib"
+                },
+                {
+                    "name": "sameboy",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/sameboy_libretro.dylib"
+                },
+                {
+                    "name": "gearboy",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/gearboy_libretro.dylib"
+                },
+                {
+                    "name": "mgba",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mgba_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gc",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/dolphin_libretro.dylib"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "dolphin.AppImage -e"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "gmaster",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gp32",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gx4000",
+            "command": [
+                {
+                    "name": "cap32",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/cap32_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "intellivision",
+            "command": [
+                {
+                    "name": "freeintv",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/freeintv_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "jaguar",
+            "command": [
+                {
+                    "name": "virtualjaguar",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/virtualjaguar_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "jaguarcd",
+            "command": [
+                {
+                    "name": "RetroArch",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/virtualjaguar-libretro.so"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "lowresnx",
+            "command": [
+                {
+                    "name": "lowresnx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/lowresnx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "lutro",
+            "command": [
+                {
+                    "name": "lutro",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/lutro_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "lynx",
+            "command": [
+                {
+                    "name": "handy",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/handy_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "mame",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                },
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                },
+                {
+                    "name": "mame2010",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame2010_libretro.dylib"
+                },
+                {
+                    "name": "mame2003_plus",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame2003_plus_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "mastersystem",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/genesis_plus_gx_libretro.dylib"
+                },
+                {
+                    "name": "picodrive",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/picodrive_libretro.dylib"
+                },
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "megacd",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/genesis_plus_gx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "megadrive",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/genesis_plus_gx_libretro.dylib"
+                },
+                {
+                    "name": "picodrive",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/picodrive_libretro.dylib"
+                },
+                {
+                    "name": "blastem",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/blastem_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "megadrive-msu",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/genesis_plus_gx_libretro.dylib"
+                },
+                {
+                    "name": "genesis_plus_gx_wide",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/genesis_plus_gx_wide_libretro.dylib"
+                },
+                {
+                    "name": "genesis_plus_gx_expanded",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/genesis_plus_gx_expanded_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "megaduck",
+            "command": [
+                {
+                    "name": "sameboy",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/sameboy_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "model2",
+            "command": [
+                {
+                    "name": "EMULATOR",
+                    "command": "..\\m2emulator\\EMULATOR.EXE"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "model3",
+            "command": [
+                {
+                    "name": "Supermodel",
+                    "command": "..\\supermodel\\Supermodel.exe"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "mplayer",
+            "command": [
+                {
+                    "name": "vlc",
+                    "command": "vlc.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "msx",
+            "command": [
+                {
+                    "name": "bluemsx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/bluemsx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "msx1",
+            "command": [
+                {
+                    "name": "bluemsx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/bluemsx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "msx2",
+            "command": [
+                {
+                    "name": "bluemsx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/bluemsx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "multivision",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/geneis_plus_gx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "n3ds",
+            "command": [
+                {
+                    "name": "citra",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/citra_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "n64",
+            "command": [
+                {
+                    "name": "mupen64plus_next",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mupen64plus_next_libretro.dylib"
+                },
+                {
+                    "name": "parallel_n64",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/parallel_n64_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "n64dd",
+            "command": [
+                {
+                    "name": "mupen64plus_next",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mupen64plus_next_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "naomi",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/flycast_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "naomi2",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/flycast_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "naomigd",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/flycast_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "nds",
+            "command": [
+                {
+                    "name": "melondsds",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/melondsds_libretro.dylib"
+                },
+                {
+                    "name": "desmume",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/desmume_libretro.dylib"
+                },
+                {
+                    "name": "desmume2015",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/desmume2015_libretro.dylib"
+                },
+                {
+                    "name": "melonds",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/melonds_libretro.dylib"
+                },
+                {
+                    "name": "noods",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/noods_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "neogeo",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                },
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "neogeo64",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fbneo_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "neogeocd",
+            "command": [
+                {
+                    "name": "neocd",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/neocd_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "nes",
+            "command": [
+                {
+                    "name": "nestopia",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/nestopia_libretro.dylib"
+                },
+                {
+                    "name": "fceumm",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fceumm_libretro.dylib"
+                },
+                {
+                    "name": "mesen",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mesen_libretro.dylib"
+                },
+                {
+                    "name": "quicknes",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/quicknes_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ngage",
+            "command": [
+                {
+                    "name": "eka2l1",
+                    "command": "eka2l1.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ngp",
+            "command": [
+                {
+                    "name": "mednafen_ngp",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_ngp_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ngpc",
+            "command": [
+                {
+                    "name": "mednafen_ngp",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_ngp_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "odyssey2",
+            "command": [
+                {
+                    "name": "o2em",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/o2em_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "openbor",
+            "command": [
+                {
+                    "name": "openbor",
+                    "command": "openbor.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "oricatmos",
+            "command": [
+                {
+                    "name": "clx",
+                    "command": "clx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pc88",
+            "command": [
+                {
+                    "name": "quasi88",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/quasi88_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pc98",
+            "command": [
+                {
+                    "name": "np2kai",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/np2kai_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pcengine",
+            "command": [
+                {
+                    "name": "mednafen_pce_fast",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_pce_fast_libretro.dylib"
+                },
+                {
+                    "name": "mednafen_supergrafx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_supergrafx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pcenginecd",
+            "command": [
+                {
+                    "name": "mednafen_pce_fast",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_pce_fast_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pet",
+            "command": [
+                {
+                    "name": "vice_xpet",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/vice_xpet_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pico8",
+            "command": [
+                {
+                    "name": "retro8",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/retro8_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pinballfx3",
+            "command": [
+                {
+                    "name": "steam",
+                    "command": "steam -applaunch 442120 -offline -class"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": null,
+            "corePreferences": {}
+        },
+        {
+            "system": "pokemini",
+            "command": [
+                {
+                    "name": "pokemini",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/pokemini_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ps2",
+            "command": [
+                {
+                    "name": "pcsx2",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/pcsx2_libretro.dylib"
+                },
+                {
+                    "name": "pcsx2-qt",
+                    "command": "pcsx2-qt.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ps3",
+            "command": [
+                {
+                    "name": "rpcs3",
+                    "command": "rpcs3.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ps4",
+            "command": [
+                {
+                    "name": "shadps4",
+                    "command": "shadps4.AppImage -f -g"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "psp",
+            "command": [
+                {
+                    "name": "ppsspp",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/ppsspp_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "psvita",
+            "command": [
+                {
+                    "name": "vita3k",
+                    "command": "vita3k.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "psx",
+            "command": [
+                {
+                    "name": "mednafen_psx_hw",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_psx_hw_libretro.dylib"
+                },
+                {
+                    "name": "pcsx_rearmed",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/pcsx_rearmed_libretro.dylib"
+                },
+                {
+                    "name": "duckstation",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/duckstation_libretro.dylib"
+                },
+                {
+                    "name": "swanstation",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/swanstation_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pv1000",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ebooks",
+            "command": [
+                {
+                    "name": "Pdf viwer",
+                    "command": "pdf.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "samcoupe",
+            "command": [
+                {
+                    "name": "SimCoupe",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/simcp_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "satellaview",
+            "command": [
+                {
+                    "name": "snes9x",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/snes9x_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "saturn",
+            "command": [
+                {
+                    "name": "mednafen_saturn",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_saturn_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "scummvm",
+            "command": [
+                {
+                    "name": "scummvm",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/scummvm_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "scv",
+            "command": [
+                {
+                    "name": "EmuSCV",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/emuscv_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "sega32x",
+            "command": [
+                {
+                    "name": "picodrive",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/picodrive_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "segacd",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/genesis_plus_gx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "segastv",
+            "command": [
+                {
+                    "name": "kronos",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/kronos_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "snes",
+            "command": [
+                {
+                    "name": "snes9x",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/snes9x_libretro.dylib"
+                },
+                {
+                    "name": "bsnes",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/bsnes_libretro.dylib"
+                },
+                {
+                    "name": "mesen-s",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mesen-s_libretro.dylib"
+                },
+                {
+                    "name": "snes9x_2010",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/snes9x_2010_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "snes-msu1",
+            "command": [
+                {
+                    "name": "snes9x",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/snes9x_libretro.dylib"
+                },
+                {
+                    "name": "bsnes",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/bsnes_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "spectravideo",
+            "command": [
+                {
+                    "name": "bluemsx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/bluemsx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "stv",
+            "command": [
+                {
+                    "name": "kronos",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/kronos_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "sufami",
+            "command": [
+                {
+                    "name": "snes9x",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/snes9x_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "supervision",
+            "command": [
+                {
+                    "name": "potator",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/potator_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "switch",
+            "command": [
+                {
+                    "name": "ryujinx",
+                    "command": "ryujinx.AppImage"
+                },
+                {
+                    "name": "citron",
+                    "command": "citron.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "teknoparrot",
+            "command": [
+                {
+                    "name": "TeknoParrotUi",
+                    "command": "..\\teknoparrot\\TeknoParrotUi.exe"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "triforce",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/dolphin_libretro.dylib"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "dolphin.AppImage -e"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "uzebox",
+            "command": [
+                {
+                    "name": "uzem",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/uzem_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "vc4000",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mame_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "vectrex",
+            "command": [
+                {
+                    "name": "vecx",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/vecx_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "videopac",
+            "command": [
+                {
+                    "name": "o2em",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/o2em_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "vircon32",
+            "command": [
+                {
+                    "name": "vircon32",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/vircon32_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "virtualboy",
+            "command": [
+                {
+                    "name": "mednafen_vb",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_vb_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "vsmile",
+            "command": [
+                {
+                    "name": "Mess",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mess_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wasm4",
+            "command": [
+                {
+                    "name": "wasm4",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/wasm4_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wii",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/dolphin_libretro.dylib"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "dolphin.AppImage -e"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "wiiu",
+            "command": [
+                {
+                    "name": "cemu",
+                    "command": "cemu.AppImage -g"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wiiware",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/dolphin_libretro.dylib"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "dolphin.AppImage -e"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "windows",
+            "command": [
+                {
+                    "name": "Wine",
+                    "command": "wine"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wonderswan",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_wswan_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wonderswanc",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_wswan_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wonderswancolor",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_wswan_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wswan",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_wswan_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wswanc",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mednafen_wswan_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "x68000",
+            "command": [
+                {
+                    "name": "px68k",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/px68k_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "xbox",
+            "command": [
+                {
+                    "name": "xemu",
+                    "command": "xemu.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "xbox360",
+            "command": [
+                {
+                    "name": "xenia",
+                    "command": "xenia.AppImage"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "xegs",
+            "command": [
+                {
+                    "name": "atari800",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/atari800_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "zmachine",
+            "command": [
+                {
+                    "name": "mojozork",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/mojozork_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "zx81",
+            "command": [
+                {
+                    "name": "81",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/81_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "zxspectrum",
+            "command": [
+                {
+                    "name": "fuse",
+                    "command": "retroarch -L ~/Library/Application Support/RetroArch/cores/fuse_libretro.dylib"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        }
+    ]
+}

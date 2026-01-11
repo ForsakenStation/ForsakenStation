@@ -37,7 +37,6 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
   bool _isMigrating = false;
   String _tempPathDisplay = '';
   String _foreverPathDisplay = '';
-  Map<String, dynamic> _storageStats = {};
 
   @override
   void initState() {
@@ -67,12 +66,10 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
     try {
       final tempDir = await _storageService.getTempStorageDirectory();
       final foreverDir = await _storageService.getForeverStorageDirectory();
-      final stats = await _storageService.getStorageStats();
 
       setState(() {
         _tempPathDisplay = tempDir.path;
         _foreverPathDisplay = foreverDir.path;
-        _storageStats = stats;
       });
     } catch (e) {
       debugPrint('Error loading storage info: $e');
@@ -275,16 +272,6 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
         }
       }
     }
-  }
-
-  /// Format bytes to human-readable string
-  String _formatBytes(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024) {
-      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-    }
-    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 
   @override
@@ -515,7 +502,8 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                               'Emulators Path: EMULATORS_PATH/emulator_binary',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.black,         fontFamily: 'monospace',
+                                color: Colors.black,
+                                fontFamily: 'monospace',
                               ),
                             ),
                           ],

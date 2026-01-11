@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/game_info.dart';
@@ -16,7 +15,6 @@ class RomsScreenController {
   // Media loading control with debouncing
   Timer? _mediaLoadTimer;
   bool _isNavigating = false;
-  int? _lastLoadedMediaIndex;
   final Set<int> _preloadedThumbnailIndices = {};
 
   // Caches
@@ -48,7 +46,6 @@ class RomsScreenController {
     _mediaCache.clear();
     _gameInfoCache.clear();
     _preloadedThumbnailIndices.clear();
-    _lastLoadedMediaIndex = null;
   }
 
   /// Load media for a specific ROM item
@@ -158,7 +155,6 @@ class RomsScreenController {
     if (selectedItem.isRom) {
       await loadMediaForItem(selectedItem, platformName, onUpdate);
       await loadGameInfoForItem(selectedItem, platformName, onUpdate);
-      _lastLoadedMediaIndex = selectedIndex;
     }
 
     // Previous item

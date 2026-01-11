@@ -1,5 +1,5 @@
 import 'rom.dart';
-import 'package:path/path.dart' as filePath;
+import 'package:path/path.dart' as file_path;
 import '../utils/platform_names.dart';
 
 class Platform {
@@ -24,7 +24,7 @@ class Platform {
   }
 
   String get code {
-    return filePath.basename(name);
+    return file_path.basename(name);
   }
 
   int get romCount => _romCount ?? roms.length;

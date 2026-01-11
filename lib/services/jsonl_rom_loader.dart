@@ -60,7 +60,6 @@ class JsonlRomLoader {
 
           final name = json['n'] as String? ?? '';
           final filePath = json['p'] as String? ?? '';
-          final ext = json['ext'] as String? ?? '';
           final parent = json['parent'] as String? ?? '';
           final urls = json['urls'] as List<dynamic>? ?? [];
 

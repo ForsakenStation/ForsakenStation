@@ -6,6 +6,7 @@ import 'package:forsaken/screens/roms/roms_grid_view.dart';
 import 'package:forsaken/screens/roms/roms_list_view.dart';
 import 'package:forsaken/screens/roms/utils/scroll_utils.dart';
 import 'package:forsaken/screens/roms/utils/bottom_bar_actions.dart';
+import 'package:forsaken/screens/pdf_viewer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,7 +21,6 @@ import 'package:forsaken/services/debug_service.dart';
 import 'package:forsaken/services/rom_service.dart';
 import 'package:forsaken/services/media_service.dart';
 import 'package:forsaken/services/emulator_service.dart';
-import 'package:forsaken/services/download_service.dart';
 import 'package:forsaken/services/keyboard_service.dart';
 import 'package:forsaken/services/gamelist_service.dart';
 import 'package:forsaken/widgets/common/theme_selector.dart';
@@ -69,7 +69,6 @@ class _RomsScreenState extends State<RomsScreen> {
       {}; // Cache for downloaded ROM status
   late MediaService _mediaService;
   late EmulatorService _emulatorService;
-  late DownloadService _downloadService;
   late KeyboardService _keyboardService;
   late GamelistService _gamelistService;
   late ScrollController _carouselController;
@@ -96,7 +95,6 @@ class _RomsScreenState extends State<RomsScreen> {
   // Media loading control with debouncing
   Timer? _mediaLoadTimer;
   bool _isNavigating = false;
-  int? _lastLoadedMediaIndex;
   final Set<int> _preloadedThumbnailIndices = {};
 
   @override
@@ -119,7 +117,6 @@ class _RomsScreenState extends State<RomsScreen> {
     final gamelistPath = dotenv.env['GAMELIST_PATH'] ?? '';
 
     _mediaService = MediaService(mediaBasePath: mediaPath);
-    _downloadService = DownloadService.instance;
     _emulatorService = EmulatorService.instance;
     _gamelistService = GamelistService(gamelistBasePath: gamelistPath);
     _keyboardService = KeyboardService.instance;
@@ -253,7 +250,6 @@ class _RomsScreenState extends State<RomsScreen> {
         _selectedIndex = 0;
         _mediaCache.clear();
         _preloadedThumbnailIndices.clear();
-        _lastLoadedMediaIndex = null;
       });
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -420,7 +416,6 @@ class _RomsScreenState extends State<RomsScreen> {
     if (selectedItem.isRom) {
       _loadMediaForItem(selectedItem);
       _loadGameInfoForItem(selectedItem);
-      _lastLoadedMediaIndex = _selectedIndex;
     }
 
     // Previous item
@@ -1314,7 +1309,7 @@ class _RomsScreenState extends State<RomsScreen> {
     );
 
     try {
-      final success = await _emulatorService.launchRom(
+      final result = await _emulatorService.launchRom(
         romItem: item,
         platform: widget.platform.name,
         selectedCommand: command,
@@ -1331,14 +1326,27 @@ class _RomsScreenState extends State<RomsScreen> {
         Navigator.pop(context);
       }
 
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Launched: ${item.displayName}'),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+      if (result.success) {
+        // If it's a PDF, open the PDF viewer instead of showing success
+        if (result.isPdf && result.filePath != null) {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PdfViewerScreen(
+                pdfPath: result.filePath!,
+                title: item.displayName,
+              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Launched: ${item.displayName}'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
 
         // If ROM was downloaded, ask if user wants to save it permanently
         if (isDownloading && !wasCancelled) {
@@ -1360,7 +1368,8 @@ class _RomsScreenState extends State<RomsScreen> {
           'Check that:\n'
           '• Emulator is installed correctly\n'
           '• ROM file is valid\n'
-          '• Configuration is correct',
+          '• Configuration is correct\n\n'
+          'Error: ${result.error ?? "Unknown error"}',
         );
       }
       _requestFocusForCurrentViewMode();

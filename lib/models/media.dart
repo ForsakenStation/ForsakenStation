@@ -75,6 +75,7 @@ class RomMedia {
   Media? mixImage;
   Media? video;
   Media? titlescreen;
+  Media? manual;
 
   RomMedia({
     required this.romName,
@@ -86,6 +87,7 @@ class RomMedia {
     this.mixImage,
     this.video,
     this.titlescreen,
+    this.manual,
   });
 
   bool get hasAnyMedia =>
@@ -96,6 +98,8 @@ class RomMedia {
       (screenshot?.exists ?? false) ||
       (mixImage?.exists ?? false) ||
       (video?.exists ?? false);
+
+  String? get manualPath => manual?.path;
 
   List<Media> get allMedia {
     final List<Media> media = [];

@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
 import '../models/emulator_config.dart';
+import '../models/launch_result.dart';
 import 'download_service.dart';
 import 'debug_service.dart';
 import 'config_service.dart';
@@ -253,7 +254,9 @@ class EmulatorService {
   }
 
   /// Launch emulator for a ROM (download first if needed)
-  Future<bool> launchRom({
+  /// Returns LaunchResult with success status and file path
+  /// If the file is a PDF, it will NOT launch an emulator and will set isPdf=true
+  Future<LaunchResult> launchRom({
     required RomItem romItem,
     required String platform,
     EmulatorCommand? selectedCommand,
@@ -265,23 +268,6 @@ class EmulatorService {
         tag: 'EmulatorService',
       );
       _debug.debug('Platform: $platform', tag: 'EmulatorService');
-
-      // Load platform configuration
-      final config = await loadPlatformConfig(platform);
-      if (config == null || config.commands.isEmpty) {
-        _debug.error(
-          'No emulator configuration found for platform: $platform',
-          tag: 'EmulatorService',
-        );
-        return false;
-      }
-
-      // Determine which command to use
-      final command = selectedCommand ?? config.defaultCommand;
-      if (command == null) {
-        _debug.error('No emulator command available', tag: 'EmulatorService');
-        return false;
-      }
 
       String romPath;
 
@@ -312,7 +298,7 @@ class EmulatorService {
         );
         if (downloadedPath == null) {
           _debug.error('Failed to download ROM', tag: 'EmulatorService');
-          return false;
+          return LaunchResult.failure('Failed to download file');
         }
 
         _debug.info(
@@ -325,15 +311,50 @@ class EmulatorService {
         romPath = romItem.path;
       }
 
+      // Check if the file is a PDF
+      final extension = path.extension(romPath).toLowerCase();
+      if (extension == '.pdf') {
+        _debug.info(
+          'Detected PDF file, will not launch emulator',
+          tag: 'EmulatorService',
+        );
+        return LaunchResult.success(filePath: romPath, isPdf: true);
+      }
+
+      // Load platform configuration
+      final config = await loadPlatformConfig(platform);
+      if (config == null || config.commands.isEmpty) {
+        _debug.error(
+          'No emulator configuration found for platform: $platform',
+          tag: 'EmulatorService',
+        );
+        return LaunchResult.failure(
+          'No emulator configuration found for platform: $platform',
+        );
+      }
+
+      // Determine which command to use
+      final command = selectedCommand ?? config.defaultCommand;
+      if (command == null) {
+        _debug.error('No emulator command available', tag: 'EmulatorService');
+        return LaunchResult.failure('No emulator command available');
+      }
+
       // Launch emulator
-      return await launchWithCommand(
+      final success = await launchWithCommand(
         command: command,
         romPath: romPath,
         platform: platform,
       );
+
+      if (success) {
+        return LaunchResult.success(filePath: romPath);
+      } else {
+        return LaunchResult.failure('Failed to launch emulator');
+      }
     } catch (e) {
       _debug.error('Error in launchRom', tag: 'EmulatorService', error: e);
-      return false;
+      return LaunchResult.failure('Error: $e');
     }
   }
 

@@ -57,11 +57,32 @@ class ConfigService {
     }
   }
 
+  /// Get the platform-specific config file name
+  String _getPlatformConfigFile() {
+    if (kIsWeb) {
+      return 'assets/configs/config.web.json';
+    } else if (Platform.isAndroid) {
+      return 'assets/configs/config.android.json';
+    } else if (Platform.isIOS) {
+      return 'assets/configs/config.ios.json';
+    } else if (Platform.isMacOS) {
+      return 'assets/configs/config.macos.json';
+    } else if (Platform.isWindows) {
+      return 'assets/configs/config.windows.json';
+    } else if (Platform.isLinux) {
+      return 'assets/configs/config.linux.json';
+    }
+
+    // Fallback to default config.json
+    return 'assets/config.json';
+  }
+
   /// Load configuration from shared_preferences or assets
   ///
   /// Priority:
   /// 1. shared_preferences (user overrides) - if exists
-  /// 2. assets/config.json (bundled default)
+  /// 2. Platform-specific config (assets/configs/config.{platform}.json)
+  /// 3. Default config (assets/config.json) as fallback
   ///
   /// Set forceReload to true to bypass cache and reload from source
   Future<Map<String, dynamic>> loadConfig({bool forceReload = false}) async {
@@ -82,9 +103,19 @@ class ConfigService {
         return _config!;
       }
 
-      // If no local config, load from assets
-      debugPrint('Loading config from assets: assets/config.json');
-      final assetString = await rootBundle.loadString('assets/config.json');
+      // If no local config, load platform-specific config from assets
+      final platformConfigPath = _getPlatformConfigFile();
+      debugPrint('Loading config from assets: $platformConfigPath');
+
+      String assetString;
+      try {
+        assetString = await rootBundle.loadString(platformConfigPath);
+      } catch (e) {
+        // If platform-specific config not found, fallback to default
+        debugPrint('Platform-specific config not found, using default: $e');
+        assetString = await rootBundle.loadString('assets/config.json');
+      }
+
       _config = json.decode(assetString) as Map<String, dynamic>;
       _hasLocalOverrides = false;
 

@@ -1,0 +1,2162 @@
+{
+    "ask_to_save": true,
+    "emulators": [
+        {
+            "system": "3do",
+            "command": [
+                {
+                    "name": "opera",
+                    "command": "retroarch://org.libretro.android/LOAD/opera"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "3ds",
+            "command": [
+                {
+                    "name": "citra",
+                    "command": "retroarch://org.libretro.android/LOAD/citra"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "adam",
+            "command": [
+                {
+                    "name": "gearcoleco",
+                    "command": "android://gearcoleco"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "advision",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amiga",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "android://puae"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "android://puae2021"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amiga1200",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "android://puae"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "android://puae2021"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amiga500",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "android://puae"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "android://puae2021"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amigacd32",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "android://puae"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "android://puae2021"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amigacdtv",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "android://puae"
+                },
+                {
+                    "name": "puae2021",
+                    "command": "android://puae2021"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "amstradcpc",
+            "command": [
+                {
+                    "name": "cap32",
+                    "command": "retroarch://org.libretro.android/LOAD/cap32"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "apfm1000",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "apple2",
+            "command": [
+                {
+                    "name": "applewin",
+                    "command": "android://applewin"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "arcade",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                },
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                },
+                {
+                    "name": "mame2010",
+                    "command": "android://mame2010"
+                },
+                {
+                    "name": "mame2003_plus",
+                    "command": "android://mame2003_plus"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "arcadia",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "arduboy",
+            "command": [
+                {
+                    "name": "arduous",
+                    "command": "android://arduous"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "astrocde",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atari2600",
+            "command": [
+                {
+                    "name": "stella2023",
+                    "command": "retroarch://org.libretro.android/LOAD/stella2023"
+                },
+                {
+                    "name": "stella",
+                    "command": "android://stella"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atari5200",
+            "command": [
+                {
+                    "name": "a5200",
+                    "command": "android://a5200"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atari7800",
+            "command": [
+                {
+                    "name": "prosystem",
+                    "command": "retroarch://org.libretro.android/LOAD/prosystem"
+                },
+                {
+                    "name": "stella",
+                    "command": "android://stella"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atari800",
+            "command": [
+                {
+                    "name": "atari800",
+                    "command": "android://atari800"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarijaguar",
+            "command": [
+                {
+                    "name": "virtualjaguar",
+                    "command": "retroarch://org.libretro.android/LOAD/virtualjaguar"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarijaguarcd",
+            "command": [
+                {
+                    "name": "BigPEmu",
+                    "command": "android://BigPEmu"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarilynx",
+            "command": [
+                {
+                    "name": "handy",
+                    "command": "retroarch://org.libretro.android/LOAD/handy"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarist",
+            "command": [
+                {
+                    "name": "hatari",
+                    "command": "android://hatari"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atarixe",
+            "command": [
+                {
+                    "name": "atari800",
+                    "command": "android://atari800"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "atomiswave",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch://org.libretro.android/LOAD/flycast"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "bbcmicro",
+            "command": [
+                {
+                    "name": "beebem",
+                    "command": "android://beebem"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "c20",
+            "command": [
+                {
+                    "name": "vice_xvic",
+                    "command": "android://vice_xvic"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "c64",
+            "command": [
+                {
+                    "name": "vice",
+                    "command": "android://vice"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "casloopy",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cave",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                },
+                {
+                    "name": "fbalpha",
+                    "command": "android://fbalpha"
+                },
+                {
+                    "name": "fbalpha2012",
+                    "command": "android://fbalpha2012"
+                },
+                {
+                    "name": "mame2003_plus",
+                    "command": "android://mame2003_plus"
+                },
+                {
+                    "name": "mame2016",
+                    "command": "android://mame2016"
+                },
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cdi",
+            "command": [
+                {
+                    "name": "same_cdi",
+                    "command": "android://same_cdi"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cdimono",
+            "command": [
+                {
+                    "name": "same_cdi",
+                    "command": "android://same_cdi"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": null,
+            "corePreferences": {}
+        },
+        {
+            "system": "cdimono1",
+            "command": [
+                {
+                    "name": "cdimono1",
+                    "command": "android://cdimono1"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cdtv",
+            "command": [
+                {
+                    "name": "puae",
+                    "command": "android://puae"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "channelf",
+            "command": [
+                {
+                    "name": "freechannelf",
+                    "command": "android://freechannelf"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "colecovision",
+            "command": [
+                {
+                    "name": "gearcoleco",
+                    "command": "android://gearcoleco"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cplus4",
+            "command": [
+                {
+                    "name": "vice_xplus4",
+                    "command": "android://vice_xplus4"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cps",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cps1",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cps2",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "cps3",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "crvision",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "dos",
+            "command": [
+                {
+                    "name": "dosbox_pure",
+                    "command": "android://dosbox_pure"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "dreamcast",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch://org.libretro.android/LOAD/flycast"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "dsi",
+            "command": [
+                {
+                    "name": "melondsds",
+                    "command": "retroarch://org.libretro.android/LOAD/melondsds"
+                },
+                {
+                    "name": "melonds",
+                    "command": "android://melonds"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "easyrpg",
+            "command": [
+                {
+                    "name": "easyrpg",
+                    "command": "android://easyrpg"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fbneo",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fds",
+            "command": [
+                {
+                    "name": "nestopia",
+                    "command": "retroarch://org.libretro.android/LOAD/nestopia"
+                },
+                {
+                    "name": "fceumm",
+                    "command": "retroarch://org.libretro.android/LOAD/fceumm"
+                },
+                {
+                    "name": "mesen",
+                    "command": "retroarch://org.libretro.android/LOAD/mesen"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "flash",
+            "command": [
+                {
+                    "name": "ruffle",
+                    "command": "android://ruffle"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fm7",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fmtowns",
+            "command": [
+                {
+                    "name": "Tsugaru_CUI",
+                    "command": "android://Tsugaru_CUI"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "fpinball",
+            "command": [
+                {
+                    "name": "FPLoader",
+                    "command": "android://FPLoader"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gamate",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gameandwatch",
+            "command": [
+                {
+                    "name": "gw",
+                    "command": "android://gw"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gamecube",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "gamegear",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch://org.libretro.android/LOAD/genesis_plus_gx"
+                },
+                {
+                    "name": "picodrive",
+                    "command": "retroarch://org.libretro.android/LOAD/picodrive"
+                },
+                {
+                    "name": "smsplus",
+                    "command": "android://smsplus"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gamepock",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gb",
+            "command": [
+                {
+                    "name": "gambatte",
+                    "command": "retroarch://org.libretro.android/LOAD/gambatte"
+                },
+                {
+                    "name": "sameboy",
+                    "command": "retroarch://org.libretro.android/LOAD/sameboy"
+                },
+                {
+                    "name": "gearboy",
+                    "command": "android://gearboy"
+                },
+                {
+                    "name": "mgba",
+                    "command": "retroarch://org.libretro.android/LOAD/mgba"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gba",
+            "command": [
+                {
+                    "name": "mgba",
+                    "command": "retroarch://org.libretro.android/LOAD/mgba"
+                },
+                {
+                    "name": "vba_next",
+                    "command": "android://vba_next"
+                },
+                {
+                    "name": "vbam",
+                    "command": "android://vbam"
+                },
+                {
+                    "name": "gpsp",
+                    "command": "android://gpsp"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gbc",
+            "command": [
+                {
+                    "name": "gambatte",
+                    "command": "retroarch://org.libretro.android/LOAD/gambatte"
+                },
+                {
+                    "name": "sameboy",
+                    "command": "retroarch://org.libretro.android/LOAD/sameboy"
+                },
+                {
+                    "name": "gearboy",
+                    "command": "android://gearboy"
+                },
+                {
+                    "name": "mgba",
+                    "command": "retroarch://org.libretro.android/LOAD/mgba"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gc",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "gmaster",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gp32",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "gx4000",
+            "command": [
+                {
+                    "name": "cap32",
+                    "command": "retroarch://org.libretro.android/LOAD/cap32"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "intellivision",
+            "command": [
+                {
+                    "name": "freeintv",
+                    "command": "retroarch://org.libretro.android/LOAD/freeintv"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "jaguar",
+            "command": [
+                {
+                    "name": "virtualjaguar",
+                    "command": "retroarch://org.libretro.android/LOAD/virtualjaguar"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "jaguarcd",
+            "command": [
+                {
+                    "name": "RetroArch",
+                    "command": "android://RetroArch"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "lowresnx",
+            "command": [
+                {
+                    "name": "lowresnx",
+                    "command": "android://lowresnx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "lutro",
+            "command": [
+                {
+                    "name": "lutro",
+                    "command": "android://lutro"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "lynx",
+            "command": [
+                {
+                    "name": "handy",
+                    "command": "retroarch://org.libretro.android/LOAD/handy"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "mame",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                },
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                },
+                {
+                    "name": "mame2010",
+                    "command": "android://mame2010"
+                },
+                {
+                    "name": "mame2003_plus",
+                    "command": "android://mame2003_plus"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "mastersystem",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch://org.libretro.android/LOAD/genesis_plus_gx"
+                },
+                {
+                    "name": "picodrive",
+                    "command": "retroarch://org.libretro.android/LOAD/picodrive"
+                },
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "megacd",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch://org.libretro.android/LOAD/genesis_plus_gx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "megadrive",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch://org.libretro.android/LOAD/genesis_plus_gx"
+                },
+                {
+                    "name": "picodrive",
+                    "command": "retroarch://org.libretro.android/LOAD/picodrive"
+                },
+                {
+                    "name": "blastem",
+                    "command": "android://blastem"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "megadrive-msu",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch://org.libretro.android/LOAD/genesis_plus_gx"
+                },
+                {
+                    "name": "genesis_plus_gx_wide",
+                    "command": "android://genesis_plus_gx_wide"
+                },
+                {
+                    "name": "genesis_plus_gx_expanded",
+                    "command": "android://genesis_plus_gx_expanded"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "megaduck",
+            "command": [
+                {
+                    "name": "sameboy",
+                    "command": "retroarch://org.libretro.android/LOAD/sameboy"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "model2",
+            "command": [
+                {
+                    "name": "EMULATOR",
+                    "command": "android://EMULATOR"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "model3",
+            "command": [
+                {
+                    "name": "Supermodel",
+                    "command": "android://Supermodel"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "mplayer",
+            "command": [
+                {
+                    "name": "vlc",
+                    "command": "android://vlc"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "msx",
+            "command": [
+                {
+                    "name": "bluemsx",
+                    "command": "retroarch://org.libretro.android/LOAD/bluemsx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "msx1",
+            "command": [
+                {
+                    "name": "bluemsx",
+                    "command": "retroarch://org.libretro.android/LOAD/bluemsx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "msx2",
+            "command": [
+                {
+                    "name": "bluemsx",
+                    "command": "retroarch://org.libretro.android/LOAD/bluemsx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "multivision",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "n3ds",
+            "command": [
+                {
+                    "name": "citra",
+                    "command": "retroarch://org.libretro.android/LOAD/citra"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "n64",
+            "command": [
+                {
+                    "name": "mupen64plus_next",
+                    "command": "retroarch://org.libretro.android/LOAD/mupen64plus_next"
+                },
+                {
+                    "name": "parallel_n64",
+                    "command": "retroarch://org.libretro.android/LOAD/parallel_n64"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "n64dd",
+            "command": [
+                {
+                    "name": "mupen64plus_next",
+                    "command": "retroarch://org.libretro.android/LOAD/mupen64plus_next"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "naomi",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch://org.libretro.android/LOAD/flycast"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "naomi2",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch://org.libretro.android/LOAD/flycast"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "naomigd",
+            "command": [
+                {
+                    "name": "flycast",
+                    "command": "retroarch://org.libretro.android/LOAD/flycast"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "nds",
+            "command": [
+                {
+                    "name": "melondsds",
+                    "command": "retroarch://org.libretro.android/LOAD/melondsds"
+                },
+                {
+                    "name": "desmume",
+                    "command": "retroarch://org.libretro.android/LOAD/desmume"
+                },
+                {
+                    "name": "desmume2015",
+                    "command": "android://desmume2015"
+                },
+                {
+                    "name": "melonds",
+                    "command": "android://melonds"
+                },
+                {
+                    "name": "noods",
+                    "command": "android://noods"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "neogeo",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                },
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "neogeo64",
+            "command": [
+                {
+                    "name": "fbneo",
+                    "command": "retroarch://org.libretro.android/LOAD/fbneo"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "neogeocd",
+            "command": [
+                {
+                    "name": "neocd",
+                    "command": "android://neocd"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "nes",
+            "command": [
+                {
+                    "name": "nestopia",
+                    "command": "retroarch://org.libretro.android/LOAD/nestopia"
+                },
+                {
+                    "name": "fceumm",
+                    "command": "retroarch://org.libretro.android/LOAD/fceumm"
+                },
+                {
+                    "name": "mesen",
+                    "command": "retroarch://org.libretro.android/LOAD/mesen"
+                },
+                {
+                    "name": "quicknes",
+                    "command": "android://quicknes"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ngage",
+            "command": [
+                {
+                    "name": "eka2l1",
+                    "command": "android://eka2l1"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ngp",
+            "command": [
+                {
+                    "name": "mednafen_ngp",
+                    "command": "android://mednafen_ngp"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ngpc",
+            "command": [
+                {
+                    "name": "mednafen_ngp",
+                    "command": "android://mednafen_ngp"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "odyssey2",
+            "command": [
+                {
+                    "name": "o2em",
+                    "command": "retroarch://org.libretro.android/LOAD/o2em"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "openbor",
+            "command": [
+                {
+                    "name": "openbor",
+                    "command": "android://openbor"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "oricatmos",
+            "command": [
+                {
+                    "name": "clx",
+                    "command": "android://clx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pc88",
+            "command": [
+                {
+                    "name": "quasi88",
+                    "command": "android://quasi88"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pc98",
+            "command": [
+                {
+                    "name": "np2kai",
+                    "command": "android://np2kai"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pcengine",
+            "command": [
+                {
+                    "name": "mednafen_pce_fast",
+                    "command": "retroarch://org.libretro.android/LOAD/mednafen_pce_fast"
+                },
+                {
+                    "name": "mednafen_supergrafx",
+                    "command": "android://mednafen_supergrafx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pcenginecd",
+            "command": [
+                {
+                    "name": "mednafen_pce_fast",
+                    "command": "retroarch://org.libretro.android/LOAD/mednafen_pce_fast"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pet",
+            "command": [
+                {
+                    "name": "vice_xpet",
+                    "command": "android://vice_xpet"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pico8",
+            "command": [
+                {
+                    "name": "retro8",
+                    "command": "android://retro8"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pinballfx3",
+            "command": [
+                {
+                    "name": "steam",
+                    "command": "android://steam"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": null,
+            "corePreferences": {}
+        },
+        {
+            "system": "pokemini",
+            "command": [
+                {
+                    "name": "pokemini",
+                    "command": "android://pokemini"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ps2",
+            "command": [
+                {
+                    "name": "pcsx2",
+                    "command": "android://pcsx2"
+                },
+                {
+                    "name": "pcsx2-qt",
+                    "command": "android://pcsx2-qt"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ps3",
+            "command": [
+                {
+                    "name": "rpcs3",
+                    "command": "android://rpcs3"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ps4",
+            "command": [
+                {
+                    "name": "shadps4",
+                    "command": "android://shadps4"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "psp",
+            "command": [
+                {
+                    "name": "ppsspp",
+                    "command": "retroarch://org.libretro.android/LOAD/ppsspp"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "psvita",
+            "command": [
+                {
+                    "name": "vita3k",
+                    "command": "android://vita3k"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "psx",
+            "command": [
+                {
+                    "name": "mednafen_psx_hw",
+                    "command": "android://mednafen_psx_hw"
+                },
+                {
+                    "name": "pcsx_rearmed",
+                    "command": "retroarch://org.libretro.android/LOAD/pcsx_rearmed"
+                },
+                {
+                    "name": "duckstation",
+                    "command": "android://duckstation"
+                },
+                {
+                    "name": "swanstation",
+                    "command": "retroarch://org.libretro.android/LOAD/swanstation"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pv1000",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ebooks",
+            "command": [
+                {
+                    "name": "Pdf viwer",
+                    "command": "pdf.viewer"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "samcoupe",
+            "command": [
+                {
+                    "name": "SimCoupe",
+                    "command": "android://SimCoupe"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "satellaview",
+            "command": [
+                {
+                    "name": "snes9x",
+                    "command": "retroarch://org.libretro.android/LOAD/snes9x"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "saturn",
+            "command": [
+                {
+                    "name": "mednafen_saturn",
+                    "command": "android://mednafen_saturn"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "scummvm",
+            "command": [
+                {
+                    "name": "scummvm",
+                    "command": "android://scummvm"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "scv",
+            "command": [
+                {
+                    "name": "EmuSCV",
+                    "command": "android://EmuSCV"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "sega32x",
+            "command": [
+                {
+                    "name": "picodrive",
+                    "command": "retroarch://org.libretro.android/LOAD/picodrive"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "segacd",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch://org.libretro.android/LOAD/genesis_plus_gx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "segastv",
+            "command": [
+                {
+                    "name": "kronos",
+                    "command": "retroarch://org.libretro.android/LOAD/kronos"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "snes",
+            "command": [
+                {
+                    "name": "snes9x",
+                    "command": "retroarch://org.libretro.android/LOAD/snes9x"
+                },
+                {
+                    "name": "bsnes",
+                    "command": "retroarch://org.libretro.android/LOAD/bsnes"
+                },
+                {
+                    "name": "mesen-s",
+                    "command": "android://mesen-s"
+                },
+                {
+                    "name": "snes9x_2010",
+                    "command": "android://snes9x_2010"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "snes-msu1",
+            "command": [
+                {
+                    "name": "snes9x",
+                    "command": "retroarch://org.libretro.android/LOAD/snes9x"
+                },
+                {
+                    "name": "bsnes",
+                    "command": "retroarch://org.libretro.android/LOAD/bsnes"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "spectravideo",
+            "command": [
+                {
+                    "name": "bluemsx",
+                    "command": "retroarch://org.libretro.android/LOAD/bluemsx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "stv",
+            "command": [
+                {
+                    "name": "kronos",
+                    "command": "retroarch://org.libretro.android/LOAD/kronos"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "sufami",
+            "command": [
+                {
+                    "name": "snes9x",
+                    "command": "retroarch://org.libretro.android/LOAD/snes9x"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "supervision",
+            "command": [
+                {
+                    "name": "potator",
+                    "command": "android://potator"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "switch",
+            "command": [
+                {
+                    "name": "ryujinx",
+                    "command": "android://ryujinx"
+                },
+                {
+                    "name": "citron",
+                    "command": "android://citron"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "teknoparrot",
+            "command": [
+                {
+                    "name": "TeknoParrotUi",
+                    "command": "android://TeknoParrotUi"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "triforce",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "uzebox",
+            "command": [
+                {
+                    "name": "uzem",
+                    "command": "android://uzem"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "vc4000",
+            "command": [
+                {
+                    "name": "mame",
+                    "command": "retroarch://org.libretro.android/LOAD/mame"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "vectrex",
+            "command": [
+                {
+                    "name": "vecx",
+                    "command": "retroarch://org.libretro.android/LOAD/vecx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "videopac",
+            "command": [
+                {
+                    "name": "o2em",
+                    "command": "retroarch://org.libretro.android/LOAD/o2em"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "vircon32",
+            "command": [
+                {
+                    "name": "vircon32",
+                    "command": "android://vircon32"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "virtualboy",
+            "command": [
+                {
+                    "name": "mednafen_vb",
+                    "command": "android://mednafen_vb"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "vsmile",
+            "command": [
+                {
+                    "name": "Mess",
+                    "command": "android://Mess"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wasm4",
+            "command": [
+                {
+                    "name": "wasm4",
+                    "command": "android://wasm4"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wii",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "wiiu",
+            "command": [
+                {
+                    "name": "cemu",
+                    "command": "android://cemu"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wiiware",
+            "command": [
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                },
+                {
+                    "name": "dolphin",
+                    "command": "android://dolphin"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "windows",
+            "command": [
+                {
+                    "name": "Wine",
+                    "command": "android://Wine"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "todo": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wonderswan",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch://org.libretro.android/LOAD/mednafen_wswan"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wonderswanc",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch://org.libretro.android/LOAD/mednafen_wswan"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wonderswancolor",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch://org.libretro.android/LOAD/mednafen_wswan"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wswan",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch://org.libretro.android/LOAD/mednafen_wswan"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "wswanc",
+            "command": [
+                {
+                    "name": "mednafen_wswan",
+                    "command": "retroarch://org.libretro.android/LOAD/mednafen_wswan"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "x68000",
+            "command": [
+                {
+                    "name": "px68k",
+                    "command": "android://px68k"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "xbox",
+            "command": [
+                {
+                    "name": "xemu",
+                    "command": "android://xemu"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "xbox360",
+            "command": [
+                {
+                    "name": "xenia",
+                    "command": "android://xenia"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "xegs",
+            "command": [
+                {
+                    "name": "atari800",
+                    "command": "android://atari800"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "zmachine",
+            "command": [
+                {
+                    "name": "mojozork",
+                    "command": "android://mojozork"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "zx81",
+            "command": [
+                {
+                    "name": "81",
+                    "command": "android://81"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "zxspectrum",
+            "command": [
+                {
+                    "name": "fuse",
+                    "command": "android://fuse"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        }
+    ]
+}
