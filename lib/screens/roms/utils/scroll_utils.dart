@@ -11,7 +11,7 @@ class ScrollUtils {
   }) {
     if (!controller.hasClients) return;
     const listPaddingTop = 8.0;
-    const itemHeight = 56.0;
+    const itemHeight = 72.0;
 
     final itemOffset = listPaddingTop + (index * itemHeight);
     final viewportHeight = controller.position.viewportDimension;

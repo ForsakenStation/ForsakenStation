@@ -60,7 +60,7 @@ class RomsListView extends StatelessWidget {
               controller: scrollController,
               padding: const EdgeInsets.all(8),
               itemCount: items.length,
-              itemExtent: 56.0,
+              itemExtent: 72.0,
               itemBuilder: (context, index) {
                 final item = items[index];
                 final isSelected = index == selectedIndex;

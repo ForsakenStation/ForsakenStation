@@ -37,7 +37,6 @@ class RomListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       elevation: isSelected ? 8 : 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -51,34 +50,36 @@ class RomListCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Row(
             children: [
               _buildThumbnail(context),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       item.displayName,
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: const TextStyle(fontWeight: FontWeight.w500),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
-                    if (showPlatform && item.platform != null)
+                    if (showPlatform && item.platform != null) ...[
+                      const SizedBox(height: 2),
                       Text(
-                        item.platform!.toUpperCase(),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[400],
-                        ),
-                      )
-                    else if (!item.isFolder)
-                      _buildMediaIndicators(),
+                        item.platform!,
+                        style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                      ),
+                    ],
                   ],
                 ),
               ),
+              if (!item.isFolder && !showPlatform) ...[
+                const SizedBox(width: 8),
+                _buildMediaIndicators(),
+              ],
               Icon(
                 item.isFolder ? Icons.chevron_right : Icons.play_arrow,
                 color: Colors.grey[600],
@@ -94,16 +95,16 @@ class RomListCard extends StatelessWidget {
     // Show loading spinner
     if (isLoading) {
       return Container(
-        width: 80,
-        height: 80,
+        width: 60,
+        height: 60,
         decoration: BoxDecoration(
           color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
         ),
         child: const Center(
           child: SizedBox(
-            width: 24,
-            height: 24,
+            width: 20,
+            height: 20,
             child: CircularProgressIndicator(strokeWidth: 2),
           ),
         ),
@@ -120,11 +121,11 @@ class RomListCard extends StatelessWidget {
         // Thumbnail image or placeholder
         if (imagePath != null && File(imagePath).existsSync())
           ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(4),
             child: Image.file(
               File(imagePath),
-              width: 80,
-              height: 80,
+              width: 60,
+              height: 60,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return _defaultThumbnail();
@@ -169,13 +170,13 @@ class RomListCard extends StatelessWidget {
 
   Widget _defaultThumbnail() {
     return Container(
-      width: 80,
-      height: 80,
+      width: 60,
+      height: 60,
       decoration: BoxDecoration(
         color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(4),
       ),
-      child: const Icon(Icons.games, size: 40, color: Colors.grey),
+      child: const Icon(Icons.games, size: 30, color: Colors.grey),
     );
   }
 
@@ -185,35 +186,36 @@ class RomListCard extends StatelessWidget {
     }
 
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (media!.box3d?.exists ?? false)
           const Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.view_in_ar, size: 16, color: Colors.purple),
           ),
         if (media!.cover?.exists ?? false)
           const Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.image, size: 16, color: Colors.blue),
           ),
         if (media!.marquee?.exists ?? false)
           const Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.rectangle, size: 16, color: Colors.indigo),
           ),
         if (media!.screenshot?.exists ?? false)
           const Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.photo_camera, size: 16, color: Colors.green),
           ),
         if (media!.mixImage?.exists ?? false)
           const Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.collections, size: 16, color: Colors.teal),
           ),
         if (media!.video?.exists ?? false)
           const Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.videocam, size: 16, color: Colors.orange),
           ),
       ],

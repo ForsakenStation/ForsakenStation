@@ -1,5 +1,17 @@
 # AGENTS.md - Emulator Frontend Development Guide
 
+## ⚠️ CRITICAL GIT POLICY ⚠️
+
+**NEVER CREATE GIT COMMITS UNLESS EXPLICITLY REQUESTED BY THE USER**
+
+- ❌ DO NOT commit after completing tasks
+- ❌ DO NOT commit after running tests
+- ❌ DO NOT commit "to save progress"
+- ❌ DO NOT commit proactively
+- ✅ ONLY commit when the user explicitly asks: "commit these changes", "create a commit", "git commit", etc.
+
+**This is CRITICAL** - The user needs to review changes before they are committed. Creating commits without permission makes it harder to review what changed and is considered overstepping boundaries.
+
 ## Project Overview
 Flutter-based multi-platform emulator frontend that manages ROM files and launches emulators. ROMs are organized by platform, with metadata stored in text files containing download URLs. Media assets (images, videos) are organized separately by platform and type.
 
