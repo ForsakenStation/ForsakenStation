@@ -157,7 +157,7 @@ class KeyboardHandlers {
         onHideNavigationHint();
       }
       onIndexChanged(newIndex);
-      ScrollUtils.scrollToCarouselIndex(controller, selectedIndex);
+      ScrollUtils.scrollToCarouselIndex(controller, newIndex);
       onScheduleMediaLoad();
       return KeyEventResult.handled;
     }

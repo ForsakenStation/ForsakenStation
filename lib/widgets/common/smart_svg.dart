@@ -94,7 +94,9 @@ class _SmartSvgState extends State<SmartSvg> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('🎨 [SmartSvg] Building widget for: ${widget.assetPath}');
     if (_isSvgz(widget.assetPath)) {
+      debugPrint('📦 [SmartSvg] Detected SVGZ format');
       // Handle SVGZ - load and decompress using cached future
       return FutureBuilder<String>(
         future: _decompressFuture,
@@ -159,17 +161,24 @@ class _SmartSvgState extends State<SmartSvg> {
   /// Load and decompress SVGZ file from assets
   Future<String> _loadAndDecompressSvgz(String assetPath) async {
     try {
+      debugPrint('🔧 [SmartSvg] Loading SVGZ from: $assetPath');
       // Load compressed data from assets
       final ByteData data = await rootBundle.load(assetPath);
+      debugPrint('✅ [SmartSvg] Loaded ${data.lengthInBytes} bytes');
       final List<int> bytes = data.buffer.asUint8List();
 
       // Decompress using gzip
       final List<int> decompressed = GZipCodec().decode(bytes);
+      debugPrint('✅ [SmartSvg] Decompressed to ${decompressed.length} bytes');
 
       // Convert to string
-      return String.fromCharCodes(decompressed);
+      final result = String.fromCharCodes(decompressed);
+      debugPrint(
+        '✅ [SmartSvg] Successfully converted to string (${result.length} chars)',
+      );
+      return result;
     } catch (e) {
-      debugPrint('Failed to decompress SVGZ from $assetPath: $e');
+      debugPrint('❌ [SmartSvg] Failed to decompress SVGZ from $assetPath: $e');
       rethrow;
     }
   }

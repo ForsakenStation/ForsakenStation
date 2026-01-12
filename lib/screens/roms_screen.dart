@@ -6,7 +6,8 @@ import 'package:forsaken/screens/roms/roms_list_view.dart';
 import 'package:forsaken/screens/roms/utils/scroll_utils.dart';
 import 'package:forsaken/screens/roms/utils/bottom_bar_actions.dart';
 import 'package:forsaken/screens/roms/controllers/roms_screen_controller.dart';
-import 'package:forsaken/screens/pdf_viewer_screen.dart';
+import 'package:forsaken/screens/roms/handlers/rom_launcher.dart';
+import 'package:forsaken/screens/roms/handlers/rom_save_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,25 +15,20 @@ import 'package:path/path.dart' as path;
 import 'package:forsaken/models/platform.dart';
 import 'package:forsaken/models/rom.dart';
 import 'package:forsaken/models/rom_item.dart';
-import 'package:forsaken/models/emulator_config.dart';
 import 'package:forsaken/services/debug_service.dart';
 import 'package:forsaken/services/rom_service.dart';
 import 'package:forsaken/services/media_service.dart';
 import 'package:forsaken/services/emulator_service.dart';
 import 'package:forsaken/services/keyboard_service.dart';
 import 'package:forsaken/services/gamelist_service.dart';
+import 'package:forsaken/services/rom_storage_service.dart';
 import 'package:forsaken/widgets/common/theme_selector.dart';
 import 'package:forsaken/widgets/common/help_dialog.dart';
 import 'package:forsaken/widgets/common/virtual_keyboard.dart';
 import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
 import 'package:forsaken/widgets/common/smart_svg.dart';
-import 'package:forsaken/widgets/common/error_dialog.dart';
-import 'package:forsaken/widgets/roms/launch_progress_dialog.dart';
-import 'package:forsaken/widgets/roms/save_rom_dialog.dart';
 import 'package:forsaken/widgets/roms/fullscreen_image_viewer.dart';
 import 'package:forsaken/widgets/roms/rom_detail_dialog.dart';
-import 'package:forsaken/widgets/roms/emulator_selection_dialog.dart';
-import 'package:forsaken/services/rom_storage_service.dart';
 import 'package:forsaken/screens/settings_screen.dart';
 
 enum ViewMode { list, grid, carousel }
@@ -70,6 +66,8 @@ class _RomsScreenState extends State<RomsScreen> {
   late KeyboardService _keyboardService;
   late GamelistService _gamelistService;
   late RomsScreenController _controller;
+  late RomLauncher _romLauncher;
+  late RomSaveHandler _romSaveHandler;
   late ScrollController _carouselController;
   late ScrollController _gridScrollController;
   late ScrollController _listScrollController;
@@ -117,6 +115,22 @@ class _RomsScreenState extends State<RomsScreen> {
     _controller = RomsScreenController(
       mediaService: _mediaService,
       gamelistService: _gamelistService,
+    );
+    _romLauncher = RomLauncher(
+      context: context,
+      emulatorService: _emulatorService,
+      mediaService: _mediaService,
+      platformName: widget.platform.name,
+      platformDisplayName: widget.platform.displayName,
+      mediaCache: _controller.mediaCache,
+      requestFocus: _requestFocusForCurrentViewMode,
+      isCollection: widget.isCollection,
+    );
+    _romSaveHandler = RomSaveHandler(
+      context: context,
+      platformName: widget.platform.name,
+      requestFocus: _requestFocusForCurrentViewMode,
+      isCollection: widget.isCollection,
     );
     _carouselController = ScrollController();
     _gridScrollController = ScrollController();
@@ -211,11 +225,26 @@ class _RomsScreenState extends State<RomsScreen> {
     setState(() {
       _isLoading = true;
     });
-    final platformLogoPath = await _mediaService.getSystemLogo(
-      widget.platform.code,
+    // For collections, use platform.name (the collection ID)
+    // For regular platforms, use platform.code (basename of path)
+    final platformIdentifier = widget.isCollection
+        ? widget.platform.name
+        : widget.platform.code;
+
+    debugPrint(
+      '🔍 [RomsScreen] Loading assets for: $platformIdentifier (isCollection: ${widget.isCollection})',
     );
+
+    final platformLogoPath = await _mediaService.getSystemLogo(
+      platformIdentifier,
+    );
+    debugPrint('🏷️ [RomsScreen] Logo path result: $platformLogoPath');
+
     final platformBackgroundPath = await _mediaService.getSystemBackground(
-      widget.platform.code,
+      platformIdentifier,
+    );
+    debugPrint(
+      '🖼️ [RomsScreen] Background path result: $platformBackgroundPath',
     );
 
     List<RomItem> items;
@@ -308,7 +337,6 @@ class _RomsScreenState extends State<RomsScreen> {
     setState(() {
       _filteredItems = _items;
       _isSearchMode = false;
-      _filteredItems = _items;
       _selectedIndex = 0;
     });
     // Load media after clearing search
@@ -534,12 +562,17 @@ class _RomsScreenState extends State<RomsScreen> {
       return _handleAlphabeticalJump(event);
     }
 
-    // 3. Handle common shortcuts (R, V, S)
+    // 3. Handle number jump (Shift + 0-9)
+    if (_keyboardService.isNumberJump(event)) {
+      return _handleNumberJump(event);
+    }
+
+    // 4. Handle common shortcuts (R, V, S)
     if (_handleCommonShortcuts(key)) {
       return KeyEventResult.handled;
     }
 
-    // 4. Handle back navigation
+    // 5. Handle back navigation
     if (_keyboardService.isBackKey(key)) {
       if (_isSearchMode) {
         _clearSearch();
@@ -571,6 +604,36 @@ class _RomsScreenState extends State<RomsScreen> {
 
     final newIndex = _keyboardService.findIndexByLetter(
       letter: letter,
+      items: _filteredItems,
+      getDisplayName: (item) => item.displayName,
+    );
+
+    if (newIndex == null) return KeyEventResult.ignored;
+    setState(() {
+      _selectedIndex = newIndex;
+      _showNavigationHint = false;
+    });
+    if (_viewMode == ViewMode.grid) {
+      final columns = _calculateCrossAxisCount(context);
+      _scrollToIndexInGrid(newIndex, columns, centerItem: true);
+    } else if (_viewMode == ViewMode.list) {
+      _scrollToIndexInList(newIndex, centerItem: true);
+    } else {
+      _scrollToCarouselIndex(newIndex, centerItem: true);
+    }
+
+    _scheduleMediaLoad();
+
+    return KeyEventResult.handled;
+  }
+
+  /// Handle number jump (Shift + 0-9) based on current view mode
+  KeyEventResult _handleNumberJump(KeyEvent event) {
+    final digit = _keyboardService.getNumberJumpDigit(event);
+    if (digit == null) return KeyEventResult.ignored;
+
+    final newIndex = _keyboardService.findIndexByNumber(
+      digit: digit,
       items: _filteredItems,
       getDisplayName: (item) => item.displayName,
     );
@@ -810,6 +873,9 @@ class _RomsScreenState extends State<RomsScreen> {
 
   Widget _buildTitile() {
     String? subFolder = _getCurrentFolderName();
+    debugPrint(
+      '🏗️ [RomsScreen] Building title - logoPath: $_platformLogoPath',
+    );
     return Container(
       margin: const EdgeInsets.only(right: 1),
       child: Row(
@@ -1129,236 +1195,20 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   Future<void> _handleRomLaunch(RomItem item) async {
-    final config = await _emulatorService.loadPlatformConfig(
-      widget.platform.name,
-    );
-
-    if (config == null || config.commands.isEmpty) {
-      _showErrorDialog(
-        'No emulator configured for ${widget.platform.displayName}.\n\n'
-        'Please add configuration for "${widget.platform.name}" in:\n'
-        '${dotenv.env['EMULATORS_CONFIG_PATH']}',
-      );
-      return;
-    }
-
-    // If multiple commands, show selection dialog
-    if (config.hasMultipleCommands) {
-      final selectedCommand = await _showEmulatorSelectionDialog(config);
-      if (selectedCommand == null) {
-        return; // User cancelled
-      }
-      await _launchWithCommand(item, selectedCommand);
-    } else {
-      // Use default command
-      await _launchWithCommand(item, config.defaultCommand!);
-    }
-  }
-
-  Future<EmulatorCommand?> _showEmulatorSelectionDialog(
-    EmulatorConfig config,
-  ) async {
-    return await EmulatorSelectionDialog.show(
-      context: context,
-      config: config,
-      onClose: _requestFocusForCurrentViewMode,
-    );
-  }
-
-  Future<void> _launchWithCommand(RomItem item, EmulatorCommand command) async {
-    // Get media for this ROM to show marquee/boxart
+    final isDownloading =
+        item.downloadUrl != null && item.downloadUrl!.isNotEmpty;
     final media = _controller.mediaCache[item.name];
     final imagePath = media != null
         ? _mediaService.getLaunchImagePath(media)
         : null;
 
-    final isDownloading =
-        item.downloadUrl != null && item.downloadUrl!.isNotEmpty;
+    // Launch ROM using handler
+    final success = await _romLauncher.launchRom(item);
 
-    // Create dialog key to access state
-    final GlobalKey<LaunchProgressDialogState> dialogKey = GlobalKey();
-    bool wasCancelled = false;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => LaunchProgressDialog(
-        key: dialogKey,
-        item: item,
-        command: command,
-        imagePath: imagePath,
-        isDownloading: isDownloading,
-        onCancel: isDownloading
-            ? () {
-                // Cancel the download
-                _emulatorService.cancelDownload();
-                wasCancelled = true;
-                if (mounted) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Download cancelled'),
-                      backgroundColor: Colors.orange,
-                      duration: Duration(seconds: 5),
-                    ),
-                  );
-                }
-              }
-            : null,
-      ),
-    );
-
-    try {
-      final result = await _emulatorService.launchRom(
-        romItem: item,
-        platform: widget.platform.name,
-        selectedCommand: command,
-        onDownloadProgress: (progress, received, total) {
-          // Update dialog progress
-          dialogKey.currentState?.updateProgress(progress, received, total);
-        },
-      );
-
-      if (!mounted) return;
-
-      // Only close dialog if not already closed by cancel
-      if (!wasCancelled) {
-        Navigator.pop(context);
-      }
-
-      if (result.success) {
-        // If it's a PDF, open the PDF viewer instead of showing success
-        if (result.isPdf && result.filePath != null) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PdfViewerScreen(
-                pdfPath: result.filePath!,
-                title: item.displayName,
-              ),
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Launched: ${item.displayName}'),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        }
-
-        // If ROM was downloaded, ask if user wants to save it permanently
-        if (isDownloading && !wasCancelled) {
-          // Check if ROM is already in forever storage
-          final storageService = RomStorageService.instance;
-          final foreverPath = await storageService.findRomInForeverStorage(
-            widget.platform.name,
-            item.name,
-          );
-
-          // Only ask to save if not already in forever storage
-          if (foreverPath == null) {
-            await _askToSaveRomPermanently(item, imagePath);
-          }
-        }
-      } else if (!wasCancelled) {
-        _showErrorDialog(
-          'Failed to launch ROM.\n\n'
-          'Check that:\n'
-          '• Emulator is installed correctly\n'
-          '• ROM file is valid\n'
-          '• Configuration is correct\n\n'
-          'Error: ${result.error ?? "Unknown error"}',
-        );
-      }
-      _requestFocusForCurrentViewMode();
-    } catch (e) {
-      if (!mounted) return;
-      if (!wasCancelled) {
-        Navigator.pop(context); // Close loading dialog
-        _showErrorDialog('Error launching ROM: $e');
-      }
-      _requestFocusForCurrentViewMode();
+    // If launch was successful and ROM was downloaded, ask to save
+    if (success && isDownloading && mounted) {
+      await _romSaveHandler.handleRomSave(item, imagePath);
     }
-  }
-
-  /// Ask user if they want to save ROM permanently after playing
-  Future<void> _askToSaveRomPermanently(RomItem item, String? imagePath) async {
-    // Show dialog asking if user wants to save ROM permanently
-    final result = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => SaveRomDialog(item: item, imagePath: imagePath),
-    );
-
-    if (!mounted) return;
-
-    // If user chose to save permanently
-    if (result == true) {
-      try {
-        final storageService = RomStorageService.instance;
-
-        // Move ROM from temp to forever storage
-        final newPath = await storageService.moveToForeverStorage(
-          widget.platform.name,
-          item.name,
-        );
-
-        if (newPath != null && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${item.displayName} saved permanently'),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 2),
-              action: SnackBarAction(
-                label: 'Undo',
-                textColor: Colors.white,
-                onPressed: () async {
-                  // Move back to temp storage
-                  await storageService.deleteFromForeverStorage(
-                    widget.platform.name,
-                    item.name,
-                  );
-                },
-              ),
-            ),
-          );
-        } else if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to save ROM permanently'),
-              backgroundColor: Colors.orange,
-              duration: Duration(seconds: 2),
-            ),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error saving ROM: $e'),
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        }
-      }
-    } else {
-      // User chose "Not Now" - ROM stays in temp storage for now
-      // It will be cleaned up when downloading another ROM for this platform
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${item.displayName} kept in temporary storage'),
-            backgroundColor: Colors.grey[700],
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
-    }
-
-    _requestFocusForCurrentViewMode();
   }
 
   /// Check if a ROM is already downloaded (in temp or forever storage)
@@ -1391,14 +1241,6 @@ class _RomsScreenState extends State<RomsScreen> {
     final isDownloaded = tempPath != null;
     _downloadedRomsCache[item.name] = isDownloaded;
     return isDownloaded;
-  }
-
-  void _showErrorDialog(String message) {
-    ErrorDialog.show(
-      context: context,
-      message: message,
-      onClose: _requestFocusForCurrentViewMode,
-    );
   }
 
   void _requestScrollToIndexCurrentViewMode() {

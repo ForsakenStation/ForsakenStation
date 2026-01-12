@@ -180,6 +180,9 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
 
       // Convert collections to "virtual" platforms
       final collectionPlatforms = collections.map((collection) {
+        debugPrint(
+          '🎮 [PlatformsScreen] Creating platform for collection: ${collection.id}',
+        );
         return Platform(
           name: collection.id, // Use collection ID as platform name
           path: '', // Collections don't have paths
@@ -188,12 +191,24 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
         );
       }).toList();
 
+      debugPrint(
+        '📋 [PlatformsScreen] Total collections: ${collectionPlatforms.length}',
+      );
+      debugPrint('📋 [PlatformsScreen] Total platforms: ${platforms.length}');
+
       if (mounted) {
         setState(() {
           // Combine collections + platforms
           _platforms = [...collectionPlatforms, ...platforms];
           _isLoading = false;
         });
+
+        debugPrint(
+          '✅ [PlatformsScreen] Loaded ${_platforms.length} total platforms',
+        );
+        for (var p in _platforms.take(5)) {
+          debugPrint('   - ${p.name} (${p.displayName})');
+        }
 
         // Request focus after loading platforms
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -223,7 +238,11 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     }
 
     // Load system image
+    debugPrint('🔍 [PlatformsScreen] Loading system image for: $platformName');
     final imagePath = await _mediaService.getSystemImage(platformName);
+    debugPrint(
+      '📷 [PlatformsScreen] System image result for $platformName: $imagePath',
+    );
 
     if (mounted) {
       setState(() {
@@ -239,7 +258,11 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     }
 
     // Load system logo
+    debugPrint('🔍 [PlatformsScreen] Loading system logo for: $platformName');
     final logoPath = await _mediaService.getSystemLogo(platformName);
+    debugPrint(
+      '🏷️ [PlatformsScreen] System logo result for $platformName: $logoPath',
+    );
 
     if (mounted) {
       setState(() {
@@ -255,8 +278,14 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     }
 
     // Load system background (always returns a path, default if not found)
+    debugPrint(
+      '🔍 [PlatformsScreen] Loading system background for: $platformName',
+    );
     final backgroundPath = await _mediaService.getSystemBackground(
       platformName,
+    );
+    debugPrint(
+      '🖼️ [PlatformsScreen] System background result for $platformName: $backgroundPath',
     );
 
     if (mounted) {
@@ -382,12 +411,17 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
       return _handleAlphabeticalJump(event);
     }
 
-    // 3. Handle common shortcuts (R, V)
+    // 3. Handle number jump (Shift + 0-9)
+    if (_keyboardService.isNumberJump(event)) {
+      return _handleNumberJump(event);
+    }
+
+    // 4. Handle common shortcuts (R, V)
     if (_handleCommonShortcuts(key)) {
       return KeyEventResult.handled;
     }
 
-    // 4. Handle back/exit
+    // 5. Handle back/exit
     if (_keyboardService.isBackKey(key)) {
       _showExitDialog();
       return KeyEventResult.handled;
@@ -442,6 +476,38 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
 
     final newIndex = _keyboardService.findIndexByLetter(
       letter: letter,
+      items: _platforms,
+      getDisplayName: (platform) => platform.name,
+    );
+
+    if (newIndex == null) return KeyEventResult.ignored;
+
+    if (_viewMode == ViewMode.grid) {
+      setState(() {
+        _gridSelectedIndex = newIndex;
+      });
+      final columns = _calculateCrossAxisCount(context);
+      _scrollToIndex(newIndex, columns);
+    } else {
+      // Carousel
+      _hideNavigationHint();
+      _carouselController.animateToPage(
+        newIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+
+    return KeyEventResult.handled;
+  }
+
+  /// Handle number jump (Shift + 0-9) based on current view mode
+  KeyEventResult _handleNumberJump(KeyEvent event) {
+    final digit = _keyboardService.getNumberJumpDigit(event);
+    if (digit == null) return KeyEventResult.ignored;
+
+    final newIndex = _keyboardService.findIndexByNumber(
+      digit: digit,
       items: _platforms,
       getDisplayName: (platform) => platform.name,
     );

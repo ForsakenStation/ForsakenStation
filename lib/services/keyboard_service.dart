@@ -207,6 +207,31 @@ class KeyboardService {
     return isShiftPressed && isLetterKey;
   }
 
+  /// Check if event is a number jump (Shift + 0-9)
+  bool isNumberJump(KeyEvent event) {
+    if (event is! KeyDownEvent) return false;
+
+    // Check if shift is pressed
+    final hardwareShiftPressed = HardwareKeyboard.instance.isShiftPressed;
+    final logicalShiftPressed = HardwareKeyboard.instance.logicalKeysPressed
+        .any(
+          (key) =>
+              key == LogicalKeyboardKey.shiftLeft ||
+              key == LogicalKeyboardKey.shiftRight,
+        );
+
+    final isShiftPressed = hardwareShiftPressed || logicalShiftPressed;
+
+    final key = event.logicalKey;
+
+    // Check if it's a digit key (digit0 to digit9)
+    final isDigitKey =
+        (key.keyId >= LogicalKeyboardKey.digit0.keyId &&
+        key.keyId <= LogicalKeyboardKey.digit9.keyId);
+
+    return isShiftPressed && isDigitKey;
+  }
+
   /// Get the letter from an alphabetical jump event
   String? getAlphabeticalJumpLetter(KeyEvent event) {
     if (!isAlphabeticalJump(event)) return null;
@@ -216,6 +241,20 @@ class KeyboardService {
     final letterIndex = key.keyId - LogicalKeyboardKey.keyA.keyId;
     if (letterIndex >= 0 && letterIndex < 26) {
       return String.fromCharCode('A'.codeUnitAt(0) + letterIndex);
+    }
+
+    return null;
+  }
+
+  /// Get the digit from a number jump event
+  String? getNumberJumpDigit(KeyEvent event) {
+    if (!isNumberJump(event)) return null;
+
+    // Convert keyId to digit (digit0 = 0x00000000030)
+    final key = event.logicalKey;
+    final digitIndex = key.keyId - LogicalKeyboardKey.digit0.keyId;
+    if (digitIndex >= 0 && digitIndex <= 9) {
+      return digitIndex.toString();
     }
 
     return null;
@@ -268,6 +307,52 @@ class KeyboardService {
     // If nothing found after this letter, return null (no change)
     _debug.debug(
       'No items found starting with or after "$upperLetter"',
+      tag: 'KeyboardService',
+    );
+    return null;
+  }
+
+  /// Find item index by number (or next available number)
+  /// Returns null if no match found
+  int? findIndexByNumber<T>({
+    required String digit,
+    required List<T> items,
+    required String Function(T item) getDisplayName,
+  }) {
+    if (items.isEmpty) return null;
+
+    // First try to find exact match
+    final exactIndex = items.indexWhere(
+      (item) => getDisplayName(item).startsWith(digit),
+    );
+
+    if (exactIndex != -1) {
+      _debug.debug(
+        'Found item starting with "$digit" at index $exactIndex',
+        tag: 'KeyboardService',
+      );
+      return exactIndex;
+    }
+
+    // If no exact match, find the next digit that exists
+    for (int nextDigit = int.parse(digit) + 1; nextDigit <= 9; nextDigit++) {
+      final nextDigitStr = nextDigit.toString();
+      final nextIndex = items.indexWhere(
+        (item) => getDisplayName(item).startsWith(nextDigitStr),
+      );
+
+      if (nextIndex != -1) {
+        _debug.debug(
+          'No item with "$digit", jumping to "$nextDigitStr" at index $nextIndex',
+          tag: 'KeyboardService',
+        );
+        return nextIndex;
+      }
+    }
+
+    // If nothing found after this digit, return null (no change)
+    _debug.debug(
+      'No items found starting with or after "$digit"',
       tag: 'KeyboardService',
     );
     return null;

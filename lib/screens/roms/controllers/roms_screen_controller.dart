@@ -58,7 +58,10 @@ class RomsScreenController {
     if (_mediaCache.containsKey(item.name)) {
       return;
     }
-    final media = await _mediaService.getMediaForRomItem(item, platformName);
+
+    // Use item's platform if available (for collections), otherwise use provided platformName
+    final actualPlatform = item.platform ?? platformName;
+    final media = await _mediaService.getMediaForRomItem(item, actualPlatform);
 
     if (isMounted()) {
       _mediaCache[item.name] = media;
@@ -79,9 +82,12 @@ class RomsScreenController {
     }
 
     try {
+      // Use item's platform if available (for collections), otherwise use provided platformName
+      final actualPlatform = item.platform ?? platformName;
+
       // Load game info from gamelist.xml
       final gameInfo = await _gamelistService.getGameInfo(
-        platformName,
+        actualPlatform,
         item.path,
       );
 
