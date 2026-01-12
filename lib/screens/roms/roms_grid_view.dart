@@ -3,7 +3,7 @@ import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
 import '../../widgets/roms/folder_widget.dart';
-import '../../widgets/roms/rom_card.dart';
+import '../../widgets/roms/rom_grid_card.dart';
 
 class RomsGridView extends StatelessWidget {
   final List<RomItem> items;
@@ -78,12 +78,7 @@ class RomsGridView extends StatelessWidget {
 
     // Don't load media eagerly - let the debouncing system handle it
     // Only use cache if it exists
-    RomItem? selectedRom = items[selectedIndex];
-
-    final media = mediaCache[item.name];
-    final isSelected = selectedRom == item;
-
-    return RomCard(
+    return RomGridCard(
       item: item,
       isSelected: index == selectedIndex,
       onTap: () => onItemTap(index, item),

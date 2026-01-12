@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:forsaken/screens/roms/roms_carousel_view.dart';
@@ -6,6 +5,7 @@ import 'package:forsaken/screens/roms/roms_grid_view.dart';
 import 'package:forsaken/screens/roms/roms_list_view.dart';
 import 'package:forsaken/screens/roms/utils/scroll_utils.dart';
 import 'package:forsaken/screens/roms/utils/bottom_bar_actions.dart';
+import 'package:forsaken/screens/roms/controllers/roms_screen_controller.dart';
 import 'package:forsaken/screens/pdf_viewer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,9 +14,7 @@ import 'package:path/path.dart' as path;
 import 'package:forsaken/models/platform.dart';
 import 'package:forsaken/models/rom.dart';
 import 'package:forsaken/models/rom_item.dart';
-import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/emulator_config.dart';
-import 'package:forsaken/models/game_info.dart';
 import 'package:forsaken/services/debug_service.dart';
 import 'package:forsaken/services/rom_service.dart';
 import 'package:forsaken/services/media_service.dart';
@@ -65,14 +63,13 @@ class _RomsScreenState extends State<RomsScreen> {
   List<Rom>? _platformRoms; // Cached ROMs for JSONL platform
   ViewMode _viewMode = ViewMode.list;
   int _selectedIndex = 0;
-  final Map<String, RomMedia> _mediaCache = {};
-  final Map<String, GameInfo> _gameInfoCache = {};
   final Map<String, bool> _downloadedRomsCache =
       {}; // Cache for downloaded ROM status
   late MediaService _mediaService;
   late EmulatorService _emulatorService;
   late KeyboardService _keyboardService;
   late GamelistService _gamelistService;
+  late RomsScreenController _controller;
   late ScrollController _carouselController;
   late ScrollController _gridScrollController;
   late ScrollController _listScrollController;
@@ -93,11 +90,6 @@ class _RomsScreenState extends State<RomsScreen> {
   final FocusNode _searchFocusNode = FocusNode();
   bool _isSearchMode = false;
   bool _showVirtualKeyboard = false;
-
-  // Media loading control with debouncing
-  Timer? _mediaLoadTimer;
-  bool _isNavigating = false;
-  final Set<int> _preloadedThumbnailIndices = {};
 
   @override
   void initState() {
@@ -122,6 +114,10 @@ class _RomsScreenState extends State<RomsScreen> {
     _emulatorService = EmulatorService.instance;
     _gamelistService = GamelistService(gamelistBasePath: gamelistPath);
     _keyboardService = KeyboardService.instance;
+    _controller = RomsScreenController(
+      mediaService: _mediaService,
+      gamelistService: _gamelistService,
+    );
     _carouselController = ScrollController();
     _gridScrollController = ScrollController();
     _listScrollController = ScrollController();
@@ -192,8 +188,8 @@ class _RomsScreenState extends State<RomsScreen> {
 
   @override
   void dispose() {
-    // Cancel media load timer
-    _mediaLoadTimer?.cancel();
+    // Cancel media load timer and dispose controller
+    _controller.dispose();
 
     // Clear platform cache when leaving the screen to free up memory
     if (widget.platform.isJsonlPlatform) {
@@ -264,15 +260,22 @@ class _RomsScreenState extends State<RomsScreen> {
         _filteredItems = items;
         _isLoading = false;
         _selectedIndex = 0;
-        _mediaCache.clear();
-        _preloadedThumbnailIndices.clear();
+        _controller.clearCaches();
       });
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _requestFocusForCurrentViewMode();
         // Load initial media for visible items
         if (_filteredItems.isNotEmpty) {
-          _scheduleMediaLoad();
+          _controller.scheduleMediaLoad(
+            filteredItems: _filteredItems,
+            selectedIndex: _selectedIndex,
+            platformName: widget.platform.name,
+            onUpdate: () {
+              if (mounted) setState(() {});
+            },
+            isMounted: () => mounted,
+          );
         }
       });
     }
@@ -342,152 +345,29 @@ class _RomsScreenState extends State<RomsScreen> {
     );
   }
 
-  Future<void> _loadMediaForItem(RomItem item) async {
-    if (_mediaCache.containsKey(item.name)) {
-      return;
-    }
-    final media = await _mediaService.getMediaForRomItem(
-      item,
-      widget.platform.name,
+  /// Wrapper methods to simplify controller calls
+  void _scheduleMediaLoad() {
+    _controller.scheduleMediaLoad(
+      filteredItems: _filteredItems,
+      selectedIndex: _selectedIndex,
+      platformName: widget.platform.name,
+      onUpdate: () {
+        if (mounted) setState(() {});
+      },
+      isMounted: () => mounted,
     );
+  }
 
-    if (mounted) {
-      setState(() {
-        _mediaCache[item.name] = media;
-      });
-    }
+  Future<void> _loadMediaForItem(RomItem item) async {
+    await _controller.loadMediaForItem(item, widget.platform.name, () {
+      if (mounted) setState(() {});
+    }, () => mounted);
   }
 
   Future<void> _loadGameInfoForItem(RomItem item) async {
-    // Check if already loaded
-    if (_gameInfoCache.containsKey(item.name)) {
-      return;
-    }
-
-    try {
-      // Load game info from gamelist.xml
-      final gameInfo = await _gamelistService.getGameInfo(
-        widget.platform.name,
-        item.path,
-      );
-
-      if (mounted && gameInfo != null) {
-        setState(() {
-          _gameInfoCache[item.name] = gameInfo;
-        });
-        _debug.info(
-          'Loaded game info for ${item.name}: ${gameInfo.name}',
-          tag: 'RomsScreen',
-        );
-      }
-    } catch (e) {
-      _debug.error(
-        'Failed to load game info for ${item.name}: $e',
-        tag: 'RomsScreen',
-      );
-    }
-  }
-
-  /// Schedule media loading after debounce delay (500ms)
-  /// Loads full media for selected item and neighbors, thumbnails for wider range
-  void _scheduleMediaLoad() {
-    // Cancel any pending load
-    _mediaLoadTimer?.cancel();
-
-    // Mark as navigating
-    if (!_isNavigating) {
-      setState(() {
-        _isNavigating = true;
-      });
-    }
-
-    // Schedule load after 500ms debounce delay
-    _mediaLoadTimer = Timer(const Duration(milliseconds: 500), () async {
-      if (!mounted) return;
-
-      // Reset navigation flag
-      setState(() {
-        _isNavigating = false;
-      });
-
-      // Validate index
-      if (_filteredItems.isEmpty || _selectedIndex >= _filteredItems.length) {
-        return;
-      }
-
-      // Load media for selected item and immediate neighbors (±1)
-      await _loadMediaForSelectedAndNeighbors();
-
-      // Schedule thumbnail preloading for wider range (±10)
-      _scheduleThumbnailPreload();
-    });
-  }
-
-  /// Load full media for selected item and immediate neighbors (±1)
-  Future<void> _loadMediaForSelectedAndNeighbors() async {
-    if (_filteredItems.isEmpty) return;
-
-    // Selected item
-    final selectedItem = _filteredItems[_selectedIndex];
-    if (selectedItem.isRom) {
-      _loadMediaForItem(selectedItem);
-      _loadGameInfoForItem(selectedItem);
-    }
-
-    // Previous item
-    if (_selectedIndex > 0) {
-      final prevItem = _filteredItems[_selectedIndex - 1];
-      if (prevItem.isRom) {
-        _loadMediaForItem(prevItem);
-      }
-    }
-
-    // Next item
-    if (_selectedIndex < _filteredItems.length - 1) {
-      final nextItem = _filteredItems[_selectedIndex + 1];
-      if (nextItem.isRom) {
-        _loadMediaForItem(nextItem);
-      }
-    }
-  }
-
-  /// Preload thumbnails for items in range ±10 (background, low priority)
-  void _scheduleThumbnailPreload() {
-    // For very large lists (>5000 items), reduce preload range to avoid performance issues
-    final preloadRange = _filteredItems.length > 5000 ? 20 : 100;
-
-    // Wait additional 500ms before starting background preload
-    Timer(const Duration(milliseconds: 100), () async {
-      if (!mounted || _isNavigating) return;
-
-      final startIndex = (_selectedIndex - preloadRange).clamp(
-        0,
-        _filteredItems.length - 1,
-      );
-      final endIndex = (_selectedIndex + preloadRange).clamp(
-        0,
-        _filteredItems.length - 1,
-      );
-
-      // Load thumbnails for items not already loaded
-      for (int i = startIndex; i <= endIndex; i++) {
-        // Skip if navigating started again
-        if (_isNavigating) break;
-
-        // Skip if already preloaded
-        if (_preloadedThumbnailIndices.contains(i)) continue;
-
-        final item = _filteredItems[i];
-        if (item.isRom && !_mediaCache.containsKey(item.name)) {
-          await _loadMediaForItem(item);
-          _preloadedThumbnailIndices.add(i);
-
-          // Larger delay for very large lists to avoid I/O saturation
-          final delayMs = _filteredItems.length > 5000 ? 100 : 50;
-          await Future.delayed(Duration(milliseconds: delayMs));
-        }
-      }
-    });
+    await _controller.loadGameInfoForItem(item, widget.platform.name, () {
+      if (mounted) setState(() {});
+    }, () => mounted);
   }
 
   void _navigateToFolder(RomItem folder) {
@@ -1089,13 +969,13 @@ class _RomsScreenState extends State<RomsScreen> {
         _scheduleMediaLoad();
       },
       onKeyEvent: _handleKeyEvent,
-      mediaCache: _mediaCache,
+      mediaCache: _controller.mediaCache,
       mediaService: _mediaService,
       loadMediaForItem: _loadMediaForItem,
       onRomLaunch: _handleRomLaunch,
       showRomDetailDialog: _showRomDetailDialog,
       loadGameInfoForItem: _loadGameInfoForItem,
-      gameInfoCache: _gameInfoCache,
+      gameInfoCache: _controller.gameInfoCache,
       isRomDownloaded: _isRomDownloaded,
       isCollection: widget.isCollection,
     );
@@ -1116,7 +996,7 @@ class _RomsScreenState extends State<RomsScreen> {
         _scheduleMediaLoad();
       },
       onKeyEvent: _handleKeyEvent,
-      mediaCache: _mediaCache,
+      mediaCache: _controller.mediaCache,
       mediaService: _mediaService,
       loadMediaForItem: _loadMediaForItem,
       isRomDownloaded: _isRomDownloaded,
@@ -1138,7 +1018,7 @@ class _RomsScreenState extends State<RomsScreen> {
       onFolderTap: _navigateToFolder,
       onRomLaunch: _handleRomLaunch,
       onKeyEvent: _handleKeyEvent,
-      mediaCache: _mediaCache,
+      mediaCache: _controller.mediaCache,
       mediaService: _mediaService,
       loadMediaForItem: _loadMediaForItem,
       onCardTap: (int index) {
@@ -1150,7 +1030,7 @@ class _RomsScreenState extends State<RomsScreen> {
       },
       showNavigationHint: _showNavigationHint,
       loadGameInfoForItem: _loadGameInfoForItem,
-      gameInfoCache: _gameInfoCache,
+      gameInfoCache: _controller.gameInfoCache,
       isRomDownloaded: _isRomDownloaded,
       isCollection: widget.isCollection,
     );
@@ -1176,8 +1056,8 @@ class _RomsScreenState extends State<RomsScreen> {
     await RomDetailDialog.show(
       context: context,
       item: item,
-      media: _mediaCache[item.name],
-      gameInfo: _gameInfoCache[item.name],
+      media: _controller.mediaCache[item.name],
+      gameInfo: _controller.gameInfoCache[item.name],
       onPlay: () => _handleRomLaunch(item),
       onClose: _requestFocusForCurrentViewMode,
     );
@@ -1191,11 +1071,11 @@ class _RomsScreenState extends State<RomsScreen> {
     if (item.isFolder) return;
 
     // Load media if not cached
-    if (!_mediaCache.containsKey(item.name)) {
+    if (!_controller.mediaCache.containsKey(item.name)) {
       await _loadMediaForItem(item);
     }
 
-    final media = _mediaCache[item.name];
+    final media = _controller.mediaCache[item.name];
 
     // Only show if media exists
     if (media == null || !media.hasAnyMedia) {
@@ -1287,7 +1167,7 @@ class _RomsScreenState extends State<RomsScreen> {
 
   Future<void> _launchWithCommand(RomItem item, EmulatorCommand command) async {
     // Get media for this ROM to show marquee/boxart
-    final media = _mediaCache[item.name];
+    final media = _controller.mediaCache[item.name];
     final imagePath = media != null
         ? _mediaService.getLaunchImagePath(media)
         : null;

@@ -7,12 +7,13 @@ import '../common/placeholder_image.dart';
 
 /// Reusable ROM card widget for grid and carousel views
 ///
-/// Displays a ROM with:
-/// - Cover image
-/// - Title
+/// Displays a ROM with vertical layout:
+/// - Cover image (top)
+/// - Title (bottom)
 /// - Download status badge (if applicable)
 /// - Selection state
-class RomCard extends StatelessWidget {
+/// - Platform name (for collection views)
+class RomGridCard extends StatelessWidget {
   final RomItem item;
   final bool isSelected;
   final VoidCallback onTap;
@@ -23,7 +24,7 @@ class RomCard extends StatelessWidget {
   final double? height;
   final bool showPlatform; // Show platform info for collection views
 
-  const RomCard({
+  const RomGridCard({
     super.key,
     required this.item,
     required this.isSelected,

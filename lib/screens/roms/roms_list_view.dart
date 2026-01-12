@@ -1,11 +1,10 @@
-import 'dart:io';
 import 'package:forsaken/models/game_info.dart';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
 import '../../widgets/roms/folder_widget.dart';
-import '../../widgets/common/placeholder_image.dart';
+import '../../widgets/roms/rom_list_card.dart';
 import '../../widgets/roms/rom_detail_panel.dart';
 
 class RomsListView extends StatelessWidget {
@@ -93,103 +92,56 @@ class RomsListView extends StatelessWidget {
     bool isSelected,
     bool isWideScreen,
   ) {
-    // Don't load media eagerly - let the debouncing system handle it
-    // Only use cache if it exists
-    final media = mediaCache[item.name];
-    final imagePath = media != null
-        ? mediaService.getBestImagePath(media)
-        : null;
-
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      elevation: isSelected ? 8 : 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: isSelected
-            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
-            : BorderSide.none,
-      ),
-      color: isSelected
-          ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-          : null,
-      child: ListTile(
-        leading: Stack(
-          children: [
-            item.isFolder
-                ? FolderWidget(
-                    width: 60,
-                    height: 60,
-                    iconSize: 60,
-                    borderRadius: 4,
-                  )
-                : _buildThumbnail(context, imagePath),
-            // Download badge
-            if (!item.isFolder &&
-                item.downloadUrl != null &&
-                item.downloadUrl!.isNotEmpty &&
-                isRomDownloaded != null)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: FutureBuilder<bool>(
-                  future: isRomDownloaded!(item),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData && snapshot.data == true) {
-                      return Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.cloud_done,
-                          color: Colors.white,
-                          size: 14,
-                        ),
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-              ),
-          ],
+    // Handle folder items separately
+    if (item.isFolder) {
+      return Card(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        elevation: isSelected ? 8 : 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: isSelected
+              ? BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 3,
+                )
+              : BorderSide.none,
         ),
-        title: Text(
-          item.displayName,
-          style: const TextStyle(fontWeight: FontWeight.w500),
-        ),
-        subtitle: isCollection && item.platform != null
-            ? Text(
-                item.platform!,
-                style: TextStyle(fontSize: 12, color: Colors.grey[400]),
-              )
+        color: isSelected
+            ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
             : null,
-        trailing: Icon(
-          item.isFolder ? Icons.chevron_right : Icons.play_arrow,
-          color: Colors.grey[600],
-        ),
-        onTap: () =>
-            isWideScreen ? onItemTap(index) : showRomDetailDialog(item),
-      ),
-    );
-  }
-
-  Widget _buildThumbnail(BuildContext context, String? imagePath) {
-    if (imagePath != null) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(4),
-        child: Image.file(
-          File(imagePath),
-          width: 60,
-          height: 60,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return PlaceholderImage(size: 60);
-          },
+        child: ListTile(
+          leading: FolderWidget(
+            width: 60,
+            height: 60,
+            iconSize: 60,
+            borderRadius: 4,
+          ),
+          title: Text(
+            item.displayName,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          trailing: Icon(Icons.chevron_right, color: Colors.grey[600]),
+          onTap: () =>
+              isWideScreen ? onItemTap(index) : showRomDetailDialog(item),
         ),
       );
     }
-    return PlaceholderImage(size: 60);
+
+    // Use RomListCard for ROM items
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: RomListCard(
+        item: item,
+        isSelected: isSelected,
+        onTap: () =>
+            isWideScreen ? onItemTap(index) : showRomDetailDialog(item),
+        media: mediaCache[item.name],
+        mediaService: mediaService,
+        isRomDownloaded: isRomDownloaded,
+        isLoading: false,
+        showPlatform: isCollection,
+      ),
+    );
   }
 
   Widget _buildDetailPanel(RomItem item, BuildContext context) {

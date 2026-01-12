@@ -7,7 +7,7 @@ import '../../widgets/common/placeholder_image.dart';
 import '../../widgets/roms/media_carousel.dart';
 import '../../widgets/roms/folder_widget.dart';
 import '../../widgets/roms/rom_detail_panel.dart';
-import '../../widgets/roms/rom_card.dart';
+import '../../widgets/roms/rom_grid_card.dart';
 
 class RomsCarouselView extends StatelessWidget {
   final List<RomItem> items;
@@ -285,11 +285,9 @@ class RomsCarouselView extends StatelessWidget {
 
     // Don't load media eagerly - let the debouncing system handle it
     // Only use cache if it exists
-    final media = mediaCache[item.name];
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-      child: RomCard(
+      child: RomGridCard(
         item: item,
         isSelected: index == selectedIndex,
         onTap: () => onCardTap(index),

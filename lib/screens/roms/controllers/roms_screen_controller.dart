@@ -53,14 +53,17 @@ class RomsScreenController {
     RomItem item,
     String platformName,
     Function() onUpdate,
+    bool Function() isMounted,
   ) async {
     if (_mediaCache.containsKey(item.name)) {
       return;
     }
     final media = await _mediaService.getMediaForRomItem(item, platformName);
 
-    _mediaCache[item.name] = media;
-    onUpdate();
+    if (isMounted()) {
+      _mediaCache[item.name] = media;
+      onUpdate();
+    }
   }
 
   /// Load game info for a specific ROM item
@@ -68,6 +71,7 @@ class RomsScreenController {
     RomItem item,
     String platformName,
     Function() onUpdate,
+    bool Function() isMounted,
   ) async {
     // Check if already loaded
     if (_gameInfoCache.containsKey(item.name)) {
@@ -81,7 +85,7 @@ class RomsScreenController {
         item.path,
       );
 
-      if (gameInfo != null) {
+      if (isMounted() && gameInfo != null) {
         _gameInfoCache[item.name] = gameInfo;
         onUpdate();
         _debug.info(
@@ -104,6 +108,7 @@ class RomsScreenController {
     required int selectedIndex,
     required String platformName,
     required Function() onUpdate,
+    required bool Function() isMounted,
   }) {
     // Cancel any pending load
     _mediaLoadTimer?.cancel();
@@ -114,6 +119,8 @@ class RomsScreenController {
 
     // Schedule load after 500ms debounce delay
     _mediaLoadTimer = Timer(const Duration(milliseconds: 500), () async {
+      if (!isMounted()) return;
+
       // Reset navigation flag
       _isNavigating = false;
       onUpdate();
@@ -129,14 +136,16 @@ class RomsScreenController {
         selectedIndex: selectedIndex,
         platformName: platformName,
         onUpdate: onUpdate,
+        isMounted: isMounted,
       );
 
-      // Schedule thumbnail preloading for wider range (±10)
+      // Schedule thumbnail preloading for wider range (±100)
       _scheduleThumbnailPreload(
         filteredItems: filteredItems,
         selectedIndex: selectedIndex,
         platformName: platformName,
         onUpdate: onUpdate,
+        isMounted: isMounted,
       );
     });
   }
@@ -147,21 +156,27 @@ class RomsScreenController {
     required int selectedIndex,
     required String platformName,
     required Function() onUpdate,
+    required bool Function() isMounted,
   }) async {
     if (filteredItems.isEmpty) return;
 
     // Selected item
     final selectedItem = filteredItems[selectedIndex];
     if (selectedItem.isRom) {
-      await loadMediaForItem(selectedItem, platformName, onUpdate);
-      await loadGameInfoForItem(selectedItem, platformName, onUpdate);
+      await loadMediaForItem(selectedItem, platformName, onUpdate, isMounted);
+      await loadGameInfoForItem(
+        selectedItem,
+        platformName,
+        onUpdate,
+        isMounted,
+      );
     }
 
     // Previous item
     if (selectedIndex > 0) {
       final prevItem = filteredItems[selectedIndex - 1];
       if (prevItem.isRom) {
-        await loadMediaForItem(prevItem, platformName, onUpdate);
+        await loadMediaForItem(prevItem, platformName, onUpdate, isMounted);
       }
     }
 
@@ -169,24 +184,25 @@ class RomsScreenController {
     if (selectedIndex < filteredItems.length - 1) {
       final nextItem = filteredItems[selectedIndex + 1];
       if (nextItem.isRom) {
-        await loadMediaForItem(nextItem, platformName, onUpdate);
+        await loadMediaForItem(nextItem, platformName, onUpdate, isMounted);
       }
     }
   }
 
-  /// Preload thumbnails for items in range ±10 (background, low priority)
+  /// Preload thumbnails for items in range ±20/100 (background, low priority)
   void _scheduleThumbnailPreload({
     required List<RomItem> filteredItems,
     required int selectedIndex,
     required String platformName,
     required Function() onUpdate,
+    required bool Function() isMounted,
   }) {
     // For very large lists (>5000 items), reduce preload range to avoid performance issues
-    final preloadRange = filteredItems.length > 5000 ? 5 : 10;
+    final preloadRange = filteredItems.length > 5000 ? 20 : 100;
 
-    // Wait additional 500ms before starting background preload
-    Timer(const Duration(milliseconds: 500), () async {
-      if (_isNavigating) return;
+    // Wait additional 100ms before starting background preload
+    Timer(const Duration(milliseconds: 100), () async {
+      if (!isMounted() || _isNavigating) return;
 
       final startIndex = (selectedIndex - preloadRange).clamp(
         0,
@@ -207,7 +223,7 @@ class RomsScreenController {
 
         final item = filteredItems[i];
         if (item.isRom && !_mediaCache.containsKey(item.name)) {
-          await loadMediaForItem(item, platformName, onUpdate);
+          await loadMediaForItem(item, platformName, onUpdate, isMounted);
           _preloadedThumbnailIndices.add(i);
 
           // Larger delay for very large lists to avoid I/O saturation
