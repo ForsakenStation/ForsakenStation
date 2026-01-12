@@ -162,7 +162,7 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                       height: widget.mediaHeight!,
                     )
                   else
-                    Center(child: PlaceholderImage(size: 200)),
+                    Center(child: PlaceholderImage(size: 100)),
                   const SizedBox(height: 24),
                 ],
 

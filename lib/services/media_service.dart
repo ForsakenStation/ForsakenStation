@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as path;
-import '../models/media.dart';
-import '../models/rom.dart';
-import '../models/rom_item.dart';
+import 'package:forsaken/models/media.dart';
+import 'package:forsaken/models/rom.dart';
+import 'package:forsaken/models/rom_item.dart';
 import 'debug_service.dart';
 
 class MediaService {
@@ -185,44 +185,7 @@ class MediaService {
   }
 
   String _getRomNameWithoutExtension(String fileName) {
-    // Remove common ROM extensions
-    final commonExtensions = [
-      '.zip',
-      '.rar',
-      '.7z',
-      '.gz',
-      '.nes',
-      '.snes',
-      '.sfc',
-      '.n64',
-      '.z64',
-      '.v64',
-      '.gba',
-      '.gbc',
-      '.gb',
-      '.iso',
-      '.cue',
-      '.bin',
-      '.img',
-      '.nds',
-      '.3ds',
-      '.gcm',
-      '.gcz',
-      '.smd',
-      '.md',
-      '.gen',
-      '.txt',
-    ];
-
-    String name = fileName;
-    for (var ext in commonExtensions) {
-      if (name.toLowerCase().endsWith(ext)) {
-        name = name.substring(0, name.length - ext.length);
-        break;
-      }
-    }
-
-    return name;
+    return fileName.substring(0, fileName.lastIndexOf('.'));
   }
 
   Future<Media?> _findMedia(

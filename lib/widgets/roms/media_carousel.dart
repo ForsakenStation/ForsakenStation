@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../models/media.dart';
-import '../../services/debug_service.dart';
+import 'package:forsaken/models/media.dart';
+import 'package:forsaken/services/debug_service.dart';
 import 'fullscreen_image_viewer.dart';
 import 'video_player_screen.dart';
 
@@ -31,13 +31,11 @@ class _MediaCarouselState extends State<MediaCarousel> {
   @override
   void didUpdateWidget(MediaCarousel oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Reload media items if the media changed
     if (oldWidget.media != widget.media) {
       setState(() {
         _currentPage = 0;
         _loadMediaItems();
       });
-      // Reset page controller to first page
       if (_pageController.hasClients) {
         _pageController.jumpToPage(0);
       }
@@ -67,10 +65,6 @@ class _MediaCarouselState extends State<MediaCarousel> {
     if (_mediaItems.isEmpty) {
       return Container(
         height: widget.height,
-        color: Colors.grey[300],
-        child: const Center(
-          child: Icon(Icons.videogame_asset, size: 64, color: Colors.grey),
-        ),
       );
     }
 
@@ -216,7 +210,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 60,
-      ), // Space for nav buttons
+      ),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -224,7 +218,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
             borderRadius: BorderRadius.circular(8),
             child: Image.file(
               File(media.path),
-              key: ValueKey(media.path), // Force reload when path changes
+              key: ValueKey(media.path),
               fit: BoxFit.contain,
             ),
           ),

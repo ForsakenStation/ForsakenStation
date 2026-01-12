@@ -103,13 +103,13 @@ class RomMedia {
 
   List<Media> get allMedia {
     final List<Media> media = [];
+    if (mixImage?.exists ?? false) media.add(mixImage!);
     if (box3d?.exists ?? false) media.add(box3d!);
     if (cover?.exists ?? false) media.add(cover!);
     if (marquee?.exists ?? false) media.add(marquee!);
-    if (screenshot?.exists ?? false) media.add(screenshot!);
-    if (mixImage?.exists ?? false) media.add(mixImage!);
-    if (video?.exists ?? false) media.add(video!);
     if (titlescreen?.exists ?? false) media.add(titlescreen!);
+    if (screenshot?.exists ?? false) media.add(screenshot!);
+    if (video?.exists ?? false) media.add(video!);
     return media;
   }
 
