@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:async';
 
 import 'package:forsaken/screens/roms/roms_carousel_view.dart';
 import 'package:forsaken/screens/roms/roms_grid_view.dart';
@@ -20,6 +21,7 @@ import 'package:forsaken/services/rom_service.dart';
 import 'package:forsaken/services/media_service.dart';
 import 'package:forsaken/services/emulator_service.dart';
 import 'package:forsaken/services/keyboard_service.dart';
+import 'package:forsaken/services/gamepad_service.dart';
 import 'package:forsaken/services/gamelist_service.dart';
 import 'package:forsaken/services/rom_storage_service.dart';
 import 'package:forsaken/widgets/common/theme_selector.dart';
@@ -64,6 +66,7 @@ class _RomsScreenState extends State<RomsScreen> {
   late MediaService _mediaService;
   late EmulatorService _emulatorService;
   late KeyboardService _keyboardService;
+  late GamepadService _gamepadService;
   late GamelistService _gamelistService;
   late RomsScreenController _controller;
   late RomLauncher _romLauncher;
@@ -77,6 +80,7 @@ class _RomsScreenState extends State<RomsScreen> {
   bool _showNavigationHint = true;
   String? _platformLogoPath;
   String? _platformBackgroundPath;
+  Timer? _gamepadPollTimer;
   final _debug = DebugService.instance;
 
   // Platform navigation support
@@ -112,6 +116,7 @@ class _RomsScreenState extends State<RomsScreen> {
     _emulatorService = EmulatorService.instance;
     _gamelistService = GamelistService(gamelistBasePath: gamelistPath);
     _keyboardService = KeyboardService.instance;
+    _gamepadService = GamepadService.instance;
     _controller = RomsScreenController(
       mediaService: _mediaService,
       gamelistService: _gamelistService,
@@ -138,14 +143,181 @@ class _RomsScreenState extends State<RomsScreen> {
     _carouselFocusNode = FocusNode();
     _gridFocusNode = FocusNode();
     _listFocusNode = FocusNode();
+
+    // Setup gamepad connection callback for NEW connections
+    GamepadService.instance.onGamepadConnected = _onGamepadConnected;
+
+    // Check if gamepad is already connected and show toast
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && GamepadService.instance.isGamepadConnected) {
+        _showGamepadToast('Gamepad');
+      }
+    });
+
     _loadPlatformsList();
     _loadItems();
+    _startGamepadPolling();
+  }
+
+  /// Start polling gamepad state periodically
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(
+      const Duration(
+        milliseconds: 50,
+      ), // Reduced from 100ms for better responsiveness
+      (_) => _handleGamepadInput(),
+    );
+  }
+
+  /// Handle gamepad input
+  void _handleGamepadInput() {
+    if (!_gamepadService.isGamepadConnected) return;
+    if (_filteredItems.isEmpty) return;
+
+    // In search mode, only allow B button to exit
+    if (_isSearchMode) {
+      if (_gamepadService.isBackPressed()) {
+        _clearSearch();
+        _gamepadService.updatePreviousButtonStates();
+      }
+      return;
+    }
+
+    // Handle selection (A button)
+    if (_gamepadService.isSelectPressed()) {
+      _handleSelection();
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    // Handle back (B button)
+    if (_gamepadService.isBackPressed()) {
+      _navigateBack();
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    // Handle search (X button)
+    if (_gamepadService.isSearchPressed()) {
+      _activateSearchMode();
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    // Handle help (Y button)
+    if (_gamepadService.isHelpPressed()) {
+      _showHelpDialog();
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    // Handle view toggle (Right stick click)
+    if (_gamepadService.isViewTogglePressed()) {
+      _toggleViewMode();
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    // Handle navigation based on view mode
+    if (_viewMode == ViewMode.grid) {
+      _handleGamepadGridNavigation();
+    } else if (_viewMode == ViewMode.list) {
+      _handleGamepadListNavigation();
+    } else {
+      _handleGamepadCarouselNavigation();
+    }
+
+    // Update previous states after handling all inputs
+    _gamepadService.updatePreviousButtonStates();
+  }
+
+  /// Handle gamepad navigation in grid mode
+  void _handleGamepadGridNavigation() {
+    final columns = _calculateCrossAxisCount(context);
+    final newIndex = _gamepadService.handleGridNavigation(
+      currentIndex: _selectedIndex,
+      itemCount: _filteredItems.length,
+      columns: columns,
+    );
+
+    if (newIndex != null && newIndex != _selectedIndex) {
+      setState(() {
+        _selectedIndex = newIndex;
+        _showNavigationHint = false;
+      });
+      _scrollToIndexInGrid(newIndex, columns);
+      _scheduleMediaLoad();
+    }
+  }
+
+  /// Handle gamepad navigation in list mode
+  void _handleGamepadListNavigation() {
+    final newIndex = _gamepadService.handleListNavigation(
+      currentIndex: _selectedIndex,
+      itemCount: _filteredItems.length,
+    );
+
+    if (newIndex != null && newIndex != _selectedIndex) {
+      setState(() {
+        _selectedIndex = newIndex;
+        _showNavigationHint = false;
+      });
+      _scrollToIndexInList(newIndex);
+      _scheduleMediaLoad();
+    }
+  }
+
+  /// Handle gamepad navigation in carousel mode
+  void _handleGamepadCarouselNavigation() {
+    final newIndex = _gamepadService.handleCarouselNavigation(
+      currentIndex: _selectedIndex,
+      itemCount: _filteredItems.length,
+      loop: true,
+    );
+
+    if (newIndex != null && newIndex != _selectedIndex) {
+      setState(() {
+        _selectedIndex = newIndex;
+        _showNavigationHint = false;
+      });
+      _scrollToCarouselIndex(newIndex);
+      _scheduleMediaLoad();
+    }
+  }
+
+  /// Show gamepad connected toast
+  void _showGamepadToast(String gamepadName) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('🎮 Mando conectado: $gamepadName'),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.green.shade700,
+      ),
+    );
+  }
+
+  /// Called when a gamepad is connected
+  void _onGamepadConnected(String gamepadName) {
+    if (!mounted) return;
+
+    debugPrint('🎮 Gamepad connected in ROMs screen: $gamepadName');
+
+    // Use post-frame callback to ensure ScaffoldMessenger is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _showGamepadToast(gamepadName);
+      }
+    });
   }
 
   /// Load list of all platforms for lateral navigation
   Future<void> _loadPlatformsList() async {
     try {
       final platforms = await widget.romService.loadPlatforms();
+      if (!mounted) return; // Check mounted before setState
       setState(() {
         _allPlatforms = platforms;
         _currentPlatformIndex = platforms.indexWhere(
@@ -202,8 +374,12 @@ class _RomsScreenState extends State<RomsScreen> {
 
   @override
   void dispose() {
-    // Cancel media load timer and dispose controller
+    // Cancel timers
+    _stopGamepadPolling();
     _controller.dispose();
+
+    // Clear gamepad callback
+    GamepadService.instance.onGamepadConnected = null;
 
     // Clear platform cache when leaving the screen to free up memory
     if (widget.platform.isJsonlPlatform) {
@@ -221,7 +397,14 @@ class _RomsScreenState extends State<RomsScreen> {
     super.dispose();
   }
 
+  /// Stop polling gamepad state
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
+
   Future<void> _loadItems() async {
+    if (!mounted) return;
     setState(() {
       _isLoading = true;
     });
@@ -293,6 +476,7 @@ class _RomsScreenState extends State<RomsScreen> {
       });
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
         _requestFocusForCurrentViewMode();
         // Load initial media for visible items
         if (_filteredItems.isNotEmpty) {
@@ -351,7 +535,9 @@ class _RomsScreenState extends State<RomsScreen> {
     });
     // Request focus after the widget rebuilds
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _searchFocusNode.requestFocus();
+      if (mounted) {
+        _searchFocusNode.requestFocus();
+      }
     });
   }
 
@@ -487,6 +673,7 @@ class _RomsScreenState extends State<RomsScreen> {
 
     // Request focus for the new view mode after the widget rebuilds
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       _requestFocusForCurrentViewMode();
       _requestScrollToIndexCurrentViewMode();
       // Load media for the new view
@@ -537,10 +724,15 @@ class _RomsScreenState extends State<RomsScreen> {
       return true;
     }
     if (key == LogicalKeyboardKey.tab) {
+      _stopGamepadPolling();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const SettingsScreen()),
-      );
+      ).then((_) {
+        if (mounted) {
+          _startGamepadPolling();
+        }
+      });
       return true;
     }
     return false;
@@ -593,8 +785,16 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   /// Show help dialog with keyboard shortcuts
-  void _showHelpDialog() {
-    HelpDialog.show(context, showSearchShortcut: true);
+  void _showHelpDialog() async {
+    // Pause gamepad polling while dialog is open
+    _stopGamepadPolling();
+
+    await HelpDialog.show(context, showSearchShortcut: true);
+
+    // Resume gamepad polling after dialog closes
+    if (mounted) {
+      _startGamepadPolling();
+    }
   }
 
   /// Handle alphabetical jump based on current view mode
@@ -812,29 +1012,45 @@ class _RomsScreenState extends State<RomsScreen> {
                     onPressed: _navigateBack,
                   ),
                   title: _isSearchMode
-                      ? TextField(
-                          controller: _searchController,
-                          focusNode: _searchFocusNode,
-                          autofocus: true,
-                          decoration: InputDecoration(
-                            hintText: 'Search ROMs...',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(color: Colors.white),
-                            suffixIcon: IconButton(
-                              icon: const Icon(
-                                Icons.keyboard,
-                                color: Colors.white70,
+                      ? Focus(
+                          onKeyEvent: (node, event) {
+                            // Exit search mode on ESC key
+                            if (event is KeyDownEvent &&
+                                event.logicalKey == LogicalKeyboardKey.escape) {
+                              _clearSearch();
+                              return KeyEventResult.handled;
+                            }
+                            return KeyEventResult.ignored;
+                          },
+                          child: TextField(
+                            controller: _searchController,
+                            focusNode: _searchFocusNode,
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              hintText: 'Search ROMs... (ESC to exit)',
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(color: Colors.white),
+                              suffixIcon: IconButton(
+                                icon: const Icon(
+                                  Icons.keyboard,
+                                  color: Colors.white70,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _showVirtualKeyboard =
+                                        !_showVirtualKeyboard;
+                                  });
+                                },
+                                tooltip: 'Toggle virtual keyboard',
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _showVirtualKeyboard = !_showVirtualKeyboard;
-                                });
-                              },
-                              tooltip: 'Toggle virtual keyboard',
                             ),
+                            style: TextStyle(color: Colors.white),
+                            onChanged: _onSearchChanged,
+                            onSubmitted: (_) {
+                              // Close search on submit
+                              _clearSearch();
+                            },
                           ),
-                          style: TextStyle(color: Colors.white),
-                          onChanged: _onSearchChanged,
                         )
                       : _buildTitile(),
                   actions: _buildAppBarActions(context),
@@ -1119,6 +1335,9 @@ class _RomsScreenState extends State<RomsScreen> {
     _loadMediaForItem(item);
     _loadGameInfoForItem(item);
 
+    // Pause gamepad polling while dialog is open
+    _stopGamepadPolling();
+
     await RomDetailDialog.show(
       context: context,
       item: item,
@@ -1127,6 +1346,11 @@ class _RomsScreenState extends State<RomsScreen> {
       onPlay: () => _handleRomLaunch(item),
       onClose: _requestFocusForCurrentViewMode,
     );
+
+    // Resume gamepad polling after dialog closes
+    if (mounted) {
+      _startGamepadPolling();
+    }
   }
 
   /// Show media in fullscreen dialog

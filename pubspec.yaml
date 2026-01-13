@@ -22,18 +22,18 @@ dependencies:
   shared_preferences: ^2.5.4
   window_manager: ^0.5.1
   file_picker: ^10.3.8
-  google_fonts: ^7.0.0
+  google_fonts: ^7.0.2
   xml: ^6.6.1
   archive: ^4.0.7
   gamepads: ^0.1.9
-  pdfrx: ^1.0.88
+  pdfrx: ^2.2.24
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  flutter_launcher_icons: ^0.14.2
-  flutter_native_splash: ^2.4.3
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.7
 
 flutter:
   uses-material-design: true

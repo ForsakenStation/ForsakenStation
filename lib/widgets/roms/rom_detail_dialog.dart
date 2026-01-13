@@ -1,14 +1,17 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/game_info.dart';
 import 'package:forsaken/screens/pdf_viewer_screen.dart';
+import 'package:forsaken/services/gamepad_service.dart';
 import 'package:forsaken/widgets/roms/media_carousel.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
 import 'package:forsaken/widgets/common/info_row.dart';
 
 /// Dialog showing detailed information about a ROM
-class RomDetailDialog extends StatelessWidget {
+class RomDetailDialog extends StatefulWidget {
   final RomItem item;
   final RomMedia? media;
   final GameInfo? gameInfo;
@@ -43,7 +46,75 @@ class RomDetailDialog extends StatelessWidget {
   }
 
   @override
+  State<RomDetailDialog> createState() => _RomDetailDialogState();
+}
+
+class _RomDetailDialogState extends State<RomDetailDialog> {
+  final _gamepadService = GamepadService.instance;
+  final _playButtonFocusNode = FocusNode();
+  Timer? _gamepadPollTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Request focus on Play button after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _playButtonFocusNode.requestFocus();
+      }
+    });
+    // Start gamepad polling
+    _startGamepadPolling();
+  }
+
+  @override
+  void dispose() {
+    _stopGamepadPolling();
+    _playButtonFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(
+      const Duration(milliseconds: 50),
+      (_) => _handleGamepadInput(),
+    );
+  }
+
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
+
+  void _handleGamepadInput() {
+    if (!_gamepadService.isGamepadConnected) return;
+
+    // A button = Play
+    if (_gamepadService.isSelectPressed()) {
+      _playRom();
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    // B button = Close dialog
+    if (_gamepadService.isBackPressed()) {
+      Navigator.pop(context);
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    _gamepadService.updatePreviousButtonStates();
+  }
+
+  void _playRom() {
+    Navigator.pop(context);
+    widget.onPlay();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final hasGamepad = _gamepadService.isGamepadConnected;
+
     return Dialog(
       child: Container(
         constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700),
@@ -51,7 +122,7 @@ class RomDetailDialog extends StatelessWidget {
           children: [
             // Header
             AppBar(
-              title: Text(gameInfo?.name ?? item.displayName),
+              title: Text(widget.gameInfo?.name ?? widget.item.displayName),
               leading: IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () => Navigator.pop(context),
@@ -66,8 +137,8 @@ class RomDetailDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Media carousel or placeholder
-                    if (media != null)
-                      MediaCarousel(media: media!, height: 400)
+                    if (widget.media != null)
+                      MediaCarousel(media: widget.media!, height: 400)
                     else
                       const Center(child: PlaceholderImage(size: 300)),
                     const SizedBox(height: 16),
@@ -76,7 +147,7 @@ class RomDetailDialog extends StatelessWidget {
                     InfoRow(
                       label: 'Description',
                       value:
-                          gameInfo?.desc ??
+                          widget.gameInfo?.desc ??
                           'No description available for this ROM.',
                     ),
                     const SizedBox(height: 16),
@@ -88,7 +159,7 @@ class RomDetailDialog extends StatelessWidget {
                           child: InfoRow(
                             label: 'Release Date',
                             value:
-                                gameInfo?.releaseDate?.toString().split(
+                                widget.gameInfo?.releaseDate?.toString().split(
                                   ' ',
                                 )[0] ??
                                 '',
@@ -98,7 +169,7 @@ class RomDetailDialog extends StatelessWidget {
                         Expanded(
                           child: InfoRow(
                             label: 'Developer',
-                            value: gameInfo?.developer ?? '',
+                            value: widget.gameInfo?.developer ?? '',
                           ),
                         ),
                       ],
@@ -111,14 +182,14 @@ class RomDetailDialog extends StatelessWidget {
                         Expanded(
                           child: InfoRow(
                             label: 'Publisher',
-                            value: gameInfo?.publisher ?? '',
+                            value: widget.gameInfo?.publisher ?? '',
                           ),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: InfoRow(
                             label: 'Genre',
-                            value: gameInfo?.genre ?? '',
+                            value: widget.gameInfo?.genre ?? '',
                           ),
                         ),
                       ],
@@ -131,14 +202,14 @@ class RomDetailDialog extends StatelessWidget {
                         Expanded(
                           child: InfoRow(
                             label: 'Players',
-                            value: gameInfo?.playersText ?? '',
+                            value: widget.gameInfo?.playersText ?? '',
                           ),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: InfoRow(
                             label: 'Rating',
-                            value: gameInfo?.ratingPercentage ?? '--',
+                            value: widget.gameInfo?.ratingPercentage ?? '--',
                           ),
                         ),
                       ],
@@ -155,16 +226,16 @@ class RomDetailDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Manual button (if manual PDF exists)
-                  if (media?.manualPath != null &&
-                      media!.manualPath!.toLowerCase().endsWith('.pdf'))
+                  if (widget.media?.manualPath != null &&
+                      widget.media!.manualPath!.toLowerCase().endsWith('.pdf'))
                     ElevatedButton.icon(
                       onPressed: () async {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => PdfViewerScreen(
-                              pdfPath: media!.manualPath!,
-                              title: '${item.displayName} - Manual',
+                              pdfPath: widget.media!.manualPath!,
+                              title: '${widget.item.displayName} - Manual',
                             ),
                           ),
                         );
@@ -188,17 +259,53 @@ class RomDetailDialog extends StatelessWidget {
                         child: const Text('Cancel'),
                       ),
                       const SizedBox(width: 16),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          onPlay();
+                      Focus(
+                        focusNode: _playButtonFocusNode,
+                        onKeyEvent: (node, event) {
+                          // Handle Enter and Space keys
+                          if (event is KeyDownEvent &&
+                              (event.logicalKey == LogicalKeyboardKey.enter ||
+                                  event.logicalKey ==
+                                      LogicalKeyboardKey.space)) {
+                            _playRom();
+                            return KeyEventResult.handled;
+                          }
+                          return KeyEventResult.ignored;
                         },
-                        icon: const Icon(Icons.gamepad),
-                        label: const Text('Play'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 16,
+                        child: ElevatedButton(
+                          onPressed: _playRom,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 16,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Show gamepad button icon if gamepad connected
+                              if (hasGamepad) ...[
+                                Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green.shade700,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Text(
+                                    'A',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              ],
+                              const Icon(Icons.gamepad),
+                              const SizedBox(width: 8),
+                              const Text('Play'),
+                            ],
                           ),
                         ),
                       ),

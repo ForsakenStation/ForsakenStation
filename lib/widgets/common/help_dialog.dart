@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:forsaken/services/gamepad_service.dart';
 
 /// Help dialog that shows keyboard and gamepad controls for the application
 /// Can be configured for different screens (Platforms or ROMs)
-class HelpDialog extends StatelessWidget {
+class HelpDialog extends StatefulWidget {
   final bool showSearchShortcut;
   final bool showPlatformInfoShortcut;
 
@@ -13,7 +16,84 @@ class HelpDialog extends StatelessWidget {
   });
 
   @override
+  State<HelpDialog> createState() => _HelpDialogState();
+
+  /// Show help dialog
+  static Future<void> show(
+    BuildContext context, {
+    bool showSearchShortcut = false,
+    bool showPlatformInfoShortcut = false,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (context) => HelpDialog(
+        showSearchShortcut: showSearchShortcut,
+        showPlatformInfoShortcut: showPlatformInfoShortcut,
+      ),
+    );
+  }
+}
+
+class _HelpDialogState extends State<HelpDialog> {
+  final _gamepadService = GamepadService.instance;
+  final _closeButtonFocusNode = FocusNode();
+  Timer? _gamepadPollTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Request focus on close button after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _closeButtonFocusNode.requestFocus();
+      }
+    });
+    _startGamepadPolling();
+  }
+
+  @override
+  void dispose() {
+    _stopGamepadPolling();
+    _closeButtonFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(
+      const Duration(milliseconds: 50),
+      (_) => _handleGamepadInput(),
+    );
+  }
+
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
+
+  void _handleGamepadInput() {
+    if (!_gamepadService.isGamepadConnected) return;
+
+    // B button = Close dialog
+    if (_gamepadService.isBackPressed()) {
+      Navigator.pop(context);
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    // A button = Close dialog (same as "Got it!")
+    if (_gamepadService.isSelectPressed()) {
+      Navigator.pop(context);
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    _gamepadService.updatePreviousButtonStates();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final hasGamepad = _gamepadService.isGamepadConnected;
+
     return Dialog(
       child: Container(
         constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
@@ -79,14 +159,14 @@ class HelpDialog extends StatelessWidget {
                     const SizedBox(height: 24),
                     _buildSection(context, 'Actions', Icons.touch_app, [
                       _ShortcutItem('Enter / Space', 'Select item'),
-                      _ShortcutItem('A Button / Start', 'Gamepad select'),
+                      _ShortcutItem('A Button', 'Gamepad select'),
                       _ShortcutItem(
                         'Escape',
-                        showSearchShortcut
+                        widget.showSearchShortcut
                             ? 'Go back / Close dialogs'
                             : 'Exit application',
                       ),
-                      _ShortcutItem('B Button / Select', 'Gamepad back'),
+                      _ShortcutItem('B Button', 'Gamepad back / Close dialogs'),
                     ]),
                     const SizedBox(height: 24),
                     _buildSection(context, 'View Controls', Icons.view_module, [
@@ -94,18 +174,19 @@ class HelpDialog extends StatelessWidget {
                         'V',
                         'Toggle view mode (Grid/List/Carousel)',
                       ),
-                      _ShortcutItem('Y Button', 'Gamepad view toggle'),
+                      _ShortcutItem('Right Stick Click', 'Gamepad view toggle'),
                       _ShortcutItem('R', 'Refresh current view'),
-                      if (showPlatformInfoShortcut)
+                      if (widget.showPlatformInfoShortcut)
                         _ShortcutItem('I', 'Show platform information'),
-                      if (showSearchShortcut)
+                      if (widget.showSearchShortcut)
                         _ShortcutItem('S', 'Activate search'),
-                      if (showSearchShortcut)
+                      if (widget.showSearchShortcut)
                         _ShortcutItem('X Button', 'Gamepad search'),
                     ]),
                     const SizedBox(height: 24),
                     _buildSection(context, 'Help', Icons.info_outline, [
                       _ShortcutItem('?', 'Show this help dialog'),
+                      _ShortcutItem('Y Button', 'Gamepad help'),
                     ]),
                     const SizedBox(height: 24),
                     // Tips section
@@ -164,12 +245,49 @@ class HelpDialog extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Focus(
+                  focusNode: _closeButtonFocusNode,
+                  onKeyEvent: (node, event) {
+                    // Handle Enter and Space keys
+                    if (event is KeyDownEvent &&
+                        (event.logicalKey == LogicalKeyboardKey.enter ||
+                            event.logicalKey == LogicalKeyboardKey.space ||
+                            event.logicalKey == LogicalKeyboardKey.escape)) {
+                      Navigator.of(context).pop();
+                      return KeyEventResult.handled;
+                    }
+                    return KeyEventResult.ignored;
+                  },
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (hasGamepad) ...[
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade700,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Text(
+                              'B',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                        const Text('Got it!'),
+                      ],
+                    ),
                   ),
-                  child: const Text('Got it!'),
                 ),
               ),
             ),
@@ -248,21 +366,6 @@ class HelpDialog extends StatelessWidget {
           const Text('• ', style: TextStyle(fontSize: 14)),
           Expanded(child: Text(tip, style: const TextStyle(fontSize: 14))),
         ],
-      ),
-    );
-  }
-
-  /// Show help dialog
-  static void show(
-    BuildContext context, {
-    bool showSearchShortcut = false,
-    bool showPlatformInfoShortcut = false,
-  }) {
-    showDialog(
-      context: context,
-      builder: (context) => HelpDialog(
-        showSearchShortcut: showSearchShortcut,
-        showPlatformInfoShortcut: showPlatformInfoShortcut,
       ),
     );
   }

@@ -1,17 +1,82 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:forsaken/services/gamepad_service.dart';
 import '../../models/rom_item.dart';
 import '../common/placeholder_image.dart';
 
 /// Dialog asking if user wants to save the ROM permanently
-class SaveRomDialog extends StatelessWidget {
+class SaveRomDialog extends StatefulWidget {
   final RomItem item;
   final String? imagePath;
 
   const SaveRomDialog({super.key, required this.item, this.imagePath});
 
   @override
+  State<SaveRomDialog> createState() => _SaveRomDialogState();
+}
+
+class _SaveRomDialogState extends State<SaveRomDialog> {
+  final _gamepadService = GamepadService.instance;
+  final _saveButtonFocusNode = FocusNode();
+  Timer? _gamepadPollTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Request focus on Save button after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _saveButtonFocusNode.requestFocus();
+      }
+    });
+    _startGamepadPolling();
+  }
+
+  @override
+  void dispose() {
+    _stopGamepadPolling();
+    _saveButtonFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(
+      const Duration(milliseconds: 50),
+      (_) => _handleGamepadInput(),
+    );
+  }
+
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
+
+  void _handleGamepadInput() {
+    if (!_gamepadService.isGamepadConnected) return;
+
+    // A button = Save
+    if (_gamepadService.isSelectPressed()) {
+      Navigator.pop(context, true);
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    // B button = Not Now (close dialog)
+    if (_gamepadService.isBackPressed()) {
+      Navigator.pop(context, false);
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
+    _gamepadService.updatePreviousButtonStates();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final hasGamepad = _gamepadService.isGamepadConnected;
+
     return Dialog(
       child: Container(
         constraints: const BoxConstraints(maxWidth: 500),
@@ -38,7 +103,7 @@ class SaveRomDialog extends StatelessWidget {
             const SizedBox(height: 16),
 
             // ROM Image (if available)
-            if (imagePath != null)
+            if (widget.imagePath != null)
               Container(
                 constraints: const BoxConstraints(
                   maxHeight: 150,
@@ -48,7 +113,7 @@ class SaveRomDialog extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.file(
-                    File(imagePath!),
+                    File(widget.imagePath!),
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {
                       return PlaceholderImage(size: 100);
@@ -64,7 +129,7 @@ class SaveRomDialog extends StatelessWidget {
 
             // ROM Name
             Text(
-              item.displayName,
+              widget.item.displayName,
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
@@ -106,25 +171,88 @@ class SaveRomDialog extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton.icon(
+                  child: OutlinedButton(
                     onPressed: () => Navigator.pop(context, false),
-                    icon: const Icon(Icons.close),
-                    label: const Text('Not Now'),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (hasGamepad) ...[
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade700,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Text(
+                              'B',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                        const Icon(Icons.close),
+                        const SizedBox(width: 8),
+                        const Text('Not Now'),
+                      ],
                     ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () => Navigator.pop(context, true),
-                    icon: const Icon(Icons.save),
-                    label: const Text('Save'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Focus(
+                    focusNode: _saveButtonFocusNode,
+                    onKeyEvent: (node, event) {
+                      // Handle Enter and Space keys
+                      if (event is KeyDownEvent &&
+                          (event.logicalKey == LogicalKeyboardKey.enter ||
+                              event.logicalKey == LogicalKeyboardKey.space)) {
+                        Navigator.pop(context, true);
+                        return KeyEventResult.handled;
+                      }
+                      return KeyEventResult.ignored;
+                    },
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(
+                          context,
+                        ).colorScheme.onPrimary,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (hasGamepad) ...[
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade700,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Text(
+                                'A',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                          const Icon(Icons.save),
+                          const SizedBox(width: 8),
+                          const Text('Save'),
+                        ],
+                      ),
                     ),
                   ),
                 ),

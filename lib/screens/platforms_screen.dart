@@ -33,7 +33,8 @@ class PlatformsScreen extends StatefulWidget {
   State<PlatformsScreen> createState() => _PlatformsScreenState();
 }
 
-class _PlatformsScreenState extends State<PlatformsScreen> {
+class _PlatformsScreenState extends State<PlatformsScreen>
+    with WidgetsBindingObserver, RouteAware {
   List<Platform> _platforms = [];
   bool _isLoading = true;
   String? _errorMessage;
@@ -68,13 +69,53 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     _gridScrollController = ScrollController();
     _carouselFocusNode = FocusNode();
     _gridFocusNode = FocusNode();
+
+    // Setup gamepad connection callback for NEW connections
+    _gamepadService.onGamepadConnected = _onGamepadConnected;
+
+    // Check if gamepad is already connected and show toast
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _gamepadService.isGamepadConnected) {
+        _showGamepadToast('Gamepad');
+      }
+    });
+
     _loadPlatforms();
     _startGamepadPolling();
   }
 
+  /// Show gamepad connected toast
+  void _showGamepadToast(String gamepadName) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('🎮 Mando conectado: $gamepadName'),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.green.shade700,
+      ),
+    );
+  }
+
+  /// Called when a gamepad is connected
+  void _onGamepadConnected(String gamepadName) {
+    if (!mounted) return;
+
+    debugPrint('🎮 Gamepad connected: $gamepadName');
+
+    // Use post-frame callback to ensure ScaffoldMessenger is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _showGamepadToast(gamepadName);
+      }
+    });
+  }
+
   @override
   void dispose() {
-    _gamepadPollTimer?.cancel();
+    _stopGamepadPolling();
+    _gamepadService.onGamepadConnected = null; // Clear callback
     _carouselController.dispose();
     _gridScrollController.dispose();
     _carouselFocusNode.dispose();
@@ -82,10 +123,18 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     super.dispose();
   }
 
+  /// Stop polling gamepad state
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
+
   /// Start polling gamepad state periodically
   void _startGamepadPolling() {
     _gamepadPollTimer = Timer.periodic(
-      const Duration(milliseconds: 100),
+      const Duration(
+        milliseconds: 50,
+      ), // Reduced from 100ms for better responsiveness
       (_) => _handleGamepadInput(),
     );
   }
@@ -98,24 +147,28 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     // Handle selection (A button or Start)
     if (_gamepadService.isSelectPressed()) {
       _handleSelection();
+      _gamepadService.updatePreviousButtonStates();
       return;
     }
 
     // Handle back (B button or Select)
     if (_gamepadService.isBackPressed()) {
       _showExitDialog();
+      _gamepadService.updatePreviousButtonStates();
       return;
     }
 
     // Handle view toggle (Y button)
     if (_gamepadService.isViewTogglePressed()) {
       _toggleViewMode();
+      _gamepadService.updatePreviousButtonStates();
       return;
     }
 
     // Handle help (X button for help)
     if (_gamepadService.isHelpPressed()) {
       _showHelpDialog();
+      _gamepadService.updatePreviousButtonStates();
       return;
     }
 
@@ -125,6 +178,9 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     } else {
       _handleGamepadCarouselNavigation();
     }
+
+    // Update previous states after handling all inputs
+    _gamepadService.updatePreviousButtonStates();
   }
 
   /// Handle gamepad navigation in grid mode
@@ -212,7 +268,9 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
 
         // Request focus after loading platforms
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _requestFocusForCurrentViewMode();
+          if (mounted) {
+            _requestFocusForCurrentViewMode();
+          }
         });
       }
     } catch (e) {
@@ -348,7 +406,9 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
 
     // Request focus for the new view mode after the widget rebuilds
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _requestFocusForCurrentViewMode();
+      if (mounted) {
+        _requestFocusForCurrentViewMode();
+      }
     });
   }
 
@@ -384,10 +444,15 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
       return true;
     }
     if (key == LogicalKeyboardKey.tab) {
+      _stopGamepadPolling();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const SettingsScreen()),
-      );
+      ).then((_) {
+        if (mounted) {
+          _startGamepadPolling();
+        }
+      });
       return true;
     }
     return false;
@@ -438,12 +503,20 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
   }
 
   /// Show help dialog with keyboard shortcuts
-  void _showHelpDialog() {
-    HelpDialog.show(
+  void _showHelpDialog() async {
+    // Pause gamepad polling while dialog is open
+    _stopGamepadPolling();
+
+    await HelpDialog.show(
       context,
       showSearchShortcut: false,
       showPlatformInfoShortcut: true,
     );
+
+    // Resume gamepad polling after dialog closes
+    if (mounted) {
+      _startGamepadPolling();
+    }
   }
 
   /// Show platform information dialog
@@ -874,9 +947,13 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
     return 2;
   }
 
-  void _navigateToRoms(Platform platform) {
+  void _navigateToRoms(Platform platform) async {
     final isCollection = _isCollection(platform);
-    Navigator.push(
+
+    // Stop gamepad polling to avoid handler overlap
+    _stopGamepadPolling();
+
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => RomsScreen(
@@ -886,9 +963,17 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
         ),
       ),
     );
+
+    // Resume gamepad polling when returning
+    if (mounted) {
+      _startGamepadPolling();
+    }
   }
 
   Future<void> _showExitDialog() async {
+    // Pause gamepad polling while dialog is open
+    _stopGamepadPolling();
+
     final shouldExit = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -906,6 +991,11 @@ class _PlatformsScreenState extends State<PlatformsScreen> {
         ],
       ),
     );
+
+    // Resume gamepad polling after dialog closes
+    if (mounted) {
+      _startGamepadPolling();
+    }
 
     if (shouldExit == true && mounted) {
       Navigator.of(context).pop();

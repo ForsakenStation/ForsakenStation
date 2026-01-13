@@ -123,9 +123,9 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     }
 
     // L2/R2 - Zoom
-    if (_gamepadService.isButtonPressed(GamepadService.buttonLT)) {
+    if (_gamepadService.isLeftTriggerPressed()) {
       _zoomOut();
-    } else if (_gamepadService.isButtonPressed(GamepadService.buttonRT)) {
+    } else if (_gamepadService.isRightTriggerPressed()) {
       _zoomIn();
     }
 

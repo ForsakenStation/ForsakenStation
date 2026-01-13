@@ -6,6 +6,7 @@ import 'settings_categories/rom_database_screen.dart';
 import 'settings_categories/rom_storage_management_screen.dart';
 import 'settings_categories/download_manager_screen.dart';
 import 'settings_categories/system_check_screen.dart';
+import 'gamepad_test_screen.dart';
 import '../../services/debug_service.dart';
 import '../services/keyboard_service.dart';
 
@@ -184,6 +185,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const SystemCheckScreen(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+
+            _buildCategoryCard(
+              context,
+              icon: Icons.gamepad,
+              title: 'Gamepad Test & Debug',
+              description:
+                  'Test gamepad buttons, axes, and troubleshoot issues',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GamepadTestScreen(),
                   ),
                 );
               },
