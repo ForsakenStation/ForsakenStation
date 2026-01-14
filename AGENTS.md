@@ -2,15 +2,40 @@
 
 ## ⚠️ CRITICAL GIT POLICY ⚠️
 
-**NEVER CREATE GIT COMMITS UNLESS EXPLICITLY REQUESTED BY THE USER**
+**ABSOLUTELY NEVER USE ANY GIT COMMANDS WITHOUT EXPLICIT USER PERMISSION**
 
-- ❌ DO NOT commit after completing tasks
-- ❌ DO NOT commit after running tests
-- ❌ DO NOT commit "to save progress"
-- ❌ DO NOT commit proactively
-- ✅ ONLY commit when the user explicitly asks: "commit these changes", "create a commit", "git commit", etc.
+### PROHIBITED Git Commands:
+- ❌ **NEVER** run `git commit` 
+- ❌ **NEVER** run `git add`
+- ❌ **NEVER** run `git checkout`
+- ❌ **NEVER** run `git stash` (especially `git stash drop`)
+- ❌ **NEVER** run `git reset`
+- ❌ **NEVER** run `git rebase`
+- ❌ **NEVER** run `git push`
+- ❌ **NEVER** run ANY destructive git operation
+- ❌ **NEVER** suggest or execute git commands proactively
 
-**This is CRITICAL** - The user needs to review changes before they are committed. Creating commits without permission makes it harder to review what changed and is considered overstepping boundaries.
+### ALLOWED Git Commands (Read-only):
+- ✅ `git status` - Only when explicitly requested
+- ✅ `git diff` - Only when explicitly requested  
+- ✅ `git log` - Only when explicitly requested
+
+### The ONLY Exception:
+- User explicitly says: "commit this", "create a commit", "git commit", "push to remote", etc.
+- Even then, CONFIRM before executing destructive commands
+
+**WHY THIS IS CRITICAL**: Running git commands without permission can cause MASSIVE data loss. The user MUST review all changes before committing. NEVER assume the user wants changes committed, even after tests pass or builds succeed.
+
+## 💬 COMMUNICATION STYLE
+
+**BE CONCISE TO SAVE TOKENS:**
+- Short, direct responses
+- No verbose explanations unless asked
+- No emoji unless requested
+- No unnecessary context
+- Get straight to the point
+- Use bullet points over paragraphs
+- Omit pleasantries and filler words
 
 ## Project Overview
 Flutter-based multi-platform emulator frontend that manages ROM files and launches emulators. ROMs are organized by platform, with metadata stored in text files containing download URLs. Media assets (images, videos) are organized separately by platform and type.

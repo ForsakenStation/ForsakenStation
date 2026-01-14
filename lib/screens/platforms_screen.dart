@@ -976,19 +976,27 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
     final shouldExit = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Exit Application'),
-        content: const Text('Are you sure you want to exit?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+      barrierDismissible: false,
+      barrierColor: Colors.black.withValues(alpha: 0.7),
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Focus(
+          autofocus: true,
+          child: AlertDialog(
+            title: const Text('Exit Application'),
+            content: const Text('Are you sure you want to exit?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: const Text('Exit'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => SystemNavigator.pop(),
-            child: const Text('Exit'),
-          ),
-        ],
+        ),
       ),
     );
 

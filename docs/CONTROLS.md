@@ -179,7 +179,11 @@ D-pad Y              7     -1.0 a +1.0    Navegación V
 | Y | Mostrar ayuda |
 | RS Click | Cambiar modo de vista |
 
-**⚠️ Nota:** El mando NO funciona durante el modo búsqueda. Usa el teclado para escribir y navegar en búsqueda.
+**⚠️ Nota sobre Modo Búsqueda:**
+- Durante la búsqueda, usa el **teclado** para escribir
+- Presiona **Ⓑ (B button)** o **ESC** para salir del modo búsqueda
+- Los demás botones del mando están deshabilitados durante la búsqueda
+- El fondo NO se mueve con el mando mientras buscas
 
 ---
 
@@ -207,7 +211,151 @@ D-pad Y              7     -1.0 a +1.0    Navegación V
 
 ---
 
-### 🧪 Pantalla de Debug del Gamepad
+### 💬 Diálogos con Soporte de Mando
+
+Todos los diálogos principales soportan navegación con mando y muestran indicadores visuales:
+
+#### Diálogos Implementados (✅)
+
+| Diálogo | Gamepad | Teclado | Blur/Focus | Indicadores |
+|---------|---------|---------|------------|-------------|
+| **Ayuda (Help)** | Ⓐ/Ⓑ Cerrar | ESC/Enter | ✅ | Ⓐ verde, Ⓑ rojo |
+| **Detalle de ROM** | Ⓐ Jugar, Ⓑ Cerrar, D-pad navegar | Enter/ESC | ✅ | Ⓐ verde, Ⓑ rojo |
+| **Guardar ROM** | Ⓐ Guardar, Ⓑ Cancelar | Enter/ESC | ✅ | Ⓐ verde, Ⓑ rojo |
+| **Selección Emulador** | Ⓐ Seleccionar, Ⓑ Cancelar, D-pad lista | Enter/ESC | ✅ | Ⓐ verde, Ⓑ rojo |
+
+**Características especiales de los diálogos implementados:**
+- 🔒 **Focus trap:** Los diálogos capturan todo el input (el fondo NO responde)
+- 🌫️ **Blur effect:** El fondo se difumina (5px gaussian blur) cuando un diálogo está abierto
+- 🎯 **Auto-focus:** El botón principal recibe foco automáticamente al abrir
+- ⏸️ **Polling pausado:** Las pantallas de fondo pausan su polling de mando
+- 🎮 **Edge detection:** Los botones no se repiten si mantienes presionado
+
+#### Diálogos Pendientes (❌ Sin gamepad implementado)
+
+| Diálogo | Teclado | Blur | Notas |
+|---------|---------|------|-------|
+| **Info de Plataforma** | ESC cierra | ❌ | Falta: Ⓑ cerrar, blur background |
+| **Error Dialog** | ESC cierra | ❌ | Falta: Ⓐ/Ⓑ botones, blur background |
+| **Launch Progress** | Click Cancel | ❌ | Falta: Ⓑ cancelar descarga, blur |
+
+**Próximos pasos para diálogos pendientes:**
+1. Añadir blur + focus trap (patrón estándar)
+2. Añadir polling de gamepad (50ms timer)
+3. Mapear botones Ⓐ/Ⓑ según acción
+4. Añadir indicadores visuales en botones
+
+---
+
+### 🖼️ Visores Especiales
+
+#### Visor de Imágenes en Pantalla Completa
+
+**Actualmente implementado:**
+| Control | Acción |
+|---------|--------|
+| ESC / Q | Cerrar visor |
+| ← → | Imagen anterior/siguiente |
+| Scroll mouse | Zoom in/out |
+
+**Pendiente (❌):**
+| Control | Acción Planeada |
+|---------|-----------------|
+| Ⓑ | Cerrar visor |
+| D-pad / Stick Izq. | Navegar imágenes (←/→) |
+
+**Archivo:** `lib/widgets/roms/fullscreen_image_viewer.dart` (líneas 53-88)
+
+#### Reproductor de Video
+
+**Estado actual:** ❌ Sin controles de teclado ni gamepad
+
+**Pendiente:**
+
+Teclado:
+- `Space` / `Enter` → Play/Pause
+- `ESC` / `Q` → Cerrar
+- `←` / `→` → Retroceder/Avanzar (si soportado)
+
+Gamepad:
+- Ⓐ → Play/Pause
+- Ⓑ → Cerrar
+- Stick Izq. ←/→ → Seek (si soportado)
+
+**Archivo:** `lib/widgets/roms/video_player_screen.dart`
+
+---
+
+### ⚙️ Pantallas de Configuración
+
+Todas las pantallas de Settings tienen soporte parcial:
+
+**Actualmente implementado:**
+- ✅ Teclado: `ESC` vuelve atrás en todas las pantallas
+
+**Pendiente (❌ Gamepad):**
+- Settings Screen principal (8 categorías)
+- System Paths Screen
+- ROM Storage Management Screen
+- Emulator Management Screen
+- ROM Database Screen
+- Download Manager Screen
+- System Check Screen
+- System Utilities Screen
+
+**Gamepad planeado:**
+- Ⓑ → Volver atrás (Navigator.pop)
+- D-pad / Stick Izq. → Navegar lista de opciones
+- Ⓐ → Seleccionar item / Acción principal
+
+**Prioridad:** BAJA (settings son infrecuentes, teclado disponible)
+
+---
+
+## 🎨 Indicadores Visuales
+
+### Botones de Mando en Diálogos
+
+Los diálogos implementados muestran indicadores visuales para guiar al jugador:
+
+| Indicador | Color | Significado | Ejemplos |
+|-----------|-------|-------------|----------|
+| Ⓐ | 🟢 Verde | Acción principal (confirmar) | Jugar, Guardar, Aceptar, Seleccionar |
+| Ⓑ | 🔴 Rojo | Acción secundaria (cancelar) | Cerrar, Volver, Cancelar |
+
+### Efectos de Focus & Blur
+
+Cuando un diálogo está abierto (solo en diálogos implementados):
+- 🌫️ **Blur background:** El fondo se difumina con gaussian blur de 5px
+- 🔒 **Barrier:** `barrierDismissible: false` + `barrierColor: Colors.black.withValues(alpha: 0.7)`
+- 🎯 **Focus trap:** El diálogo usa `Focus(autofocus: true)` para capturar todo el input
+- 🚫 **Background inactivo:** Las pantallas de fondo NO responden a input del mando
+- ⏸️ **Polling management:** Pantalla padre pausa polling antes de mostrar diálogo
+
+**Implementación técnica:**
+```dart
+// En el método show() del diálogo:
+showDialog(
+  barrierDismissible: false,
+  barrierColor: Colors.black.withValues(alpha: 0.7),
+  builder: (context) => BackdropFilter(
+    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+    child: MiDialogo(...),
+  ),
+);
+
+// En build() del diálogo:
+Widget build(BuildContext context) {
+  return Focus(
+    autofocus: true,
+    child: Dialog(...),
+  );
+}
+```
+
+---
+
+## 🧪 Pantalla de Debug del Gamepad
 
 Una herramienta especializada para probar y diagnosticar el mando.
 
@@ -246,8 +394,8 @@ Una herramienta especializada para probar y diagnosticar el mando.
 - **Explicación:** Tiempo mínimo entre movimientos de navegación
 
 ### Polling Rate del Gamepad
-- **Valor:** 100ms (10 veces por segundo)
-- **Ubicación:** `platforms_screen.dart` y `roms_screen.dart`
+- **Valor:** 50ms (20 veces por segundo)
+- **Ubicación:** `GamepadService` y todas las pantallas/diálogos con soporte de mando
 
 ### Normalización de Valores
 Los valores brutos del joystick en Linux (-32768 a 32767) se normalizan automáticamente a -1.0 a +1.0 para facilitar el manejo.
@@ -339,15 +487,367 @@ static const double deadzone = 0.3; // Aumentar si hay drift
 
 - ✅ Soporte completo para navegación con teclado
 - ✅ Soporte completo para mando Xbox en Linux
-- ✅ Detección automática de gamepad
+- ✅ Detección automática de gamepad con edge detection
 - ✅ Notificación visual cuando se conecta un mando
 - ✅ Debounce y deadzone configurables
 - ✅ Modos de vista múltiples (List, Grid, Carousel)
 - ✅ Navegación alfabética y numérica instantánea
 - ✅ Soporte para múltiples plataformas simultáneamente
+- ✅ Sistema de focus trap para diálogos (sin handler overlap)
+- ✅ Blur automático de fondo en diálogos importantes
+- ✅ Indicadores visuales Ⓐ/Ⓑ en diálogos
+- ✅ Polling management (pausa/resume al navegar)
 
 ---
 
-**Versión del documento:** 1.0  
-**Última actualización:** 2026-01-13  
+## 📊 Estado de Implementación por Componente
+
+### Pantallas Principales
+
+| Pantalla | Keyboard | Gamepad | Estado |
+|----------|----------|---------|--------|
+| Platforms Screen | ✅ | ✅ | 🟢 Completo |
+| ROMs Screen | ✅ | ✅ | 🟢 Completo |
+| PDF Viewer | ✅ | ✅ | 🟢 Completo |
+| Gamepad Test Screen | N/A | ✅ | 🟢 Completo (debug) |
+| Settings Screen | ✅ ESC | ❌ | 🟡 Parcial |
+| System Paths | ✅ ESC | ❌ | 🟡 Parcial |
+| ROM Storage Mgmt | ✅ ESC | ❌ | 🟡 Parcial |
+| Emulator Mgmt | ✅ ESC | ❌ | 🟡 Parcial |
+| ROM Database | ✅ ESC | ❌ | 🟡 Parcial |
+| Download Manager | ✅ ESC | ❌ | 🟡 Parcial |
+| System Check | ✅ ESC | ❌ | 🟡 Parcial |
+| System Utilities | ✅ ESC | ❌ | 🟡 Parcial |
+
+### Diálogos
+
+| Diálogo | Keyboard | Gamepad | Blur/Focus | Estado |
+|---------|----------|---------|------------|--------|
+| Help Dialog | ✅ | ✅ Ⓐ/Ⓑ | ✅ | 🟢 Completo |
+| ROM Detail | ✅ | ✅ Ⓐ/Ⓑ/D-pad | ✅ | 🟢 Completo |
+| Save ROM | ✅ | ✅ Ⓐ/Ⓑ | ✅ | 🟢 Completo |
+| Emulator Selection | ✅ | ✅ Ⓐ/Ⓑ/D-pad | ✅ | 🟢 Completo |
+| Platform Info | ✅ ESC | ❌ | ❌ | 🔴 Incompleto |
+| Error Dialog | ✅ ESC | ❌ | ❌ | 🔴 Incompleto |
+| Launch Progress | Mouse | ❌ | ❌ | 🔴 Incompleto |
+
+### Visores Especiales
+
+| Componente | Keyboard | Gamepad | Estado |
+|------------|----------|---------|--------|
+| Fullscreen Image | ✅ ESC/Q/arrows | ❌ | 🔴 Incompleto |
+| Video Player | ❌ | ❌ | 🔴 Incompleto |
+
+---
+
+## 🎯 Roadmap de Implementación
+
+### Fase 1: Diálogos Críticos (ALTA PRIORIDAD)
+
+**Objetivo:** Todos los diálogos con blur + gamepad
+
+**Tareas:**
+1. ✅ Help Dialog - COMPLETADO
+2. ✅ ROM Detail Dialog - COMPLETADO
+3. ✅ Save ROM Dialog - COMPLETADO
+4. ✅ Emulator Selection Dialog - COMPLETADO
+5. ❌ Platform Info Dialog - **PENDIENTE**
+   - Añadir blur/focus trap
+   - Añadir Ⓑ para cerrar
+   - Archivo: `lib/widgets/platforms/platform_info_dialog.dart`
+6. ❌ Error Dialog - **PENDIENTE**
+   - Añadir blur/focus trap
+   - Añadir Ⓐ/Ⓑ según botones disponibles
+   - Archivo: `lib/widgets/common/error_dialog.dart`
+7. ❌ Launch Progress Dialog - **PENDIENTE** (opcional)
+   - Añadir blur
+   - Añadir Ⓑ para cancelar descarga
+   - Archivo: `lib/widgets/roms/launch_progress_dialog.dart`
+
+**Tiempo estimado:** ~30 minutos
+
+### Fase 2: Visores de Media (MEDIA PRIORIDAD)
+
+**Objetivo:** Navegación completa con gamepad en visores
+
+**Tareas:**
+1. ❌ Fullscreen Image Viewer - **PENDIENTE**
+   - Añadir polling de gamepad (50ms)
+   - Añadir D-pad/Stick navegación (←/→)
+   - Añadir Ⓑ para cerrar
+   - Archivo: `lib/widgets/roms/fullscreen_image_viewer.dart`
+2. ❌ Video Player Screen - **PENDIENTE**
+   - Añadir controles de teclado (Space/ESC/arrows)
+   - Añadir controles de gamepad (Ⓐ play/pause, Ⓑ cerrar)
+   - Archivo: `lib/widgets/roms/video_player_screen.dart`
+
+**Tiempo estimado:** ~45 minutos
+
+### Fase 3: Settings Navigation (BAJA PRIORIDAD)
+
+**Objetivo:** Gamepad en pantallas de configuración
+
+**Tareas:**
+1. ❌ Settings Screen - **PENDIENTE**
+   - Añadir polling de gamepad
+   - Añadir Ⓑ para volver
+   - Añadir D-pad para navegar lista
+   - Añadir Ⓐ para seleccionar
+2. ❌ Todas las Settings Categories (7 pantallas) - **PENDIENTE**
+   - Mismo patrón que Settings Screen
+   - Ⓑ para volver en todas
+
+**Tiempo estimado:** ~60 minutos
+
+**Justificación de baja prioridad:**
+- Settings son infrecuentes
+- Teclado siempre disponible en desktop
+- Usuarios no necesitan gamepad para configurar
+
+---
+
+## 🐛 Problemas Conocidos Resueltos
+
+### ✅ Handler Overlap (RESUELTO)
+**Problema:** Múltiples pantallas recibían input de gamepad simultáneamente  
+**Solución:** Polling pause/resume al navegar entre pantallas  
+**Commit:** [referencia commit reciente]  
+**Archivos:** `platforms_screen.dart`, `roms_screen.dart`
+
+### ✅ Búsqueda + Gamepad Conflict (RESUELTO)
+**Problema:** Gamepad navegaba el fondo mientras se escribía en búsqueda  
+**Solución:** Bloquear todos los botones excepto Ⓑ durante búsqueda  
+**Archivo:** `roms_screen.dart` (línea ~300)
+
+### ✅ Duplicate Actions (RESUELTO)
+**Problema:** Mantener presionado un botón ejecutaba la acción múltiples veces  
+**Solución:** Edge detection system en GamepadService  
+**Archivo:** `lib/services/gamepad_service.dart` (línea ~80-120)
+
+### ✅ Dialog Background Response (RESUELTO)
+**Problema:** Pantalla de fondo respondía a input con diálogo abierto  
+**Solución:** Focus trap + blur + barrierDismissible: false + pausar polling del padre  
+**Patrón aplicado:** Help, ROM Detail, Save ROM, Emulator Selection dialogs
+
+---
+
+## 📝 Patrones de Implementación
+
+### Patrón: Diálogo con Gamepad Support
+
+**1. Estructura del StatefulWidget:**
+```dart
+class MiDialogo extends StatefulWidget {
+  // ... constructor
+}
+
+class MiDialogoState extends State<MiDialogo> {
+  Timer? _gamepadPollTimer;
+  final FocusNode _primaryButtonFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _startGamepadPolling();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _primaryButtonFocusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _stopGamepadPolling();
+    _primaryButtonFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
+      if (!mounted) return;
+      final gamepad = GamepadService.instance;
+      
+      if (gamepad.isSelectPressed()) {
+        _onPrimaryAction(); // Ⓐ button
+        gamepad.updatePreviousButtonStates();
+      } else if (gamepad.isBackPressed()) {
+        Navigator.of(context).pop(); // Ⓑ button
+        gamepad.updatePreviousButtonStates();
+      }
+    });
+  }
+
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      autofocus: true,
+      child: Dialog(
+        child: Column(
+          children: [
+            // ... contenido
+            ElevatedButton(
+              focusNode: _primaryButtonFocusNode,
+              onPressed: _onPrimaryAction,
+              child: Row(
+                children: [
+                  Text('Acción'),
+                  if (GamepadService.instance.isGamepadConnected) ...[
+                    SizedBox(width: 8),
+                    Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text('Ⓐ', style: TextStyle(color: Colors.white)),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+**2. Método estático show() con blur:**
+```dart
+static Future<T?> show<T>(BuildContext context, ...) {
+  return showDialog<T>(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black.withValues(alpha: 0.7),
+    builder: (context) => BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: MiDialogo(...),
+    ),
+  );
+}
+```
+
+**3. Llamar desde pantalla padre (con pause/resume):**
+```dart
+Future<void> _showMiDialogo() async {
+  _stopGamepadPolling(); // Pausar polling del padre
+  
+  final result = await MiDialogo.show(context, ...);
+  
+  if (mounted) {
+    _startGamepadPolling(); // Resumir polling del padre
+  }
+  
+  // Procesar resultado...
+}
+```
+
+### Patrón: Pantalla con Gamepad Support
+
+**1. Estructura básica:**
+```dart
+class MiPantalla extends StatefulWidget { }
+
+class MiPantallaState extends State<MiPantalla> {
+  Timer? _gamepadPollTimer;
+  
+  @override
+  void initState() {
+    super.initState();
+    _startGamepadPolling();
+  }
+
+  @override
+  void dispose() {
+    _stopGamepadPolling();
+    super.dispose();
+  }
+
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
+      if (!mounted) return;
+      final gamepad = GamepadService.instance;
+      
+      // Navegación
+      final direction = gamepad.getNavigationDirection();
+      if (direction != null) {
+        _handleNavigation(direction);
+      }
+      
+      // Acciones
+      if (gamepad.isSelectPressed()) {
+        _onSelectAction();
+        gamepad.updatePreviousButtonStates();
+      }
+      // ... otros botones
+    });
+  }
+
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
+
+  Future<void> _navigateToChild() async {
+    _stopGamepadPolling(); // Pausar antes de navegar
+    await Navigator.push(...);
+    if (mounted) {
+      _startGamepadPolling(); // Resumir al volver
+    }
+  }
+}
+```
+
+---
+
+## 🔗 Referencias de Código
+
+### Archivos de Servicio
+- **GamepadService:** `lib/services/gamepad_service.dart`
+  - Edge detection: líneas ~80-120
+  - Navigation direction: líneas ~140-160
+  - Debug mode: líneas ~200-220
+
+### Pantallas Implementadas (Referencia)
+- **Platforms Screen:** `lib/screens/platforms_screen.dart`
+  - Gamepad polling: línea ~124
+  - Pause/resume: líneas ~450, ~480
+- **ROMs Screen:** `lib/screens/roms_screen.dart`
+  - Gamepad polling: línea ~168
+  - Search mode blocking: línea ~300
+  - Pause/resume: líneas ~550, ~580
+- **PDF Viewer:** `lib/screens/pdf_viewer_screen.dart`
+  - Gamepad + triggers: líneas ~180-250
+
+### Diálogos Implementados (Referencia)
+- **Help Dialog:** `lib/widgets/common/help_dialog.dart`
+  - Patrón completo de blur + focus + gamepad
+- **ROM Detail Dialog:** `lib/widgets/roms/rom_detail_dialog.dart`
+  - Navegación D-pad entre tabs
+  - Autofocus en botón Play
+- **Save ROM Dialog:** `lib/widgets/roms/save_rom_dialog.dart`
+  - Ⓐ Save, Ⓑ Cancel
+  - Indicadores visuales
+- **Emulator Selection:** `lib/widgets/roms/emulator_selection_dialog.dart`
+  - D-pad navigation en lista
+  - Ⓐ seleccionar, Ⓑ cancelar
+
+### Diálogos Pendientes (Para Implementar)
+- **Platform Info Dialog:** `lib/widgets/platforms/platform_info_dialog.dart`
+- **Error Dialog:** `lib/widgets/common/error_dialog.dart`
+- **Launch Progress:** `lib/widgets/roms/launch_progress_dialog.dart`
+
+### Visores Pendientes (Para Implementar)
+- **Fullscreen Image:** `lib/widgets/roms/fullscreen_image_viewer.dart` (líneas 53-88)
+- **Video Player:** `lib/widgets/roms/video_player_screen.dart`
+
+---
+
+**Versión del documento:** 2.0  
+**Última actualización:** 2026-01-14  
 **Mando probado:** Xbox Controller (Linux)

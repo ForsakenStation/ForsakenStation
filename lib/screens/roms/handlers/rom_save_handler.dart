@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../models/rom_item.dart';
 import '../../../services/rom_storage_service.dart';
@@ -60,7 +61,11 @@ class RomSaveHandler {
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => SaveRomDialog(item: item, imagePath: imagePath),
+      barrierColor: Colors.black.withValues(alpha: 0.7), // Darker barrier
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blur background
+        child: SaveRomDialog(item: item, imagePath: imagePath),
+      ),
     );
 
     if (!context.mounted) return false;

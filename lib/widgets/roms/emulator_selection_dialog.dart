@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:forsaken/models/emulator_config.dart';
 import 'package:forsaken/services/gamepad_service.dart';
@@ -17,7 +18,12 @@ class EmulatorSelectionDialog extends StatefulWidget {
   }) async {
     final result = await showDialog<EmulatorCommand>(
       context: context,
-      builder: (context) => EmulatorSelectionDialog(config: config),
+      barrierDismissible: false, // Prevent dismissing by clicking outside
+      barrierColor: Colors.black.withValues(alpha: 0.7), // Darker barrier
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blur background
+        child: EmulatorSelectionDialog(config: config),
+      ),
     );
 
     onClose();
@@ -96,64 +102,67 @@ class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog> {
   Widget build(BuildContext context) {
     final hasGamepad = _gamepadService.isGamepadConnected;
 
-    return AlertDialog(
-      title: const Text('Select Emulator'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: widget.config.commands.asMap().entries.map((entry) {
-          final index = entry.key;
-          final command = entry.value;
-          final isSelected = index == _selectedIndex;
+    return Focus(
+      autofocus: true, // Trap focus in dialog
+      child: AlertDialog(
+        title: const Text('Select Emulator'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: widget.config.commands.asMap().entries.map((entry) {
+            final index = entry.key;
+            final command = entry.value;
+            final isSelected = index == _selectedIndex;
 
-          return Container(
-            decoration: isSelected && hasGamepad
-                ? BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  )
-                : null,
-            child: ListTile(
-              leading: const Icon(Icons.videogame_asset),
-              title: Text(command.name),
-              subtitle: Text(command.command),
-              selected: isSelected,
-              onTap: () => Navigator.pop(context, command),
-            ),
-          );
-        }).toList(),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (hasGamepad) ...[
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade700,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Text(
-                    'B',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-              ],
-              const Text('Cancel'),
-            ],
-          ),
+            return Container(
+              decoration: isSelected && hasGamepad
+                  ? BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    )
+                  : null,
+              child: ListTile(
+                leading: const Icon(Icons.videogame_asset),
+                title: Text(command.name),
+                subtitle: Text(command.command),
+                selected: isSelected,
+                onTap: () => Navigator.pop(context, command),
+              ),
+            );
+          }).toList(),
         ),
-      ],
-    );
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (hasGamepad) ...[
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade700,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Text(
+                      'B',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                ],
+                const Text('Cancel'),
+              ],
+            ),
+          ),
+        ],
+      ), // Close AlertDialog
+    ); // Close Focus
   }
 }

@@ -3,14 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:forsaken/models/media.dart';
 import 'package:forsaken/services/debug_service.dart';
 import 'fullscreen_image_viewer.dart';
-import 'video_player_screen.dart';
 
 /// Carousel widget for displaying media (images and videos) with navigation
 class MediaCarousel extends StatefulWidget {
   final RomMedia media;
   final double height;
+  final VoidCallback? onBeforeNavigation;
+  final VoidCallback? onAfterNavigation;
 
-  const MediaCarousel({super.key, required this.media, required this.height});
+  const MediaCarousel({
+    super.key,
+    required this.media,
+    required this.height,
+    this.onBeforeNavigation,
+    this.onAfterNavigation,
+  });
 
   @override
   State<MediaCarousel> createState() => _MediaCarouselState();
@@ -63,9 +70,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
   @override
   Widget build(BuildContext context) {
     if (_mediaItems.isEmpty) {
-      return Container(
-        height: widget.height,
-      );
+      return Container(height: widget.height);
     }
 
     return Column(
@@ -208,9 +213,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
 
   Widget _buildImagePreview(Media media) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 60,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 60),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -275,7 +278,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
             child: IconButton(
               icon: const Icon(Icons.play_circle_filled, size: 80),
               color: Colors.white,
-              onPressed: () => _playVideo(media),
+              onPressed: () => _showFullScreenImage(media),
             ),
           ),
           Positioned(
@@ -298,10 +301,13 @@ class _MediaCarouselState extends State<MediaCarousel> {
     );
   }
 
-  void _showFullScreenImage(Media media) {
+  void _showFullScreenImage(Media media) async {
     final index = _mediaItems.indexOf(media);
 
-    Navigator.of(context).push(
+    // Notify parent before navigation
+    widget.onBeforeNavigation?.call();
+
+    await Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
         builder: (context) => FullScreenImageViewer(
@@ -311,14 +317,10 @@ class _MediaCarouselState extends State<MediaCarousel> {
         ),
       ),
     );
-  }
 
-  void _playVideo(Media media) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (context) => VideoPlayerScreen(videoPath: media.path),
-      ),
-    );
+    // Notify parent after navigation
+    if (mounted) {
+      widget.onAfterNavigation?.call();
+    }
   }
 }

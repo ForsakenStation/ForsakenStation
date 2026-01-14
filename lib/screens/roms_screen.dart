@@ -211,6 +211,13 @@ class _RomsScreenState extends State<RomsScreen> {
       return;
     }
 
+    // Handle view media (RT - Right Trigger)
+    if (_gamepadService.isRightTriggerPressed()) {
+      _showMediaDialog();
+      _gamepadService.updatePreviousButtonStates();
+      return;
+    }
+
     // Handle view toggle (Right stick click)
     if (_gamepadService.isViewTogglePressed()) {
       _toggleViewMode();
@@ -302,10 +309,6 @@ class _RomsScreenState extends State<RomsScreen> {
   /// Called when a gamepad is connected
   void _onGamepadConnected(String gamepadName) {
     if (!mounted) return;
-
-    debugPrint('🎮 Gamepad connected in ROMs screen: $gamepadName');
-
-    // Use post-frame callback to ensure ScaffoldMessenger is available
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _showGamepadToast(gamepadName);
@@ -414,20 +417,11 @@ class _RomsScreenState extends State<RomsScreen> {
         ? widget.platform.name
         : widget.platform.code;
 
-    debugPrint(
-      '🔍 [RomsScreen] Loading assets for: $platformIdentifier (isCollection: ${widget.isCollection})',
-    );
-
     final platformLogoPath = await _mediaService.getSystemLogo(
       platformIdentifier,
     );
-    debugPrint('🏷️ [RomsScreen] Logo path result: $platformLogoPath');
-
     final platformBackgroundPath = await _mediaService.getSystemBackground(
       platformIdentifier,
-    );
-    debugPrint(
-      '🖼️ [RomsScreen] Background path result: $platformBackgroundPath',
     );
 
     List<RomItem> items;
@@ -1089,9 +1083,6 @@ class _RomsScreenState extends State<RomsScreen> {
 
   Widget _buildTitile() {
     String? subFolder = _getCurrentFolderName();
-    debugPrint(
-      '🏗️ [RomsScreen] Building title - logoPath: $_platformLogoPath',
-    );
     return Container(
       margin: const EdgeInsets.only(right: 1),
       child: Row(
@@ -1332,6 +1323,14 @@ class _RomsScreenState extends State<RomsScreen> {
       return;
     }
 
+    // Don't show dialog in desktop mode (wide screen) - detail panel is already visible
+    final isWideScreen = MediaQuery.of(context).size.width > 800;
+    if (isWideScreen) {
+      // In desktop mode, just update selection (panel updates automatically)
+      // Media and game info are already loaded by the panel
+      return;
+    }
+
     _loadMediaForItem(item);
     _loadGameInfoForItem(item);
 
@@ -1401,21 +1400,26 @@ class _RomsScreenState extends State<RomsScreen> {
       return;
     }
 
+    // Pause gamepad polling before navigation
+    _stopGamepadPolling();
+
     // Navigate to fullscreen image viewer
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            fullscreenDialog: true,
-            builder: (context) => FullScreenImageViewer(
-              imagePath: allMediaItems[firstImageIndex].path,
-              allMedia: allMediaItems,
-              initialIndex: firstImageIndex,
-            ),
-          ),
-        )
-        .then((_) {
-          _requestFocusForCurrentViewMode();
-        });
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => FullScreenImageViewer(
+          imagePath: allMediaItems[firstImageIndex].path,
+          allMedia: allMediaItems,
+          initialIndex: firstImageIndex,
+        ),
+      ),
+    );
+
+    // Resume gamepad polling after navigation
+    if (mounted) {
+      _startGamepadPolling();
+      _requestFocusForCurrentViewMode();
+    }
   }
 
   Future<void> _handleRomLaunch(RomItem item) async {

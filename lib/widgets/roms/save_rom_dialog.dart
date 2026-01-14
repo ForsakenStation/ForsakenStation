@@ -77,154 +77,105 @@ class _SaveRomDialogState extends State<SaveRomDialog> {
   Widget build(BuildContext context) {
     final hasGamepad = _gamepadService.isGamepadConnected;
 
-    return Dialog(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 500),
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Icon
-            Icon(
-              Icons.save_alt,
-              size: 64,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(height: 16),
+    return Focus(
+      autofocus: true, // Trap focus in dialog
+      child: Dialog(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Icon
+              Icon(
+                Icons.save_alt,
+                size: 64,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(height: 16),
 
-            // Title
-            Text(
-              'Save ROM Permanently?',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-
-            // ROM Image (if available)
-            if (widget.imagePath != null)
-              Container(
-                constraints: const BoxConstraints(
-                  maxHeight: 150,
-                  maxWidth: 150,
+              // Title
+              Text(
+                'Save ROM Permanently?',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-                margin: const EdgeInsets.only(bottom: 16),
-                child: ClipRRect(
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+
+              // ROM Image (if available)
+              if (widget.imagePath != null)
+                Container(
+                  constraints: const BoxConstraints(
+                    maxHeight: 150,
+                    maxWidth: 150,
+                  ),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(
+                      File(widget.imagePath!),
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return PlaceholderImage(size: 100);
+                      },
+                    ),
+                  ),
+                )
+              else
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: PlaceholderImage(size: 100),
+                ),
+
+              // ROM Name
+              Text(
+                widget.item.displayName,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 16),
+
+              // Description
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    File(widget.imagePath!),
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return PlaceholderImage(size: 100);
-                    },
-                  ),
                 ),
-              )
-            else
-              Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                child: PlaceholderImage(size: 100),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Would you like to keep this ROM downloaded for offline play?',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'If not, it will be deleted later to save space.',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(height: 24),
 
-            // ROM Name
-            Text(
-              widget.item.displayName,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 16),
-
-            // Description
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // Buttons
+              Row(
                 children: [
-                  Text(
-                    'Would you like to keep this ROM downloaded for offline play?',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'If not, it will be deleted later to save space.',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Buttons
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (hasGamepad) ...[
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Colors.red.shade700,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Text(
-                              'B',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                        const Icon(Icons.close),
-                        const SizedBox(width: 8),
-                        const Text('Not Now'),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Focus(
-                    focusNode: _saveButtonFocusNode,
-                    onKeyEvent: (node, event) {
-                      // Handle Enter and Space keys
-                      if (event is KeyDownEvent &&
-                          (event.logicalKey == LogicalKeyboardKey.enter ||
-                              event.logicalKey == LogicalKeyboardKey.space)) {
-                        Navigator.pop(context, true);
-                        return KeyEventResult.handled;
-                      }
-                      return KeyEventResult.ignored;
-                    },
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(
-                          context,
-                        ).colorScheme.onPrimary,
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                       child: Row(
@@ -234,11 +185,11 @@ class _SaveRomDialogState extends State<SaveRomDialog> {
                             Container(
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: Colors.green.shade700,
+                                color: Colors.red.shade700,
                                 shape: BoxShape.circle,
                               ),
                               child: const Text(
-                                'A',
+                                'B',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -248,19 +199,73 @@ class _SaveRomDialogState extends State<SaveRomDialog> {
                             ),
                             const SizedBox(width: 8),
                           ],
-                          const Icon(Icons.save),
+                          const Icon(Icons.close),
                           const SizedBox(width: 8),
-                          const Text('Save'),
+                          const Text('Not Now'),
                         ],
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Focus(
+                      focusNode: _saveButtonFocusNode,
+                      onKeyEvent: (node, event) {
+                        // Handle Enter and Space keys
+                        if (event is KeyDownEvent &&
+                            (event.logicalKey == LogicalKeyboardKey.enter ||
+                                event.logicalKey == LogicalKeyboardKey.space)) {
+                          Navigator.pop(context, true);
+                          return KeyEventResult.handled;
+                        }
+                        return KeyEventResult.ignored;
+                      },
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onPrimary,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (hasGamepad) ...[
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade700,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  'A',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                            const Icon(Icons.save),
+                            const SizedBox(width: 8),
+                            const Text('Save'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      ), // Close Dialog
+    ); // Close Focus
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forsaken/models/rom_item.dart';
@@ -36,11 +37,16 @@ class RomDetailDialog extends StatefulWidget {
   }) {
     return showDialog(
       context: context,
-      builder: (context) => RomDetailDialog(
-        item: item,
-        media: media,
-        gameInfo: gameInfo,
-        onPlay: onPlay,
+      barrierDismissible: false, // Prevent dismissing by clicking outside
+      barrierColor: Colors.black.withValues(alpha: 0.7), // Darker barrier
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blur background
+        child: RomDetailDialog(
+          item: item,
+          media: media,
+          gameInfo: gameInfo,
+          onPlay: onPlay,
+        ),
       ),
     ).then((_) => onClose());
   }
@@ -115,208 +121,218 @@ class _RomDetailDialogState extends State<RomDetailDialog> {
   Widget build(BuildContext context) {
     final hasGamepad = _gamepadService.isGamepadConnected;
 
-    return Dialog(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700),
-        child: Column(
-          children: [
-            // Header
-            AppBar(
-              title: Text(widget.gameInfo?.name ?? widget.item.displayName),
-              leading: IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.pop(context),
+    return Focus(
+      autofocus: true, // Trap focus in dialog
+      child: Dialog(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700),
+          child: Column(
+            children: [
+              // Header
+              AppBar(
+                title: Text(widget.gameInfo?.name ?? widget.item.displayName),
+                leading: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                automaticallyImplyLeading: false,
               ),
-              automaticallyImplyLeading: false,
-            ),
-            // Content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              // Content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Media carousel or placeholder
+                      if (widget.media != null)
+                        MediaCarousel(
+                          media: widget.media!,
+                          height: 400,
+                          onBeforeNavigation: _stopGamepadPolling,
+                          onAfterNavigation: _startGamepadPolling,
+                        )
+                      else
+                        const Center(child: PlaceholderImage(size: 300)),
+                      const SizedBox(height: 16),
+
+                      // Description
+                      InfoRow(
+                        label: 'Description',
+                        value:
+                            widget.gameInfo?.desc ??
+                            'No description available for this ROM.',
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Release date and developer
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Release Date',
+                              value:
+                                  widget.gameInfo?.releaseDate
+                                      ?.toString()
+                                      .split(' ')[0] ??
+                                  '',
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Developer',
+                              value: widget.gameInfo?.developer ?? '',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Publisher and genre
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Publisher',
+                              value: widget.gameInfo?.publisher ?? '',
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Genre',
+                              value: widget.gameInfo?.genre ?? '',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Players and rating
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Players',
+                              value: widget.gameInfo?.playersText ?? '',
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: InfoRow(
+                              label: 'Rating',
+                              value: widget.gameInfo?.ratingPercentage ?? '--',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ),
+              // Actions
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Media carousel or placeholder
-                    if (widget.media != null)
-                      MediaCarousel(media: widget.media!, height: 400)
+                    // Manual button (if manual PDF exists)
+                    if (widget.media?.manualPath != null &&
+                        widget.media!.manualPath!.toLowerCase().endsWith(
+                          '.pdf',
+                        ))
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PdfViewerScreen(
+                                pdfPath: widget.media!.manualPath!,
+                                title: '${widget.item.displayName} - Manual',
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.menu_book),
+                        label: const Text('View Manual'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                        ),
+                      )
                     else
-                      const Center(child: PlaceholderImage(size: 300)),
-                    const SizedBox(height: 16),
-
-                    // Description
-                    InfoRow(
-                      label: 'Description',
-                      value:
-                          widget.gameInfo?.desc ??
-                          'No description available for this ROM.',
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Release date and developer
+                      const SizedBox.shrink(),
+                    // Right side buttons
                     Row(
                       children: [
-                        Expanded(
-                          child: InfoRow(
-                            label: 'Release Date',
-                            value:
-                                widget.gameInfo?.releaseDate?.toString().split(
-                                  ' ',
-                                )[0] ??
-                                '',
-                          ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: InfoRow(
-                            label: 'Developer',
-                            value: widget.gameInfo?.developer ?? '',
+                        const SizedBox(width: 16),
+                        Focus(
+                          focusNode: _playButtonFocusNode,
+                          onKeyEvent: (node, event) {
+                            // Handle Enter and Space keys
+                            if (event is KeyDownEvent &&
+                                (event.logicalKey == LogicalKeyboardKey.enter ||
+                                    event.logicalKey ==
+                                        LogicalKeyboardKey.space)) {
+                              _playRom();
+                              return KeyEventResult.handled;
+                            }
+                            return KeyEventResult.ignored;
+                          },
+                          child: ElevatedButton(
+                            onPressed: _playRom,
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 16,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Show gamepad button icon if gamepad connected
+                                if (hasGamepad) ...[
+                                  Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green.shade700,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Text(
+                                      'A',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
+                                const Icon(Icons.gamepad),
+                                const SizedBox(width: 8),
+                                const Text('Play'),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-
-                    // Publisher and genre
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InfoRow(
-                            label: 'Publisher',
-                            value: widget.gameInfo?.publisher ?? '',
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: InfoRow(
-                            label: 'Genre',
-                            value: widget.gameInfo?.genre ?? '',
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Players and rating
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InfoRow(
-                            label: 'Players',
-                            value: widget.gameInfo?.playersText ?? '',
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: InfoRow(
-                            label: 'Rating',
-                            value: widget.gameInfo?.ratingPercentage ?? '--',
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
                   ],
                 ),
               ),
-            ),
-            // Actions
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Manual button (if manual PDF exists)
-                  if (widget.media?.manualPath != null &&
-                      widget.media!.manualPath!.toLowerCase().endsWith('.pdf'))
-                    ElevatedButton.icon(
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PdfViewerScreen(
-                              pdfPath: widget.media!.manualPath!,
-                              title: '${widget.item.displayName} - Manual',
-                            ),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.menu_book),
-                      label: const Text('View Manual'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                      ),
-                    )
-                  else
-                    const SizedBox.shrink(),
-                  // Right side buttons
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
-                      const SizedBox(width: 16),
-                      Focus(
-                        focusNode: _playButtonFocusNode,
-                        onKeyEvent: (node, event) {
-                          // Handle Enter and Space keys
-                          if (event is KeyDownEvent &&
-                              (event.logicalKey == LogicalKeyboardKey.enter ||
-                                  event.logicalKey ==
-                                      LogicalKeyboardKey.space)) {
-                            _playRom();
-                            return KeyEventResult.handled;
-                          }
-                          return KeyEventResult.ignored;
-                        },
-                        child: ElevatedButton(
-                          onPressed: _playRom,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 16,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Show gamepad button icon if gamepad connected
-                              if (hasGamepad) ...[
-                                Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.green.shade700,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Text(
-                                    'A',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                              ],
-                              const Icon(Icons.gamepad),
-                              const SizedBox(width: 8),
-                              const Text('Play'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      ), // Close Dialog
+    ); // Close Focus
   }
 }
