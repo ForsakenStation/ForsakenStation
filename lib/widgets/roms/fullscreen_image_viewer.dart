@@ -274,7 +274,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 // Keyboard hint
-                                Container(
+                                if (!GamepadService
+                                    .instance
+                                    .isGamepadConnected) Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 8,
                                     vertical: 4,
@@ -507,7 +509,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // Keyboard hint
-                        Container(
+                        if (!GamepadService.instance.isGamepadConnected) Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
                             vertical: 4,
@@ -850,7 +852,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Keyboard arrow
-                Icon(
+                if (!isGamepadConnected) Icon(
                   icon == Icons.arrow_back
                       ? Icons.keyboard_arrow_left
                       : Icons.keyboard_arrow_right,
