@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:forsaken/widgets/roms/folder_widget.dart';
-import '../../models/rom_item.dart';
-import '../../models/media.dart';
-import '../../models/game_info.dart';
-import 'media_carousel.dart';
-import '../common/placeholder_image.dart';
-import '../common/info_row.dart';
-import '../common/language_flags.dart';
-import '../common/star_rating.dart';
-import '../common/region_flags.dart';
-import '../common/rom_tag_badges.dart';
+import 'package:forsaken/models/rom_item.dart';
+import 'package:forsaken/models/media.dart';
+import 'package:forsaken/models/game_info.dart';
+import 'package:forsaken/widgets/roms/media_carousel.dart';
+import 'package:forsaken/widgets/common/placeholder_image.dart';
+import 'package:forsaken/widgets/common/info_row.dart';
+import 'package:forsaken/widgets/common/language_flags.dart';
+import 'package:forsaken/widgets/common/star_rating.dart';
+import 'package:forsaken/widgets/common/region_flags.dart';
+import 'package:forsaken/widgets/common/rom_tag_badges.dart';
 
 class RomDetailPanel extends StatefulWidget {
   final RomItem item;
