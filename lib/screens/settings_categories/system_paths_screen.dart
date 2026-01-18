@@ -7,6 +7,7 @@ import '../../services/keyboard_service.dart';
 import '../../services/gamepad_service.dart';
 import '../../services/rom_storage_service.dart';
 import '../../mixins/gamepad_polling_mixin.dart';
+import '../../mixins/screen_navigation_mixin.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
 
 /// Screen for configuring system paths
@@ -26,7 +27,7 @@ class SystemPathsScreen extends StatefulWidget {
 }
 
 class _SystemPathsScreenState extends State<SystemPathsScreen>
-    with GamepadPollingMixin<SystemPathsScreen> {
+    with GamepadPollingMixin<SystemPathsScreen>, ScreenNavigationMixin {
   final _configService = ConfigService.instance;
   final _storageService = RomStorageService.instance;
   final _keyboardService = KeyboardService.instance;
@@ -112,7 +113,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
     if (gamepad.isSelectPressed()) {
       _activateSelectedItem();
     } else if (gamepad.isBackPressed()) {
-      Navigator.pop(context);
+      safePop();
     }
 
     gamepad.updatePreviousButtonStates();

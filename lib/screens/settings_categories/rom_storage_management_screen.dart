@@ -6,6 +6,7 @@ import '../../services/debug_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../services/gamepad_service.dart';
 import '../../mixins/gamepad_polling_mixin.dart';
+import '../../mixins/screen_navigation_mixin.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
 
 /// Screen for managing downloaded ROMs (temporary and permanent storage)
@@ -18,7 +19,9 @@ class RomStorageManagementScreen extends StatefulWidget {
 }
 
 class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
-    with GamepadPollingMixin<RomStorageManagementScreen> {
+    with
+        GamepadPollingMixin<RomStorageManagementScreen>,
+        ScreenNavigationMixin {
   final _storageService = RomStorageService.instance;
   final _debug = DebugService.instance;
   final _keyboardService = KeyboardService.instance;
@@ -86,7 +89,7 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     if (gamepad.isSelectPressed()) {
       _activateSelectedItem();
     } else if (gamepad.isBackPressed()) {
-      Navigator.pop(context);
+      safePop();
     }
 
     gamepad.updatePreviousButtonStates();
@@ -133,7 +136,7 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
 
     // Handle back key (ESC or Backspace)
     if (_keyboardService.isBackKey(key)) {
-      Navigator.pop(context);
+      safePop();
       return KeyEventResult.handled;
     }
 
