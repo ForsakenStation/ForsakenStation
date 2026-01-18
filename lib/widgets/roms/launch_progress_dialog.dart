@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../models/rom_item.dart';
-import '../../models/emulator_config.dart';
-import '../../services/gamepad_service.dart';
-import '../common/placeholder_image.dart';
+import 'package:forsaken/mixins/dialog_controls_mixin.dart';
+import 'package:forsaken/models/rom_item.dart';
+import 'package:forsaken/models/emulator_config.dart';
+import 'package:forsaken/services/gamepad_service.dart';
+import 'package:forsaken/widgets/common/placeholder_image.dart';
+import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
 /// Dialog shown while downloading and launching a ROM
 class LaunchProgressDialog extends StatefulWidget {
@@ -53,20 +55,20 @@ class LaunchProgressDialog extends StatefulWidget {
   State<LaunchProgressDialog> createState() => LaunchProgressDialogState();
 }
 
-class LaunchProgressDialogState extends State<LaunchProgressDialog> {
+class LaunchProgressDialogState extends State<LaunchProgressDialog>
+    with DialogControlsMixin<LaunchProgressDialog> {
   double _progress = 0.0;
   int _receivedBytes = 0;
   int _totalBytes = 0;
   DateTime? _downloadStartTime;
   double _downloadSpeed = 0.0; // bytes per second
-  Timer? _gamepadPollTimer;
   final FocusNode _cancelFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     if (widget.isDownloading && widget.onCancel != null) {
-      _startGamepadPolling();
+      startDialogControls(onCancel: widget.onCancel!);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _cancelFocusNode.requestFocus();
       });
@@ -75,27 +77,8 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog> {
 
   @override
   void dispose() {
-    _stopGamepadPolling();
     _cancelFocusNode.dispose();
-    super.dispose();
-  }
-
-  void _startGamepadPolling() {
-    _gamepadPollTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
-      if (!mounted) return;
-      final gamepad = GamepadService.instance;
-
-      if (gamepad.isBackPressed() && widget.onCancel != null) {
-        widget.onCancel!();
-      }
-
-      gamepad.updatePreviousButtonStates();
-    });
-  }
-
-  void _stopGamepadPolling() {
-    _gamepadPollTimer?.cancel();
-    _gamepadPollTimer = null;
+    super.dispose(); // DialogControlsMixin handles cleanup
   }
 
   void updateProgress(double progress, int received, int total) {
@@ -318,21 +301,7 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog> {
                         const Text('Cancel Download'),
                         if (GamepadService.instance.isGamepadConnected) ...[
                           const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Text(
-                              'Ⓑ',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                          GamepadButtonIndicator(button: GamepadButton.b),
                         ],
                       ],
                     ),

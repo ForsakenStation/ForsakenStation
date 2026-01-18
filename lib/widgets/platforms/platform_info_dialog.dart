@@ -1,12 +1,12 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../../models/platform_info.dart';
-import '../../services/gamepad_service.dart';
+import 'package:forsaken/models/platform_info.dart';
+import 'package:forsaken/widgets/common/navigable_dialog.dart';
+import 'package:forsaken/widgets/common/dialog_button_bar.dart';
+import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
 /// Dialog that displays detailed information about a gaming platform
-class PlatformInfoDialog extends StatefulWidget {
+class PlatformInfoDialog extends NavigableDialog {
   final String platformName;
   final PlatformInfo platformInfo;
 
@@ -37,142 +37,56 @@ class PlatformInfoDialog extends StatefulWidget {
   }
 
   @override
-  State<PlatformInfoDialog> createState() => _PlatformInfoDialogState();
-}
-
-class _PlatformInfoDialogState extends State<PlatformInfoDialog> {
-  Timer? _gamepadPollTimer;
-  final FocusNode _closeFocusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    _startGamepadPolling();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _closeFocusNode.requestFocus();
-    });
+  String? getTitle(BuildContext context) {
+    // No usamos el título aquí, lo construimos en el contenido
+    return null;
   }
 
   @override
-  void dispose() {
-    _stopGamepadPolling();
-    _closeFocusNode.dispose();
-    super.dispose();
-  }
-
-  void _startGamepadPolling() {
-    _gamepadPollTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
-      if (!mounted) return;
-      final gamepad = GamepadService.instance;
-
-      if (gamepad.isBackPressed() || gamepad.isSelectPressed()) {
-        Navigator.of(context).pop();
-      }
-
-      gamepad.updatePreviousButtonStates();
-    });
-  }
-
-  void _stopGamepadPolling() {
-    _gamepadPollTimer?.cancel();
-    _gamepadPollTimer = null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return KeyboardListener(
-      focusNode: FocusNode(),
-      autofocus: true,
-      onKeyEvent: (event) {
-        if (event is KeyDownEvent &&
-            event.logicalKey == LogicalKeyboardKey.escape) {
-          Navigator.of(context).pop();
-        }
-      },
-      child: Focus(
-        autofocus: true,
-        child: AlertDialog(
-          title: Row(
-            children: [
-              Icon(Icons.info_outline, color: colorScheme.primary),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  widget.platformInfo.fullName,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Custom title with icon
+        Row(
+          children: [
+            Icon(Icons.info_outline, color: colorScheme.primary),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                platformInfo.fullName,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Description
-                Text(
-                  widget.platformInfo.description,
-                  style: theme.textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 24),
-
-                // Basic Info
-                _buildInfoSection(context, 'Información General', [
-                  _InfoItem('Fabricante', widget.platformInfo.manufacturer),
-                  _InfoItem(
-                    'Año de Lanzamiento',
-                    widget.platformInfo.releaseYear.toString(),
-                  ),
-                  _InfoItem('Generación', widget.platformInfo.generationString),
-                ]),
-                const SizedBox(height: 16),
-
-                // Technical Specs
-                _buildInfoSection(context, 'Especificaciones Técnicas', [
-                  _InfoItem('CPU', widget.platformInfo.cpu),
-                  _InfoItem('Resolución', widget.platformInfo.resolution),
-                  _InfoItem('Colores', widget.platformInfo.colors),
-                ]),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              focusNode: _closeFocusNode,
-              onPressed: () => Navigator.of(context).pop(),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Cerrar'),
-                  if (GamepadService.instance.isGamepadConnected) ...[
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Text(
-                        'Ⓑ',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
               ),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: 16),
+
+        // Description
+        Text(platformInfo.description, style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 24),
+
+        // Basic Info
+        _buildInfoSection(context, 'Información General', [
+          _InfoItem('Fabricante', platformInfo.manufacturer),
+          _InfoItem('Año de Lanzamiento', platformInfo.releaseYear.toString()),
+          _InfoItem('Generación', platformInfo.generationString),
+        ]),
+        const SizedBox(height: 16),
+
+        // Technical Specs
+        _buildInfoSection(context, 'Especificaciones Técnicas', [
+          _InfoItem('CPU', platformInfo.cpu),
+          _InfoItem('Resolución', platformInfo.resolution),
+          _InfoItem('Colores', platformInfo.colors),
+        ]),
+      ],
     );
   }
 
@@ -220,6 +134,20 @@ class _PlatformInfoDialogState extends State<PlatformInfoDialog> {
       ],
     );
   }
+
+  @override
+  List<DialogButton> buildButtons(BuildContext context) {
+    return [
+      DialogButton(
+        label: 'Cerrar',
+        gamepadButton: GamepadButton.b,
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    ];
+  }
+
+  @override
+  double getMaxWidth() => 600; // Más ancho para mostrar mejor la info
 }
 
 class _InfoItem {

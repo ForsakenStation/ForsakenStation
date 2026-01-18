@@ -1,16 +1,26 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../../services/gamepad_service.dart';
+import 'package:forsaken/widgets/common/navigable_dialog.dart';
+import 'package:forsaken/widgets/common/dialog_button_bar.dart';
+import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
-/// Simple error dialog widget
-class ErrorDialog extends StatefulWidget {
+/// Simple error dialog widget using NavigableDialog
+///
+/// Displays an error message with a single OK button.
+/// Automatically handles:
+/// - ESC/B button to close
+/// - A button to confirm
+/// - Gamepad connection indicators
+/// - Blur background
+class ErrorDialog extends NavigableDialog {
   final String message;
 
   const ErrorDialog({super.key, required this.message});
 
   /// Show error dialog
+  ///
+  /// Helper method for showing error dialog with blur background.
+  /// Calls onClose callback after dialog is dismissed.
   static Future<void> show({
     required BuildContext context,
     required String message,
@@ -28,95 +38,25 @@ class ErrorDialog extends StatefulWidget {
   }
 
   @override
-  State<ErrorDialog> createState() => _ErrorDialogState();
-}
-
-class _ErrorDialogState extends State<ErrorDialog> {
-  Timer? _gamepadPollTimer;
-  final FocusNode _okFocusNode = FocusNode();
+  String? getTitle(BuildContext context) => 'Error';
 
   @override
-  void initState() {
-    super.initState();
-    _startGamepadPolling();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _okFocusNode.requestFocus();
-    });
+  Widget buildContent(BuildContext context) {
+    return Text(message);
   }
 
   @override
-  void dispose() {
-    _stopGamepadPolling();
-    _okFocusNode.dispose();
-    super.dispose();
-  }
-
-  void _startGamepadPolling() {
-    _gamepadPollTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
-      if (!mounted) return;
-      final gamepad = GamepadService.instance;
-
-      if (gamepad.isSelectPressed() || gamepad.isBackPressed()) {
-        Navigator.pop(context);
-      }
-
-      gamepad.updatePreviousButtonStates();
-    });
-  }
-
-  void _stopGamepadPolling() {
-    _gamepadPollTimer?.cancel();
-    _gamepadPollTimer = null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return KeyboardListener(
-      focusNode: FocusNode(),
-      autofocus: true,
-      onKeyEvent: (event) {
-        if (event is KeyDownEvent &&
-            event.logicalKey == LogicalKeyboardKey.escape) {
-          Navigator.pop(context);
-        }
-      },
-      child: Focus(
-        autofocus: true,
-        child: AlertDialog(
-          title: const Text('Error'),
-          content: Text(widget.message),
-          actions: [
-            TextButton(
-              focusNode: _okFocusNode,
-              onPressed: () => Navigator.pop(context),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('OK'),
-                  if (GamepadService.instance.isGamepadConnected) ...[
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Text(
-                        'Ⓐ',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ],
-        ),
+  List<DialogButton> buildButtons(BuildContext context) {
+    return [
+      DialogButton(
+        label: 'OK',
+        primary: true,
+        gamepadButton: GamepadButton.a,
+        onPressed: () => Navigator.pop(context),
       ),
-    );
+    ];
   }
+
+  @override
+  double getMaxWidth() => 400;
 }

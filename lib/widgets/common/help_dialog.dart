@@ -1,8 +1,9 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:forsaken/mixins/dialog_controls_mixin.dart';
 import 'package:forsaken/services/gamepad_service.dart';
+import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
 /// Help dialog that shows keyboard and gamepad controls for the application
 /// Can be configured for different screens (Platforms or ROMs)
@@ -40,10 +41,9 @@ class HelpDialog extends StatefulWidget {
   }
 }
 
-class _HelpDialogState extends State<HelpDialog> {
-  final _gamepadService = GamepadService.instance;
+class _HelpDialogState extends State<HelpDialog>
+    with DialogControlsMixin<HelpDialog> {
   final _closeButtonFocusNode = FocusNode();
-  Timer? _gamepadPollTimer;
 
   @override
   void initState() {
@@ -54,54 +54,33 @@ class _HelpDialogState extends State<HelpDialog> {
         _closeButtonFocusNode.requestFocus();
       }
     });
-    _startGamepadPolling();
+    startDialogControls(
+      onCancel: () => Navigator.pop(context),
+      customHandler: _handleCustomGamepadInput,
+    );
+  }
+
+  void _handleCustomGamepadInput() {
+    final gamepad = GamepadService.instance;
+
+    // A button = Close dialog (same as "Got it!")
+    if (gamepad.isSelectPressed()) {
+      Navigator.pop(context);
+    }
   }
 
   @override
   void dispose() {
-    _stopGamepadPolling();
     _closeButtonFocusNode.dispose();
-    super.dispose();
-  }
-
-  void _startGamepadPolling() {
-    _gamepadPollTimer = Timer.periodic(
-      const Duration(milliseconds: 50),
-      (_) => _handleGamepadInput(),
-    );
-  }
-
-  void _stopGamepadPolling() {
-    _gamepadPollTimer?.cancel();
-    _gamepadPollTimer = null;
-  }
-
-  void _handleGamepadInput() {
-    if (!_gamepadService.isGamepadConnected) return;
-
-    // B button = Close dialog
-    if (_gamepadService.isBackPressed()) {
-      Navigator.pop(context);
-      _gamepadService.updatePreviousButtonStates();
-      return;
-    }
-
-    // A button = Close dialog (same as "Got it!")
-    if (_gamepadService.isSelectPressed()) {
-      Navigator.pop(context);
-      _gamepadService.updatePreviousButtonStates();
-      return;
-    }
-
-    _gamepadService.updatePreviousButtonStates();
+    super.dispose(); // DialogControlsMixin handles cleanup
   }
 
   @override
   Widget build(BuildContext context) {
-    final hasGamepad = _gamepadService.isGamepadConnected;
+    final hasGamepad = GamepadService.instance.isGamepadConnected;
 
-    return Focus(
-      autofocus: true, // Trap focus in dialog
+    return wrapWithKeyboardHandler(
+      onEscape: () => Navigator.pop(context),
       child: Dialog(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
@@ -293,21 +272,7 @@ class _HelpDialogState extends State<HelpDialog> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (hasGamepad) ...[
-                            Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: Colors.red.shade700,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Text(
-                                'B',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                            GamepadButtonIndicator(button: GamepadButton.b),
                             const SizedBox(width: 8),
                           ],
                           const Text('Got it!'),
@@ -321,7 +286,7 @@ class _HelpDialogState extends State<HelpDialog> {
           ),
         ),
       ),
-    ); // Close Focus widget
+    );
   }
 
   Widget _buildSection(

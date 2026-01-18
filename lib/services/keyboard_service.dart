@@ -30,6 +30,7 @@ class KeyboardService {
   static const keySearch = LogicalKeyboardKey.keyS;
   static const keyRefresh = LogicalKeyboardKey.keyR;
   static const keyToggleView = LogicalKeyboardKey.keyV;
+  static const keyMedia = LogicalKeyboardKey.keyM;
   static const keyHelp = LogicalKeyboardKey.question; // ? key (shift + slash)
 
   /// Handle grid navigation
@@ -386,5 +387,10 @@ class KeyboardService {
         tag: 'KeyboardService',
       );
     }
+  }
+
+  /// Check if event is media key (M)
+  bool isMediaKey(KeyEvent event) {
+    return event is KeyDownEvent && event.logicalKey == keyMedia;
   }
 }

@@ -12,6 +12,7 @@ import '../services/keyboard_service.dart';
 import '../services/gamepad_service.dart';
 import '../services/platform_info_service.dart';
 import '../services/collection_service.dart';
+import '../services/screen_keyboard_handler.dart';
 import '../utils/platform_icons.dart';
 import '../widgets/platforms/platform_card.dart';
 import '../widgets/platforms/platform_info_dialog.dart';
@@ -43,6 +44,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   late GamepadService _gamepadService;
   late PlatformInfoService _platformInfoService;
   late CollectionService _collectionService;
+  late ScreenKeyboardHandler<Platform> _keyboardHandler;
   Timer? _gamepadPollTimer;
   final Map<String, String?> _systemImagesCache = {};
   final Map<String, String?> _systemLogosCache = {};
@@ -69,6 +71,68 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     _gridScrollController = ScrollController();
     _carouselFocusNode = FocusNode();
     _gridFocusNode = FocusNode();
+
+    // Initialize keyboard handler
+    _keyboardHandler = ScreenKeyboardHandler<Platform>(
+      keyboardService: _keyboardService,
+      config: ScreenKeyboardConfig<Platform>(
+        getDisplayName: (platform) => platform.name,
+        getItems: () => _platforms,
+        getCurrentIndex: () => _viewMode == ViewMode.grid
+            ? _gridSelectedIndex
+            : _carouselCurrentIndex,
+        setCurrentIndex: (newIndex) {
+          setState(() {
+            if (_viewMode == ViewMode.grid) {
+              _gridSelectedIndex = newIndex;
+            } else {
+              _carouselCurrentIndex = newIndex;
+            }
+          });
+        },
+        getColumns: () => _viewMode == ViewMode.grid
+            ? _calculateCrossAxisCount(context)
+            : null,
+        scrollToIndex: (index, {columns, centerItem = false}) {
+          if (_viewMode == ViewMode.grid) {
+            _scrollToIndex(index, columns ?? _calculateCrossAxisCount(context));
+          } else {
+            _carouselController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          }
+        },
+        onSelect: _handleSelection,
+        onBack: _showExitDialog,
+        onRefresh: _loadPlatforms,
+        onToggleView: _toggleViewMode,
+        onShowHelp: _showHelpDialog,
+        onHideNavigationHint: _hideNavigationHint,
+        onCustomShortcut: (key) {
+          // Handle platform info shortcut (I key)
+          if (key == LogicalKeyboardKey.keyI) {
+            _showPlatformInfo();
+            return true;
+          }
+          // Handle settings shortcut (Tab key)
+          if (key == LogicalKeyboardKey.tab) {
+            _stopGamepadPolling();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            ).then((_) {
+              if (mounted) {
+                _startGamepadPolling();
+              }
+            });
+            return true;
+          }
+          return false;
+        },
+      ),
+    );
 
     // Setup gamepad connection callback for NEW connections
     _gamepadService.onGamepadConnected = _onGamepadConnected;
@@ -428,78 +492,12 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
   }
 
-  /// Handles common keyboard shortcuts (R, V, I, Tab) that work across all view modes
-  /// Returns true if the key was handled, false otherwise
-  bool _handleCommonShortcuts(LogicalKeyboardKey key) {
-    if (key == KeyboardService.keyRefresh) {
-      _loadPlatforms();
-      return true;
-    }
-    if (key == KeyboardService.keyToggleView) {
-      _toggleViewMode();
-      return true;
-    }
-    if (key == LogicalKeyboardKey.keyI) {
-      _showPlatformInfo();
-      return true;
-    }
-    if (key == LogicalKeyboardKey.tab) {
-      _stopGamepadPolling();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SettingsScreen()),
-      ).then((_) {
-        if (mounted) {
-          _startGamepadPolling();
-        }
-      });
-      return true;
-    }
-    return false;
-  }
-
-  /// Centralized keyboard event handler for all view modes
-  /// This eliminates code duplication across grid and carousel views
+  /// Centralized keyboard event handler - delegates to ScreenKeyboardHandler
   KeyEventResult _handleKeyEvent(KeyEvent event) {
-    if (event is! KeyDownEvent) return KeyEventResult.ignored;
-
-    final key = event.logicalKey;
-
-    // 1. Handle help shortcut (Shift + ?)
-    if (_keyboardService.isHelpKey(event)) {
-      _showHelpDialog();
-      return KeyEventResult.handled;
-    }
-
-    // 2. Handle alphabetical jump (Shift + Letter)
-    if (_keyboardService.isAlphabeticalJump(event)) {
-      return _handleAlphabeticalJump(event);
-    }
-
-    // 3. Handle number jump (Shift + 0-9)
-    if (_keyboardService.isNumberJump(event)) {
-      return _handleNumberJump(event);
-    }
-
-    // 4. Handle common shortcuts (R, V)
-    if (_handleCommonShortcuts(key)) {
-      return KeyEventResult.handled;
-    }
-
-    // 5. Handle back/exit
-    if (_keyboardService.isBackKey(key)) {
-      _showExitDialog();
-      return KeyEventResult.handled;
-    }
-
-    // 5. Handle selection
-    if (_keyboardService.isSelectKey(key)) {
-      _handleSelection();
-      return KeyEventResult.handled;
-    }
-
-    // 6. Handle directional navigation (depends on view mode)
-    return _handleDirectionalNavigation(key);
+    final viewMode = _viewMode == ViewMode.grid
+        ? ScreenViewMode.grid
+        : ScreenViewMode.carousel;
+    return _keyboardHandler.handleKeyEvent(event, viewMode);
   }
 
   /// Show help dialog with keyboard shortcuts
@@ -542,128 +540,12 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
   }
 
-  /// Handle alphabetical jump based on current view mode
-  KeyEventResult _handleAlphabeticalJump(KeyEvent event) {
-    final letter = _keyboardService.getAlphabeticalJumpLetter(event);
-    if (letter == null) return KeyEventResult.ignored;
-
-    final newIndex = _keyboardService.findIndexByLetter(
-      letter: letter,
-      items: _platforms,
-      getDisplayName: (platform) => platform.name,
-    );
-
-    if (newIndex == null) return KeyEventResult.ignored;
-
-    if (_viewMode == ViewMode.grid) {
-      setState(() {
-        _gridSelectedIndex = newIndex;
-      });
-      final columns = _calculateCrossAxisCount(context);
-      _scrollToIndex(newIndex, columns);
-    } else {
-      // Carousel
-      _hideNavigationHint();
-      _carouselController.animateToPage(
-        newIndex,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-
-    return KeyEventResult.handled;
-  }
-
-  /// Handle number jump (Shift + 0-9) based on current view mode
-  KeyEventResult _handleNumberJump(KeyEvent event) {
-    final digit = _keyboardService.getNumberJumpDigit(event);
-    if (digit == null) return KeyEventResult.ignored;
-
-    final newIndex = _keyboardService.findIndexByNumber(
-      digit: digit,
-      items: _platforms,
-      getDisplayName: (platform) => platform.name,
-    );
-
-    if (newIndex == null) return KeyEventResult.ignored;
-
-    if (_viewMode == ViewMode.grid) {
-      setState(() {
-        _gridSelectedIndex = newIndex;
-      });
-      final columns = _calculateCrossAxisCount(context);
-      _scrollToIndex(newIndex, columns);
-    } else {
-      // Carousel
-      _hideNavigationHint();
-      _carouselController.animateToPage(
-        newIndex,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-
-    return KeyEventResult.handled;
-  }
-
   /// Handle selection based on current view mode
   void _handleSelection() {
     final selectedPlatform = _viewMode == ViewMode.grid
         ? _platforms[_gridSelectedIndex]
         : _platforms[_carouselCurrentIndex];
     _navigateToRoms(selectedPlatform);
-  }
-
-  /// Handle directional navigation based on current view mode
-  KeyEventResult _handleDirectionalNavigation(LogicalKeyboardKey key) {
-    if (_viewMode == ViewMode.grid) {
-      return _handleGridNavigation(key);
-    } else {
-      return _handleCarouselNavigation(key);
-    }
-  }
-
-  /// Handle grid-specific navigation
-  KeyEventResult _handleGridNavigation(LogicalKeyboardKey key) {
-    final columns = _calculateCrossAxisCount(context);
-    final newIndex = _keyboardService.handleGridNavigation(
-      key: key,
-      currentIndex: _gridSelectedIndex,
-      itemCount: _platforms.length,
-      columns: columns,
-    );
-
-    if (newIndex != null) {
-      setState(() {
-        _gridSelectedIndex = newIndex;
-      });
-      _scrollToIndex(newIndex, columns);
-      return KeyEventResult.handled;
-    }
-
-    return KeyEventResult.ignored;
-  }
-
-  /// Handle carousel-specific navigation
-  KeyEventResult _handleCarouselNavigation(LogicalKeyboardKey key) {
-    final newIndex = _keyboardService.handleCarouselNavigation(
-      key: key,
-      currentIndex: _carouselCurrentIndex,
-      itemCount: _platforms.length,
-      loop: true,
-    );
-
-    if (newIndex != null) {
-      _hideNavigationHint();
-      _carouselController.animateToPage(
-        newIndex,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-      return KeyEventResult.handled;
-    }
-
-    return KeyEventResult.ignored;
   }
 
   @override

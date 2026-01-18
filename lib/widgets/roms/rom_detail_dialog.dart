@@ -1,15 +1,15 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/game_info.dart';
 import 'package:forsaken/screens/pdf_viewer_screen.dart';
-import 'package:forsaken/services/gamepad_service.dart';
+import 'package:forsaken/mixins/dialog_controls_mixin.dart';
 import 'package:forsaken/widgets/roms/media_carousel.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
 import 'package:forsaken/widgets/common/info_row.dart';
+import 'package:forsaken/widgets/common/dialog_button_bar.dart';
+import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
 /// Dialog showing detailed information about a ROM
 class RomDetailDialog extends StatefulWidget {
@@ -37,10 +37,10 @@ class RomDetailDialog extends StatefulWidget {
   }) {
     return showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dismissing by clicking outside
-      barrierColor: Colors.black.withValues(alpha: 0.7), // Darker barrier
+      barrierDismissible: false,
+      barrierColor: Colors.black.withValues(alpha: 0.7),
       builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blur background
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: RomDetailDialog(
           item: item,
           media: media,
@@ -55,61 +55,93 @@ class RomDetailDialog extends StatefulWidget {
   State<RomDetailDialog> createState() => _RomDetailDialogState();
 }
 
-class _RomDetailDialogState extends State<RomDetailDialog> {
-  final _gamepadService = GamepadService.instance;
-  final _playButtonFocusNode = FocusNode();
-  Timer? _gamepadPollTimer;
+class _RomDetailDialogState extends State<RomDetailDialog>
+    with DialogControlsMixin<RomDetailDialog> {
+  late List<DialogButton> _buttons;
+  bool _hasManual = false;
 
   @override
   void initState() {
     super.initState();
-    // Request focus on Play button after build
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _playButtonFocusNode.requestFocus();
-      }
-    });
-    // Start gamepad polling
-    _startGamepadPolling();
-  }
 
-  @override
-  void dispose() {
-    _stopGamepadPolling();
-    _playButtonFocusNode.dispose();
-    super.dispose();
-  }
+    // Check if manual exists
+    _hasManual =
+        widget.media?.manualPath != null &&
+        widget.media!.manualPath!.toLowerCase().endsWith('.pdf');
 
-  void _startGamepadPolling() {
-    _gamepadPollTimer = Timer.periodic(
-      const Duration(milliseconds: 50),
-      (_) => _handleGamepadInput(),
+    // Build buttons list
+    _buttons = _buildButtonsList();
+
+    // Start dialog controls with navigation
+    // Default to Play button (last button)
+    startDialogControlsWithNavigation(
+      onCancel: _handleCancel,
+      buttonCount: _buttons.length,
+      defaultIndex: _buttons.length - 1, // Play button
+      onButtonSelected: (index) {
+        if (mounted) setState(() {});
+      },
+      onConfirm: _handleConfirm,
+      layout: ButtonLayout.horizontal,
     );
   }
 
-  void _stopGamepadPolling() {
-    _gamepadPollTimer?.cancel();
-    _gamepadPollTimer = null;
+  List<DialogButton> _buildButtonsList() {
+    final buttons = <DialogButton>[];
+
+    // Cancel button
+    buttons.add(DialogButton(label: 'Cancel', onPressed: _handleCancel));
+
+    // View Manual button (if manual exists)
+    if (_hasManual) {
+      buttons.add(
+        DialogButton(
+          label: 'View Manual',
+          icon: Icons.menu_book,
+          onPressed: _viewManual,
+        ),
+      );
+    }
+
+    // Play button (primary)
+    buttons.add(
+      DialogButton(
+        label: 'Play',
+        icon: Icons.gamepad,
+        primary: true,
+        gamepadButton: GamepadButton.a,
+        onPressed: _playRom,
+      ),
+    );
+
+    return buttons;
   }
 
-  void _handleGamepadInput() {
-    if (!_gamepadService.isGamepadConnected) return;
-
-    // A button = Play
-    if (_gamepadService.isSelectPressed()) {
-      _playRom();
-      _gamepadService.updatePreviousButtonStates();
-      return;
-    }
-
-    // B button = Close dialog
-    if (_gamepadService.isBackPressed()) {
+  void _handleCancel() {
+    if (mounted) {
       Navigator.pop(context);
-      _gamepadService.updatePreviousButtonStates();
-      return;
     }
+  }
 
-    _gamepadService.updatePreviousButtonStates();
+  void _handleConfirm() {
+    // Execute action of selected button
+    _buttons[selectedButtonIndex].onPressed();
+  }
+
+  void _restartDialogControls() {
+    // Helper to restart dialog controls (used by MediaCarousel)
+    if (mounted) {
+      startDialogControlsWithNavigation(
+        onCancel: _handleCancel,
+        buttonCount: _buttons.length,
+        defaultIndex: selectedButtonIndex, // Keep same selection
+        onButtonSelected: (index) {
+          if (mounted) setState(() {});
+        },
+        onConfirm: _handleConfirm,
+        layout: ButtonLayout.horizontal,
+      );
+    }
   }
 
   void _playRom() {
@@ -117,12 +149,39 @@ class _RomDetailDialogState extends State<RomDetailDialog> {
     widget.onPlay();
   }
 
+  void _viewManual() {
+    // Stop dialog controls while viewing manual
+    stopDialogControls();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PdfViewerScreen(
+          pdfPath: widget.media!.manualPath!,
+          title: '${widget.item.displayName} - Manual',
+        ),
+      ),
+    ).then((_) {
+      // Restart dialog controls when returning
+      if (mounted) {
+        startDialogControlsWithNavigation(
+          onCancel: _handleCancel,
+          buttonCount: _buttons.length,
+          defaultIndex: selectedButtonIndex, // Keep same selection
+          onButtonSelected: (index) {
+            if (mounted) setState(() {});
+          },
+          onConfirm: _handleConfirm,
+          layout: ButtonLayout.horizontal,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final hasGamepad = _gamepadService.isGamepadConnected;
-
-    return Focus(
-      autofocus: true, // Trap focus in dialog
+    return wrapWithKeyboardHandler(
+      onEscape: _handleCancel,
       child: Dialog(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700),
@@ -133,10 +192,11 @@ class _RomDetailDialogState extends State<RomDetailDialog> {
                 title: Text(widget.gameInfo?.name ?? widget.item.displayName),
                 leading: IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: _handleCancel,
                 ),
                 automaticallyImplyLeading: false,
               ),
+
               // Content
               Expanded(
                 child: SingleChildScrollView(
@@ -149,8 +209,8 @@ class _RomDetailDialogState extends State<RomDetailDialog> {
                         MediaCarousel(
                           media: widget.media!,
                           height: 400,
-                          onBeforeNavigation: _stopGamepadPolling,
-                          onAfterNavigation: _startGamepadPolling,
+                          onBeforeNavigation: stopDialogControls,
+                          onAfterNavigation: _restartDialogControls,
                         )
                       else
                         const Center(child: PlaceholderImage(size: 300)),
@@ -232,107 +292,21 @@ class _RomDetailDialogState extends State<RomDetailDialog> {
                   ),
                 ),
               ),
-              // Actions
+
+              // Actions with DialogButtonBar
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Manual button (if manual PDF exists)
-                    if (widget.media?.manualPath != null &&
-                        widget.media!.manualPath!.toLowerCase().endsWith(
-                          '.pdf',
-                        ))
-                      ElevatedButton.icon(
-                        onPressed: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PdfViewerScreen(
-                                pdfPath: widget.media!.manualPath!,
-                                title: '${widget.item.displayName} - Manual',
-                              ),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.menu_book),
-                        label: const Text('View Manual'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 16,
-                          ),
-                        ),
-                      )
-                    else
-                      const SizedBox.shrink(),
-                    // Right side buttons
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Cancel'),
-                        ),
-                        const SizedBox(width: 16),
-                        Focus(
-                          focusNode: _playButtonFocusNode,
-                          onKeyEvent: (node, event) {
-                            // Handle Enter and Space keys
-                            if (event is KeyDownEvent &&
-                                (event.logicalKey == LogicalKeyboardKey.enter ||
-                                    event.logicalKey ==
-                                        LogicalKeyboardKey.space)) {
-                              _playRom();
-                              return KeyEventResult.handled;
-                            }
-                            return KeyEventResult.ignored;
-                          },
-                          child: ElevatedButton(
-                            onPressed: _playRom,
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 16,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Show gamepad button icon if gamepad connected
-                                if (hasGamepad) ...[
-                                  Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.green.shade700,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Text(
-                                      'A',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                ],
-                                const Icon(Icons.gamepad),
-                                const SizedBox(width: 8),
-                                const Text('Play'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                child: DialogButtonBar(
+                  buttons: _buttons,
+                  selectedIndex: selectedButtonIndex,
+                  layout: ButtonLayout.horizontal,
+                  alignment: MainAxisAlignment.spaceBetween,
                 ),
               ),
             ],
           ),
         ),
-      ), // Close Dialog
-    ); // Close Focus
+      ),
+    );
   }
 }

@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import '../../services/rom_storage_service.dart';
 import '../../services/debug_service.dart';
 import '../../services/keyboard_service.dart';
+import '../../services/gamepad_service.dart';
+import '../../mixins/gamepad_polling_mixin.dart';
+import '../../widgets/common/gamepad_button_indicator.dart';
 
 /// Screen for managing downloaded ROMs (temporary and permanent storage)
 class RomStorageManagementScreen extends StatefulWidget {
@@ -14,8 +17,8 @@ class RomStorageManagementScreen extends StatefulWidget {
       _RomStorageManagementScreenState();
 }
 
-class _RomStorageManagementScreenState
-    extends State<RomStorageManagementScreen> {
+class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
+    with GamepadPollingMixin<RomStorageManagementScreen> {
   final _storageService = RomStorageService.instance;
   final _debug = DebugService.instance;
   final _keyboardService = KeyboardService.instance;
@@ -26,6 +29,11 @@ class _RomStorageManagementScreenState
   Map<String, List<FileSystemEntity>> _foreverRoms = {};
   bool _isLoading = true;
 
+  // Navigation state
+  int _selectedIndex = 0;
+  int _totalItems = 2; // Default: Clear All + Refresh buttons
+  bool _isGamepadConnected = false;
+
   @override
   void dispose() {
     _focusNode.dispose();
@@ -35,13 +43,93 @@ class _RomStorageManagementScreenState
   @override
   void initState() {
     super.initState();
+    startGamepadPolling(_handleGamepadInput);
     _loadStorageData();
+    _checkGamepadConnection();
+  }
+
+  void _checkGamepadConnection() {
+    final gamepad = GamepadService.instance;
+    setState(() {
+      _isGamepadConnected = gamepad.isGamepadConnected;
+    });
+  }
+
+  void _handleGamepadInput() {
+    final gamepad = GamepadService.instance;
+
+    // Update gamepad connection status
+    final connected = gamepad.isGamepadConnected;
+    if (connected != _isGamepadConnected) {
+      setState(() => _isGamepadConnected = connected);
+    }
+
+    if (!connected) {
+      gamepad.updatePreviousButtonStates();
+      return;
+    }
+
+    // Navigation
+    final direction = gamepad.getNavigationDirection();
+    if (direction != null) {
+      setState(() {
+        if (direction == 'up') {
+          _selectedIndex = (_selectedIndex - 1) % _totalItems;
+          if (_selectedIndex < 0) _selectedIndex = _totalItems - 1;
+        } else if (direction == 'down') {
+          _selectedIndex = (_selectedIndex + 1) % _totalItems;
+        }
+      });
+    }
+
+    // Actions
+    if (gamepad.isSelectPressed()) {
+      _activateSelectedItem();
+    } else if (gamepad.isBackPressed()) {
+      Navigator.pop(context);
+    }
+
+    gamepad.updatePreviousButtonStates();
+  }
+
+  void _activateSelectedItem() {
+    // Index 0: Clear All button (if visible)
+    // Index 1: Refresh button
+    final hasClearButton =
+        _storageStats['tempCount'] != null && _storageStats['tempCount'] > 0;
+
+    if (_selectedIndex == 0 && hasClearButton) {
+      _clearAllTempRoms();
+    } else if (_selectedIndex == 1 ||
+        (_selectedIndex == 0 && !hasClearButton)) {
+      _loadStorageData();
+    }
   }
 
   KeyEventResult _handleKeyEvent(KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
 
     final key = event.logicalKey;
+
+    // Handle navigation (arrow keys)
+    if (key == LogicalKeyboardKey.arrowDown) {
+      setState(() {
+        _selectedIndex = (_selectedIndex + 1) % _totalItems;
+      });
+      return KeyEventResult.handled;
+    } else if (key == LogicalKeyboardKey.arrowUp) {
+      setState(() {
+        _selectedIndex = (_selectedIndex - 1) % _totalItems;
+        if (_selectedIndex < 0) _selectedIndex = _totalItems - 1;
+      });
+      return KeyEventResult.handled;
+    }
+
+    // Handle activation (Enter/Space)
+    if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.space) {
+      _activateSelectedItem();
+      return KeyEventResult.handled;
+    }
 
     // Handle back key (ESC or Backspace)
     if (_keyboardService.isBackKey(key)) {
@@ -326,15 +414,70 @@ class _RomStorageManagementScreenState
           actions: [
             if (_storageStats['tempCount'] != null &&
                 _storageStats['tempCount'] > 0)
-              IconButton(
-                icon: const Icon(Icons.delete_sweep),
-                onPressed: _clearAllTempRoms,
-                tooltip: 'Clear all temporary ROMs',
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    decoration: _selectedIndex == 0
+                        ? BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primaryContainer
+                                .withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(8),
+                          )
+                        : null,
+                    child: IconButton(
+                      icon: const Icon(Icons.delete_sweep),
+                      onPressed: _clearAllTempRoms,
+                      tooltip: 'Clear all temporary ROMs',
+                    ),
+                  ),
+                  if (_isGamepadConnected && _selectedIndex == 0)
+                    Positioned(
+                      bottom: 0,
+                      child: const GamepadButtonIndicator(
+                        button: GamepadButton.a,
+                        size: 16,
+                      ),
+                    ),
+                ],
               ),
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: _loadStorageData,
-              tooltip: 'Refresh',
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  decoration:
+                      (_selectedIndex == 1 ||
+                          (_selectedIndex == 0 &&
+                              !(_storageStats['tempCount'] != null &&
+                                  _storageStats['tempCount'] > 0)))
+                      ? BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                        )
+                      : null,
+                  child: IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: _loadStorageData,
+                    tooltip: 'Refresh',
+                  ),
+                ),
+                if (_isGamepadConnected &&
+                    (_selectedIndex == 1 ||
+                        (_selectedIndex == 0 &&
+                            !(_storageStats['tempCount'] != null &&
+                                _storageStats['tempCount'] > 0))))
+                  Positioned(
+                    bottom: 0,
+                    child: const GamepadButtonIndicator(
+                      button: GamepadButton.a,
+                      size: 16,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),

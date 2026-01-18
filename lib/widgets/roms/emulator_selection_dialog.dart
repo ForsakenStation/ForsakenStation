@@ -1,8 +1,10 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:forsaken/models/emulator_config.dart';
+import 'package:forsaken/mixins/dialog_controls_mixin.dart';
 import 'package:forsaken/services/gamepad_service.dart';
+import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
 /// Dialog for selecting an emulator when multiple commands are available
 class EmulatorSelectionDialog extends StatefulWidget {
@@ -35,55 +37,31 @@ class EmulatorSelectionDialog extends StatefulWidget {
       _EmulatorSelectionDialogState();
 }
 
-class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog> {
-  final _gamepadService = GamepadService.instance;
-  Timer? _gamepadPollTimer;
+class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog>
+    with DialogControlsMixin<EmulatorSelectionDialog> {
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _startGamepadPolling();
-  }
-
-  @override
-  void dispose() {
-    _stopGamepadPolling();
-    super.dispose();
-  }
-
-  void _startGamepadPolling() {
-    _gamepadPollTimer = Timer.periodic(
-      const Duration(milliseconds: 50),
-      (_) => _handleGamepadInput(),
+    startDialogControls(
+      onCancel: () => Navigator.pop(context),
+      customHandler: _handleCustomGamepadInput,
     );
   }
 
-  void _stopGamepadPolling() {
-    _gamepadPollTimer?.cancel();
-    _gamepadPollTimer = null;
-  }
-
-  void _handleGamepadInput() {
-    if (!_gamepadService.isGamepadConnected) return;
+  void _handleCustomGamepadInput() {
+    final gamepad = GamepadService.instance;
 
     // A button = Select emulator
-    if (_gamepadService.isSelectPressed()) {
+    if (gamepad.isSelectPressed()) {
       final selectedCommand = widget.config.commands[_selectedIndex];
       Navigator.pop(context, selectedCommand);
-      _gamepadService.updatePreviousButtonStates();
       return;
     }
 
-    // B button = Cancel
-    if (_gamepadService.isBackPressed()) {
-      Navigator.pop(context);
-      _gamepadService.updatePreviousButtonStates();
-      return;
-    }
-
-    // Navigation
-    final direction = _gamepadService.getNavigationDirection();
+    // Navigation (Up/Down for list)
+    final direction = gamepad.getNavigationDirection();
     if (direction != null) {
       setState(() {
         if (direction == 'up' && _selectedIndex > 0) {
@@ -94,16 +72,42 @@ class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog> {
         }
       });
     }
-
-    _gamepadService.updatePreviousButtonStates();
   }
 
   @override
   Widget build(BuildContext context) {
-    final hasGamepad = _gamepadService.isGamepadConnected;
+    final hasGamepad = GamepadService.instance.isGamepadConnected;
 
-    return Focus(
-      autofocus: true, // Trap focus in dialog
+    return KeyboardListener(
+      focusNode: FocusNode()..requestFocus(),
+      autofocus: true,
+      onKeyEvent: (event) {
+        if (event is! KeyDownEvent) return;
+
+        final key = event.logicalKey;
+
+        // Enter/Space = Select emulator
+        if (key == LogicalKeyboardKey.enter ||
+            key == LogicalKeyboardKey.space) {
+          final selectedCommand = widget.config.commands[_selectedIndex];
+          Navigator.pop(context, selectedCommand);
+          return;
+        }
+
+        // ESC = Cancel
+        if (key == LogicalKeyboardKey.escape) {
+          Navigator.pop(context);
+          return;
+        }
+
+        // Arrow navigation
+        if (key == LogicalKeyboardKey.arrowUp && _selectedIndex > 0) {
+          setState(() => _selectedIndex--);
+        } else if (key == LogicalKeyboardKey.arrowDown &&
+            _selectedIndex < widget.config.commands.length - 1) {
+          setState(() => _selectedIndex++);
+        }
+      },
       child: AlertDialog(
         title: const Text('Select Emulator'),
         content: Column(
@@ -114,7 +118,7 @@ class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog> {
             final isSelected = index == _selectedIndex;
 
             return Container(
-              decoration: isSelected && hasGamepad
+              decoration: isSelected
                   ? BoxDecoration(
                       border: Border.all(
                         color: Theme.of(context).colorScheme.primary,
@@ -139,30 +143,14 @@ class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (hasGamepad) ...[
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade700,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Text(
-                      'B',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ],
+                if (hasGamepad) GamepadButtonIndicator(button: GamepadButton.b),
+                const SizedBox(width: 8),
                 const Text('Cancel'),
               ],
             ),
           ),
         ],
-      ), // Close AlertDialog
-    ); // Close Focus
+      ),
+    );
   }
 }

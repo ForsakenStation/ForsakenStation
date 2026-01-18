@@ -192,6 +192,11 @@ class EmulatorCatalog {
           estimatedSizeMB: 35,
         ),
       },
+      postDownloadCommands: {
+        'linux': ['chmod +x duckstation.AppImage'],
+        'windows': ['move duckstation-windows-x64-release.exe duckstation.exe'],
+        'macos': ['mv duckstation-mac-release.dmg duckstation.dmg'],
+      },
     ),
 
     // PCSX2 (PS2)
@@ -202,19 +207,19 @@ class EmulatorCatalog {
       downloads: {
         'linux': PlatformDownload(
           url:
-              'https://github.com/PCSX2/pcsx2/releases/download/v2.4.0/pcsx2-v2.4.0-linux-appimage-x64-Qt.AppImage',
+              'https://github.com/PCSX2/pcsx2/releases/download/v2.6.2/pcsx2-v2.6.2-linux-appimage-x64-Qt.AppImage',
           fileName: 'pcsx2.AppImage',
           estimatedSizeMB: 40,
         ),
         'windows': PlatformDownload(
           url:
-              'https://github.com/PCSX2/pcsx2/releases/download/v2.4.0/pcsx2-v2.4.0-windows-x64-Qt.7z',
+              'https://github.com/PCSX2/pcsx2/releases/download/v2.6.2/pcsx2-v2.6.2-windows-x64-Qt.7z',
           fileName: 'pcsx2.7z',
           estimatedSizeMB: 45,
         ),
         'macos': PlatformDownload(
           url:
-              'https://github.com/PCSX2/pcsx2/releases/download/v2.4.0/pcsx2-v2.4.0-macos-Qt.tar.xz',
+              'https://github.com/PCSX2/pcsx2/releases/download/v2.6.2/pcsx2-v2.6.2-macos-Qt.tar.xz',
           fileName: 'pcsx2.tar.xz',
           estimatedSizeMB: 50,
         ),
@@ -229,22 +234,32 @@ class EmulatorCatalog {
       downloads: {
         'linux': PlatformDownload(
           url:
-              'https://github.com/RPCS3/rpcs3-binaries-linux/releases/download/build-f81a5a5cb1cd30678061bff31b2156090abe2a57/rpcs3-v0.0.38-18544-f81a5a5c_linux64.AppImage',
+              'https://github.com/RPCS3/rpcs3-binaries-linux/releases/download/build-0f85e9123e781b6ec7fa78fa1c54b1de40179a23/rpcs3-v0.0.39-18705-0f85e912_linux64.AppImage',
           fileName: 'rpcs3.AppImage',
-          estimatedSizeMB: 80,
+          estimatedSizeMB: 90,
         ),
         'windows': PlatformDownload(
           url:
-              'https://github.com/RPCS3/rpcs3-binaries-win/releases/download/build-latest/rpcs3-v0.0.38-windows-x64.7z',
+              'https://github.com/RPCS3/rpcs3-binaries-win/releases/download/build-0f85e9123e781b6ec7fa78fa1c54b1de40179a23/rpcs3-v0.0.39-18705-0f85e912_win64_msvc.7z',
           fileName: 'rpcs3.7z',
-          estimatedSizeMB: 85,
+          estimatedSizeMB: 34,
         ),
         'macos': PlatformDownload(
           url:
-              'https://github.com/RPCS3/rpcs3-binaries-mac/releases/download/build-latest/rpcs3-v0.0.38-macos-x64.dmg',
-          fileName: 'rpcs3.dmg',
-          estimatedSizeMB: 90,
+              'https://github.com/RPCS3/rpcs3-binaries-mac-arm64/releases/download/build-0f85e9123e781b6ec7fa78fa1c54b1de40179a23/rpcs3-v0.0.39-18705-0f85e912_macos.7z',
+          fileName: 'rpcs3.7z',
+          estimatedSizeMB: 43,
         ),
+      },
+      postDownloadCommands: {
+        'linux': ['chmod +x rpcs3.AppImage'],
+        'windows': [
+          '7z x rpcs3.7z -o./ && rm rpcs3.7z',
+          'move rpcs3-v0.0.39-18705-0f85e912_win64_msvc.exe rpcs3.exe',
+        ],
+        'macos': [
+          '7z x rpcs3.7z -o./ && rm rpcs3.7z'
+          'mv RPCS3.app App'],
       },
     ),
 

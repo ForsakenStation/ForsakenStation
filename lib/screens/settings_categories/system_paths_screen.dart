@@ -6,6 +6,8 @@ import '../../services/config_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../services/gamepad_service.dart';
 import '../../services/rom_storage_service.dart';
+import '../../mixins/gamepad_polling_mixin.dart';
+import '../../widgets/common/gamepad_button_indicator.dart';
 
 /// Screen for configuring system paths
 ///
@@ -23,12 +25,12 @@ class SystemPathsScreen extends StatefulWidget {
   State<SystemPathsScreen> createState() => _SystemPathsScreenState();
 }
 
-class _SystemPathsScreenState extends State<SystemPathsScreen> {
+class _SystemPathsScreenState extends State<SystemPathsScreen>
+    with GamepadPollingMixin<SystemPathsScreen> {
   final _configService = ConfigService.instance;
   final _storageService = RomStorageService.instance;
   final _keyboardService = KeyboardService.instance;
   final _focusNode = FocusNode();
-  Timer? _gamepadPollTimer;
   late final TextEditingController _romsPathController;
   late final TextEditingController _mediaPathController;
   late final TextEditingController _emulatorsPathController;
@@ -41,10 +43,16 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
   String _tempPathDisplay = '';
   String _foreverPathDisplay = '';
 
+  // Navigation state
+  int _selectedIndex = 0;
+  static const int _totalItems =
+      7; // 5 path fields + reset button + save button
+  bool _isGamepadConnected = false;
+
   @override
   void initState() {
     super.initState();
-    _startGamepadPolling();
+    startGamepadPolling(_handleGamepadInput);
     _romsPathController = TextEditingController(text: _configService.romsPath);
     _mediaPathController = TextEditingController(
       text: _configService.mediaPath,
@@ -63,24 +71,79 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
     );
 
     _loadStorageInfo();
+    _checkGamepadConnection();
   }
 
-  void _startGamepadPolling() {
-    _gamepadPollTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
-      if (!mounted) return;
-      final gamepad = GamepadService.instance;
-
-      if (gamepad.isBackPressed()) {
-        Navigator.pop(context);
-      }
-
-      gamepad.updatePreviousButtonStates();
+  void _checkGamepadConnection() {
+    final gamepad = GamepadService.instance;
+    setState(() {
+      _isGamepadConnected = gamepad.isGamepadConnected;
     });
   }
 
-  void _stopGamepadPolling() {
-    _gamepadPollTimer?.cancel();
-    _gamepadPollTimer = null;
+  void _handleGamepadInput() {
+    final gamepad = GamepadService.instance;
+
+    // Update gamepad connection status
+    final connected = gamepad.isGamepadConnected;
+    if (connected != _isGamepadConnected) {
+      setState(() => _isGamepadConnected = connected);
+    }
+
+    if (!connected) {
+      gamepad.updatePreviousButtonStates();
+      return;
+    }
+
+    // Navigation
+    final direction = gamepad.getNavigationDirection();
+    if (direction != null) {
+      setState(() {
+        if (direction == 'up') {
+          _selectedIndex = (_selectedIndex - 1) % _totalItems;
+          if (_selectedIndex < 0) _selectedIndex = _totalItems - 1;
+        } else if (direction == 'down') {
+          _selectedIndex = (_selectedIndex + 1) % _totalItems;
+        }
+      });
+    }
+
+    // Actions
+    if (gamepad.isSelectPressed()) {
+      _activateSelectedItem();
+    } else if (gamepad.isBackPressed()) {
+      Navigator.pop(context);
+    }
+
+    gamepad.updatePreviousButtonStates();
+  }
+
+  void _activateSelectedItem() {
+    switch (_selectedIndex) {
+      case 0: // Media path
+        _pickDirectory(_mediaPathController);
+        break;
+      case 1: // Emulators path
+        _pickDirectory(_emulatorsPathController);
+        break;
+      case 2: // Gamelist path
+        _pickDirectory(_gamelistPathController);
+        break;
+      case 3: // Temp ROM path
+        _pickDirectory(_romTempPathController);
+        break;
+      case 4: // Forever ROM path
+        _pickDirectory(_romForeverPathController);
+        break;
+      case 5: // Reset button
+        _resetToDefaults();
+        break;
+      case 6: // Save button
+        if (!_isSaving && !_isMigrating) {
+          _savePaths();
+        }
+        break;
+    }
   }
 
   /// Load current storage paths and statistics
@@ -100,7 +163,6 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
 
   @override
   void dispose() {
-    _stopGamepadPolling();
     _focusNode.dispose();
     _romsPathController.dispose();
     _mediaPathController.dispose();
@@ -115,6 +177,26 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
 
     final key = event.logicalKey;
+
+    // Handle navigation (arrow keys)
+    if (key == LogicalKeyboardKey.arrowDown) {
+      setState(() {
+        _selectedIndex = (_selectedIndex + 1) % _totalItems;
+      });
+      return KeyEventResult.handled;
+    } else if (key == LogicalKeyboardKey.arrowUp) {
+      setState(() {
+        _selectedIndex = (_selectedIndex - 1) % _totalItems;
+        if (_selectedIndex < 0) _selectedIndex = _totalItems - 1;
+      });
+      return KeyEventResult.handled;
+    }
+
+    // Handle activation (Enter/Space)
+    if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.space) {
+      _activateSelectedItem();
+      return KeyEventResult.handled;
+    }
 
     // Handle back key (Escape, Backspace)
     if (_keyboardService.isBackKey(key)) {
@@ -307,10 +389,33 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
         appBar: AppBar(
           title: const Text('System Paths Configuration'),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.restore),
-              onPressed: _resetToDefaults,
-              tooltip: 'Reset to defaults',
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  decoration: _selectedIndex == 5
+                      ? BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                        )
+                      : null,
+                  child: IconButton(
+                    icon: const Icon(Icons.restore),
+                    onPressed: _resetToDefaults,
+                    tooltip: 'Reset to defaults',
+                  ),
+                ),
+                if (_isGamepadConnected && _selectedIndex == 5)
+                  Positioned(
+                    bottom: 0,
+                    child: const GamepadButtonIndicator(
+                      button: GamepadButton.a,
+                      size: 16,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
@@ -357,6 +462,8 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                       hint: 'Directory containing media (images, videos)',
                       controller: _mediaPathController,
                       onBrowse: () => _pickDirectory(_mediaPathController),
+                      isSelected: _selectedIndex == 0,
+                      showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 16),
                     _PathField(
@@ -364,6 +471,8 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                       hint: 'Directory containing emulator binaries',
                       controller: _emulatorsPathController,
                       onBrowse: () => _pickDirectory(_emulatorsPathController),
+                      isSelected: _selectedIndex == 1,
+                      showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 16),
                     _PathField(
@@ -371,6 +480,8 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                       hint: 'Directory containing gamelist.xml files',
                       controller: _gamelistPathController,
                       onBrowse: () => _pickDirectory(_gamelistPathController),
+                      isSelected: _selectedIndex == 2,
+                      showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 32),
                     const Divider(),
@@ -395,6 +506,8 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                           : 'Current: $_tempPathDisplay',
                       controller: _romTempPathController,
                       onBrowse: () => _pickDirectory(_romTempPathController),
+                      isSelected: _selectedIndex == 3,
+                      showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 8),
                     const Text(
@@ -409,6 +522,8 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                           : 'Current: $_foreverPathDisplay',
                       controller: _romForeverPathController,
                       onBrowse: () => _pickDirectory(_romForeverPathController),
+                      isSelected: _selectedIndex == 4,
+                      showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 8),
                     const Text(
@@ -537,29 +652,63 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: (_isSaving || _isMigrating) ? null : _savePaths,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+              Container(
+                decoration: _selectedIndex == 6
+                    ? BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 2,
+                        ),
+                      )
+                    : null,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: (_isSaving || _isMigrating) ? null : _savePaths,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: _selectedIndex == 6
+                          ? Theme.of(context).colorScheme.primaryContainer
+                          : null,
+                    ),
+                    child: (_isSaving || _isMigrating)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                _isMigrating
+                                    ? 'Migrating ROMs...'
+                                    : 'Saving...',
+                              ),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Save Paths'),
+                              if (_isGamepadConnected &&
+                                  _selectedIndex == 6) ...[
+                                const SizedBox(width: 8),
+                                const GamepadButtonIndicator(
+                                  button: GamepadButton.a,
+                                  size: 20,
+                                ),
+                              ],
+                            ],
+                          ),
                   ),
-                  child: (_isSaving || _isMigrating)
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              _isMigrating ? 'Migrating ROMs...' : 'Saving...',
-                            ),
-                          ],
-                        )
-                      : const Text('Save Paths'),
                 ),
               ),
             ],
@@ -576,39 +725,71 @@ class _PathField extends StatelessWidget {
   final String hint;
   final TextEditingController controller;
   final VoidCallback onBrowse;
+  final bool isSelected;
+  final bool showGamepadIndicator;
 
   const _PathField({
     required this.label,
     required this.hint,
     required this.controller,
     required this.onBrowse,
+    this.isSelected = false,
+    this.showGamepadIndicator = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              labelText: label,
-              hintText: hint,
-              border: const OutlineInputBorder(),
+    final theme = Theme.of(context);
+    return Card(
+      elevation: isSelected ? 8 : 2,
+      color: isSelected ? theme.colorScheme.primaryContainer : null,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  labelText: label,
+                  hintText: hint,
+                  border: const OutlineInputBorder(),
+                  filled: isSelected,
+                  fillColor: isSelected
+                      ? theme.colorScheme.primaryContainer.withValues(
+                          alpha: 0.3,
+                        )
+                      : null,
+                ),
+              ),
             ),
-          ),
+            const SizedBox(width: 8),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.folder_open),
+                  onPressed: onBrowse,
+                  tooltip: 'Browse',
+                  style: IconButton.styleFrom(
+                    backgroundColor: isSelected
+                        ? theme.colorScheme.primary
+                        : theme.primaryColor,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                if (showGamepadIndicator && isSelected) ...[
+                  const SizedBox(height: 4),
+                  const GamepadButtonIndicator(
+                    button: GamepadButton.a,
+                    size: 20,
+                  ),
+                ],
+              ],
+            ),
+          ],
         ),
-        const SizedBox(width: 8),
-        IconButton(
-          icon: const Icon(Icons.folder_open),
-          onPressed: onBrowse,
-          tooltip: 'Browse',
-          style: IconButton.styleFrom(
-            backgroundColor: Theme.of(context).primaryColor,
-            foregroundColor: Colors.white,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

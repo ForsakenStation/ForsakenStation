@@ -857,10 +857,12 @@ class _RomsScreenState extends State<RomsScreen> {
     if (item.isFolder) {
       _navigateToFolder(item);
     } else {
-      if (_viewMode == ViewMode.carousel) {
-        _handleRomLaunch(item);
-      } else {
+      // Carousel and List: launch directly
+      // Grid: show detail dialog
+      if (_viewMode == ViewMode.grid) {
         _showRomDetailDialog(item);
+      } else {
+        _handleRomLaunch(item);
       }
     }
   }
