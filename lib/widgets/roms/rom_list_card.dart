@@ -126,6 +126,8 @@ class RomListCard extends StatelessWidget {
               File(imagePath),
               width: 60,
               height: 60,
+              cacheWidth: 120, // 2x for retina displays
+              cacheHeight: 120,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return _defaultThumbnail();

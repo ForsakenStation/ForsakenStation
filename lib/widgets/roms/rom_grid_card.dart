@@ -65,6 +65,8 @@ class RomGridCard extends StatelessWidget {
                       ? Image.file(
                           File(imagePath),
                           fit: BoxFit.cover,
+                          cacheWidth: 300,
+                          cacheHeight: 400,
                           errorBuilder: (context, error, stackTrace) {
                             return PlaceholderImage(size: null);
                           },

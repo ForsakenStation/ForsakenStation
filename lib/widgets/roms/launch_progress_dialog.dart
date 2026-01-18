@@ -173,6 +173,8 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog>
                     child: Image.file(
                       File(widget.imagePath!),
                       fit: BoxFit.contain,
+                      cacheWidth: 400, // Max 200px displayed, 2x for retina
+                      cacheHeight: 400,
                       errorBuilder: (context, error, stackTrace) {
                         return PlaceholderImage(size: 150);
                       },

@@ -47,6 +47,8 @@ class FolderWidget extends StatelessWidget {
         child: Image.asset(
           _folderImagePath,
           fit: BoxFit.cover,
+          cacheWidth: width.toInt() * 2, // 2x for retina
+          cacheHeight: height.toInt() * 2,
           errorBuilder: (context, error, stackTrace) {
             // Fallback to icon if image not found
             return Icon(Icons.folder, size: iconSize, color: Colors.amber);

@@ -62,6 +62,8 @@ class _PlatformCardState extends State<PlatformCard> {
                 child: Image.asset(
                   widget.backgroundPath!,
                   fit: BoxFit.cover,
+                  cacheWidth: 400, // Optimize: no need for full resolution
+                  cacheHeight: 300,
                   errorBuilder: (context, error, stackTrace) =>
                       Container(color: Theme.of(context).colorScheme.surface),
                 ),
@@ -192,6 +194,7 @@ class _PlatformCardState extends State<PlatformCard> {
       return Image.asset(
         logoPath,
         height: height,
+        cacheHeight: (height * 2).toInt(), // 2x for high DPI displays
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) => _buildFallbackIcon(),
       );
