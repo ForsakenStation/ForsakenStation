@@ -571,12 +571,12 @@ static const double deadzone = 0.3; // Aumentar si hay drift
 **Objetivo:** Navegación completa con gamepad en visores
 
 **Tareas:**
-1. ❌ Fullscreen Image Viewer - **PENDIENTE**
+1. ✅ Fullscreen Image Viewer
    - Añadir polling de gamepad (50ms)
    - Añadir D-pad/Stick navegación (←/→)
    - Añadir Ⓑ para cerrar
    - Archivo: `lib/widgets/roms/fullscreen_image_viewer.dart`
-2. ❌ Video Player Screen - **PENDIENTE**
+2. ✅ Video Player Screen
    - Añadir controles de teclado (Space/ESC/arrows)
    - Añadir controles de gamepad (Ⓐ play/pause, Ⓑ cerrar)
    - Archivo: `lib/widgets/roms/video_player_screen.dart`

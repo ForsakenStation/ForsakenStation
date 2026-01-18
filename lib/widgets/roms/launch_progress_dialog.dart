@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/emulator_config.dart';
+import '../../services/gamepad_service.dart';
 import '../common/placeholder_image.dart';
 
 /// Dialog shown while downloading and launching a ROM
@@ -21,6 +24,31 @@ class LaunchProgressDialog extends StatefulWidget {
     this.onCancel,
   });
 
+  static Future<T?> show<T>({
+    required BuildContext context,
+    required RomItem item,
+    required EmulatorCommand command,
+    String? imagePath,
+    required bool isDownloading,
+    VoidCallback? onCancel,
+  }) {
+    return showDialog<T>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withValues(alpha: 0.7),
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: LaunchProgressDialog(
+          item: item,
+          command: command,
+          imagePath: imagePath,
+          isDownloading: isDownloading,
+          onCancel: onCancel,
+        ),
+      ),
+    );
+  }
+
   @override
   State<LaunchProgressDialog> createState() => LaunchProgressDialogState();
 }
@@ -31,6 +59,44 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog> {
   int _totalBytes = 0;
   DateTime? _downloadStartTime;
   double _downloadSpeed = 0.0; // bytes per second
+  Timer? _gamepadPollTimer;
+  final FocusNode _cancelFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isDownloading && widget.onCancel != null) {
+      _startGamepadPolling();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _cancelFocusNode.requestFocus();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _stopGamepadPolling();
+    _cancelFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
+      if (!mounted) return;
+      final gamepad = GamepadService.instance;
+
+      if (gamepad.isBackPressed() && widget.onCancel != null) {
+        widget.onCancel!();
+      }
+
+      gamepad.updatePreviousButtonStates();
+    });
+  }
+
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
 
   void updateProgress(double progress, int received, int total) {
     setState(() {
@@ -90,169 +156,198 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog> {
     final maxWidth = 600.0;
     final width = dialogWidth.clamp(minWidth, maxWidth);
 
-    return Dialog(
-      child: Container(
-        width: width,
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Title
-            Text(
-              widget.item.displayName,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 24),
-
-            // Image
-            if (widget.imagePath != null)
-              Container(
-                constraints: const BoxConstraints(
-                  maxHeight: 200,
-                  maxWidth: 200,
+    return Focus(
+      autofocus: true,
+      child: Dialog(
+        child: Container(
+          width: width,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Title
+              Text(
+                widget.item.displayName,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-                margin: const EdgeInsets.only(bottom: 24),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    File(widget.imagePath!),
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return PlaceholderImage(size: 150);
-                    },
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 24),
+
+              // Image
+              if (widget.imagePath != null)
+                Container(
+                  constraints: const BoxConstraints(
+                    maxHeight: 200,
+                    maxWidth: 200,
                   ),
+                  margin: const EdgeInsets.only(bottom: 24),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(
+                      File(widget.imagePath!),
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return PlaceholderImage(size: 150);
+                      },
+                    ),
+                  ),
+                )
+              else
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  child: PlaceholderImage(size: 150),
                 ),
-              )
-            else
-              Container(
-                margin: const EdgeInsets.only(bottom: 24),
-                child: PlaceholderImage(size: 150),
-              ),
 
-            // Progress bar (only for downloads)
-            if (widget.isDownloading) ...[
-              LinearProgressIndicator(
-                value: _progress > 0 ? _progress : null,
-                minHeight: 8,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              const SizedBox(height: 16),
-
-              // Download stats
-              if (_totalBytes > 0) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${(_progress * 100).toStringAsFixed(1)}%',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '${_formatBytes(_receivedBytes)} / ${_formatBytes(_totalBytes)}',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.speed, size: 16, color: Colors.grey),
-                        const SizedBox(width: 4),
-                        Text(
-                          _formatSpeed(_downloadSpeed),
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          _formatTimeRemaining(
-                            _totalBytes - _receivedBytes,
-                            _downloadSpeed,
-                          ),
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                  ],
+              // Progress bar (only for downloads)
+              if (widget.isDownloading) ...[
+                LinearProgressIndicator(
+                  value: _progress > 0 ? _progress : null,
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 const SizedBox(height: 16),
+
+                // Download stats
+                if (_totalBytes > 0) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${(_progress * 100).toStringAsFixed(1)}%',
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '${_formatBytes(_receivedBytes)} / ${_formatBytes(_totalBytes)}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.speed, size: 16, color: Colors.grey),
+                          const SizedBox(width: 4),
+                          Text(
+                            _formatSpeed(_downloadSpeed),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.access_time,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            _formatTimeRemaining(
+                              _totalBytes - _receivedBytes,
+                              _downloadSpeed,
+                            ),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                ],
+
+                // Status text
+                Text(
+                  'Downloading & Launching...',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ] else ...[
+                // No download, just launching
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                Text(
+                  'Launching...',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ],
 
-              // Status text
-              Text(
-                'Downloading & Launching...',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ] else ...[
-              // No download, just launching
-              const CircularProgressIndicator(),
               const SizedBox(height: 16),
-              Text(
-                'Launching...',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
 
-            const SizedBox(height: 16),
-
-            // Emulator info
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.videogame_asset, size: 16),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Emulator: ${widget.command.name}',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-
-            // Cancel button (only show while downloading)
-            if (widget.isDownloading && widget.onCancel != null) ...[
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: widget.onCancel,
-                  icon: const Icon(Icons.cancel),
-                  label: const Text('Cancel Download'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Theme.of(context).colorScheme.error,
-                    side: BorderSide(
-                      color: Theme.of(context).colorScheme.error,
+              // Emulator info
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.videogame_asset, size: 16),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Emulator: ${widget.command.name}',
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
+                  ],
                 ),
               ),
+
+              // Cancel button (only show while downloading)
+              if (widget.isDownloading && widget.onCancel != null) ...[
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    focusNode: _cancelFocusNode,
+                    onPressed: widget.onCancel,
+                    icon: const Icon(Icons.cancel),
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Cancel Download'),
+                        if (GamepadService.instance.isGamepadConnected) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Text(
+                              'Ⓑ',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.error,
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

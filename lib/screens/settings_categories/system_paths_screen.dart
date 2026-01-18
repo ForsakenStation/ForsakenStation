@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../services/config_service.dart';
 import '../../services/keyboard_service.dart';
+import '../../services/gamepad_service.dart';
 import '../../services/rom_storage_service.dart';
 
 /// Screen for configuring system paths
@@ -26,6 +28,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
   final _storageService = RomStorageService.instance;
   final _keyboardService = KeyboardService.instance;
   final _focusNode = FocusNode();
+  Timer? _gamepadPollTimer;
   late final TextEditingController _romsPathController;
   late final TextEditingController _mediaPathController;
   late final TextEditingController _emulatorsPathController;
@@ -41,6 +44,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
   @override
   void initState() {
     super.initState();
+    _startGamepadPolling();
     _romsPathController = TextEditingController(text: _configService.romsPath);
     _mediaPathController = TextEditingController(
       text: _configService.mediaPath,
@@ -61,6 +65,24 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
     _loadStorageInfo();
   }
 
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
+      if (!mounted) return;
+      final gamepad = GamepadService.instance;
+
+      if (gamepad.isBackPressed()) {
+        Navigator.pop(context);
+      }
+
+      gamepad.updatePreviousButtonStates();
+    });
+  }
+
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
+
   /// Load current storage paths and statistics
   Future<void> _loadStorageInfo() async {
     try {
@@ -78,6 +100,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen> {
 
   @override
   void dispose() {
+    _stopGamepadPolling();
     _focusNode.dispose();
     _romsPathController.dispose();
     _mediaPathController.dispose();

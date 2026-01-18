@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'settings_categories/emulator_management_screen.dart';
@@ -9,6 +10,7 @@ import 'settings_categories/system_check_screen.dart';
 import 'gamepad_test_screen.dart';
 import '../../services/debug_service.dart';
 import '../services/keyboard_service.dart';
+import '../services/gamepad_service.dart';
 
 /// Main settings screen with categorized configuration options
 /// Replaces bash scripts with native Flutter UI
@@ -22,11 +24,101 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final _keyboardService = KeyboardService.instance;
   final _focusNode = FocusNode();
+  Timer? _gamepadPollTimer;
+  int _selectedIndex = 0;
+  final int _categoryCount = 8;
+  bool _isGamepadNavigating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _startGamepadPolling();
+  }
 
   @override
   void dispose() {
+    _stopGamepadPolling();
     _focusNode.dispose();
     super.dispose();
+  }
+
+  void _startGamepadPolling() {
+    _gamepadPollTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
+      if (!mounted) return;
+      final gamepad = GamepadService.instance;
+
+      // Navegación
+      final direction = gamepad.getNavigationDirection();
+      if (direction != null) {
+        setState(() {
+          _isGamepadNavigating = true;
+          if (direction == 'up') {
+            _selectedIndex = (_selectedIndex - 1) % _categoryCount;
+            if (_selectedIndex < 0) _selectedIndex = _categoryCount - 1;
+          } else if (direction == 'down') {
+            _selectedIndex = (_selectedIndex + 1) % _categoryCount;
+          }
+        });
+      }
+
+      // Botones
+      if (gamepad.isSelectPressed()) {
+        _navigateToCategory(_selectedIndex);
+      } else if (gamepad.isBackPressed()) {
+        Navigator.pop(context);
+      }
+
+      gamepad.updatePreviousButtonStates();
+    });
+  }
+
+  void _stopGamepadPolling() {
+    _gamepadPollTimer?.cancel();
+    _gamepadPollTimer = null;
+  }
+
+  void _navigateToCategory(int index) {
+    _stopGamepadPolling();
+
+    if (index == 7) {
+      _showAboutDialog(context);
+      if (mounted) _startGamepadPolling();
+      return;
+    }
+
+    late final Widget screen;
+    switch (index) {
+      case 0:
+        screen = const EmulatorManagementScreen();
+        break;
+      case 1:
+        screen = const SystemPathsScreen();
+        break;
+      case 2:
+        screen = const RomDatabaseScreen();
+        break;
+      case 3:
+        screen = const RomStorageManagementScreen();
+        break;
+      case 4:
+        screen = const DownloadManagerScreen();
+        break;
+      case 5:
+        screen = const SystemCheckScreen();
+        break;
+      case 6:
+        screen = const GamepadTestScreen();
+        break;
+      default:
+        return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+    ).then((_) {
+      if (mounted) _startGamepadPolling();
+    });
   }
 
   KeyEventResult _handleKeyEvent(KeyEvent event) {
@@ -37,6 +129,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Handle back key (ESC or Backspace)
     if (_keyboardService.isBackKey(key)) {
       Navigator.pop(context);
+      return KeyEventResult.handled;
+    }
+
+    // Handle arrow keys
+    if (key == LogicalKeyboardKey.arrowUp) {
+      setState(() {
+        _isGamepadNavigating = true;
+        _selectedIndex = (_selectedIndex - 1) % _categoryCount;
+        if (_selectedIndex < 0) _selectedIndex = _categoryCount - 1;
+      });
+      return KeyEventResult.handled;
+    }
+    if (key == LogicalKeyboardKey.arrowDown) {
+      setState(() {
+        _isGamepadNavigating = true;
+        _selectedIndex = (_selectedIndex + 1) % _categoryCount;
+      });
+      return KeyEventResult.handled;
+    }
+
+    // Handle Enter/Space to select
+    if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.space) {
+      _navigateToCategory(_selectedIndex);
       return KeyEventResult.handled;
     }
 
@@ -96,120 +211,79 @@ class _SettingsScreenState extends State<SettingsScreen> {
             // Configuration Categories
             _buildCategoryCard(
               context,
+              index: 0,
               icon: Icons.videogame_asset,
               title: 'Emulator Management',
               description: 'Add, edit, and configure emulator commands',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const EmulatorManagementScreen(),
-                  ),
-                );
-              },
+              onTap: () => _navigateToCategory(0),
             ),
             const SizedBox(height: 12),
 
             _buildCategoryCard(
               context,
+              index: 1,
               icon: Icons.folder,
               title: 'System Paths',
               description: 'Configure ROMs, media, and emulator paths',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SystemPathsScreen(),
-                  ),
-                );
-              },
+              onTap: () => _navigateToCategory(1),
             ),
             const SizedBox(height: 12),
 
             _buildCategoryCard(
               context,
+              index: 2,
               icon: Icons.storage,
               title: 'ROM Database',
               description: 'Download and manage ROM lists from GitHub',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RomDatabaseScreen(),
-                  ),
-                );
-              },
+              onTap: () => _navigateToCategory(2),
             ),
             const SizedBox(height: 12),
 
             _buildCategoryCard(
               context,
+              index: 3,
               icon: Icons.folder_special,
               title: 'ROM Storage',
               description:
                   'Manage downloaded ROMs, storage, and temp files cleanup',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RomStorageManagementScreen(),
-                  ),
-                );
-              },
+              onTap: () => _navigateToCategory(3),
             ),
             const SizedBox(height: 12),
 
             _buildCategoryCard(
               context,
+              index: 4,
               icon: Icons.download,
               title: 'Download Manager',
               description: 'Download emulators, ROMs lists, and game data',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const DownloadManagerScreen(),
-                  ),
-                );
-              },
+              onTap: () => _navigateToCategory(4),
             ),
             const SizedBox(height: 12),
 
             _buildCategoryCard(
               context,
+              index: 5,
               icon: Icons.check_circle_outline,
               title: 'System Requirements',
               description: 'Check required tools and dependencies',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SystemCheckScreen(),
-                  ),
-                );
-              },
+              onTap: () => _navigateToCategory(5),
             ),
             const SizedBox(height: 12),
 
             _buildCategoryCard(
               context,
+              index: 6,
               icon: Icons.gamepad,
               title: 'Gamepad Test & Debug',
               description:
                   'Test gamepad buttons, axes, and troubleshoot issues',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const GamepadTestScreen(),
-                  ),
-                );
-              },
+              onTap: () => _navigateToCategory(6),
             ),
             const SizedBox(height: 12),
 
             _buildCategoryCard(
               context,
+              index: 7,
               icon: Icons.info_outline,
               title: 'About & Debug',
               description: 'App information and debug settings',
@@ -223,15 +297,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildCategoryCard(
     BuildContext context, {
+    required int index,
     required IconData icon,
     required String title,
     required String description,
     required VoidCallback onTap,
   }) {
+    final isSelected = _isGamepadNavigating && _selectedIndex == index;
+
     return Card(
-      elevation: 2,
+      elevation: isSelected ? 8 : 2,
+      color: isSelected ? Theme.of(context).colorScheme.primaryContainer : null,
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          setState(() => _isGamepadNavigating = false);
+          onTap();
+        },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -241,13 +322,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   icon,
                   size: 32,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 16),
