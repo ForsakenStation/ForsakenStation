@@ -154,7 +154,7 @@ class RomsListView extends StatelessWidget {
       onLoadMedia: () => loadMediaForItem(item),
       onLoadGameInfo: () => loadGameInfoForItem(item),
       showMediaCarousel: true,
-      mediaHeight: 300,
+      mediaHeight: 500,
     );
   }
 }

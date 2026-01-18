@@ -1,0 +1,28 @@
+# Configuración para flutter_distributor
+# Crea paquetes autocontenidos para Linux
+
+output: dist/
+
+releases:
+  - name: linux-appimage
+    jobs:
+      # AppImage: archivo único portable con todas las dependencias
+      - name: appimage
+        package:
+          platform: linux
+          target: appimage
+          build_args:
+            target-platform: linux-x64
+        
+  - name: linux-portable
+    jobs:
+      # Zip con bundle + libmpv incluido
+      - name: zip-portable
+        package:
+          platform: linux
+          target: zip
+          build_args:
+            target-platform: linux-x64
+
+# Nota: Necesitas instalar flutter_distributor:
+# dart pub global activate flutter_distributor

@@ -303,10 +303,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
 
   void _showFullScreenImage(Media media) async {
     final index = _mediaItems.indexOf(media);
-
-    // Notify parent before navigation
     widget.onBeforeNavigation?.call();
-
     await Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
@@ -318,7 +315,6 @@ class _MediaCarouselState extends State<MediaCarousel> {
       ),
     );
 
-    // Notify parent after navigation
     if (mounted) {
       widget.onAfterNavigation?.call();
     }

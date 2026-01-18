@@ -1,0 +1,62 @@
+# Flatpak manifest para Forsaken Emulator
+# Build: flatpak-builder --force-clean build-dir com.forsaken.Emulator.yml
+# Install: flatpak-builder --user --install --force-clean build-dir com.forsaken.Emulator.yml
+# Run: flatpak run com.forsaken.Emulator
+
+app-id: com.forsaken.Emulator
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: forsaken
+
+finish-args:
+  # Permisos necesarios
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --socket=pulseaudio
+  - --device=all  # Para gamepads
+  - --filesystem=home  # Acceso a ROMs en home
+  - --filesystem=xdg-documents
+  - --filesystem=xdg-download
+
+modules:
+  # mpv con todas las dependencias
+  - name: mpv
+    buildsystem: simple
+    build-commands:
+      - python3 waf configure --prefix=/app --enable-libmpv-shared --disable-cplayer
+      - python3 waf build
+      - python3 waf install
+    sources:
+      - type: archive
+        url: https://github.com/mpv-player/mpv/archive/v0.37.0.tar.gz
+        sha256: 1d2d4adbaf048a2fa6ee134575032c4b2dad9a7efafd5b3e69b88db935afaddf
+    modules:
+      - name: ffmpeg
+        config-opts:
+          - --enable-shared
+          - --disable-static
+          - --enable-gnutls
+          - --disable-doc
+        sources:
+          - type: archive
+            url: https://ffmpeg.org/releases/ffmpeg-6.1.tar.xz
+            sha256: 488c76e57dd9b3bee901f71d5c95eaf1db4a5a31fe46a28654e837144207c270
+
+  # Forsaken Emulator
+  - name: forsaken
+    buildsystem: simple
+    build-commands:
+      # Copiar el bundle pre-compilado
+      - cp -r bundle/* /app/
+      # Crear launcher
+      - |
+        cat > /app/bin/forsaken << 'EOF'
+        #!/bin/bash
+        exec /app/forsaken "$@"
+        EOF
+      - chmod +x /app/bin/forsaken
+    sources:
+      - type: dir
+        path: build/linux/x64/release/bundle

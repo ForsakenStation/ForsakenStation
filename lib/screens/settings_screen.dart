@@ -7,10 +7,10 @@ import 'settings_categories/rom_database_screen.dart';
 import 'settings_categories/rom_storage_management_screen.dart';
 import 'settings_categories/download_manager_screen.dart';
 import 'settings_categories/system_check_screen.dart';
-import 'gamepad_test_screen.dart';
-import '../../services/debug_service.dart';
-import '../services/keyboard_service.dart';
-import '../services/gamepad_service.dart';
+import 'settings_categories/gamepad_test_screen.dart';
+import 'package:forsaken/services/debug_service.dart';
+import 'package:forsaken/services/keyboard_service.dart';
+import 'package:forsaken/services/gamepad_service.dart';
 
 /// Main settings screen with categorized configuration options
 /// Replaces bash scripts with native Flutter UI

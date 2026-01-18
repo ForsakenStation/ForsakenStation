@@ -77,12 +77,10 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
 
   @override
   Widget build(BuildContext context) {
-    // If item is a folder, show simplified view
     if (widget.item.isFolder) {
       return _buildFolderDetailPanel(context);
     }
 
-    // Otherwise, show full ROM details
     return _buildRomDetailPanel(context);
   }
 
@@ -144,14 +142,12 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
   Widget _buildRomDetailPanel(BuildContext context) {
     return Column(
       children: [
-        // Scrollable content
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Media carousel (optional)
                 if (widget.showMediaCarousel) ...[
                   if (widget.media != null)
                     MediaCarousel(

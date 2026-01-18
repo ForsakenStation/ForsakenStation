@@ -37,6 +37,9 @@ class ScreenKeyboardConfig<T> {
   /// Show help dialog (optional)
   final void Function()? onShowHelp;
 
+  /// Search action (optional)
+  final void Function()? onSearch;
+
   /// Additional custom shortcuts (optional)
   /// Return true if handled
   final bool Function(LogicalKeyboardKey key)? onCustomShortcut;
@@ -46,6 +49,10 @@ class ScreenKeyboardConfig<T> {
 
   /// Whether to hide navigation hint after action (optional)
   final void Function()? onHideNavigationHint;
+
+  /// Whether we're in search mode (optional)
+  /// If true, normal keyboard shortcuts are ignored except back
+  final bool Function()? isInSearchMode;
 
   const ScreenKeyboardConfig({
     required this.getDisplayName,
@@ -59,9 +66,11 @@ class ScreenKeyboardConfig<T> {
     this.onRefresh,
     this.onToggleView,
     this.onShowHelp,
+    this.onSearch,
     this.onCustomShortcut,
     this.onScheduleMediaLoad,
     this.onHideNavigationHint,
+    this.isInSearchMode,
   });
 }
 
@@ -114,6 +123,15 @@ class ScreenKeyboardHandler<T> {
 
     final key = event.logicalKey;
 
+    // If in search mode, only handle back key
+    if (config.isInSearchMode?.call() == true) {
+      if (keyboardService.isBackKey(key)) {
+        config.onBack();
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    }
+
     // 1. Handle help shortcut (Shift + ?)
     if (keyboardService.isHelpKey(event)) {
       config.onShowHelp?.call();
@@ -156,7 +174,7 @@ class ScreenKeyboardHandler<T> {
     return _handleDirectionalNavigation(key, viewMode);
   }
 
-  /// Handle common shortcuts (R, V)
+  /// Handle common shortcuts (R, V, S)
   bool _handleCommonShortcuts(LogicalKeyboardKey key) {
     // R = Refresh
     if (key == LogicalKeyboardKey.keyR && config.onRefresh != null) {
@@ -167,6 +185,12 @@ class ScreenKeyboardHandler<T> {
     // V = Toggle view mode
     if (key == LogicalKeyboardKey.keyV && config.onToggleView != null) {
       config.onToggleView!();
+      return true;
+    }
+
+    // S = Search
+    if (key == LogicalKeyboardKey.keyS && config.onSearch != null) {
+      config.onSearch!();
       return true;
     }
 

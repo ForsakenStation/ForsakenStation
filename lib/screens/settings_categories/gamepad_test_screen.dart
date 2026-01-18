@@ -515,9 +515,8 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
                                               value: (value + 1.0) / 2.0,
                                               backgroundColor:
                                                   Colors.grey.shade700,
-                                              valueColor: AlwaysStoppedAnimation(
-                                                color,
-                                              ),
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(color),
                                             ),
                                           ),
                                         ),
@@ -572,16 +571,16 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
                 ),
               ),
             ),
-              Center(
-                child: Text(
-                  direction?.toUpperCase() ?? ' ',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                  ),
+            Center(
+              child: Text(
+                direction?.toUpperCase() ?? ' ',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
           ],
         ),
       ),
@@ -622,16 +621,16 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
                 ),
               ),
             ),
-              Center(
-                child: Text(
-                  direction?.toUpperCase() ?? ' ',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                  ),
+            Center(
+              child: Text(
+                direction?.toUpperCase() ?? ' ',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
           ],
         ),
       ),

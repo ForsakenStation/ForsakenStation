@@ -24,6 +24,7 @@ import 'package:forsaken/services/keyboard_service.dart';
 import 'package:forsaken/services/gamepad_service.dart';
 import 'package:forsaken/services/gamelist_service.dart';
 import 'package:forsaken/services/rom_storage_service.dart';
+import 'package:forsaken/services/screen_keyboard_handler.dart';
 import 'package:forsaken/widgets/common/theme_selector.dart';
 import 'package:forsaken/widgets/common/help_dialog.dart';
 import 'package:forsaken/widgets/common/virtual_keyboard.dart';
@@ -71,6 +72,7 @@ class _RomsScreenState extends State<RomsScreen> {
   late RomsScreenController _controller;
   late RomLauncher _romLauncher;
   late RomSaveHandler _romSaveHandler;
+  late ScreenKeyboardHandler<RomItem> _keyboardHandler;
   late ScrollController _carouselController;
   late ScrollController _gridScrollController;
   late ScrollController _listScrollController;
@@ -78,8 +80,8 @@ class _RomsScreenState extends State<RomsScreen> {
   late FocusNode _gridFocusNode;
   late FocusNode _listFocusNode;
   bool _showNavigationHint = true;
-  String? _platformLogoPath;
   String? _platformBackgroundPath;
+  Widget? _cachedLogoWidget; // Cache del logo para evitar rebuilds
   Timer? _gamepadPollTimer;
   final _debug = DebugService.instance;
 
@@ -143,6 +145,89 @@ class _RomsScreenState extends State<RomsScreen> {
     _carouselFocusNode = FocusNode();
     _gridFocusNode = FocusNode();
     _listFocusNode = FocusNode();
+
+    // Initialize keyboard handler
+    _keyboardHandler = ScreenKeyboardHandler<RomItem>(
+      keyboardService: _keyboardService,
+      config: ScreenKeyboardConfig<RomItem>(
+        getDisplayName: (item) => item.displayName,
+        getItems: () => _filteredItems,
+        getCurrentIndex: () => _selectedIndex,
+        setCurrentIndex: (index) {
+          setState(() {
+            _selectedIndex = index;
+            _showNavigationHint = false;
+          });
+        },
+        getColumns: () => _calculateCrossAxisCount(context),
+        scrollToIndex: (index, {columns, centerItem = false}) {
+          if (_viewMode == ViewMode.grid) {
+            _scrollToIndexInGrid(index, columns!, centerItem: centerItem);
+          } else if (_viewMode == ViewMode.list) {
+            _scrollToIndexInList(index, centerItem: centerItem);
+          } else {
+            _scrollToCarouselIndex(index, centerItem: centerItem);
+          }
+        },
+        onSelect: _handleSelection,
+        onBack: () {
+          if (_isSearchMode) {
+            _clearSearch();
+          } else {
+            _navigateBack();
+          }
+        },
+        onRefresh: _loadItems,
+        onToggleView: _toggleViewMode,
+        onSearch: _activateSearchMode,
+        onShowHelp: _showHelpDialog,
+        onScheduleMediaLoad: _scheduleMediaLoad,
+        onHideNavigationHint: () {
+          if (mounted) {
+            setState(() {
+              _showNavigationHint = false;
+            });
+          }
+        },
+        isInSearchMode: () => _isSearchMode,
+        onCustomShortcut: (key) {
+          // M = Show media
+          if (key == LogicalKeyboardKey.keyM) {
+            _showMediaDialog();
+            return true;
+          }
+          // Tab = Settings
+          if (key == LogicalKeyboardKey.tab) {
+            _stopGamepadPolling();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            ).then((_) {
+              if (mounted) {
+                _startGamepadPolling();
+              }
+            });
+            return true;
+          }
+          // Platform navigation (only in list mode at root)
+          if (_viewMode == ViewMode.list &&
+              _pathHistory.isEmpty &&
+              _currentSubdirectory == null) {
+            if (key == LogicalKeyboardKey.arrowLeft ||
+                key == LogicalKeyboardKey.keyQ) {
+              _navigateToPreviousPlatform();
+              return true;
+            }
+            if (key == LogicalKeyboardKey.arrowRight ||
+                key == LogicalKeyboardKey.keyE) {
+              _navigateToNextPlatform();
+              return true;
+            }
+          }
+          return false;
+        },
+      ),
+    );
 
     // Setup gamepad connection callback for NEW connections
     GamepadService.instance.onGamepadConnected = _onGamepadConnected;
@@ -459,8 +544,19 @@ class _RomsScreenState extends State<RomsScreen> {
     if (mounted) {
       setState(() {
         _items = items;
-        _platformLogoPath = platformLogoPath;
         _platformBackgroundPath = platformBackgroundPath;
+
+        // Cache logo widget to avoid rebuilds
+        _cachedLogoWidget = platformLogoPath != null
+            ? SmartSvg.asset(
+                platformLogoPath,
+                height: 24,
+                fit: BoxFit.contain,
+                placeholderBuilder: (context) =>
+                    Text(widget.platform.displayName),
+              )
+            : Text(widget.platform.displayName);
+
         _searchController.clear();
         _isSearchMode = false;
         _filteredItems = items;
@@ -698,84 +794,21 @@ class _RomsScreenState extends State<RomsScreen> {
     }
   }
 
-  /// Handles common keyboard shortcuts (R, V, S, M, Tab) that work across all view modes
-  /// Returns true if the key was handled, false otherwise
-  bool _handleCommonShortcuts(LogicalKeyboardKey key) {
-    if (key == KeyboardService.keyRefresh) {
-      _loadItems();
-      return true;
+  /// Convert ViewMode to ScreenViewMode
+  ScreenViewMode _getScreenViewMode() {
+    switch (_viewMode) {
+      case ViewMode.grid:
+        return ScreenViewMode.grid;
+      case ViewMode.list:
+        return ScreenViewMode.list;
+      case ViewMode.carousel:
+        return ScreenViewMode.carousel;
     }
-    if (key == KeyboardService.keyToggleView) {
-      _toggleViewMode();
-      return true;
-    }
-    if (key == KeyboardService.keySearch) {
-      _activateSearchMode();
-      return true;
-    }
-    if (key == LogicalKeyboardKey.keyM) {
-      _showMediaDialog();
-      return true;
-    }
-    if (key == LogicalKeyboardKey.tab) {
-      _stopGamepadPolling();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SettingsScreen()),
-      ).then((_) {
-        if (mounted) {
-          _startGamepadPolling();
-        }
-      });
-      return true;
-    }
-    return false;
   }
 
+  /// Main keyboard event handler - delegates to ScreenKeyboardHandler
   KeyEventResult _handleKeyEvent(KeyEvent event) {
-    if (event is! KeyDownEvent) return KeyEventResult.ignored;
-
-    final key = event.logicalKey;
-
-    // 1. Handle help shortcut (Shift + ?)
-    if (_keyboardService.isHelpKey(event)) {
-      _showHelpDialog();
-      return KeyEventResult.handled;
-    }
-
-    // 2. Handle alphabetical jump (Shift + Letter)
-    if (_keyboardService.isAlphabeticalJump(event)) {
-      return _handleAlphabeticalJump(event);
-    }
-
-    // 3. Handle number jump (Shift + 0-9)
-    if (_keyboardService.isNumberJump(event)) {
-      return _handleNumberJump(event);
-    }
-
-    // 4. Handle common shortcuts (R, V, S)
-    if (_handleCommonShortcuts(key)) {
-      return KeyEventResult.handled;
-    }
-
-    // 5. Handle back navigation
-    if (_keyboardService.isBackKey(key)) {
-      if (_isSearchMode) {
-        _clearSearch();
-      } else {
-        _navigateBack();
-      }
-      return KeyEventResult.handled;
-    }
-
-    // 5. Handle selection
-    if (_keyboardService.isSelectKey(key)) {
-      _handleSelection();
-      return KeyEventResult.handled;
-    }
-
-    // 6. Handle directional navigation (depends on view mode)
-    return _handleDirectionalNavigation(key);
+    return _keyboardHandler.handleKeyEvent(event, _getScreenViewMode());
   }
 
   /// Show help dialog with keyboard shortcuts
@@ -789,66 +822,6 @@ class _RomsScreenState extends State<RomsScreen> {
     if (mounted) {
       _startGamepadPolling();
     }
-  }
-
-  /// Handle alphabetical jump based on current view mode
-  KeyEventResult _handleAlphabeticalJump(KeyEvent event) {
-    final letter = _keyboardService.getAlphabeticalJumpLetter(event);
-    if (letter == null) return KeyEventResult.ignored;
-
-    final newIndex = _keyboardService.findIndexByLetter(
-      letter: letter,
-      items: _filteredItems,
-      getDisplayName: (item) => item.displayName,
-    );
-
-    if (newIndex == null) return KeyEventResult.ignored;
-    setState(() {
-      _selectedIndex = newIndex;
-      _showNavigationHint = false;
-    });
-    if (_viewMode == ViewMode.grid) {
-      final columns = _calculateCrossAxisCount(context);
-      _scrollToIndexInGrid(newIndex, columns, centerItem: true);
-    } else if (_viewMode == ViewMode.list) {
-      _scrollToIndexInList(newIndex, centerItem: true);
-    } else {
-      _scrollToCarouselIndex(newIndex, centerItem: true);
-    }
-
-    _scheduleMediaLoad();
-
-    return KeyEventResult.handled;
-  }
-
-  /// Handle number jump (Shift + 0-9) based on current view mode
-  KeyEventResult _handleNumberJump(KeyEvent event) {
-    final digit = _keyboardService.getNumberJumpDigit(event);
-    if (digit == null) return KeyEventResult.ignored;
-
-    final newIndex = _keyboardService.findIndexByNumber(
-      digit: digit,
-      items: _filteredItems,
-      getDisplayName: (item) => item.displayName,
-    );
-
-    if (newIndex == null) return KeyEventResult.ignored;
-    setState(() {
-      _selectedIndex = newIndex;
-      _showNavigationHint = false;
-    });
-    if (_viewMode == ViewMode.grid) {
-      final columns = _calculateCrossAxisCount(context);
-      _scrollToIndexInGrid(newIndex, columns, centerItem: true);
-    } else if (_viewMode == ViewMode.list) {
-      _scrollToIndexInList(newIndex, centerItem: true);
-    } else {
-      _scrollToCarouselIndex(newIndex, centerItem: true);
-    }
-
-    _scheduleMediaLoad();
-
-    return KeyEventResult.handled;
   }
 
   void _handleSelection() {
@@ -865,99 +838,6 @@ class _RomsScreenState extends State<RomsScreen> {
         _handleRomLaunch(item);
       }
     }
-  }
-
-  /// Handle directional navigation based on current view mode
-  KeyEventResult _handleDirectionalNavigation(LogicalKeyboardKey key) {
-    if (_viewMode == ViewMode.grid) {
-      return _handleGridNavigation(key);
-    } else if (_viewMode == ViewMode.list) {
-      return _handleListNavigation(key);
-    } else {
-      return _handleCarouselNavigationKeys(key);
-    }
-  }
-
-  /// Handle grid-specific navigation
-  KeyEventResult _handleGridNavigation(LogicalKeyboardKey key) {
-    final columns = _calculateCrossAxisCount(context);
-    final newIndex = _keyboardService.handleGridNavigation(
-      key: key,
-      currentIndex: _selectedIndex,
-      itemCount: _filteredItems.length,
-      columns: columns,
-    );
-
-    if (newIndex != null) {
-      setState(() {
-        _selectedIndex = newIndex;
-      });
-      _scrollToIndexInGrid(newIndex, columns);
-      _scheduleMediaLoad();
-      return KeyEventResult.handled;
-    }
-
-    return KeyEventResult.ignored;
-  }
-
-  /// Handle list-specific navigation
-  KeyEventResult _handleListNavigation(LogicalKeyboardKey key) {
-    // Check for lateral platform navigation first (only in root, not in subdirectories)
-    if (_currentSubdirectory == null && _pathHistory.isEmpty) {
-      if (key == LogicalKeyboardKey.arrowLeft ||
-          key == LogicalKeyboardKey.keyQ) {
-        _navigateToPreviousPlatform();
-        return KeyEventResult.handled;
-      }
-      if (key == LogicalKeyboardKey.arrowRight ||
-          key == LogicalKeyboardKey.keyE) {
-        _navigateToNextPlatform();
-        return KeyEventResult.handled;
-      }
-    }
-
-    final newIndex = _keyboardService.handleListNavigation(
-      key: key,
-      currentIndex: _selectedIndex,
-      itemCount: _filteredItems.length,
-    );
-
-    if (newIndex != null) {
-      setState(() {
-        _selectedIndex = newIndex;
-      });
-      _scrollToIndexInList(newIndex);
-      _scheduleMediaLoad();
-      return KeyEventResult.handled;
-    }
-
-    return KeyEventResult.ignored;
-  }
-
-  /// Handle carousel-specific navigation
-  KeyEventResult _handleCarouselNavigationKeys(LogicalKeyboardKey key) {
-    final newIndex = _keyboardService.handleCarouselNavigation(
-      key: key,
-      currentIndex: _selectedIndex,
-      itemCount: _filteredItems.length,
-      loop: true,
-    );
-
-    if (newIndex != null) {
-      if (_showNavigationHint) {
-        setState(() {
-          _showNavigationHint = false;
-        });
-      }
-      setState(() {
-        _selectedIndex = newIndex;
-      });
-      _scrollToCarouselIndex(_selectedIndex);
-      _scheduleMediaLoad();
-      return KeyEventResult.handled;
-    }
-
-    return KeyEventResult.ignored;
   }
 
   @override
@@ -1091,15 +971,7 @@ class _RomsScreenState extends State<RomsScreen> {
         children: [
           Image.asset('assets/images/icon.png', width: 24, height: 24),
           Icon(Icons.chevron_right),
-          _platformLogoPath != null
-              ? SmartSvg.asset(
-                  _platformLogoPath!,
-                  height: 24,
-                  fit: BoxFit.contain,
-                  placeholderBuilder: (context) =>
-                      Text(widget.platform.displayName),
-                )
-              : Text(widget.platform.displayName),
+          _cachedLogoWidget ?? Text(widget.platform.displayName),
           if (subFolder != null) Icon(Icons.chevron_right),
           if (subFolder != null) Text(subFolder),
         ],
