@@ -307,7 +307,7 @@ class RomService {
         items.add(
           RomItem(
             name: rom.fileName, // Use fileName to preserve extension
-            path: rom.urlFilePath, // For JSONL, this is just the name
+            path: rom.fileName, // Use fileName for gamelist matching
             type: RomItemType.rom,
             downloadUrl: rom.downloadUrl,
             subdirectory:

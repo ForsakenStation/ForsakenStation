@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// Service for managing application configuration from config.json and .env files.
 ///
@@ -273,9 +274,19 @@ class ConfigService {
   /// Get whether config has been modified from defaults
   bool get hasLocalOverrides => _hasLocalOverrides;
 
-  /// Get gamelist directory path from environment
-  String get gamelistPath =>
-      dotenv.maybeGet('GAMELIST_PATH') ?? '/path/to/gamelists';
+  /// Get gamelist directory path
+  ///
+  /// Returns the local gamelist directory in app's data directory
+  /// Structure: ~/.local/share/com.example.emulator/gamelists/{platform}/gamelist.xml
+  Future<String> get gamelistPath async {
+    if (kIsWeb) {
+      // Web doesn't support local file system - would need backend or IndexedDB
+      return '/gamelists';
+    }
+
+    final appDir = await getApplicationSupportDirectory();
+    return path.join(appDir.path, 'gamelists');
+  }
 
   /// Get temporary ROM storage path from environment
   ///

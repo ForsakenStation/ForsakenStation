@@ -25,6 +25,7 @@ import 'package:forsaken/services/gamepad_service.dart';
 import 'package:forsaken/services/gamelist_service.dart';
 import 'package:forsaken/services/rom_storage_service.dart';
 import 'package:forsaken/services/screen_keyboard_handler.dart';
+import 'package:forsaken/services/config_service.dart';
 import 'package:forsaken/widgets/common/theme_selector.dart';
 import 'package:forsaken/widgets/common/help_dialog.dart';
 import 'package:forsaken/widgets/common/virtual_keyboard.dart';
@@ -111,14 +112,16 @@ class _RomsScreenState extends State<RomsScreen> {
       }
     });
 
+    // Initialize services synchronously
     final mediaPath = dotenv.env['MEDIA_PATH'] ?? '';
-    final gamelistPath = dotenv.env['GAMELIST_PATH'] ?? '';
-
     _mediaService = MediaService(mediaBasePath: mediaPath);
     _emulatorService = EmulatorService.instance;
-    _gamelistService = GamelistService(gamelistBasePath: gamelistPath);
     _keyboardService = KeyboardService.instance;
     _gamepadService = GamepadService.instance;
+
+    // Initialize gamelist service with empty path temporarily
+    // Will be updated with correct path asynchronously
+    _gamelistService = GamelistService(gamelistBasePath: '');
     _controller = RomsScreenController(
       mediaService: _mediaService,
       gamelistService: _gamelistService,
@@ -139,6 +142,10 @@ class _RomsScreenState extends State<RomsScreen> {
       requestFocus: _requestFocusForCurrentViewMode,
       isCollection: widget.isCollection,
     );
+
+    // Update gamelist service with correct path asynchronously
+    _initializeGamelistService();
+
     _carouselController = ScrollController();
     _gridScrollController = ScrollController();
     _listScrollController = ScrollController();
@@ -242,6 +249,37 @@ class _RomsScreenState extends State<RomsScreen> {
     _loadPlatformsList();
     _loadItems();
     _startGamepadPolling();
+  }
+
+  /// Initialize gamelist service with correct path asynchronously
+  Future<void> _initializeGamelistService() async {
+    final gamelistPath = await ConfigService.instance.gamelistPath;
+
+    // Update gamelist service with correct path
+    _gamelistService = GamelistService(gamelistBasePath: gamelistPath);
+
+    // Update controller with new gamelist service
+    _controller = RomsScreenController(
+      mediaService: _mediaService,
+      gamelistService: _gamelistService,
+    );
+
+    // Update rom launcher with new controller
+    _romLauncher = RomLauncher(
+      context: context,
+      emulatorService: _emulatorService,
+      mediaService: _mediaService,
+      platformName: widget.platform.name,
+      platformDisplayName: widget.platform.displayName,
+      mediaCache: _controller.mediaCache,
+      requestFocus: _requestFocusForCurrentViewMode,
+      isCollection: widget.isCollection,
+    );
+
+    _debug.info(
+      'GamelistService initialized with path: $gamelistPath',
+      tag: 'RomsScreen',
+    );
   }
 
   /// Start polling gamepad state periodically

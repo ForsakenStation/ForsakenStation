@@ -222,7 +222,7 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
 
   Future<void> _checkMissingGamelists() async {
     try {
-      final gamelistPath = _configService.gamelistPath;
+      final gamelistPath = await _configService.gamelistPath;
       final romsPath = _configService.romsPath;
 
       final romsDir = Directory(romsPath);

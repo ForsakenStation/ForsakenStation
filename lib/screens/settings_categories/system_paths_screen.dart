@@ -46,9 +46,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
 
   // Navigation state
   int _selectedIndex = 0;
-  static const int _totalItems =
-      7; // 5 path fields + reset button + save button
+  static const int _totalItems = 6;
   bool _isGamepadConnected = false;
+  String _gamelistPathDisplay = '';
 
   @override
   void initState() {
@@ -61,9 +61,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
     _emulatorsPathController = TextEditingController(
       text: _configService.emulatorsPath,
     );
-    _gamelistPathController = TextEditingController(
-      text: _configService.gamelistPath,
-    );
+    _gamelistPathController = TextEditingController(); // No longer editable
     _romTempPathController = TextEditingController(
       text: _configService.romTempPath ?? '',
     );
@@ -71,8 +69,17 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
       text: _configService.romForeverPath ?? '',
     );
 
+    _loadGamelistPath();
     _loadStorageInfo();
     _checkGamepadConnection();
+  }
+
+  /// Load gamelist path (read-only, managed automatically)
+  Future<void> _loadGamelistPath() async {
+    final gamelistPath = await _configService.gamelistPath;
+    setState(() {
+      _gamelistPathDisplay = gamelistPath;
+    });
   }
 
   void _checkGamepadConnection() {
@@ -127,19 +134,16 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
       case 1: // Emulators path
         _pickDirectory(_emulatorsPathController);
         break;
-      case 2: // Gamelist path
-        _pickDirectory(_gamelistPathController);
-        break;
-      case 3: // Temp ROM path
+      case 2: // Temp ROM path
         _pickDirectory(_romTempPathController);
         break;
-      case 4: // Forever ROM path
+      case 3: // Forever ROM path
         _pickDirectory(_romForeverPathController);
         break;
-      case 5: // Reset button
+      case 4: // Reset button
         _resetToDefaults();
         break;
-      case 6: // Save button
+      case 5: // Save button
         if (!_isSaving && !_isMigrating) {
           _savePaths();
         }
@@ -285,10 +289,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
         'EMULATORS_PATH',
         _emulatorsPathController.text,
       );
-      _configService.setEnvVariable(
-        'GAMELIST_PATH',
-        _gamelistPathController.text,
-      );
+      // Note: GAMELIST_PATH is now managed automatically, not from .env
 
       // Update ROM storage paths
       if (_romTempPathController.text.trim().isNotEmpty) {
@@ -335,7 +336,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
     setState(() {
       _mediaPathController.text = '/path/to/media';
       _emulatorsPathController.text = '/path/to/emulators';
-      _gamelistPathController.text = '/path/to/gamelists';
+      // Gamelist path is now automatic, no need to reset
     });
   }
 
@@ -394,7 +395,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
               alignment: Alignment.center,
               children: [
                 Container(
-                  decoration: _selectedIndex == 5
+                  decoration: _selectedIndex == 4
                       ? BoxDecoration(
                           color: Theme.of(
                             context,
@@ -408,7 +409,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                     tooltip: 'Reset to defaults',
                   ),
                 ),
-                if (_isGamepadConnected && _selectedIndex == 5)
+                if (_isGamepadConnected && _selectedIndex == 4)
                   Positioned(
                     bottom: 0,
                     child: const GamepadButtonIndicator(
@@ -476,13 +477,50 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                       showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 16),
-                    _PathField(
-                      label: 'Gamelist Path',
-                      hint: 'Directory containing gamelist.xml files',
-                      controller: _gamelistPathController,
-                      onBrowse: () => _pickDirectory(_gamelistPathController),
-                      isSelected: _selectedIndex == 2,
-                      showGamepadIndicator: _isGamepadConnected,
+                    // Gamelist path (read-only, informational)
+                    Card(
+                      color: Colors.green.shade50,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.playlist_play,
+                                  color: Colors.green.shade700,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Gamelist Path (Automatic)',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green.shade700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              _gamelistPathDisplay,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'monospace',
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Gamelists are now managed automatically in the app data directory. This makes the app fully independent and prepares for future GitHub-based gamelist distribution.',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.green.shade900,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 32),
                     const Divider(),
@@ -507,7 +545,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                           : 'Current: $_tempPathDisplay',
                       controller: _romTempPathController,
                       onBrowse: () => _pickDirectory(_romTempPathController),
-                      isSelected: _selectedIndex == 3,
+                      isSelected: _selectedIndex == 2,
                       showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 8),
@@ -523,7 +561,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                           : 'Current: $_foreverPathDisplay',
                       controller: _romForeverPathController,
                       onBrowse: () => _pickDirectory(_romForeverPathController),
-                      isSelected: _selectedIndex == 4,
+                      isSelected: _selectedIndex == 3,
                       showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 8),
@@ -637,7 +675,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                             const SizedBox(height: 12),
                             const Text(
                               'Media Path: MEDIA_PATH/platform/boxart|screenshots|videos/rom.png\n'
-                              'Gamelist Path: GAMELIST_PATH/platform/gamelist.xml\n'
+                              'Gamelist Path: ~/.local/share/com.example.emulator/gamelists/{platform}/gamelist.xml (automatic)\n'
                               'Emulators Path: EMULATORS_PATH/emulator_binary',
                               style: TextStyle(
                                 fontSize: 12,
@@ -654,7 +692,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
               ),
               const SizedBox(height: 16),
               Container(
-                decoration: _selectedIndex == 6
+                decoration: _selectedIndex == 5
                     ? BoxDecoration(
                         color: Theme.of(
                           context,
@@ -672,7 +710,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                     onPressed: (_isSaving || _isMigrating) ? null : _savePaths,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: _selectedIndex == 6
+                      backgroundColor: _selectedIndex == 5
                           ? Theme.of(context).colorScheme.primaryContainer
                           : null,
                     ),
@@ -700,7 +738,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                             children: [
                               const Text('Save Paths'),
                               if (_isGamepadConnected &&
-                                  _selectedIndex == 6) ...[
+                                  _selectedIndex == 5) ...[
                                 const SizedBox(width: 8),
                                 const GamepadButtonIndicator(
                                   button: GamepadButton.a,

@@ -1,6 +1,6 @@
 # Media Scraper
 
-Downloads missing media (covers, screenshots, videos) from ScreenScraper.fr API.
+Downloads missing media (covers, screenshots, videos) from ScreenScraper.fr API and generates/updates EmulationStation gamelist.xml files with game metadata.
 
 ## Quick Start
 
@@ -12,20 +12,27 @@ nano .env  # Add your ScreenScraper username/password
 # 2. Test with dry-run
 ./scrape_with_env.sh arduboy --dry-run --limit 5
 
-# 3. Download media
+# 3. Download media and update gamelist
 ./scrape_with_env.sh arduboy --media-types covers,screenshots
+
+# 4. Only update gamelist (no media download)
+./scrape_with_env.sh nes --gamelist-only --limit 50
+
+# 5. Only download media (skip gamelist)
+./scrape_with_env.sh snes --skip-gamelist
 ```
 
 ## What It Does
 
-Downloads missing media assets for ROMs using ScreenScraper's database:
-- Box art / covers
-- Screenshots
-- Videos
-- Marquees
-- Title screens
-- 3D boxes
-- And more...
+1. **Downloads Media:** Box art, screenshots, videos, and more from ScreenScraper's database
+2. **Generates Gamelists:** Creates/updates EmulationStation `gamelist.xml` files with:
+   - Game names
+   - Descriptions
+   - Release dates
+   - Developers/Publishers
+   - Genres
+   - Player count
+   - Ratings
 
 Preserves subdirectory structure from JSONL files automatically.
 
@@ -85,6 +92,8 @@ python3 scrape_media.py <platform> [options]
 - `--limit N` - Process only first N ROMs
 - `--skip-existing` - Skip ROMs that already have media (default: true)
 - `--no-skip-existing` - Download even if media exists
+- `--skip-gamelist` - Skip gamelist.xml generation (only download media)
+- `--gamelist-only` - Only update gamelist.xml without downloading media
 
 ## Examples
 
@@ -103,6 +112,12 @@ python3 scrape_media.py <platform> [options]
 
 # Redownload everything (overwrite)
 ./scrape_with_env.sh amiga500 --no-skip-existing --limit 10
+
+# Only update gamelist (no media download)
+./scrape_with_env.sh gb --gamelist-only --limit 50
+
+# Only download media (skip gamelist)
+./scrape_with_env.sh gba --skip-gamelist
 ```
 
 ## Supported Media Types
@@ -180,6 +195,16 @@ Media is saved with subdirectory structure preserved:
     ├── screenshots/
     └── videos/
 ```
+
+Gamelists are saved to:
+
+```
+~/.local/share/com.example.emulator/gamelists/
+└── arduboy/
+    └── gamelist.xml                  # ES-DE compatible format
+```
+
+**Note:** Gamelists are stored separately from ES-DE to allow independent management and future GitHub publication alongside ROM lists.
 
 ## Performance
 

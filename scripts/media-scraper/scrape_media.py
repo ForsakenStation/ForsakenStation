@@ -5,8 +5,11 @@ ROM Media Scraper for Forsaken Emulator
 Downloads missing media (covers, screenshots, videos, etc.) for ROMs
 using ScreenScraper.fr API based on JSONL ROM lists.
 
+Also generates/updates EmulationStation gamelist.xml files with metadata
+from the API (name, description, release date, genre, developer, etc.).
+
 Requirements:
-  pip install requests Pillow
+  pip install requests Pillow python-dotenv
 
 Setup:
   1. Create an account at https://www.screenscraper.fr/
@@ -23,10 +26,17 @@ Usage:
   ./scrape_media.py <platform> [options]
 
 Examples:
+  # Download media and update gamelist
   ./scrape_media.py arduboy --media-types covers,screenshots
-  ./scrape_media.py nes --dry-run
-  ./scrape_media.py snes --limit 10
-  ./scrape_media.py amiga500 --skip-existing
+
+  # Only update gamelist without downloading media
+  ./scrape_media.py nes --gamelist-only --limit 50
+
+  # Only download media without updating gamelist
+  ./scrape_media.py snes --skip-gamelist
+
+  # Dry run to see what would happen
+  ./scrape_media.py amiga500 --dry-run --limit 10
 """
 
 import argparse
@@ -38,6 +48,9 @@ import hashlib
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 from urllib.parse import quote
+from datetime import datetime
+import xml.etree.ElementTree as ET
+from xml.dom import minidom
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -64,6 +77,7 @@ COLORS = {
 # Configuration
 JSONL_DIR = Path.home() / ".local/share/com.example.emulator/romlists/AndroidRoms-main"
 MEDIA_DIR = Path("/home/victor/ES-DE/downloaded_media_new")
+GAMELIST_DIR = Path.home() / ".local/share/com.example.emulator/gamelists"
 
 # ScreenScraper API
 SCREENSCRAPER_API = "https://www.screenscraper.fr/api2"
@@ -130,6 +144,11 @@ PLATFORM_IDS = {
     "wii": 16,
     "wiiu": 18,
     "wasm4": 262,
+    "wonderswan": 45,
+    "wonderswancolor": 46,
+    "x68000": 79,
+    "zmachine": 215,
+    "uzebox": 216,
 }
 
 
@@ -243,12 +262,40 @@ class ScreenScraperAPI:
         return None
 
     def download_media(self, media_url: str, output_path: Path) -> bool:
-        """Download media file"""
+        """
+        Download media file
+
+        Args:
+            media_url: URL to download from
+            output_path: Path to save to (extension will be corrected based on Content-Type)
+
+        Returns:
+            True if successful, False otherwise
+        """
         try:
             self._rate_limit()
 
             response = self.session.get(media_url, timeout=60, stream=True)
             if response.status_code == 200:
+                # Detect correct extension from Content-Type header
+                content_type = response.headers.get("Content-Type", "").lower()
+
+                if "image/png" in content_type:
+                    ext = ".png"
+                elif "image/jpeg" in content_type or "image/jpg" in content_type:
+                    ext = ".jpg"
+                elif "image/webp" in content_type:
+                    ext = ".webp"
+                elif "video/mp4" in content_type:
+                    ext = ".mp4"
+                else:
+                    # Fallback: try to get extension from URL, or default to .png
+                    ext = Path(media_url).suffix
+                    if not ext or ext.startswith(".php"):
+                        ext = ".png"  # Default for images
+
+                # Update output path with correct extension
+                output_path = output_path.with_suffix(ext)
                 output_path.parent.mkdir(parents=True, exist_ok=True)
 
                 with open(output_path, "wb") as f:
@@ -300,6 +347,188 @@ def get_existing_media(
     return None
 
 
+def escape_xml(text: str) -> str:
+    """Escape special XML characters"""
+    if not text:
+        return ""
+    return (
+        text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&apos;")
+    )
+
+
+def format_date(date_str: str) -> str:
+    """Convert date string to ES-DE format (YYYYMMDDTHHMMSS)"""
+    if not date_str:
+        return ""
+
+    # Try different date formats
+    formats = ["%Y-%m-%d", "%Y%m%d", "%Y"]
+
+    for fmt in formats:
+        try:
+            dt = datetime.strptime(date_str, fmt)
+            return dt.strftime("%Y%m%dT000000")
+        except ValueError:
+            continue
+
+    return ""
+
+
+def extract_game_metadata(game_data: Dict, rom_name: str) -> Dict[str, str]:
+    """Extract metadata from ScreenScraper game data"""
+    metadata = {}
+
+    # Name
+    if "noms" in game_data and game_data["noms"]:
+        metadata["name"] = game_data["noms"][0].get("text", rom_name)
+    else:
+        metadata["name"] = rom_name
+
+    # Description
+    if "synopsis" in game_data and game_data["synopsis"]:
+        for synopsis in game_data["synopsis"]:
+            if synopsis.get("langue") == "en":
+                metadata["desc"] = synopsis.get("text", "")
+                break
+        if "desc" not in metadata and game_data["synopsis"]:
+            metadata["desc"] = game_data["synopsis"][0].get("text", "")
+
+    # Release date
+    if "dates" in game_data and game_data["dates"]:
+        for date in game_data["dates"]:
+            if date.get("region") == "wor":  # World release
+                metadata["releasedate"] = format_date(date.get("text", ""))
+                break
+        if "releasedate" not in metadata and game_data["dates"]:
+            metadata["releasedate"] = format_date(game_data["dates"][0].get("text", ""))
+
+    # Developer
+    if "developpeur" in game_data:
+        metadata["developer"] = game_data["developpeur"].get("text", "")
+
+    # Publisher
+    if "editeur" in game_data:
+        metadata["publisher"] = game_data["editeur"].get("text", "")
+
+    # Genre
+    if "genres" in game_data and game_data["genres"]:
+        genres = []
+        for genre in game_data["genres"]:
+            if "noms" in genre and genre["noms"]:
+                for nom in genre["noms"]:
+                    if nom.get("langue") == "en":
+                        genres.append(nom.get("text", ""))
+                        break
+        if genres:
+            metadata["genre"] = " / ".join(genres)
+
+    # Players
+    if "joueurs" in game_data:
+        metadata["players"] = game_data["joueurs"].get("text", "1")
+
+    # Rating (convert 0-20 scale to 0-1 scale)
+    if "note" in game_data:
+        try:
+            note = float(game_data["note"].get("text", "0"))
+            metadata["rating"] = str(note / 20.0)
+        except (ValueError, AttributeError):
+            pass
+
+    return metadata
+
+
+def load_gamelist(gamelist_path: Path) -> ET.Element:
+    """Load existing gamelist.xml or create new one"""
+    if gamelist_path.exists():
+        try:
+            tree = ET.parse(gamelist_path)
+            return tree.getroot()
+        except ET.ParseError:
+            log("warning", f"Could not parse existing gamelist.xml, creating new one")
+
+    # Create new gamelist
+    root = ET.Element("gameList")
+    return root
+
+
+def update_gamelist(
+    gamelist_root: ET.Element, rom_name: str, metadata: Dict[str, str], parent: str = ""
+) -> bool:
+    """Update or add game entry in gamelist"""
+    # Build path (with parent directory if exists)
+    if parent:
+        rom_path = f"./{parent}/{rom_name}.zip"
+    else:
+        rom_path = f"./{rom_name}.zip"
+
+    # Check if game already exists
+    game_elem = None
+    for game in gamelist_root.findall("game"):
+        path_elem = game.find("path")
+        if path_elem is not None and path_elem.text == rom_path:
+            game_elem = game
+            break
+
+    # Create new game element if not exists
+    if game_elem is None:
+        game_elem = ET.SubElement(gamelist_root, "game")
+        path_elem = ET.SubElement(game_elem, "path")
+        path_elem.text = rom_path
+
+    # Update metadata fields
+    fields = [
+        "name",
+        "desc",
+        "releasedate",
+        "developer",
+        "publisher",
+        "genre",
+        "players",
+        "rating",
+    ]
+
+    for field in fields:
+        if field in metadata and metadata[field]:
+            # Find or create element
+            elem = game_elem.find(field)
+            if elem is None:
+                elem = ET.SubElement(game_elem, field)
+            elem.text = escape_xml(metadata[field])
+
+    return True
+
+
+def save_gamelist(gamelist_root: ET.Element, gamelist_path: Path) -> bool:
+    """Save gamelist.xml with proper formatting"""
+    try:
+        # Convert to string with minidom for pretty printing
+        xml_str = ET.tostring(gamelist_root, encoding="unicode")
+        dom = minidom.parseString(xml_str)
+        pretty_xml = dom.toprettyxml(indent="\t", encoding="utf-8")
+
+        # Remove extra blank lines
+        lines = [
+            line for line in pretty_xml.decode("utf-8").split("\n") if line.strip()
+        ]
+        pretty_xml = "\n".join(lines) + "\n"
+
+        # Ensure directory exists
+        gamelist_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Write file
+        with open(gamelist_path, "w", encoding="utf-8") as f:
+            f.write(pretty_xml)
+
+        return True
+    except Exception as e:
+        log("error", f"Failed to save gamelist.xml: {e}")
+        return False
+
+
 def scrape_platform(
     platform: str,
     api: ScreenScraperAPI,
@@ -307,11 +536,14 @@ def scrape_platform(
     skip_existing: bool = True,
     dry_run: bool = False,
     limit: Optional[int] = None,
+    skip_gamelist: bool = False,
+    gamelist_only: bool = False,
 ):
     """Scrape media for a platform"""
 
     jsonl_file = JSONL_DIR / f"{platform}.jsonl"
     platform_media_dir = MEDIA_DIR / platform
+    gamelist_path = GAMELIST_DIR / platform / "gamelist.xml"
 
     # Validate
     if not jsonl_file.exists():
@@ -328,7 +560,18 @@ def scrape_platform(
     log("info", f"Scraping media for: {platform} (ScreenScraper ID: {platform_id})")
     if dry_run:
         log("warning", "DRY RUN - No files will be downloaded")
+    if gamelist_only:
+        log("info", "GAMELIST ONLY - Only updating gamelist.xml")
+    if skip_gamelist:
+        log("info", "Skipping gamelist.xml generation")
     print()
+
+    # Load or create gamelist
+    gamelist_root = None
+    if not skip_gamelist:
+        gamelist_root = load_gamelist(gamelist_path)
+        log("info", f"Gamelist: {gamelist_path}")
+        print()
 
     # Extract ROM info
     log("info", "Loading ROM list...")
@@ -347,6 +590,9 @@ def scrape_platform(
         "not_found": 0,
         "downloaded": 0,
         "skipped": 0,
+        "skipped_all_exist": 0,  # ROMs with all media already present
+        "api_calls_saved": 0,  # API calls saved by checking media first
+        "gamelist_updated": 0,  # Games added/updated in gamelist
         "errors": 0,
     }
 
@@ -357,31 +603,59 @@ def scrape_platform(
 
         print(f"[{i}/{stats['total']}] {rom_name}")
 
-        # Check existing media
-        has_all_media = True
-        for media_type in media_types:
-            # Build path with subdirectory
-            if parent:
-                media_dir = platform_media_dir / media_type / parent
-            else:
-                media_dir = platform_media_dir / media_type
+        # Check which media types are missing
+        missing_media_types = []
+        existing_media_types = []
 
-            existing = get_existing_media(media_dir, rom_name, media_type)
-            if not existing:
-                has_all_media = False
-                break
+        if not gamelist_only:
+            for media_type in media_types:
+                # Build path with subdirectory
+                if parent:
+                    media_dir = platform_media_dir / media_type / parent
+                else:
+                    media_dir = platform_media_dir / media_type
 
-        if skip_existing and has_all_media:
-            print(f"  ✓ All media exists, skipping")
-            stats["skipped"] += 1
-            continue
+                existing = get_existing_media(media_dir, rom_name, media_type)
+                if existing:
+                    existing_media_types.append(media_type)
+                else:
+                    missing_media_types.append(media_type)
 
-        # Search game
-        print(f"  🔍 Searching...")
+            # If skip_existing is enabled and all media exists, check if we need gamelist
+            if skip_existing and not missing_media_types:
+                if skip_gamelist or gamelist_only:
+                    print(f"  ✓ All media exists, skipping")
+                    stats["skipped"] += 1
+                    stats["skipped_all_exist"] += 1
+                    stats["api_calls_saved"] += 1
+                    continue
+                # If we need gamelist, we still need to search
+                print(f"  ✓ All media exists")
+
+            # Show what media already exists
+            if existing_media_types:
+                existing_str = ", ".join(existing_media_types)
+                print(f"  • Already have: {existing_str}")
+
+            # Show what we're looking for
+            if missing_media_types:
+                missing_str = ", ".join(missing_media_types)
+                print(f"  • Looking for: {missing_str}")
+
+            # Check if we need to search API
+            if not missing_media_types and skip_gamelist:
+                print(f"  ✓ All requested media exists")
+                stats["skipped"] += 1
+                stats["skipped_all_exist"] += 1
+                stats["api_calls_saved"] += 1
+                continue
+
+        # Search game (if we need media or gamelist)
+        print(f"  🔍 Searching API...")
         game_data = api.search_game(rom_name, platform_id)
 
         if not game_data:
-            print(f"  ✗ Not found")
+            print(f"  ✗ Not found in ScreenScraper")
             stats["not_found"] += 1
             continue
 
@@ -389,13 +663,27 @@ def scrape_platform(
         game_name = game_data.get("noms", [{}])[0].get("text", rom_name)
         print(f"  ✓ Found: {game_name}")
 
+        # Update gamelist
+        if not skip_gamelist and gamelist_root is not None:
+            metadata = extract_game_metadata(game_data, rom_name)
+            if update_gamelist(gamelist_root, rom_name, metadata, parent):
+                stats["gamelist_updated"] += 1
+                print(f"    📝 Gamelist updated")
+
+        # Skip media download if gamelist_only
+        if gamelist_only:
+            print()
+            continue
+
         # Download media
         medias = game_data.get("medias", [])
         if not medias:
-            print(f"  ⚠ No media available")
+            print(f"  ⚠ No media available from ScreenScraper")
+            print()
             continue
 
-        for media_type in media_types:
+        # Only try to download missing media types
+        for media_type in missing_media_types:
             # Find matching media in response
             media_found = False
             for ss_type, local_types in MEDIA_TYPES.items():
@@ -412,15 +700,18 @@ def scrape_platform(
                                 else:
                                     output_dir = platform_media_dir / media_type
 
-                                # Determine extension from URL
-                                ext = Path(media_url).suffix or ".png"
-                                output_path = output_dir / f"{rom_name}{ext}"
+                                # Use temporary extension - download_media() will correct it
+                                output_path = output_dir / f"{rom_name}.tmp"
 
-                                # Skip if exists
-                                if skip_existing and output_path.exists():
-                                    print(f"    • {media_type}: exists")
-                                    media_found = True
-                                    break
+                                # Skip if media already exists (check all common extensions)
+                                if skip_existing:
+                                    existing = get_existing_media(
+                                        output_dir, rom_name, media_type
+                                    )
+                                    if existing:
+                                        print(f"    • {media_type}: exists")
+                                        media_found = True
+                                        break
 
                                 if not dry_run:
                                     print(f"    ⬇ {media_type}...", end="", flush=True)
@@ -444,17 +735,33 @@ def scrape_platform(
 
         print()
 
+    # Save gamelist
+    if not skip_gamelist and gamelist_root is not None and not dry_run:
+        if save_gamelist(gamelist_root, gamelist_path):
+            log("info", f"Gamelist saved: {gamelist_path}")
+        else:
+            log("error", "Failed to save gamelist.xml")
+
     # Summary
     print("━" * 50)
-    print(f"{'Summary for:':<20} {platform}")
+    print(f"{'Summary for:':<25} {platform}")
     print("━" * 50)
-    print(f"{'Total ROMs:':<20} {stats['total']}")
-    print(f"{'Found:':<20} {stats['found']}")
-    print(f"{'Not found:':<20} {stats['not_found']}")
-    print(f"{'Downloaded:':<20} {stats['downloaded']}")
-    print(f"{'Skipped:':<20} {stats['skipped']}")
-    print(f"{'Errors:':<20} {stats['errors']}")
+    print(f"{'Total ROMs:':<25} {stats['total']}")
+    print(f"{'Found in API:':<25} {stats['found']}")
+    print(f"{'Not found in API:':<25} {stats['not_found']}")
+    if not gamelist_only:
+        print(f"{'Media downloaded:':<25} {stats['downloaded']}")
+        print(f"{'Skipped (all exist):':<25} {stats['skipped_all_exist']}")
+        print(
+            f"{'Skipped (other):':<25} {stats['skipped'] - stats['skipped_all_exist']}"
+        )
+    if not skip_gamelist:
+        print(f"{'Gamelist entries:':<25} {stats['gamelist_updated']}")
+    print(f"{'Errors:':<25} {stats['errors']}")
     print("━" * 50)
+    if not gamelist_only:
+        print(f"{'API calls saved:':<25} {stats['api_calls_saved']} 🎉")
+        print("━" * 50)
 
     return True
 
@@ -469,6 +776,8 @@ Examples:
   %(prog)s nes --media-types covers,screenshots
   %(prog)s snes --dry-run
   %(prog)s amiga500 --limit 10 --no-skip-existing
+  %(prog)s gb --gamelist-only --limit 50
+  %(prog)s gba --skip-gamelist
         """,
     )
 
@@ -490,6 +799,16 @@ Examples:
         dest="skip_existing",
         action="store_false",
         help="Download media even if it exists",
+    )
+    parser.add_argument(
+        "--skip-gamelist",
+        action="store_true",
+        help="Skip gamelist.xml generation (only download media)",
+    )
+    parser.add_argument(
+        "--gamelist-only",
+        action="store_true",
+        help="Only update gamelist.xml without downloading media",
     )
     parser.add_argument(
         "--dry-run",
@@ -538,6 +857,8 @@ Examples:
         skip_existing=args.skip_existing,
         dry_run=args.dry_run,
         limit=args.limit,
+        skip_gamelist=args.skip_gamelist,
+        gamelist_only=args.gamelist_only,
     )
 
     return 0 if success else 1
