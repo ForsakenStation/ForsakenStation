@@ -310,6 +310,8 @@ class RomService {
             path: rom.urlFilePath, // For JSONL, this is just the name
             type: RomItemType.rom,
             downloadUrl: rom.downloadUrl,
+            subdirectory:
+                rom.subdirectory, // Pass subdirectory for media lookup
           ),
         );
       }

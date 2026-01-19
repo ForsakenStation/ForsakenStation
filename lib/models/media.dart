@@ -76,6 +76,8 @@ class RomMedia {
   Media? video;
   Media? titlescreen;
   Media? manual;
+  Media? backcover;
+  Media? fanart;
 
   RomMedia({
     required this.romName,
@@ -88,6 +90,8 @@ class RomMedia {
     this.video,
     this.titlescreen,
     this.manual,
+    this.backcover,
+    this.fanart,
   });
 
   bool get hasAnyMedia =>
@@ -97,7 +101,9 @@ class RomMedia {
       (marquee?.exists ?? false) ||
       (screenshot?.exists ?? false) ||
       (mixImage?.exists ?? false) ||
-      (video?.exists ?? false);
+      (video?.exists ?? false) ||
+      (backcover?.exists ?? false) ||
+      (fanart?.exists ?? false);
 
   String? get manualPath => manual?.path;
 
@@ -110,6 +116,8 @@ class RomMedia {
     if (titlescreen?.exists ?? false) media.add(titlescreen!);
     if (screenshot?.exists ?? false) media.add(screenshot!);
     if (video?.exists ?? false) media.add(video!);
+    if (backcover?.exists ?? false) media.add(backcover!);
+    if (fanart?.exists ?? false) media.add(fanart!);
     return media;
   }
 

@@ -1,9 +1,15 @@
 #!/bin/bash
 
 # Script para crear un build portable de Linux con libmpv incluido
-# Uso: ./build_linux_portable.sh
+# Uso: ./build_linux_portable.sh (desde la raíz)
+#      make portable (desde cualquier lugar)
 
 set -e
+
+# Change to project root if running from scripts/build/
+if [ -f "../../pubspec.yaml" ]; then
+    cd ../..
+fi
 
 echo "🚀 Building Forsaken Emulator - Linux Portable"
 echo "=============================================="

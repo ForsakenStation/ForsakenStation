@@ -120,11 +120,31 @@ Forsaken is a modern, cross-platform retro gaming frontend built with Flutter. I
 
 ## 🏗️ Building
 
+Build commands are available through the Makefile for convenience.
+
+### Quick Build
+```bash
+# Show all available commands
+make help
+
+# Standard release build
+make build
+
+# Portable Linux bundle (includes all dependencies)
+make portable
+
+# AppImage (single-file distribution)
+make appimage
+```
+
 ### Desktop
+
+Standard Flutter builds:
 
 ```bash
 # Linux
 fvm flutter build linux --release
+make build
 
 # macOS
 fvm flutter build macos --release
@@ -263,6 +283,15 @@ lib/
 │   └── ...
 └── constants/                     # App constants
 
+scripts/                           # Utility scripts
+├── README.md                      # Scripts overview
+├── media-migration/               # Media reorganization tools
+│   ├── migrate_media.py          # Migrate media to JSONL structure
+│   └── ...
+└── media-scraper/                 # Download media from web
+    ├── scrape_media.py           # ScreenScraper.fr integration
+    └── ...
+
 assets/
 ├── config.json                    # App configuration
 ├── data/
@@ -303,7 +332,9 @@ Configure emulators through the Settings > Emulator Management screen:
 
 ### Media Assets
 
-Media files should be organized by platform and type:
+Media files should be organized by platform and type. The project includes utilities in the `scripts/` directory to help manage media:
+
+**Media Directory Structure:**
 ```
 MEDIA_PATH/
   └── <platform>/
@@ -316,6 +347,24 @@ MEDIA_PATH/
 ```
 
 File names should match the ROM filename (without extension).
+
+**Media Management Scripts:**
+
+The project includes scripts to help manage your media collection:
+
+1. **Media Migration** - Reorganize existing media to match ROM folder structure
+   ```bash
+   cd scripts/media-migration
+   ./migrate_media.py <platform> --dry-run
+   ```
+
+2. **Media Scraper** - Download missing media from ScreenScraper.fr
+   ```bash
+   cd scripts/media-scraper
+   ./scrape_with_env.sh <platform> --media-types covers,screenshots
+   ```
+
+See [scripts/README.md](scripts/README.md) for complete documentation.
 
 ---
 
@@ -444,7 +493,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🗺️ Roadmap
 
-- [ ] Online scraper integration (ScreenScraper.fr, TheGamesDB)
+- [x] Media migration utilities
+- [x] Online scraper integration (ScreenScraper.fr)
+- [ ] TheGamesDB integration
 - [ ] Cloud save sync
 - [ ] Achievement tracking
 - [ ] Play time statistics

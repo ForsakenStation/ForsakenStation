@@ -14,6 +14,7 @@ class MediaService {
 
   Future<RomMedia> getMediaForRom(Rom rom) async {
     final romNameWithoutExt = rom.displayName;
+    final subdirectory = rom.subdirectory;
 
     final romMedia = RomMedia(
       romName: romNameWithoutExt,
@@ -25,41 +26,61 @@ class MediaService {
       rom.platform,
       romNameWithoutExt,
       MediaType.box3d,
+      subdirectory: subdirectory,
     );
     romMedia.cover = await _findMedia(
       rom.platform,
       romNameWithoutExt,
       MediaType.cover,
+      subdirectory: subdirectory,
     );
     romMedia.marquee = await _findMedia(
       rom.platform,
       romNameWithoutExt,
       MediaType.marquee,
+      subdirectory: subdirectory,
     );
     romMedia.screenshot = await _findMedia(
       rom.platform,
       romNameWithoutExt,
       MediaType.screenshot,
+      subdirectory: subdirectory,
     );
     romMedia.mixImage = await _findMedia(
       rom.platform,
       romNameWithoutExt,
       MediaType.mixImage,
+      subdirectory: subdirectory,
     );
     romMedia.video = await _findMedia(
       rom.platform,
       romNameWithoutExt,
       MediaType.video,
+      subdirectory: subdirectory,
     );
     romMedia.titlescreen = await _findMedia(
       rom.platform,
       romNameWithoutExt,
       MediaType.titlescreen,
+      subdirectory: subdirectory,
     );
     romMedia.manual = await _findMedia(
       rom.platform,
       romNameWithoutExt,
       MediaType.manual,
+      subdirectory: subdirectory,
+    );
+    romMedia.backcover = await _findMedia(
+      rom.platform,
+      romNameWithoutExt,
+      MediaType.backcover,
+      subdirectory: subdirectory,
+    );
+    romMedia.fanart = await _findMedia(
+      rom.platform,
+      romNameWithoutExt,
+      MediaType.fanart,
+      subdirectory: subdirectory,
     );
 
     return romMedia;
@@ -71,6 +92,7 @@ class MediaService {
   ) async {
     // Get ROM name without extension for matching media files
     final romNameWithoutExt = _getRomNameWithoutExtension(romItem.name);
+    final subdirectory = romItem.subdirectory;
 
     _debug.debug('Loading media for ROM: ${romItem.name}', tag: 'MediaService');
     _debug.debug(
@@ -78,6 +100,7 @@ class MediaService {
       tag: 'MediaService',
     );
     _debug.debug('Platform: $platformName', tag: 'MediaService');
+    _debug.debug('Subdirectory: $subdirectory', tag: 'MediaService');
     _debug.debug('Media base path: $mediaBasePath', tag: 'MediaService');
 
     final romMedia = RomMedia(
@@ -85,11 +108,12 @@ class MediaService {
       platform: platformName,
     );
 
-    // Check for all media types with priority
+    // Check for all media types with subdirectory support
     romMedia.box3d = await _findMedia(
       platformName,
       romNameWithoutExt,
       MediaType.box3d,
+      subdirectory: subdirectory,
     );
     if (romMedia.box3d != null) {
       _debug.debug(
@@ -102,6 +126,7 @@ class MediaService {
       platformName,
       romNameWithoutExt,
       MediaType.cover,
+      subdirectory: subdirectory,
     );
     if (romMedia.cover != null) {
       _debug.debug('Found cover: ${romMedia.cover!.path}', tag: 'MediaService');
@@ -111,6 +136,7 @@ class MediaService {
       platformName,
       romNameWithoutExt,
       MediaType.marquee,
+      subdirectory: subdirectory,
     );
     if (romMedia.marquee != null) {
       _debug.debug(
@@ -123,6 +149,7 @@ class MediaService {
       platformName,
       romNameWithoutExt,
       MediaType.screenshot,
+      subdirectory: subdirectory,
     );
     if (romMedia.screenshot != null) {
       _debug.debug(
@@ -135,6 +162,7 @@ class MediaService {
       platformName,
       romNameWithoutExt,
       MediaType.mixImage,
+      subdirectory: subdirectory,
     );
     if (romMedia.mixImage != null) {
       _debug.debug(
@@ -147,6 +175,7 @@ class MediaService {
       platformName,
       romNameWithoutExt,
       MediaType.video,
+      subdirectory: subdirectory,
     );
     if (romMedia.video != null) {
       _debug.debug('Found video: ${romMedia.video!.path}', tag: 'MediaService');
@@ -156,6 +185,7 @@ class MediaService {
       platformName,
       romNameWithoutExt,
       MediaType.titlescreen,
+      subdirectory: subdirectory,
     );
     if (romMedia.titlescreen != null) {
       _debug.debug(
@@ -168,10 +198,37 @@ class MediaService {
       platformName,
       romNameWithoutExt,
       MediaType.manual,
+      subdirectory: subdirectory,
     );
     if (romMedia.manual != null) {
       _debug.debug(
         'Found manual: ${romMedia.manual!.path}',
+        tag: 'MediaService',
+      );
+    }
+
+    romMedia.backcover = await _findMedia(
+      platformName,
+      romNameWithoutExt,
+      MediaType.backcover,
+      subdirectory: subdirectory,
+    );
+    if (romMedia.backcover != null) {
+      _debug.debug(
+        'Found backcover: ${romMedia.backcover!.path}',
+        tag: 'MediaService',
+      );
+    }
+
+    romMedia.fanart = await _findMedia(
+      platformName,
+      romNameWithoutExt,
+      MediaType.fanart,
+      subdirectory: subdirectory,
+    );
+    if (romMedia.fanart != null) {
+      _debug.debug(
+        'Found fanart: ${romMedia.fanart!.path}',
         tag: 'MediaService',
       );
     }
@@ -191,10 +248,23 @@ class MediaService {
   Future<Media?> _findMedia(
     String platform,
     String romName,
-    MediaType type,
-  ) async {
+    MediaType type, {
+    String? subdirectory,
+  }) async {
     final mediaTypePath = _getMediaTypePath(type);
-    final platformMediaPath = path.join(mediaBasePath, platform, mediaTypePath);
+
+    // Build path including subdirectory if present
+    String platformMediaPath;
+    if (subdirectory != null && subdirectory.isNotEmpty) {
+      platformMediaPath = path.join(
+        mediaBasePath,
+        platform,
+        mediaTypePath,
+        subdirectory,
+      );
+    } else {
+      platformMediaPath = path.join(mediaBasePath, platform, mediaTypePath);
+    }
 
     _debug.debug(
       'Looking for ${type.name} in: $platformMediaPath',

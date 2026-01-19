@@ -4,8 +4,16 @@
 # Requiere: appimagetool (https://appimage.github.io/appimagetool/)
 # Descarga: wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 #           chmod +x appimagetool-x86_64.AppImage
+#
+# Usage: Run from project root or use Makefile
+#        make appimage
 
 set -e
+
+# Change to project root if running from scripts/build/
+if [ -f "../../pubspec.yaml" ]; then
+    cd ../..
+fi
 
 echo "🚀 Building Forsaken Emulator - AppImage"
 echo "========================================"
