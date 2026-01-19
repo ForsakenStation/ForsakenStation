@@ -475,7 +475,7 @@ Examples:
     parser.add_argument("platform", help="Platform to scrape")
     parser.add_argument(
         "--media-types",
-        default="covers,screenshots,marquees,fanart",
+        default="covers,screenshots,marquees,fanart,backcovers,3dboxes,titlescreens,videos,miximages",
         help="Media types to download (comma-separated)",
     )
     parser.add_argument(
