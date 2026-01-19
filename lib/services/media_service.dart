@@ -242,7 +242,12 @@ class MediaService {
   }
 
   String _getRomNameWithoutExtension(String fileName) {
-    return fileName.substring(0, fileName.lastIndexOf('.'));
+    final dotIndex = fileName.lastIndexOf('.');
+    if (dotIndex == -1) {
+      // No extension found, return the whole filename
+      return fileName;
+    }
+    return fileName.substring(0, dotIndex);
   }
 
   Future<Media?> _findMedia(

@@ -18,6 +18,7 @@ import '../widgets/platforms/platform_card.dart';
 import '../widgets/platforms/platform_info_dialog.dart';
 import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
+import '../widgets/common/exit_dialog.dart';
 import '../widgets/common/smart_svg.dart';
 import '../widgets/common/controls_bottom_bar.dart';
 import 'roms_screen.dart';
@@ -856,38 +857,14 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     // Pause gamepad polling while dialog is open
     _stopGamepadPolling();
 
-    final shouldExit = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      barrierColor: Colors.black.withValues(alpha: 0.7),
-      builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: Focus(
-          autofocus: true,
-          child: AlertDialog(
-            title: const Text('Exit Application'),
-            content: const Text('Are you sure you want to exit?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => SystemNavigator.pop(),
-                child: const Text('Exit'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    final shouldExit = await ExitDialog.show(context);
 
     // Resume gamepad polling after dialog closes
     if (mounted) {
       _startGamepadPolling();
     }
 
-    if (shouldExit == true && mounted) {
+    if (shouldExit && mounted) {
       Navigator.of(context).pop();
     }
   }
