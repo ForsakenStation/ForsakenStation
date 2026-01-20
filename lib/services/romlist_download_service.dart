@@ -13,7 +13,7 @@ class RomlistDownloadService {
   static const String _repoUrl =
       'https://github.com/ForsakenStation/romList/archive/refs/heads/main.zip';
   static const String _romlistFolderName = 'romlists';
-  static const String _extractedFolderName = 'main';
+  static const String _extractedFolderName = 'romList-main';
 
   final _debug = DebugService.instance;
 

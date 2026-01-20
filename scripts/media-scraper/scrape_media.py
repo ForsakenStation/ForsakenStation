@@ -75,7 +75,7 @@ COLORS = {
 }
 
 # Configuration
-JSONL_DIR = Path.home() / ".local/share/com.example.emulator/romlists/main"
+JSONL_DIR = Path.home() / ".local/share/com.example.emulator/romlists/romList-main"
 MEDIA_DIR = Path("/home/victor/ES-DE/downloaded_media_new")
 GAMELIST_DIR = Path.home() / ".local/share/com.example.emulator/gamelists"
 
