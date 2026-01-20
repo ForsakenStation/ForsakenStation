@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import '../../services/romlist_download_service.dart';
 import '../../services/keyboard_service.dart';
 
-/// Screen for managing ROM database (AndroidRoms JSONL lists)
+/// Screen for managing ROM database (romLists JSONL lists)
 ///
 /// Allows users to:
 /// - View database status
@@ -66,7 +66,7 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'This will download ROM lists from the AndroidRoms repository on GitHub.',
+              'This will download ROM lists from the Forsaken romList repository on GitHub.',
             ),
             const SizedBox(height: 16),
             const Text(
@@ -332,11 +332,11 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
                 const SizedBox(height: 12),
                 const Text(
                   'The ROM database contains lists of available ROMs organized by platform. '
-                  'This data is sourced from the AndroidRoms repository on GitHub.',
+                  'This data is sourced from the Forsaken romList repository on GitHub.',
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Source: github.com/Arley4d/AndroidRoms',
+                  'Source: github.com/ForsakenStation/romList',
                   style: TextStyle(
                     fontFamily: 'monospace',
                     fontSize: 12,

@@ -31,6 +31,10 @@
                 {
                     "name": "gearcoleco",
                     "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/gearcoleco_libretro.so"
+                },
+                {
+                    "name": "mame",
+                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
                 }
             ],
             "useForeverMode": false,

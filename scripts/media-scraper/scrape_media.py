@@ -75,7 +75,7 @@ COLORS = {
 }
 
 # Configuration
-JSONL_DIR = Path.home() / ".local/share/com.example.emulator/romlists/AndroidRoms-main"
+JSONL_DIR = Path.home() / ".local/share/com.example.emulator/romlists/main"
 MEDIA_DIR = Path("/home/victor/ES-DE/downloaded_media_new")
 GAMELIST_DIR = Path.home() / ".local/share/com.example.emulator/gamelists"
 
@@ -149,6 +149,8 @@ PLATFORM_IDS = {
     "x68000": 79,
     "zmachine": 215,
     "uzebox": 216,
+    "virtualboy": 11,
+    "3do": 29,
 }
 
 
@@ -529,6 +531,33 @@ def save_gamelist(gamelist_root: ET.Element, gamelist_path: Path) -> bool:
         return False
 
 
+def game_exists_in_gamelist(
+    gamelist_root: ET.Element, rom_name: str, parent: str = ""
+) -> bool:
+    """Check if game already exists in gamelist with metadata"""
+    # Build path (with parent directory if exists)
+    if parent:
+        rom_path = f"./{parent}/{rom_name}.zip"
+    else:
+        rom_path = f"./{rom_name}.zip"
+
+    # Check if game exists and has at least name and description
+    for game in gamelist_root.findall("game"):
+        path_elem = game.find("path")
+        if path_elem is not None and path_elem.text == rom_path:
+            # Check if it has meaningful metadata (at least name and desc)
+            name_elem = game.find("name")
+            desc_elem = game.find("desc")
+            if (
+                name_elem is not None
+                and name_elem.text
+                and desc_elem is not None
+                and desc_elem.text
+            ):
+                return True
+    return False
+
+
 def scrape_platform(
     platform: str,
     api: ScreenScraperAPI,
@@ -603,6 +632,13 @@ def scrape_platform(
 
         print(f"[{i}/{stats['total']}] {rom_name}")
 
+        # Check if gamelist entry already exists with full metadata
+        gamelist_exists = False
+        if not skip_gamelist and gamelist_root is not None:
+            gamelist_exists = game_exists_in_gamelist(gamelist_root, rom_name, parent)
+            if gamelist_exists:
+                print(f"  ✓ Gamelist entry exists")
+
         # Check which media types are missing
         missing_media_types = []
         existing_media_types = []
@@ -621,15 +657,15 @@ def scrape_platform(
                 else:
                     missing_media_types.append(media_type)
 
-            # If skip_existing is enabled and all media exists, check if we need gamelist
+            # Check if we can skip entirely (all media + gamelist exists)
             if skip_existing and not missing_media_types:
-                if skip_gamelist or gamelist_only:
-                    print(f"  ✓ All media exists, skipping")
+                if gamelist_exists or skip_gamelist:
+                    print(f"  ✓ All media and gamelist exists, skipping")
                     stats["skipped"] += 1
                     stats["skipped_all_exist"] += 1
                     stats["api_calls_saved"] += 1
                     continue
-                # If we need gamelist, we still need to search
+                # If media exists but gamelist doesn't, continue to update gamelist
                 print(f"  ✓ All media exists")
 
             # Show what media already exists
@@ -642,13 +678,20 @@ def scrape_platform(
                 missing_str = ", ".join(missing_media_types)
                 print(f"  • Looking for: {missing_str}")
 
-            # Check if we need to search API
-            if not missing_media_types and skip_gamelist:
-                print(f"  ✓ All requested media exists")
+            # Check if we can skip API call (all media exists and no gamelist needed)
+            if not missing_media_types and (gamelist_exists or skip_gamelist):
+                print(f"  ✓ All requested media and gamelist exists")
                 stats["skipped"] += 1
                 stats["skipped_all_exist"] += 1
                 stats["api_calls_saved"] += 1
                 continue
+
+        # If gamelist_only mode and entry already exists, skip
+        if gamelist_only and gamelist_exists:
+            print(f"  ✓ Gamelist entry already complete, skipping")
+            stats["skipped"] += 1
+            stats["api_calls_saved"] += 1
+            continue
 
         # Search game (if we need media or gamelist)
         print(f"  🔍 Searching API...")
@@ -657,6 +700,7 @@ def scrape_platform(
         if not game_data:
             print(f"  ✗ Not found in ScreenScraper")
             stats["not_found"] += 1
+            print()
             continue
 
         stats["found"] += 1
@@ -669,6 +713,13 @@ def scrape_platform(
             if update_gamelist(gamelist_root, rom_name, metadata, parent):
                 stats["gamelist_updated"] += 1
                 print(f"    📝 Gamelist updated")
+
+                # Save gamelist after each ROM (incremental save)
+                if not dry_run:
+                    if save_gamelist(gamelist_root, gamelist_path):
+                        print(f"    💾 Gamelist saved")
+                    else:
+                        print(f"    ⚠️  Failed to save gamelist")
 
         # Skip media download if gamelist_only
         if gamelist_only:
@@ -735,12 +786,13 @@ def scrape_platform(
 
         print()
 
-    # Save gamelist
+    # Final save of gamelist (as backup, since we save after each ROM)
     if not skip_gamelist and gamelist_root is not None and not dry_run:
+        log("info", f"Final gamelist save: {gamelist_path}")
         if save_gamelist(gamelist_root, gamelist_path):
-            log("info", f"Gamelist saved: {gamelist_path}")
+            log("info", f"✓ Gamelist finalized successfully")
         else:
-            log("error", "Failed to save gamelist.xml")
+            log("error", "Failed to finalize gamelist.xml")
 
     # Summary
     print("━" * 50)

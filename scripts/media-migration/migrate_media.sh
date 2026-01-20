@@ -28,7 +28,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Configuration
-JSONL_DIR="$HOME/.local/share/com.example.emulator/romlists/AndroidRoms-main"
+JSONL_DIR="$HOME/.local/share/com.example.emulator/romlists/main"
 OLD_MEDIA_DIR="/home/victor/ES-DE/downloaded_media"
 NEW_MEDIA_DIR="/home/victor/ES-DE/downloaded_media_new"
 

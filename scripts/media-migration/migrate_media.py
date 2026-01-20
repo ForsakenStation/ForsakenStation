@@ -28,7 +28,7 @@ COLORS = {
 }
 
 # Configuration
-JSONL_DIR = Path.home() / ".local/share/com.example.emulator/romlists/AndroidRoms-main"
+JSONL_DIR = Path.home() / ".local/share/com.example.emulator/romlists/main"
 OLD_MEDIA_DIR = Path("/home/victor/ES-DE/downloaded_media")
 NEW_MEDIA_DIR = Path("/home/victor/ES-DE/downloaded_media_new")
 

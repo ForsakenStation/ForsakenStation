@@ -4,7 +4,7 @@ import 'package:path/path.dart' as path;
 import '../models/rom.dart';
 import 'debug_service.dart';
 
-/// Service for loading ROMs from JSONL files (AndroidRoms format)
+/// Service for loading ROMs from JSONL files (romLists format)
 ///
 /// JSONL format:
 /// - Each line is a JSON object
@@ -113,7 +113,7 @@ class JsonlRomLoader {
 
   /// Load ROMs for all platforms from a directory containing JSONL files
   ///
-  /// [jsonlDirectory] - Directory containing JSONL files (e.g., "tmp_scripts/AndroidRoms-main/")
+  /// [jsonlDirectory] - Directory containing JSONL files
   ///
   /// Returns a map of platform name to list of ROMs
   Future<Map<String, List<Rom>>> loadAllPlatformsFromJsonl(

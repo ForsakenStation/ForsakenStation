@@ -398,7 +398,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'ROM lists are sourced from the AndroidRoms repository by Arley4d:',
+                'ROM lists are original sourced from the AndroidRoms repository by Arley4d:',
                 style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 8),

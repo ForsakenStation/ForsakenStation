@@ -2,6 +2,15 @@
 
 Downloads missing media (covers, screenshots, videos) from ScreenScraper.fr API and generates/updates EmulationStation gamelist.xml files with game metadata.
 
+## ✨ Key Features
+
+- **Incremental Saving:** Gamelist saved after each ROM (safe for interruptions)
+- **Smart Skipping:** Automatically skips ROMs with complete data (saves API calls)
+- **Resume-Friendly:** Interrupted scraping can resume without re-processing
+- **Safe for Large Collections:** No memory issues, handles thousands of ROMs
+
+See [INCREMENTAL_SAVE_FEATURE.md](INCREMENTAL_SAVE_FEATURE.md) for details.
+
 ## Quick Start
 
 ```bash

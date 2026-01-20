@@ -1,11 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forsaken/widgets/common/navigable_dialog.dart';
+import 'package:forsaken/mixins/dialog_controls_mixin.dart';
 import 'package:forsaken/widgets/common/dialog_button_bar.dart';
 import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
-/// Exit confirmation dialog using NavigableDialog
+/// Exit confirmation dialog
 ///
 /// Displays a confirmation message with Cancel and Exit buttons.
 /// Automatically handles:
@@ -13,7 +13,7 @@ import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 /// - A button to confirm exit
 /// - Gamepad connection indicators
 /// - Blur background
-class ExitDialog extends NavigableDialog {
+class ExitDialog extends StatefulWidget {
   const ExitDialog({super.key});
 
   /// Show exit confirmation dialog
@@ -33,33 +33,95 @@ class ExitDialog extends NavigableDialog {
   }
 
   @override
-  String? getTitle(BuildContext context) => 'Exit Application';
+  State<ExitDialog> createState() => _ExitDialogState();
+}
+
+class _ExitDialogState extends State<ExitDialog>
+    with DialogControlsMixin<ExitDialog> {
+  late List<DialogButton> _buttons;
 
   @override
-  Widget buildContent(BuildContext context) {
-    return const Text('Are you sure you want to exit?');
-  }
+  void initState() {
+    super.initState();
 
-  @override
-  List<DialogButton> buildButtons(BuildContext context) {
-    return [
+    // Build buttons list
+    _buttons = [
       DialogButton(
         label: 'Cancel',
-        primary: false,
         gamepadButton: GamepadButton.b,
-        onPressed: () => Navigator.pop(context, false),
+        onPressed: _handleCancel,
       ),
       DialogButton(
         label: 'Exit',
         primary: true,
         gamepadButton: GamepadButton.a,
-        onPressed: () {
-          SystemNavigator.pop();
-        },
+        onPressed: _handleExit,
       ),
     ];
+
+    // Start dialog controls with navigation
+    // Default to Exit button (last button)
+    startDialogControlsWithNavigation(
+      onCancel: _handleCancel,
+      buttonCount: _buttons.length,
+      defaultIndex: 1, // Exit button
+      onButtonSelected: (index) {
+        if (mounted) setState(() {});
+      },
+      onConfirm: _handleConfirm,
+      layout: ButtonLayout.horizontal,
+    );
+  }
+
+  void _handleCancel() {
+    if (mounted) {
+      Navigator.pop(context, false);
+    }
+  }
+
+  void _handleExit() {
+    SystemNavigator.pop();
+  }
+
+  void _handleConfirm() {
+    // Execute selected button action
+    _buttons[selectedButtonIndex].onPressed();
   }
 
   @override
-  double getMaxWidth() => 400;
+  Widget build(BuildContext context) {
+    return wrapWithKeyboardHandler(
+      onEscape: _handleCancel,
+      child: Dialog(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Title
+              Text(
+                'Exit Application',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 16),
+
+              // Content
+              const Text('Are you sure you want to exit?'),
+              const SizedBox(height: 24),
+
+              // Buttons
+              DialogButtonBar(
+                buttons: _buttons,
+                selectedIndex: selectedButtonIndex,
+                layout: ButtonLayout.horizontal,
+                alignment: MainAxisAlignment.end,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

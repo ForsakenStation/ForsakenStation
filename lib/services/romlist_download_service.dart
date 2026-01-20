@@ -7,13 +7,13 @@ import 'debug_service.dart';
 
 /// Service for downloading and managing AndroidRoms JSONL database
 ///
-/// Downloads from: https://github.com/Arley4d/AndroidRoms
+/// Downloads from: https://github.com/ForsakenStation/romList
 /// License: See repository for license information
 class RomlistDownloadService {
   static const String _repoUrl =
-      'https://github.com/Arley4d/AndroidRoms/archive/refs/heads/main.zip';
+      'https://github.com/ForsakenStation/romList/archive/refs/heads/main.zip';
   static const String _romlistFolderName = 'romlists';
-  static const String _extractedFolderName = 'AndroidRoms-main';
+  static const String _extractedFolderName = 'main';
 
   final _debug = DebugService.instance;
 
@@ -93,7 +93,7 @@ class RomlistDownloadService {
 
       // Get download directory
       final romlistDir = await getRomlistDirectory();
-      final zipPath = path.join(romlistDir.path, 'AndroidRoms.zip');
+      final zipPath = path.join(romlistDir.path, 'romList.zip');
       final zipFile = File(zipPath);
 
       // Delete old data if exists
