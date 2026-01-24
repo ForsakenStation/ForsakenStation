@@ -355,6 +355,40 @@ class _PlatformsScreenState extends State<PlatformsScreen>
         platform.name == 'favorites';
   }
 
+  /// Reload only collections (recently played, downloaded, etc.)
+  /// without reloading all platforms
+  Future<void> _reloadCollections() async {
+    try {
+      // Load fresh collections
+      final collections = await _collectionService.getCollections();
+
+      if (mounted) {
+        setState(() {
+          // Remove old collection platforms (first items in the list)
+          _platforms.removeWhere((p) => _isCollection(p));
+
+          // Add fresh collection platforms at the beginning
+          final collectionPlatforms = collections.map((collection) {
+            return Platform(
+              name: collection.id,
+              path: '',
+              roms: collection.roms,
+              romCount: collection.romCount,
+            );
+          }).toList();
+
+          _platforms.insertAll(0, collectionPlatforms);
+        });
+
+        debugPrint(
+          '🔄 [PlatformsScreen] Reloaded collections: ${collections.length}',
+        );
+      }
+    } catch (e) {
+      debugPrint('⚠️ [PlatformsScreen] Failed to reload collections: $e');
+    }
+  }
+
   Future<void> _loadSystemImage(String platformName) async {
     if (_systemImagesCache.containsKey(platformName)) {
       return;
@@ -850,6 +884,10 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     // Resume gamepad polling when returning
     if (mounted) {
       _startGamepadPolling();
+
+      // Reload collections (recently played, downloaded) to show any new additions
+      // This ensures that if a game was just played, it appears in "Recently Played"
+      await _reloadCollections();
     }
   }
 

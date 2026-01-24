@@ -151,6 +151,8 @@ PLATFORM_IDS = {
     "uzebox": 216,
     "virtualboy": 11,
     "3do": 29,
+    "openbor": 214,
+    "mugen": 214,
 }
 
 

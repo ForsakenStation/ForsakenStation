@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:forsaken/widgets/common/navigable_dialog.dart';
+import 'package:forsaken/mixins/dialog_controls_mixin.dart';
 import 'package:forsaken/widgets/common/dialog_button_bar.dart';
 import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
-/// Simple error dialog widget using NavigableDialog
+/// Simple error dialog widget
 ///
 /// Displays an error message with a single OK button.
 /// Automatically handles:
@@ -12,7 +12,7 @@ import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 /// - A button to confirm
 /// - Gamepad connection indicators
 /// - Blur background
-class ErrorDialog extends NavigableDialog {
+class ErrorDialog extends StatefulWidget {
   final String message;
 
   const ErrorDialog({super.key, required this.message});
@@ -38,25 +38,82 @@ class ErrorDialog extends NavigableDialog {
   }
 
   @override
-  String? getTitle(BuildContext context) => 'Error';
+  State<ErrorDialog> createState() => _ErrorDialogState();
+}
+
+class _ErrorDialogState extends State<ErrorDialog>
+    with DialogControlsMixin<ErrorDialog> {
+  late List<DialogButton> _buttons;
 
   @override
-  Widget buildContent(BuildContext context) {
-    return Text(message);
-  }
+  void initState() {
+    super.initState();
 
-  @override
-  List<DialogButton> buildButtons(BuildContext context) {
-    return [
+    // Build buttons list
+    _buttons = [
       DialogButton(
         label: 'OK',
         primary: true,
         gamepadButton: GamepadButton.a,
-        onPressed: () => Navigator.pop(context),
+        onPressed: _handleClose,
       ),
     ];
+
+    // Start dialog controls with navigation
+    startDialogControlsWithNavigation(
+      onCancel: _handleClose,
+      buttonCount: _buttons.length,
+      defaultIndex: 0, // OK button
+      onButtonSelected: (index) {
+        if (mounted) setState(() {});
+      },
+      onConfirm: _handleConfirm,
+      layout: ButtonLayout.horizontal,
+    );
+  }
+
+  void _handleClose() {
+    if (mounted) {
+      Navigator.pop(context);
+    }
+  }
+
+  void _handleConfirm() {
+    // Execute selected button action
+    _buttons[selectedButtonIndex].onPressed();
   }
 
   @override
-  double getMaxWidth() => 400;
+  Widget build(BuildContext context) {
+    return wrapWithKeyboardHandler(
+      onEscape: _handleClose,
+      child: Dialog(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Title
+              Text('Error', style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 16),
+
+              // Content
+              Text(widget.message),
+              const SizedBox(height: 24),
+
+              // Buttons
+              DialogButtonBar(
+                buttons: _buttons,
+                selectedIndex: selectedButtonIndex,
+                layout: ButtonLayout.horizontal,
+                alignment: MainAxisAlignment.end,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

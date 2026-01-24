@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:forsaken/services/gamepad_service.dart';
+import 'package:forsaken/services/keyboard_service.dart';
+import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
 
 /// Screen for testing and debugging gamepad input
 /// Shows real-time button states and axis values
@@ -13,6 +16,8 @@ class GamepadTestScreen extends StatefulWidget {
 
 class _GamepadTestScreenState extends State<GamepadTestScreen> {
   final _gamepadService = GamepadService.instance;
+  final _keyboardService = KeyboardService.instance;
+  final _focusNode = FocusNode();
   Timer? _updateTimer;
   Map<String, bool> _buttonStates = {};
   Map<String, double> _axisValues = {};
@@ -32,6 +37,7 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
     // Disable debug mode when leaving
     _gamepadService.setDebugMode(false);
     _updateTimer?.cancel();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -86,6 +92,20 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
         });
       }
     });
+  }
+
+  KeyEventResult _handleKeyEvent(KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+
+    final key = event.logicalKey;
+
+    // Handle ESC to go back (always works, even without gamepad)
+    if (_keyboardService.isBackKey(key)) {
+      Navigator.of(context).pop();
+      return KeyEventResult.handled;
+    }
+
+    return KeyEventResult.ignored;
   }
 
   /// Calculate navigation direction for D-pad + Left Stick
@@ -145,74 +165,103 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
   Widget build(BuildContext context) {
     final isConnected = _gamepadService.isGamepadConnected;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Gamepad Test'),
-        backgroundColor: Colors.deepPurple,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.grey.shade900, Colors.black],
-          ),
+    return Focus(
+      focusNode: _focusNode,
+      autofocus: true,
+      onKeyEvent: (node, event) => _handleKeyEvent(event),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Gamepad Test'),
+          backgroundColor: Colors.deepPurple,
         ),
-        child: !isConnected
-            ? _buildNotConnected()
-            : Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildConnectionStatus(),
-                    const SizedBox(height: 12),
-                    _buildLastAction(),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Left column
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Expanded(child: _buildButtonTests()),
-                                const SizedBox(height: 12),
-                                Expanded(child: _buildLeftNavigationTest()),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          // Middle column
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Expanded(child: _buildButtonStates()),
-                                const SizedBox(height: 12),
-                                Expanded(child: SizedBox()),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          // Right column
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Expanded(child: _buildAxisValues()),
-                                const SizedBox(height: 12),
-                                Expanded(child: _buildRightNavigationTest()),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildExitHint(),
-                  ],
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.grey.shade900, Colors.black],
+                  ),
                 ),
+                child: !isConnected
+                    ? _buildNotConnected()
+                    : Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildConnectionStatus(),
+                            const SizedBox(height: 12),
+                            _buildLastAction(),
+                            const SizedBox(height: 12),
+                            Expanded(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Left column
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Expanded(child: _buildButtonTests()),
+                                        const SizedBox(height: 12),
+                                        Expanded(
+                                          child: _buildLeftNavigationTest(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  // Middle column
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Expanded(child: _buildButtonStates()),
+                                        const SizedBox(height: 12),
+                                        Expanded(child: SizedBox()),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  // Right column
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Expanded(child: _buildAxisValues()),
+                                        const SizedBox(height: 12),
+                                        Expanded(
+                                          child: _buildRightNavigationTest(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                        ),
+                      ),
               ),
+            ),
+            ControlsBottomBar(
+              actions: [
+                const BottomBarAction(
+                  label: 'Back',
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                if (isConnected)
+                  const BottomBarAction(
+                    label: 'Exit',
+                    keyboardKey: 'Start+Select',
+                    gamepadButton: 'Start+Select',
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -671,30 +720,6 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
         icon,
         size: 28,
         color: isActive ? Colors.white : Colors.grey.shade600,
-      ),
-    );
-  }
-
-  Widget _buildExitHint() {
-    return Card(
-      color: Colors.orange.shade900,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.info_outline, color: Colors.orange, size: 20),
-            const SizedBox(width: 12),
-            Text(
-              'Press START + SELECT together to exit',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.orange.shade100,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

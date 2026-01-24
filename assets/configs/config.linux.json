@@ -2161,6 +2161,18 @@
             "useForeverMode": false,
             "acceptZipFiles": true,
             "corePreferences": {}
+        },
+        {
+            "system": "mugen",
+            "command": [
+                {
+                    "name": "Ikemen Go",
+                    "command": "./ikemen_go/Ikemen_GO.command"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
         }
     ]
 }

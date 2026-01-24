@@ -519,17 +519,53 @@ class EmulatorCatalog {
       downloads: {
         'linux': PlatformDownload(
           url:
-              'https://github.com/DCurrent/openbor/releases/download/v7533/OpenBOR-Linux-x86-v4.0.Build.7533.AppImage',
+              'https://github.com/DCurrent/openbor/releases/download/v7533/OpenBOR-Linux-x64-v4.0.Build.7533.AppImage',
           fileName: 'openbor.AppImage',
           estimatedSizeMB: 5,
         ),
         'windows': PlatformDownload(
           url:
-              'https://github.com/DCurrent/openbor/releases/download/v7533/OpenBOR-v4.0.7533-Windows.zip',
-          fileName: 'openbor.zip',
+              'https://github.com/DCurrent/openbor/releases/download/v7533/OpenBOR.v4.0.Build.7533.rar',
+          fileName: 'openbor.rar',
           estimatedSizeMB: 6,
         ),
       },
+      postDownloadCommands: {
+        'linux': ['chmod +x openbor.AppImage'],
+        'windows': ['unrar openbor.rar -o./ && rm openbor.rar', 'move OpenBOR.exe openbor.exe'],
+      }
+    ),
+
+    // MUGEN
+    EmulatorDownloadInfo(
+      name: 'mugen',
+      displayName: 'M.U.G.E.N',
+      description: 'Beat em up game engine',
+      downloads: {
+        'linux': PlatformDownload(
+          url:
+              'https://github.com/ikemen-engine/Ikemen-GO/releases/download/v0.99.0/Ikemen_GO-v0.99.0-linux.zip',
+          fileName: 'Ikemen_GO-v0.99.0-linux.zip',
+          estimatedSizeMB: 5,
+        ),
+        'windows': PlatformDownload(
+          url:
+              'https://github.com/ikemen-engine/Ikemen-GO/releases/download/v0.99.0/Ikemen_GO-v0.99.0-windows.zip',
+          fileName: 'Ikemen_GO-v0.99.0-windows.zip',
+          estimatedSizeMB: 5,
+        ),
+        'macos': PlatformDownload(
+          url:
+              'https://github.com/ikemen-engine/Ikemen-GO/releases/download/v0.99.0/Ikemen_GO-v0.99.0-macos.zip',
+          fileName: 'Ikemen_GO-v0.99.0-macos.zip',
+          estimatedSizeMB: 5,
+        ),
+      },
+      postDownloadCommands: {
+        'linux': ['7z x Ikemen_GO-v0.99.0-linux.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-linux.zip'],
+        'windows': ['7z x Ikemen_GO-v0.99.0-windows.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-windows.zip'],
+        'macos': ['7z x Ikemen_GO-v0.99.0-macos.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-macos.zip'],
+      }
     ),
 
     // Utilities
@@ -554,26 +590,6 @@ class EmulatorCatalog {
               'https://get.videolan.org/vlc/last/macosx/vlc-3.0.21-universal.dmg',
           fileName: 'vlc.dmg',
           estimatedSizeMB: 50,
-        ),
-      },
-    ),
-
-    EmulatorDownloadInfo(
-      name: 'koreader',
-      displayName: 'KOReader',
-      description: 'PDF/eBook reader',
-      downloads: {
-        'linux': PlatformDownload(
-          url:
-              'https://github.com/koreader/koreader/releases/download/v2025.10/koreader-appimage-x86_64-v2025.10.AppImage',
-          fileName: 'pdf.AppImage',
-          estimatedSizeMB: 15,
-        ),
-        'windows': PlatformDownload(
-          url:
-              'https://github.com/koreader/koreader/releases/download/v2025.10/koreader-v2025.10-windows.zip',
-          fileName: 'koreader.zip',
-          estimatedSizeMB: 18,
         ),
       },
     ),

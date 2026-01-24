@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../services/system_check_service.dart';
 import '../../services/keyboard_service.dart';
+import '../../widgets/common/controls_bottom_bar.dart';
 
 /// Screen for checking system requirements
 ///
@@ -91,132 +92,154 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
             ),
           ],
         ),
-        body: _isChecking
-            ? const Center(child: CircularProgressIndicator())
-            : _result == null
-            ? const Center(child: Text('Failed to check system'))
-            : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Overall Status Card
-                    Card(
-                      color: _result!.allRequiredMet
-                          ? Colors.green.shade50
-                          : Colors.orange.shade50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Icon(
-                              _result!.allRequiredMet
-                                  ? Icons.check_circle
-                                  : Icons.warning,
-                              size: 48,
-                              color: _result!.allRequiredMet
-                                  ? Colors.green
-                                  : Colors.orange,
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+        body: Column(
+          children: [
+            Expanded(
+              child: _isChecking
+                  ? const Center(child: CircularProgressIndicator())
+                  : _result == null
+                  ? const Center(child: Text('Failed to check system'))
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Overall Status Card
+                          Card(
+                            color: _result!.allRequiredMet
+                                ? Colors.green.shade50
+                                : Colors.orange.shade50,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
                                 children: [
-                                  Text(
+                                  Icon(
                                     _result!.allRequiredMet
-                                        ? 'All Required Tools Installed'
-                                        : 'Missing Required Tools',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        ? Icons.check_circle
+                                        : Icons.warning,
+                                    size: 48,
+                                    color: _result!.allRequiredMet
+                                        ? Colors.green
+                                        : Colors.orange,
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _result!.allRequiredMet
-                                        ? 'Your system is ready to use the emulator'
-                                        : 'Some required tools are missing',
-                                    style: TextStyle(
-                                      color: Colors.grey.shade700,
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _result!.allRequiredMet
+                                              ? 'All Required Tools Installed'
+                                              : 'Missing Required Tools',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          _result!.allRequiredMet
+                                              ? 'Your system is ready to use the emulator'
+                                              : 'Some required tools are missing',
+                                          style: TextStyle(
+                                            color: Colors.grey.shade700,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Required Tools Section
+                          const Text(
+                            'Required Tools',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'These tools are required for downloading and extracting emulators',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          const SizedBox(height: 16),
+
+                          ..._buildToolList(
+                            _systemCheckService.getRequiredTools(),
+                            _result!.missingRequired,
+                            isRequired: true,
+                          ),
+
+                          if (_result!.missingRequired.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            Card(
+                              color: Colors.orange.shade50,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.info,
+                                          color: Colors.orange.shade700,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        const Text(
+                                          'Installation Instructions',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      _systemCheckService
+                                          .getInstallInstructions(
+                                            _result!.missingRequired,
+                                          ),
+                                      style: const TextStyle(
+                                        fontFamily: 'monospace',
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
-                        ),
+
+                          const SizedBox(height: 32),
+                        ],
                       ),
                     ),
-
-                    const SizedBox(height: 24),
-
-                    // Required Tools Section
-                    const Text(
-                      'Required Tools',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'These tools are required for downloading and extracting emulators',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    const SizedBox(height: 16),
-
-                    ..._buildToolList(
-                      _systemCheckService.getRequiredTools(),
-                      _result!.missingRequired,
-                      isRequired: true,
-                    ),
-
-                    if (_result!.missingRequired.isNotEmpty) ...[
-                      const SizedBox(height: 16),
-                      Card(
-                        color: Colors.orange.shade50,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.info,
-                                    color: Colors.orange.shade700,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    'Installation Instructions',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                _systemCheckService.getInstallInstructions(
-                                  _result!.missingRequired,
-                                ),
-                                style: const TextStyle(
-                                  fontFamily: 'monospace',
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-
-                    const SizedBox(height: 32),
-                  ],
+            ),
+            ControlsBottomBar(
+              actions: const [
+                BottomBarAction(
+                  label: 'Back',
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
                 ),
-              ),
+                BottomBarAction(
+                  label: 'Refresh',
+                  keyboardKey: 'R',
+                  gamepadButton: 'Start',
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -247,6 +247,11 @@ class JsonlRomLoader {
 
           if (count > 0) {
             platformCounts[fileName] = count;
+          } else {
+            _debug.warning(
+              'Skipping platform "$fileName" - no ROMs with valid URLs found',
+              tag: 'JsonlRomLoader',
+            );
           }
         }
       }

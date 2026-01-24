@@ -8,9 +8,12 @@ import 'settings_categories/rom_storage_management_screen.dart';
 import 'settings_categories/download_manager_screen.dart';
 import 'settings_categories/system_check_screen.dart';
 import 'settings_categories/gamepad_test_screen.dart';
+import 'settings_categories/bios_help_screen.dart';
 import 'package:forsaken/services/debug_service.dart';
 import 'package:forsaken/services/keyboard_service.dart';
 import 'package:forsaken/services/gamepad_service.dart';
+import 'package:forsaken/widgets/common/dialog_button_bar.dart';
+import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
 /// Main settings screen with categorized configuration options
 /// Replaces bash scripts with native Flutter UI
@@ -24,10 +27,15 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final _keyboardService = KeyboardService.instance;
   final _focusNode = FocusNode();
+  final _scrollController = ScrollController();
   Timer? _gamepadPollTimer;
   int _selectedIndex = 0;
-  final int _categoryCount = 8;
+  final int _categoryCount = 9;
   bool _isGamepadNavigating = false;
+
+  // Height of each card + spacing (approximate)
+  static const double _itemHeight = 88.0 + 12.0; // Card height + SizedBox
+  static const double _headerHeight = 200.0; // Approximate header card height
 
   @override
   void initState() {
@@ -39,6 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void dispose() {
     _stopGamepadPolling();
     _focusNode.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -58,6 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           } else if (direction == 'down') {
             _selectedIndex = (_selectedIndex + 1) % _categoryCount;
           }
+          _scrollToSelected();
         });
       }
 
@@ -77,10 +87,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _gamepadPollTimer = null;
   }
 
+  void _scrollToSelected() {
+    if (!_scrollController.hasClients) return;
+
+    // Calculate target scroll position
+    // Header height + (item height * selected index)
+    final targetOffset = _headerHeight + (_itemHeight * _selectedIndex);
+
+    // Get viewport height
+    final viewportHeight = _scrollController.position.viewportDimension;
+
+    // Calculate the offset to center the item, but clamp to valid range
+    final centeredOffset =
+        targetOffset - (viewportHeight / 2) + (_itemHeight / 2);
+
+    // Ensure we don't scroll beyond bounds
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final minScroll = _scrollController.position.minScrollExtent;
+    final clampedOffset = centeredOffset.clamp(minScroll, maxScroll);
+
+    _scrollController.animateTo(
+      clampedOffset,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+  }
+
   void _navigateToCategory(int index) {
     _stopGamepadPolling();
 
-    if (index == 7) {
+    if (index == 8) {
       _showAboutDialog(context);
       if (mounted) _startGamepadPolling();
       return;
@@ -108,6 +144,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         break;
       case 6:
         screen = const GamepadTestScreen();
+        break;
+      case 7:
+        screen = const BiosHelpScreen();
         break;
       default:
         return;
@@ -138,6 +177,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _isGamepadNavigating = true;
         _selectedIndex = (_selectedIndex - 1) % _categoryCount;
         if (_selectedIndex < 0) _selectedIndex = _categoryCount - 1;
+        _scrollToSelected();
       });
       return KeyEventResult.handled;
     }
@@ -145,6 +185,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       setState(() {
         _isGamepadNavigating = true;
         _selectedIndex = (_selectedIndex + 1) % _categoryCount;
+        _scrollToSelected();
       });
       return KeyEventResult.handled;
     }
@@ -170,6 +211,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           centerTitle: true,
         ),
         body: ListView(
+          controller: _scrollController,
           padding: const EdgeInsets.all(16),
           children: [
             // Header
@@ -284,6 +326,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildCategoryCard(
               context,
               index: 7,
+              icon: Icons.memory,
+              title: 'BIOS & Firmware Help',
+              description: 'Check BIOS files and firmware requirements',
+              onTap: () => _navigateToCategory(7),
+            ),
+            const SizedBox(height: 12),
+
+            _buildCategoryCard(
+              context,
+              index: 8,
               icon: Icons.info_outline,
               title: 'About & Debug',
               description: 'App information and debug settings',
@@ -447,9 +499,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+          DialogButtonBar(
+            buttons: [
+              DialogButton(
+                label: 'Close',
+                onPressed: () => Navigator.pop(context),
+                primary: true,
+                gamepadButton: GamepadButton.b,
+              ),
+            ],
           ),
         ],
       ),

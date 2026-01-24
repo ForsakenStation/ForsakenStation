@@ -1400,7 +1400,7 @@
             "command": [
                 {
                     "name": "openbor",
-                    "command": "openbor.AppImage"
+                    "command": "openbor.exe"
                 }
             ],
             "useForeverMode": false,
