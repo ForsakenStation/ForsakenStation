@@ -46,7 +46,7 @@ This guide explains how to migrate media files from the old EmulationStation-DE 
 
 ### JSONL ROM Lists
 ```
-~/.local/share/com.example.emulator/romlists/AndroidRoms-main/
+~/.local/share/com.forsaken.emulator/romlists/AndroidRoms-main/
 ├── amiga500.jsonl
 ├── arduboy.jsonl
 └── ... (100+ platforms)
@@ -212,7 +212,7 @@ Summary:
 ## Troubleshooting
 
 ### No Files Migrated
-- **Check JSONL exists**: `ls ~/.local/share/com.example.emulator/romlists/AndroidRoms-main/platform.jsonl`
+- **Check JSONL exists**: `ls ~/.local/share/com.forsaken.emulator/romlists/AndroidRoms-main/platform.jsonl`
 - **Check old media exists**: `ls /home/victor/ES-DE/downloaded_media/platform/`
 - **Check ROM names match**: Compare JSONL names to file basenames
 

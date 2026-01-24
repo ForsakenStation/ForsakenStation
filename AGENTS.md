@@ -277,3 +277,156 @@ MEDIA_PATH/
 - Use `mounted` check before setState after async operations
 - Test file path handling on different platforms (path separators)
 - Handle permissions for file system access on mobile platforms
+
+## UI/UX Standards
+
+### ControlsBottomBar - REQUIRED for All Full Screens
+
+**CRITICAL**: ALL full-screen pages (Platforms, ROMs, Settings, and Settings subpages) MUST include `ControlsBottomBar` at the bottom of the screen.
+
+#### Why It's Required
+- **Consistency**: Uniform navigation experience across all screens
+- **Accessibility**: Users always know which keys/buttons are available
+- **Gamepad Support**: Automatically shows gamepad buttons when connected
+- **Discoverability**: New users can see available actions without guessing
+
+#### Implementation Pattern
+
+```dart
+// 1. Import the widget
+import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
+
+// 2. Wrap body in Column with Expanded + ControlsBottomBar
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: const Text('Screen Title')),
+    body: Column(
+      children: [
+        // Main content - MUST be wrapped in Expanded
+        Expanded(
+          child: YourMainContent(),
+        ),
+        
+        // Bottom controls bar - REQUIRED
+        ControlsBottomBar(
+          actions: const [
+            BottomBarAction(
+              label: 'Back',
+              keyboardKey: 'ESC',
+              gamepadButton: 'B',
+            ),
+            BottomBarAction(
+              label: 'Select',
+              keyboardKey: 'Enter',
+              gamepadButton: 'A',
+            ),
+            BottomBarAction(
+              label: 'Refresh',
+              keyboardKey: 'F5',
+              gamepadButton: 'Start',
+            ),
+          ],
+          counterText: 'Optional counter text',  // Can be null
+        ),
+      ],
+    ),
+  );
+}
+```
+
+#### Common Actions Reference
+
+```dart
+// Navigation
+const BottomBarAction(label: 'Back', keyboardKey: 'ESC', gamepadButton: 'B')
+const BottomBarAction(label: 'Select', keyboardKey: 'Enter', gamepadButton: 'A')
+
+// View controls
+const BottomBarAction(label: 'Refresh', keyboardKey: 'F5', gamepadButton: 'Start')
+const BottomBarAction(label: 'Toggle View', keyboardKey: 'V', gamepadButton: 'Y')
+const BottomBarAction(label: 'Search', keyboardKey: 'S', gamepadButton: 'X')
+
+// Media
+const BottomBarAction(label: 'Media', keyboardKey: 'M', gamepadButton: 'L1')
+const BottomBarAction(label: 'Help', keyboardKey: '?', gamepadButton: 'R1')
+```
+
+#### Key Features
+- **Auto-detect gamepad**: Shows keyboard keys OR gamepad buttons
+- **Responsive**: Hides actions on mobile if no gamepad
+- **Glassmorphism**: Translucent background with blur effect
+- **Optional counter**: For showing "X / Y" item counts
+
+#### Example: Settings Screen
+
+```dart
+body: Column(
+  children: [
+    Expanded(
+      child: ListView(
+        controller: _scrollController,
+        children: [...],
+      ),
+    ),
+    ControlsBottomBar(
+      actions: const [
+        BottomBarAction(label: 'Back', keyboardKey: 'ESC', gamepadButton: 'B'),
+        BottomBarAction(label: 'Select', keyboardKey: 'Enter', gamepadButton: 'A'),
+      ],
+    ),
+  ],
+),
+```
+
+#### Example: BIOS Help Screen
+
+```dart
+body: Column(
+  children: [
+    Expanded(
+      child: ListView.builder(...),
+    ),
+    ControlsBottomBar(
+      actions: const [
+        BottomBarAction(label: 'Back', keyboardKey: 'ESC', gamepadButton: 'B'),
+        BottomBarAction(label: 'Toggle Filter', keyboardKey: 'Enter', gamepadButton: 'A'),
+        BottomBarAction(label: 'Refresh', keyboardKey: 'F5', gamepadButton: 'Start'),
+      ],
+      counterText: '${_filteredCount} platforms',
+    ),
+  ],
+),
+```
+
+#### Conditional Actions
+
+Use `if` expressions for conditional actions:
+
+```dart
+ControlsBottomBar(
+  actions: [
+    const BottomBarAction(label: 'Back', keyboardKey: 'ESC', gamepadButton: 'B'),
+    if (canRefresh)
+      const BottomBarAction(label: 'Refresh', keyboardKey: 'R', gamepadButton: 'Start'),
+    if (hasSelection)
+      const BottomBarAction(label: 'Delete', keyboardKey: 'Del', gamepadButton: 'Y'),
+  ],
+),
+```
+
+#### DON'Ts
+- ❌ Don't use custom help text at bottom of screen
+- ❌ Don't hardcode keyboard shortcuts in UI without ControlsBottomBar
+- ❌ Don't forget to wrap main content in `Expanded`
+- ❌ Don't use `Flexible` instead of `Expanded` for main content
+
+#### Migration Checklist
+When updating an existing screen:
+1. Import `controls_bottom_bar.dart`
+2. Wrap `body` content in `Column`
+3. Wrap main content in `Expanded`
+4. Add `ControlsBottomBar` as last child
+5. Define appropriate actions for the screen
+6. Remove any custom help text widgets
+7. Test keyboard and gamepad navigation

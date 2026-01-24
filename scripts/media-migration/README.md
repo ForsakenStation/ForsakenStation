@@ -87,7 +87,7 @@ Options:
 ## Common Issues
 
 **Issue:** "JSONL file not found"
-- Check that JSONL files exist in `~/.local/share/com.example.emulator/romlists/`
+- Check that JSONL files exist in `~/.local/share/com.forsaken.emulator/romlists/`
 
 **Issue:** "No ROMs with parent folders found"
 - This platform has no subdirectories, nothing to migrate

@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import '../../services/config_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../widgets/common/platform_logo.dart';
+import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/dialog_button_bar.dart';
+import '../../widgets/common/gamepad_button_indicator.dart';
 
 /// Screen for managing emulator configurations
 ///
@@ -151,30 +154,37 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
           'Are you sure you want to delete the emulator configuration for $system?',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                await _configService.removeEmulator(system);
-                await _loadEmulators();
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Emulator deleted')),
-                  );
-                }
-              } catch (e) {
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error deleting emulator: $e')),
-                  );
-                }
-              }
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          DialogButtonBar(
+            buttons: [
+              DialogButton(
+                label: 'Cancel',
+                onPressed: () => Navigator.pop(context),
+                gamepadButton: GamepadButton.b,
+              ),
+              DialogButton(
+                label: 'Delete',
+                onPressed: () async {
+                  Navigator.pop(context);
+                  try {
+                    await _configService.removeEmulator(system);
+                    await _loadEmulators();
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Emulator deleted')),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error deleting emulator: $e')),
+                      );
+                    }
+                  }
+                },
+                primary: true,
+                gamepadButton: GamepadButton.a,
+              ),
+            ],
           ),
         ],
       ),
@@ -245,9 +255,15 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                       ],
                     ),
                     actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('OK'),
+                      DialogButtonBar(
+                        buttons: [
+                          DialogButton(
+                            label: 'OK',
+                            onPressed: () => Navigator.pop(context),
+                            primary: true,
+                            gamepadButton: GamepadButton.b,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -256,115 +272,143 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             ),
           ],
         ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _emulators.isEmpty
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.videogame_asset_off,
-                      size: 64,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'No emulators configured',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Add your first emulator to get started',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    const SizedBox(height: 24),
-                    ElevatedButton.icon(
-                      onPressed: _addEmulator,
-                      icon: const Icon(Icons.add),
-                      label: const Text('Add Emulator'),
-                    ),
-                  ],
-                ),
-              )
-            : ListView.builder(
-                itemCount: _emulators.length,
-                itemBuilder: (context, index) {
-                  final emulator = _emulators[index];
-                  final system = emulator['system'] as String;
-                  final command = emulator['command'];
-                  final acceptZip = emulator['acceptZipFiles'];
-                  final todo = emulator['todo'] == true;
+        body: Column(
+          children: [
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _emulators.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.videogame_asset_off,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'No emulators configured',
+                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Add your first emulator to get started',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          const SizedBox(height: 24),
+                          ElevatedButton.icon(
+                            onPressed: _addEmulator,
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add Emulator'),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: _emulators.length,
+                      itemBuilder: (context, index) {
+                        final emulator = _emulators[index];
+                        final system = emulator['system'] as String;
+                        final command = emulator['command'];
+                        final acceptZip = emulator['acceptZipFiles'];
+                        final todo = emulator['todo'] == true;
 
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: ListTile(
-                      leading: PlatformLogo(platformName: system, size: 96),
-                      title: Row(
-                        children: [
-                          Text(
-                            system.toUpperCase(),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                        return Card(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
-                          if (todo) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: const Text(
-                                'TODO',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                          child: ListTile(
+                            leading: PlatformLogo(
+                              platformName: system,
+                              size: 96,
+                            ),
+                            title: Row(
+                              children: [
+                                Text(
+                                  system.toUpperCase(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
+                                if (todo) ...[
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.orange,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: const Text(
+                                      'TODO',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                if (acceptZip == true) ...[
+                                  const SizedBox(width: 8),
+                                  const Icon(
+                                    Icons.folder_zip,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  ),
+                                ],
+                              ],
                             ),
-                          ],
-                          if (acceptZip == true) ...[
-                            const SizedBox(width: 8),
-                            const Icon(
-                              Icons.folder_zip,
-                              size: 16,
-                              color: Colors.grey,
+                            subtitle: Text(
+                              _getCommandPreview(command),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ],
-                        ],
-                      ),
-                      subtitle: Text(
-                        _getCommandPreview(command),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () => _editEmulator(emulator),
-                            tooltip: 'Edit',
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () => _editEmulator(emulator),
+                                  tooltip: 'Edit',
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red[300],
+                                  ),
+                                  onPressed: () => _deleteEmulator(system),
+                                  tooltip: 'Delete',
+                                ),
+                              ],
+                            ),
+                            onTap: () => _editEmulator(emulator),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red[300]),
-                            onPressed: () => _deleteEmulator(system),
-                            tooltip: 'Delete',
-                          ),
-                        ],
-                      ),
-                      onTap: () => _editEmulator(emulator),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
+            ),
+            ControlsBottomBar(
+              actions: const [
+                BottomBarAction(
+                  label: 'Back',
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                BottomBarAction(
+                  label: 'Refresh',
+                  keyboardKey: 'R',
+                  gamepadButton: 'Start',
+                ),
+              ],
+            ),
+          ],
+        ),
         floatingActionButton: _emulators.isNotEmpty
             ? FloatingActionButton(
                 onPressed: _addEmulator,
@@ -415,7 +459,9 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
           if (cmd is String) {
             _commandControllers.add(TextEditingController(text: cmd));
           } else if (cmd is Map<String, dynamic>) {
-            _commandControllers.add(TextEditingController(text: cmd['command'] as String));
+            _commandControllers.add(
+              TextEditingController(text: cmd['command'] as String),
+            );
           }
         }
       }
@@ -493,10 +539,7 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
     }
 
     final List<Map<String, dynamic>> commands = commandStrings.map((cmd) {
-      return {
-        'name': extractName(cmd),
-        'command': cmd,
-      };
+      return {'name': extractName(cmd), 'command': cmd};
     }).toList();
 
     final emulator = {

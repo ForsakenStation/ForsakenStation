@@ -44,10 +44,8 @@ import json
 import os
 import sys
 import time
-import hashlib
 from pathlib import Path
 from typing import Dict, List, Optional, Set
-from urllib.parse import quote
 from datetime import datetime
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
@@ -75,9 +73,9 @@ COLORS = {
 }
 
 # Configuration
-JSONL_DIR = Path.home() / ".local/share/com.example.emulator/romlists/romList-main"
-MEDIA_DIR = Path("/home/victor/ES-DE/downloaded_media_new")
-GAMELIST_DIR = Path.home() / ".local/share/com.example.emulator/gamelists"
+JSONL_DIR = Path.home() / ".local/share/com.forsaken.emulator/romlists/romList-main"
+MEDIA_DIR = Path.home() / ".local/share/com.forsaken.emulator/media"
+GAMELIST_DIR = Path.home() / ".local/share/com.forsaken.emulator/gamelists"
 
 # ScreenScraper API
 SCREENSCRAPER_API = "https://www.screenscraper.fr/api2"
@@ -89,11 +87,11 @@ DEFAULT_DEV_ID = "xxx"
 DEFAULT_DEV_PASSWORD = "yyy"
 
 # Rate limiting: Free accounts = 1 req/2sec, Registered = 1 req/sec
-RATE_LIMIT_DELAY = 2.0  # seconds between requests
+RATE_LIMIT_DELAY = 1.0  # seconds between requests
 
 # Media type mapping: ScreenScraper → Local folder names
 MEDIA_TYPES = {
-    "box-2D": ["covers", "3dboxes"],
+    "box-2D": ["covers"],
     "box-3D": ["3dboxes"],
     "screenmarquee": ["marquees"],
     "screenshot": ["screenshots"],
@@ -102,6 +100,7 @@ MEDIA_TYPES = {
     "fanart": ["fanart"],
     "box-2D-back": ["backcovers"],
     "mixrbv1": ["miximages"],
+    "support-scan": ["physicalmedia"],
 }
 
 # Platform mapping: Local name → ScreenScraper ID
@@ -111,6 +110,7 @@ PLATFORM_IDS = {
     "amiga1200": 64,
     "amiga": 64,
     "amigacd32": 130,
+    "amigacdtv": 129,
     "arduboy": 263,
     "atari2600": 26,
     "atari5200": 40,
@@ -153,6 +153,11 @@ PLATFORM_IDS = {
     "3do": 29,
     "openbor": 214,
     "mugen": 214,
+    "adam": 89,
+    "advision": 78,
+    "apple2": 86,
+    "arcadia": 84,
+    "astrocde": 44,
 }
 
 
@@ -523,7 +528,7 @@ def save_gamelist(gamelist_root: ET.Element, gamelist_path: Path) -> bool:
         # Ensure directory exists
         gamelist_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Write file
+        # Write a file
         with open(gamelist_path, "w", encoding="utf-8") as f:
             f.write(pretty_xml)
 
@@ -838,7 +843,7 @@ Examples:
     parser.add_argument("platform", help="Platform to scrape")
     parser.add_argument(
         "--media-types",
-        default="covers,screenshots,marquees,fanart,backcovers,3dboxes,titlescreens,videos,miximages",
+        default="covers,screenshots,marquees,fanart,backcovers,3dboxes,titlescreens,videos,miximages,physicalmedia",
         help="Media types to download (comma-separated)",
     )
     parser.add_argument(

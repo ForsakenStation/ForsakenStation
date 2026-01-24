@@ -277,7 +277,7 @@ class ConfigService {
   /// Get gamelist directory path
   ///
   /// Returns the local gamelist directory in app's data directory
-  /// Structure: ~/.local/share/com.example.emulator/gamelists/{platform}/gamelist.xml
+  /// Structure: ~/.local/share/com.forsaken.emulator/gamelists/{platform}/gamelist.xml
   Future<String> get gamelistPath async {
     if (kIsWeb) {
       // Web doesn't support local file system - would need backend or IndexedDB

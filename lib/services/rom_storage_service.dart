@@ -29,10 +29,10 @@ class RomStorageService {
   /// Get the base app directory for ROM storage
   ///
   /// Returns application support directory for the platform:
-  /// - Linux: ~/.local/share/com.example.emulator
-  /// - Windows: %APPDATA%/com.example.emulator
-  /// - macOS: ~/Library/Application Support/com.example.emulator
-  /// - Android: /data/data/com.example.emulator/files
+  /// - Linux: ~/.local/share/com.forsaken.emulator
+  /// - Windows: %APPDATA%/com.forsaken.emulator
+  /// - macOS: ~/Library/Application Support/com.forsaken.emulator
+  /// - Android: /data/data/com.forsaken.emulator/files
   Future<Directory> _getBaseStorageDirectory() async {
     return await getApplicationSupportDirectory();
   }

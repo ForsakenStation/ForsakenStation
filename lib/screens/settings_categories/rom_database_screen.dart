@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../services/romlist_download_service.dart';
 import '../../services/keyboard_service.dart';
+import '../../services/gamepad_service.dart';
+import '../../mixins/gamepad_polling_mixin.dart';
+import '../../mixins/dialog_controls_mixin.dart';
+import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/dialog_button_bar.dart';
+import '../../widgets/common/gamepad_button_indicator.dart';
 
 /// Screen for managing ROM database (romLists JSONL lists)
 ///
@@ -16,7 +22,8 @@ class RomDatabaseScreen extends StatefulWidget {
   State<RomDatabaseScreen> createState() => _RomDatabaseScreenState();
 }
 
-class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
+class _RomDatabaseScreenState extends State<RomDatabaseScreen>
+    with GamepadPollingMixin<RomDatabaseScreen> {
   final _romlistService = RomlistDownloadService.instance;
   final _keyboardService = KeyboardService.instance;
   final _focusNode = FocusNode();
@@ -29,10 +36,69 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
   int _downloadReceived = 0;
   int _downloadTotal = 0;
 
+  // Navigation state
+  int _selectedButtonIndex = 0;
+  bool _isGamepadConnected = false;
+
   @override
   void initState() {
     super.initState();
+    startGamepadPolling(_handleGamepadInput);
     _loadStatus();
+    _checkGamepadConnection();
+  }
+
+  void _checkGamepadConnection() {
+    final gamepad = GamepadService.instance;
+    setState(() {
+      _isGamepadConnected = gamepad.isGamepadConnected;
+    });
+  }
+
+  void _handleGamepadInput() {
+    final gamepad = GamepadService.instance;
+
+    // Update gamepad connection status
+    final connected = gamepad.isGamepadConnected;
+    if (connected != _isGamepadConnected) {
+      setState(() => _isGamepadConnected = connected);
+    }
+
+    if (!connected) {
+      gamepad.updatePreviousButtonStates();
+      return;
+    }
+
+    // Navigation (horizontal: left/right)
+    final direction = gamepad.getNavigationDirection();
+    if (direction != null) {
+      setState(() {
+        final totalButtons = _isDownloaded ? 2 : 1;
+        if (direction == 'left') {
+          _selectedButtonIndex = (_selectedButtonIndex - 1) % totalButtons;
+          if (_selectedButtonIndex < 0) _selectedButtonIndex = totalButtons - 1;
+        } else if (direction == 'right') {
+          _selectedButtonIndex = (_selectedButtonIndex + 1) % totalButtons;
+        }
+      });
+    }
+
+    // Actions
+    if (gamepad.isSelectPressed()) {
+      _activateSelectedButton();
+    } else if (gamepad.isBackPressed()) {
+      Navigator.of(context).pop();
+    }
+
+    gamepad.updatePreviousButtonStates();
+  }
+
+  void _activateSelectedButton() {
+    if (_selectedButtonIndex == 0) {
+      _downloadDatabase();
+    } else if (_selectedButtonIndex == 1 && _isDownloaded) {
+      _clearDatabase();
+    }
   }
 
   @override
@@ -59,42 +125,7 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
   Future<void> _downloadDatabase() async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Download ROM Database'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'This will download ROM lists from the Forsaken romList repository on GitHub.',
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Size: ~7 MB\nPlatforms: 138\nTotal ROMs: ~240,000',
-              style: TextStyle(fontFamily: 'monospace'),
-            ),
-            const SizedBox(height: 16),
-            if (_isDownloaded)
-              const Text(
-                'Note: This will overwrite existing data.',
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(_isDownloaded ? 'Re-download' : 'Download'),
-          ),
-        ],
-      ),
+      builder: (context) => _DownloadConfirmDialog(isDownloaded: _isDownloaded),
     );
 
     if (confirm != true) return;
@@ -150,24 +181,7 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
   Future<void> _clearDatabase() async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Clear ROM Database'),
-        content: const Text(
-          'This will delete all downloaded ROM lists. '
-          'You will need to download them again to browse ROMs.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
+      builder: (context) => const _ClearConfirmDialog(),
     );
 
     if (confirm != true) return;
@@ -199,6 +213,28 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
 
     final key = event.logicalKey;
 
+    // Handle navigation (horizontal: left/right arrow keys)
+    if (key == LogicalKeyboardKey.arrowRight) {
+      setState(() {
+        final totalButtons = _isDownloaded ? 2 : 1;
+        _selectedButtonIndex = (_selectedButtonIndex + 1) % totalButtons;
+      });
+      return KeyEventResult.handled;
+    } else if (key == LogicalKeyboardKey.arrowLeft) {
+      setState(() {
+        final totalButtons = _isDownloaded ? 2 : 1;
+        _selectedButtonIndex = (_selectedButtonIndex - 1) % totalButtons;
+        if (_selectedButtonIndex < 0) _selectedButtonIndex = totalButtons - 1;
+      });
+      return KeyEventResult.handled;
+    }
+
+    // Handle activation (Enter/Space)
+    if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.space) {
+      _activateSelectedButton();
+      return KeyEventResult.handled;
+    }
+
     // Handle back key (Escape, Backspace)
     if (_keyboardService.isBackKey(key)) {
       Navigator.of(context).pop();
@@ -216,11 +252,36 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(title: const Text('ROM Database'), centerTitle: true),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _isDownloading
-            ? _buildDownloadingView()
-            : _buildContentView(),
+        body: Column(
+          children: [
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _isDownloading
+                  ? _buildDownloadingView()
+                  : _buildContentView(),
+            ),
+            ControlsBottomBar(
+              actions: const [
+                BottomBarAction(
+                  label: 'Back',
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                BottomBarAction(
+                  label: 'Navigate',
+                  keyboardKey: '←→',
+                  gamepadButton: 'D-pad',
+                ),
+                BottomBarAction(
+                  label: 'Select',
+                  keyboardKey: 'Enter',
+                  gamepadButton: 'A',
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -349,36 +410,97 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
         ),
         const SizedBox(height: 24),
 
-        // Actions
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: _downloadDatabase,
-            icon: Icon(_isDownloaded ? Icons.refresh : Icons.download),
-            label: Text(
-              _isDownloaded ? 'Re-download Database' : 'Download Database',
+        // Actions - styled like DialogButtonBar
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            // Download/Re-download button
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: AnimatedScale(
+                scale: _selectedButtonIndex == 0 ? 1.02 : 1.0,
+                duration: const Duration(milliseconds: 150),
+                curve: Curves.easeOut,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  decoration: BoxDecoration(
+                    border: _selectedButtonIndex == 0
+                        ? Border.all(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2,
+                          )
+                        : Border.all(color: Colors.transparent, width: 2),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: ElevatedButton.icon(
+                    onPressed: _downloadDatabase,
+                    icon: Icon(_isDownloaded ? Icons.refresh : Icons.download),
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(_isDownloaded ? 'Re-download' : 'Download'),
+                        if (_isGamepadConnected &&
+                            _selectedButtonIndex == 0) ...[
+                          const SizedBox(width: 8),
+                          const GamepadButtonIndicator(
+                            button: GamepadButton.a,
+                            size: 16,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
-            style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(16)),
-          ),
+
+            // Clear button (only if downloaded)
+            if (_isDownloaded) ...[
+              const SizedBox(width: 8),
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: AnimatedScale(
+                  scale: _selectedButtonIndex == 1 ? 1.02 : 1.0,
+                  duration: const Duration(milliseconds: 150),
+                  curve: Curves.easeOut,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    decoration: BoxDecoration(
+                      border: _selectedButtonIndex == 1
+                          ? Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            )
+                          : Border.all(color: Colors.transparent, width: 2),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: TextButton.icon(
+                      onPressed: _clearDatabase,
+                      icon: const Icon(Icons.delete_outline, color: Colors.red),
+                      label: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'Clear',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          if (_isGamepadConnected &&
+                              _selectedButtonIndex == 1) ...[
+                            const SizedBox(width: 8),
+                            const GamepadButtonIndicator(
+                              button: GamepadButton.a,
+                              size: 16,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
-        if (_isDownloaded) ...[
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: _clearDatabase,
-              icon: const Icon(Icons.delete_outline, color: Colors.red),
-              label: const Text(
-                'Clear Database',
-                style: TextStyle(color: Colors.red),
-              ),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.all(16),
-                side: const BorderSide(color: Colors.red),
-              ),
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -391,6 +513,149 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen> {
         children: [
           Text(label, style: const TextStyle(color: Colors.grey)),
           Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+}
+
+/// Download confirmation dialog with gamepad/keyboard navigation
+class _DownloadConfirmDialog extends StatefulWidget {
+  final bool isDownloaded;
+
+  const _DownloadConfirmDialog({required this.isDownloaded});
+
+  @override
+  State<_DownloadConfirmDialog> createState() => _DownloadConfirmDialogState();
+}
+
+class _DownloadConfirmDialogState extends State<_DownloadConfirmDialog>
+    with DialogControlsMixin<_DownloadConfirmDialog> {
+  late final List<DialogButton> _buttons;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _buttons = [
+      DialogButton(
+        label: 'Cancel',
+        onPressed: () => Navigator.pop(context, false),
+        gamepadButton: GamepadButton.b,
+      ),
+      DialogButton(
+        label: widget.isDownloaded ? 'Re-download' : 'Download',
+        onPressed: () => Navigator.pop(context, true),
+        primary: true,
+        gamepadButton: GamepadButton.a,
+      ),
+    ];
+
+    startDialogControlsWithNavigation(
+      onCancel: () => Navigator.pop(context, false),
+      buttonCount: _buttons.length,
+      onButtonSelected: (index) => setState(() {}),
+      onConfirm: () => _buttons[selectedButtonIndex].onPressed(),
+      layout: ButtonLayout.horizontal,
+      defaultIndex: 1, // Default to Download button
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return wrapWithKeyboardHandler(
+      onEscape: () => Navigator.pop(context, false),
+      child: AlertDialog(
+        title: const Text('Download ROM Database'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'This will download ROM lists from the Forsaken romList repository on GitHub.',
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Size: ~7 MB\nPlatforms: 138\nTotal ROMs: ~240,000',
+              style: TextStyle(fontFamily: 'monospace'),
+            ),
+            const SizedBox(height: 16),
+            if (widget.isDownloaded)
+              const Text(
+                'Note: This will overwrite existing data.',
+                style: TextStyle(
+                  color: Colors.orange,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          ],
+        ),
+        actions: [
+          DialogButtonBar(
+            buttons: _buttons,
+            selectedIndex: selectedButtonIndex,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Clear confirmation dialog with gamepad/keyboard navigation
+class _ClearConfirmDialog extends StatefulWidget {
+  const _ClearConfirmDialog();
+
+  @override
+  State<_ClearConfirmDialog> createState() => _ClearConfirmDialogState();
+}
+
+class _ClearConfirmDialogState extends State<_ClearConfirmDialog>
+    with DialogControlsMixin<_ClearConfirmDialog> {
+  late final List<DialogButton> _buttons;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _buttons = [
+      DialogButton(
+        label: 'Cancel',
+        onPressed: () => Navigator.pop(context, false),
+        gamepadButton: GamepadButton.b,
+      ),
+      DialogButton(
+        label: 'Delete',
+        onPressed: () => Navigator.pop(context, true),
+        primary: true,
+        gamepadButton: GamepadButton.a,
+      ),
+    ];
+
+    startDialogControlsWithNavigation(
+      onCancel: () => Navigator.pop(context, false),
+      buttonCount: _buttons.length,
+      onButtonSelected: (index) => setState(() {}),
+      onConfirm: () => _buttons[selectedButtonIndex].onPressed(),
+      layout: ButtonLayout.horizontal,
+      defaultIndex: 0, // Default to Cancel
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return wrapWithKeyboardHandler(
+      onEscape: () => Navigator.pop(context, false),
+      child: AlertDialog(
+        title: const Text('Clear ROM Database'),
+        content: const Text(
+          'This will delete all downloaded ROM lists. '
+          'You will need to download them again to browse ROMs.',
+        ),
+        actions: [
+          DialogButtonBar(
+            buttons: _buttons,
+            selectedIndex: selectedButtonIndex,
+          ),
         ],
       ),
     );

@@ -1,4 +1,4 @@
-package com.example.emulator
+package com.forsaken.emulator
 
 import io.flutter.embedding.android.FlutterActivity
 

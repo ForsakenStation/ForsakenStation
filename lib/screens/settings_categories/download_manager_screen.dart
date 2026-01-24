@@ -4,6 +4,9 @@ import '../../services/emulator_download_service.dart';
 import '../../services/romlist_download_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../models/emulator_download_info.dart';
+import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/dialog_button_bar.dart';
+import '../../widgets/common/gamepad_button_indicator.dart';
 
 /// Screen for managing downloads
 ///
@@ -61,130 +64,154 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(title: const Text('Download Manager')),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Download emulators and game lists',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 24),
-
-              // Quick Actions Section
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Quick Actions',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          _ActionButton(
-                            icon: Icons.download,
-                            label: 'Download All',
-                            onPressed: _isDownloading
-                                ? null
-                                : () => _downloadCategory('all'),
-                          ),
-                          _ActionButton(
-                            icon: Icons.category,
-                            label: 'By Category',
-                            onPressed: _isDownloading
-                                ? null
-                                : _showCategoryDialog,
-                          ),
-                          _ActionButton(
-                            icon: Icons.list,
-                            label: 'Download Game Lists',
-                            onPressed: _isDownloading
-                                ? null
-                                : _downloadGameLists,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Download Queue Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Download Queue',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  if (_tasks.isNotEmpty) ...[
-                    TextButton(
-                      onPressed: _clearCompleted,
-                      child: const Text('Clear Completed'),
+        body: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Download emulators and game lists',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
-                  ],
-                ],
-              ),
+                    const SizedBox(height: 24),
 
-              const SizedBox(height: 8),
-
-              // Task List
-              Expanded(
-                child: _tasks.isEmpty
-                    ? Center(
+                    // Quick Actions Section
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.download_done,
-                              size: 64,
-                              color: Colors.grey.shade300,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'No downloads in progress',
+                            const Text(
+                              'Quick Actions',
                               style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey.shade600,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 32),
-                            const Text(
-                              'Select a quick action above to start downloading',
-                              style: TextStyle(color: Colors.grey),
-                              textAlign: TextAlign.center,
+                            const SizedBox(height: 16),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                _ActionButton(
+                                  icon: Icons.download,
+                                  label: 'Download All',
+                                  onPressed: _isDownloading
+                                      ? null
+                                      : () => _downloadCategory('all'),
+                                ),
+                                _ActionButton(
+                                  icon: Icons.category,
+                                  label: 'By Category',
+                                  onPressed: _isDownloading
+                                      ? null
+                                      : _showCategoryDialog,
+                                ),
+                                _ActionButton(
+                                  icon: Icons.list,
+                                  label: 'Download Game Lists',
+                                  onPressed: _isDownloading
+                                      ? null
+                                      : _downloadGameLists,
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      )
-                    : ListView.builder(
-                        itemCount: _tasks.length,
-                        itemBuilder: (context, index) {
-                          final taskKey = _tasks.keys.elementAt(index);
-                          final task = _tasks[taskKey]!;
-                          return _DownloadTaskCard(
-                            task: task,
-                            onCancel: task.status == DownloadStatus.downloading
-                                ? () => _cancelDownload(taskKey)
-                                : null,
-                          );
-                        },
                       ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Download Queue Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Download Queue',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (_tasks.isNotEmpty) ...[
+                          TextButton(
+                            onPressed: _clearCompleted,
+                            child: const Text('Clear Completed'),
+                          ),
+                        ],
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Task List
+                    Expanded(
+                      child: _tasks.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.download_done,
+                                    size: 64,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'No downloads in progress',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 32),
+                                  const Text(
+                                    'Select a quick action above to start downloading',
+                                    style: TextStyle(color: Colors.grey),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: _tasks.length,
+                              itemBuilder: (context, index) {
+                                final taskKey = _tasks.keys.elementAt(index);
+                                final task = _tasks[taskKey]!;
+                                return _DownloadTaskCard(
+                                  task: task,
+                                  onCancel:
+                                      task.status == DownloadStatus.downloading
+                                      ? () => _cancelDownload(taskKey)
+                                      : null,
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+            ControlsBottomBar(
+              actions: const [
+                BottomBarAction(
+                  label: 'Back',
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                BottomBarAction(
+                  label: 'Clear',
+                  keyboardKey: 'C',
+                  gamepadButton: 'Y',
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -249,9 +276,15 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+          DialogButtonBar(
+            buttons: [
+              DialogButton(
+                label: 'Cancel',
+                onPressed: () => Navigator.pop(context),
+                primary: true,
+                gamepadButton: GamepadButton.b,
+              ),
+            ],
           ),
         ],
       ),
@@ -297,13 +330,20 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
             'This may take a while depending on your internet connection.',
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Download'),
+            DialogButtonBar(
+              buttons: [
+                DialogButton(
+                  label: 'Cancel',
+                  onPressed: () => Navigator.pop(context, false),
+                  gamepadButton: GamepadButton.b,
+                ),
+                DialogButton(
+                  label: 'Download',
+                  onPressed: () => Navigator.pop(context, true),
+                  primary: true,
+                  gamepadButton: GamepadButton.a,
+                ),
+              ],
             ),
           ],
         ),
@@ -430,28 +470,36 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+            DialogButtonBar(
+              buttons: [
+                DialogButton(
+                  label: 'Cancel',
+                  onPressed: () => Navigator.pop(context),
+                  gamepadButton: GamepadButton.b,
+                ),
+                if (!isDownloaded || !isGenerated)
+                  DialogButton(
+                    label: 'Download & Generate',
+                    onPressed: () => Navigator.pop(context, 'download'),
+                    primary: true,
+                    gamepadButton: GamepadButton.a,
+                  ),
+                if (isDownloaded && !isGenerated)
+                  DialogButton(
+                    label: 'Generate ROMs Only',
+                    onPressed: () => Navigator.pop(context, 'generate'),
+                    primary: true,
+                    gamepadButton: GamepadButton.a,
+                  ),
+                if (isDownloaded)
+                  DialogButton(
+                    label: 'Re-download All',
+                    onPressed: () => Navigator.pop(context, 'redownload'),
+                    primary: !isGenerated,
+                    gamepadButton: GamepadButton.a,
+                  ),
+              ],
             ),
-            if (!isDownloaded || !isGenerated) ...[
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, 'download'),
-                child: const Text('Download & Generate'),
-              ),
-            ],
-            if (isDownloaded && !isGenerated) ...[
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, 'generate'),
-                child: const Text('Generate ROMs Only'),
-              ),
-            ],
-            if (isDownloaded) ...[
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, 'redownload'),
-                child: const Text('Re-download All'),
-              ),
-            ],
           ],
         ),
       );

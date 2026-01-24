@@ -9,6 +9,8 @@ import '../../services/rom_storage_service.dart';
 import '../../mixins/gamepad_polling_mixin.dart';
 import '../../mixins/screen_navigation_mixin.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
+import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/dialog_button_bar.dart';
 
 /// Screen for configuring system paths
 ///
@@ -253,13 +255,20 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
               '$oldForeverPath\n\nto:\n\n$newForeverPath',
             ),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('No, keep them where they are'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Yes, migrate ROMs'),
+              DialogButtonBar(
+                buttons: [
+                  DialogButton(
+                    label: 'No, keep them where they are',
+                    onPressed: () => Navigator.of(context).pop(false),
+                    gamepadButton: GamepadButton.b,
+                  ),
+                  DialogButton(
+                    label: 'Yes, migrate ROMs',
+                    onPressed: () => Navigator.of(context).pop(true),
+                    primary: true,
+                    gamepadButton: GamepadButton.a,
+                  ),
+                ],
               ),
             ],
           ),
@@ -350,13 +359,20 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
           'Any custom emulator settings will be lost. Continue?',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Reset'),
+          DialogButtonBar(
+            buttons: [
+              DialogButton(
+                label: 'Cancel',
+                onPressed: () => Navigator.of(context).pop(false),
+                gamepadButton: GamepadButton.b,
+              ),
+              DialogButton(
+                label: 'Reset',
+                onPressed: () => Navigator.of(context).pop(true),
+                primary: true,
+                gamepadButton: GamepadButton.a,
+              ),
+            ],
           ),
         ],
       ),
@@ -752,6 +768,25 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
               ),
             ],
           ),
+        ),
+        bottomNavigationBar: ControlsBottomBar(
+          actions: const [
+            BottomBarAction(
+              label: 'Back',
+              keyboardKey: 'ESC',
+              gamepadButton: 'B',
+            ),
+            BottomBarAction(
+              label: 'Navigate',
+              keyboardKey: '↑↓',
+              gamepadButton: 'D-pad',
+            ),
+            BottomBarAction(
+              label: 'Select',
+              keyboardKey: 'Enter',
+              gamepadButton: 'A',
+            ),
+          ],
         ),
       ),
     );

@@ -208,7 +208,7 @@ Media is saved with subdirectory structure preserved:
 Gamelists are saved to:
 
 ```
-~/.local/share/com.example.emulator/gamelists/
+~/.local/share/com.forsaken.emulator/gamelists/
 └── arduboy/
     └── gamelist.xml                  # ES-DE compatible format
 ```
