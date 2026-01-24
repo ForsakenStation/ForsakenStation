@@ -1532,6 +1532,10 @@
                     "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/pcsx2_libretro.so"
                 },
                 {
+                    "name": "Play!",
+                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/play_libretro.so"
+                },
+                {
                     "name": "pcsx2-qt",
                     "command": "pcsx2-qt.AppImage"
                 }

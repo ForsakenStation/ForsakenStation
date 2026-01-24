@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forsaken/models/bios_requirement.dart';
+import 'package:forsaken/models/bios_requirement_download.dart';
 import 'package:forsaken/services/bios_check_service.dart';
+import 'package:forsaken/services/bios_download_service.dart';
 import 'package:forsaken/services/keyboard_service.dart';
 import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
+import 'package:forsaken/widgets/bios/bios_download_dialog.dart';
 
 class BiosHelpScreen extends StatefulWidget {
   const BiosHelpScreen({super.key});
@@ -15,11 +19,16 @@ class BiosHelpScreen extends StatefulWidget {
 class _BiosHelpScreenState extends State<BiosHelpScreen> {
   final KeyboardService _keyboardService = KeyboardService.instance;
   final ScrollController _scrollController = ScrollController();
+  final BiosDownloadService _downloadService = BiosDownloadService();
 
   bool _isLoading = true;
   bool _showOnlyMissing = false;
   List<BiosRequirement> _allRequirements = [];
   List<BiosRequirement> _filteredRequirements = [];
+
+  // Download state tracking
+  final Map<String, bool> _downloadingPlatforms = {};
+  String? _currentDownloadToken;
 
   @override
   void initState() {
@@ -29,6 +38,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
 
   @override
   void dispose() {
+    _downloadService.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -57,6 +67,11 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
       } else {
         _filteredRequirements = _allRequirements;
       }
+
+      // Sort alphabetically by display name
+      _filteredRequirements.sort(
+        (a, b) => a.displayName.compareTo(b.displayName),
+      );
     });
   }
 
@@ -65,6 +80,199 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
       _showOnlyMissing = !_showOnlyMissing;
       _updateFilteredList();
     });
+  }
+
+  /// Downloads BIOS files for a specific platform
+  Future<void> _downloadPlatformBios(BiosRequirement requirement) async {
+    if (!requirement.canDownload) return;
+
+    final missingFiles = requirement.downloadableMissingFiles;
+    if (missingFiles.isEmpty) return;
+
+    // Mark platform as downloading
+    setState(() {
+      _downloadingPlatforms[requirement.platform] = true;
+    });
+
+    try {
+      final success = await BiosDownloadDialog.showSinglePlatform(
+        context: context,
+        platformName: requirement.displayName,
+        filesToDownload: missingFiles,
+        downloadFunction: (onProgress) => _downloadService.downloadPlatformBios(
+          platformId: requirement.platform,
+          missingFiles: missingFiles,
+          destinationPath: _expandPath(requirement.primaryLocation),
+          onProgress: onProgress,
+          cancellationToken: _currentDownloadToken,
+        ),
+      );
+
+      if (success == true) {
+        // Refresh BIOS data to update UI
+        await _loadBiosData();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Download failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      // Remove downloading state
+      setState(() {
+        _downloadingPlatforms.remove(requirement.platform);
+      });
+    }
+  }
+
+  /// Downloads all missing BIOS files
+  Future<void> _downloadAllMissingBios() async {
+    final missingByPlatform = <String, List<String>>{};
+    final destinationPaths = <String, String>{};
+
+    for (final requirement in _allRequirements) {
+      if (requirement.canDownload && requirement.hasDownloadableMissing) {
+        final missingFiles = requirement.downloadableMissingFiles;
+        if (missingFiles.isNotEmpty) {
+          missingByPlatform[requirement.platform] = missingFiles;
+          destinationPaths[requirement.platform] = _expandPath(
+            requirement.primaryLocation,
+          );
+        }
+      }
+    }
+
+    if (missingByPlatform.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No downloadable BIOS files are missing'),
+          backgroundColor: Colors.blue,
+        ),
+      );
+      return;
+    }
+
+    // Show confirmation dialog
+    final shouldProceed = await _showBatchDownloadConfirmation(
+      missingByPlatform,
+    );
+    if (!shouldProceed) return;
+
+    _currentDownloadToken = _downloadService.createCancellationToken();
+
+    try {
+      final success = await BiosDownloadDialog.showBatchDownload(
+        context: context,
+        filesToDownload: missingByPlatform,
+        downloadFunction: (onProgress) =>
+            _downloadService.downloadAllMissingBios(
+              missingByPlatform: missingByPlatform,
+              destinationPaths: destinationPaths,
+              onProgress: onProgress,
+              cancellationToken: _currentDownloadToken,
+            ),
+      );
+
+      if (success == true) {
+        // Refresh BIOS data to update UI
+        await _loadBiosData();
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('All downloads completed successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Batch download failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Shows confirmation dialog for batch download
+  Future<bool> _showBatchDownloadConfirmation(
+    Map<String, List<String>> missingByPlatform,
+  ) async {
+    final totalFiles = missingByPlatform.values.fold<int>(
+      0,
+      (sum, files) => sum + files.length,
+    );
+
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Download All Missing BIOS'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'This will download $totalFiles BIOS files for ${missingByPlatform.length} platforms:',
+                  ),
+                  const SizedBox(height: 16),
+                  for (final entry in missingByPlatform.entries) ...[
+                    Text(
+                      entry.key.toUpperCase(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    ...entry.value.map(
+                      (file) => Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: Text(
+                          '• $file',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'monospace',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Files will be downloaded from the retroarch_system repository.',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Download'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  /// Expands ~ to home directory in path
+  String _expandPath(String filePath) {
+    if (filePath.startsWith('~/')) {
+      final home = Platform.environment['HOME'] ?? '/home/user';
+      return filePath.replaceFirst('~', home);
+    }
+    return filePath;
   }
 
   KeyEventResult _handleKeyEvent(KeyEvent event) {
@@ -86,6 +294,18 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
     if (key == LogicalKeyboardKey.f5 ||
         key == LogicalKeyboardKey.browserRefresh) {
       _loadBiosData();
+      return KeyEventResult.handled;
+    }
+
+    // Download shortcut (D key)
+    if (key == LogicalKeyboardKey.keyD) {
+      final missingCount = _allRequirements
+          .where((req) => req.canDownload && req.hasDownloadableMissing)
+          .length;
+
+      if (missingCount > 0) {
+        _downloadAllMissingBios();
+      }
       return KeyEventResult.handled;
     }
 
@@ -131,7 +351,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                   file.filename,
                   style: TextStyle(
                     fontFamily: 'monospace',
-                    fontSize: 13,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: file.found ? Colors.green : Colors.red,
                   ),
@@ -142,7 +362,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                       if (file.region != null) file.region,
                       if (file.description != null) file.description,
                     ].join(' - '),
-                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
               ],
             ),
@@ -237,8 +457,8 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                     'Locations:',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                      color: Colors.grey[800],
+                      fontSize: 15,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -249,7 +469,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                         location,
                         style: const TextStyle(
                           fontFamily: 'monospace',
-                          fontSize: 12,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -281,11 +501,69 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                               requirement.notes!,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey[800],
+                                color: Colors.white,
                               ),
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                  ],
+
+                  // Download button
+                  if (requirement.canDownload &&
+                      requirement.hasDownloadableMissing) ...[
+                    const SizedBox(height: 12),
+                    const Divider(height: 1),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.download,
+                          size: 16,
+                          color: Colors.purple[700],
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Available for download from retroarch_system',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.purple[700],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed:
+                            _downloadingPlatforms[requirement.platform] == true
+                            ? null
+                            : () => _downloadPlatformBios(requirement),
+                        icon:
+                            _downloadingPlatforms[requirement.platform] == true
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.download, size: 16),
+                        label: Text(
+                          _downloadingPlatforms[requirement.platform] == true
+                              ? 'Downloading...'
+                              : 'Download ${requirement.downloadableMissingCount} missing files',
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
                       ),
                     ),
                   ],
@@ -300,6 +578,10 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
 
   Widget _buildSummary() {
     final stats = BiosCheckService.getStatistics(_allRequirements);
+    final downloadableCount = _allRequirements
+        .where((req) => req.canDownload && req.hasDownloadableMissing)
+        .length;
+
     return Container(
       margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.all(12),
@@ -319,6 +601,22 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                 'Summary',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
+              const Spacer(),
+              if (downloadableCount > 0)
+                ElevatedButton.icon(
+                  onPressed: _downloadAllMissingBios,
+                  icon: const Icon(Icons.download, size: 16),
+                  label: Text('Download All ($downloadableCount)'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    textStyle: const TextStyle(fontSize: 12),
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: 8),
@@ -345,6 +643,12 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                 '${stats['foundFiles']}/${stats['totalFiles']}',
                 Colors.blue,
               ),
+              if (downloadableCount > 0)
+                _buildSummaryStat(
+                  'Downloadable',
+                  '$downloadableCount',
+                  Colors.purple,
+                ),
             ],
           ),
         ],
@@ -439,22 +743,30 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
 
                   // Bottom controls bar
                   ControlsBottomBar(
-                    actions: const [
-                      BottomBarAction(
+                    actions: [
+                      const BottomBarAction(
                         label: 'Back',
                         keyboardKey: 'ESC',
                         gamepadButton: 'B',
                       ),
-                      BottomBarAction(
+                      const BottomBarAction(
                         label: 'Toggle Filter',
                         keyboardKey: 'Enter',
                         gamepadButton: 'A',
                       ),
-                      BottomBarAction(
+                      const BottomBarAction(
                         label: 'Refresh',
                         keyboardKey: 'F5',
                         gamepadButton: 'Start',
                       ),
+                      if (_allRequirements.any(
+                        (req) => req.canDownload && req.hasDownloadableMissing,
+                      ))
+                        const BottomBarAction(
+                          label: 'Download All',
+                          keyboardKey: 'D',
+                          gamepadButton: 'Y',
+                        ),
                     ],
                     counterText: _filteredRequirements.isEmpty
                         ? null

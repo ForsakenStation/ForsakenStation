@@ -6,6 +6,8 @@ import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import '../../services/config_service.dart';
 import '../../services/keyboard_service.dart';
+import '../../widgets/common/dialog_button_bar.dart';
+import '../../widgets/common/gamepad_button_indicator.dart';
 
 /// Screen for system utilities and maintenance
 ///
@@ -203,9 +205,15 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
+              DialogButtonBar(
+                buttons: [
+                  DialogButton(
+                    label: 'Close',
+                    onPressed: () => Navigator.pop(context),
+                    primary: true,
+                    gamepadButton: GamepadButton.b,
+                  ),
+                ],
               ),
             ],
           ),
@@ -278,9 +286,15 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
               ],
             ),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
+              DialogButtonBar(
+                buttons: [
+                  DialogButton(
+                    label: 'Close',
+                    onPressed: () => Navigator.pop(context),
+                    primary: true,
+                    gamepadButton: GamepadButton.b,
+                  ),
+                ],
               ),
             ],
           ),

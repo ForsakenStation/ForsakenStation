@@ -470,6 +470,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 16),
               const Divider(),
               const SizedBox(height: 16),
+              const Text(
+                'BIOS Files',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'BIOS files are sourced from the retroarch_system repository by Abdess:',
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 8),
+              const SelectableText(
+                'https://github.com/Abdess/retroarch_system',
+                style: TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'This repository contains system files and BIOS required by various emulation platforms. Special thanks to the maintainers for preserving these essential files.',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Amiga copy protection support provided by the capsimg library:',
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 8),
+              const SelectableText(
+                'https://github.com/rsn8887/capsimg',
+                style: TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 12,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Special thanks to rsn8887 for maintaining the capsimg library that enables IPF (copy-protected) disk image support for Amiga emulation.',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
               Row(
                 children: [
                   const Text('Debug Mode: '),
