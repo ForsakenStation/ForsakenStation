@@ -546,6 +546,263 @@ class BiosRequirement {
             'Place in Machines/ subdirectory. Different MSX versions require different BIOS files.',
       ),
 
+      // Sony MSX Computers
+      BiosRequirement(
+        platform: 'msx_sony',
+        displayName: 'Sony MSX',
+        required: false,
+        locations: ['~/.config/retroarch/system/Machines/Sony/'],
+        files: [
+          BiosFile(filename: 'hb10.rom', description: 'Sony HB-10 BIOS'),
+          BiosFile(filename: 'hb20p.rom', description: 'Sony HB-20P BIOS'),
+          BiosFile(filename: 'hb55.rom', description: 'Sony HB-55 BIOS'),
+          BiosFile(filename: 'hb75.rom', description: 'Sony HB-75 BIOS'),
+          BiosFile(filename: 'hb101.rom', description: 'Sony HB-101 BIOS'),
+          BiosFile(filename: 'hb201.rom', description: 'Sony HB-201 BIOS'),
+          BiosFile(filename: 'hbf1.rom', description: 'Sony HB-F1 BIOS (MSX2)'),
+          BiosFile(
+            filename: 'hbf500.rom',
+            description: 'Sony HB-F500 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'hbf900.rom',
+            description: 'Sony HB-F900 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'hbf1xv.rom',
+            description: 'Sony HB-F1XV BIOS (MSX2+)',
+          ),
+        ],
+        notes:
+            'Sony MSX computer BIOS files for specific machine emulation. ✅ Available for automatic download.',
+      ),
+
+      // Panasonic MSX Computers
+      BiosRequirement(
+        platform: 'msx_panasonic',
+        displayName: 'Panasonic MSX',
+        required: false,
+        locations: ['~/.config/retroarch/system/Machines/Panasonic/'],
+        files: [
+          BiosFile(
+            filename: 'cf2000.rom',
+            description: 'Panasonic CF-2000 BIOS',
+          ),
+          BiosFile(
+            filename: 'fs4500.rom',
+            description: 'Panasonic FS-4500 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'fsa1.rom',
+            description: 'Panasonic FS-A1 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'fsa1fx.rom',
+            description: 'Panasonic FS-A1FX BIOS (MSX2+)',
+          ),
+          BiosFile(
+            filename: 'fsa1wsx.rom',
+            description: 'Panasonic FS-A1WSX BIOS (MSX2+)',
+          ),
+          BiosFile(
+            filename: 'fsa1st.rom',
+            description: 'Panasonic FS-A1ST BIOS (TurboR)',
+          ),
+          BiosFile(
+            filename: 'fsa1gt.rom',
+            description: 'Panasonic FS-A1GT BIOS (TurboR)',
+          ),
+        ],
+        notes:
+            'Panasonic MSX computer BIOS files including TurboR models. ✅ Available for automatic download.',
+      ),
+
+      // Philips MSX Computers
+      BiosRequirement(
+        platform: 'msx_philips',
+        displayName: 'Philips MSX',
+        required: false,
+        locations: ['~/.config/retroarch/system/Machines/Philips/'],
+        files: [
+          BiosFile(filename: 'vg8000.rom', description: 'Philips VG-8000 BIOS'),
+          BiosFile(filename: 'vg8020.rom', description: 'Philips VG-8020 BIOS'),
+          BiosFile(
+            filename: 'vg8230.rom',
+            description: 'Philips VG-8230 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'nms8220.rom',
+            description: 'Philips NMS-8220 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'nms8250.rom',
+            description: 'Philips NMS-8250 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'nms8280.rom',
+            description: 'Philips NMS-8280 BIOS (MSX2)',
+          ),
+        ],
+        notes:
+            'Philips MSX computer BIOS files for European models. ✅ Available for automatic download.',
+      ),
+
+      // Toshiba MSX Computers
+      BiosRequirement(
+        platform: 'msx_toshiba',
+        displayName: 'Toshiba MSX',
+        required: false,
+        locations: ['~/.config/retroarch/system/Machines/Toshiba/'],
+        files: [
+          BiosFile(filename: 'hx10.rom', description: 'Toshiba HX-10 BIOS'),
+          BiosFile(filename: 'hx20.rom', description: 'Toshiba HX-20 BIOS'),
+          BiosFile(filename: 'hx32.rom', description: 'Toshiba HX-32 BIOS'),
+          BiosFile(
+            filename: 'hx23.rom',
+            description: 'Toshiba HX-23 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'hx33.rom',
+            description: 'Toshiba HX-33 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'hx34.rom',
+            description: 'Toshiba HX-34 BIOS (MSX2)',
+          ),
+        ],
+        notes:
+            'Toshiba Pasopia IQ series MSX computer BIOS files. ✅ Available for automatic download.',
+      ),
+
+      // Yamaha MSX Computers
+      BiosRequirement(
+        platform: 'msx_yamaha',
+        displayName: 'Yamaha MSX',
+        required: false,
+        locations: ['~/.config/retroarch/system/Machines/Yamaha/'],
+        files: [
+          BiosFile(
+            filename: 'cx5m.rom',
+            description: 'Yamaha CX5M BIOS (Music Computer)',
+          ),
+          BiosFile(filename: 'yjs503.rom', description: 'Yamaha YJS-503 BIOS'),
+          BiosFile(filename: 'ax150.rom', description: 'Yamaha AX-150 BIOS'),
+          BiosFile(
+            filename: 'ax350.rom',
+            description: 'Yamaha AX-350 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'ax500.rom',
+            description: 'Yamaha AX-500 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'yis805r2.rom',
+            description: 'Yamaha YIS-805/128R2 BIOS (MSX2)',
+          ),
+        ],
+        notes:
+            'Yamaha MSX computer BIOS files including music computers. ✅ Available for automatic download.',
+      ),
+
+      // European MSX Computers
+      BiosRequirement(
+        platform: 'msx_european',
+        displayName: 'European MSX',
+        required: false,
+        locations: ['~/.config/retroarch/system/Machines/European/'],
+        files: [
+          BiosFile(filename: 'canonv20.rom', description: 'Canon V-20 BIOS'),
+          BiosFile(
+            filename: 'canonv30.rom',
+            description: 'Canon V-30 BIOS (MSX2)',
+          ),
+          BiosFile(
+            filename: 'svi728.rom',
+            description: 'Spectravideo SVI-728 BIOS',
+          ),
+          BiosFile(
+            filename: 'svi738.rom',
+            description: 'Spectravideo SVI-738 BIOS',
+          ),
+          BiosFile(
+            filename: 'svi838.rom',
+            description: 'Spectravideo SVI-838 BIOS (MSX2)',
+          ),
+          BiosFile(filename: 'dragonmsx.rom', description: 'Dragon MSX BIOS'),
+        ],
+        notes:
+            'European MSX computer BIOS files from various manufacturers. ✅ Available for automatic download.',
+      ),
+
+      // Korean MSX Computers
+      BiosRequirement(
+        platform: 'msx_korean',
+        displayName: 'Korean MSX',
+        required: false,
+        locations: ['~/.config/retroarch/system/Machines/Korean/'],
+        files: [
+          BiosFile(filename: 'cpc300.rom', description: 'Daewoo CPC-300 BIOS'),
+          BiosFile(filename: 'dpc200.rom', description: 'Daewoo DPC-200 BIOS'),
+          BiosFile(filename: 'zemmix.rom', description: 'Zemmix BIOS'),
+          BiosFile(
+            filename: 'zemmixsv.rom',
+            description: 'Zemmix Super V BIOS (MSX2)',
+          ),
+          BiosFile(filename: 'spc800.rom', description: 'Samsung SPC-800 BIOS'),
+          BiosFile(filename: 'fc80.rom', description: 'GoldStar FC-80 BIOS'),
+        ],
+        notes:
+            'Korean MSX computer BIOS files including Daewoo and Samsung models. ✅ Available for automatic download.',
+      ),
+
+      // Arabic MSX Computers
+      BiosRequirement(
+        platform: 'msx_arabic',
+        displayName: 'Arabic MSX',
+        required: false,
+        locations: ['~/.config/retroarch/system/Machines/Arabic/'],
+        files: [
+          BiosFile(
+            filename: 'sakhrax100.rom',
+            description: 'Al Alamia Sakhr AX-100 BIOS',
+          ),
+          BiosFile(
+            filename: 'sakhrax170.rom',
+            description: 'Al Alamia Sakhr AX-170 BIOS',
+          ),
+        ],
+        notes:
+            'Arabic MSX computer BIOS files from Al Alamia Sakhr. ✅ Available for automatic download.',
+      ),
+
+      // Brazilian MSX Computers
+      BiosRequirement(
+        platform: 'msx_brazilian',
+        displayName: 'Brazilian MSX',
+        required: false,
+        locations: ['~/.config/retroarch/system/Machines/Brazilian/'],
+        files: [
+          BiosFile(
+            filename: 'expert.rom',
+            description: 'Gradiente Expert BIOS',
+          ),
+          BiosFile(
+            filename: 'expertplus.rom',
+            description: 'Gradiente Expert Plus BIOS',
+          ),
+          BiosFile(
+            filename: 'hotbit11.rom',
+            description: 'Sharp Hotbit 1.1 BIOS',
+          ),
+          BiosFile(
+            filename: 'hotbit12.rom',
+            description: 'Sharp Hotbit 1.2 BIOS',
+          ),
+        ],
+        notes:
+            'Brazilian MSX computer BIOS files from Gradiente and Sharp. ✅ Available for automatic download.',
+      ),
+
       // Amiga
       BiosRequirement(
         platform: 'amiga',
@@ -600,9 +857,21 @@ class BiosRequirement {
           BiosFile(filename: 'cdi200.rom', description: 'CD-i 200 BIOS'),
           BiosFile(filename: 'cdi220.rom', description: 'CD-i 220 BIOS'),
           BiosFile(filename: 'cdi220b.rom', description: 'CD-i 220 BIOS (alt)'),
+          BiosFile(
+            filename: 'cdi200a.rom',
+            description: 'CD-i 200A BIOS (alt)',
+          ),
+          BiosFile(
+            filename: 'vmpega.rom',
+            description: 'Video MPEG decoder ROM',
+          ),
+          BiosFile(
+            filename: 'xmpegx.rom',
+            description: 'Digital Video Cartridge ROM',
+          ),
         ],
         notes:
-            'At least one CD-i BIOS required. Note: These files are not available through the automatic download system.',
+            'At least one main CD-i BIOS required (200, 220, or 220b). Additional files provide enhanced compatibility.',
       ),
 
       // NEC PC-98
@@ -645,11 +914,17 @@ class BiosRequirement {
         required: true,
         locations: ['~/.config/retroarch/system/'],
         files: [
-          BiosFile(filename: 'neogeo.zip', description: 'Neo Geo BIOS'),
-          BiosFile(filename: 'ng-lo.rom', description: 'Neo Geo BIOS (alt)'),
+          BiosFile(filename: 'neogeo.zip', description: 'Neo Geo Arcade BIOS'),
+          BiosFile(filename: 'ng-lo.rom', description: 'Neo Geo CD Low ROM'),
+          BiosFile(filename: 'neocd.bin', description: 'Neo Geo CD BIOS'),
+          BiosFile(
+            filename: 'front-sp1.bin',
+            description: 'Neo Geo CD Front SP1',
+          ),
+          BiosFile(filename: 'top-sp1.bin', description: 'Neo Geo CD Top SP1'),
         ],
         notes:
-            'Required for FBNeo and MAME cores. Place neogeo.zip in system directory.',
+            'Required for FBNeo and MAME cores. ng-lo.rom and neocd.bin are essential for Neo Geo CD. Other files enhance compatibility.',
       ),
 
       // Game Boy (optional)
@@ -757,9 +1032,13 @@ class BiosRequirement {
             description: 'AES encryption keys',
           ),
           BiosFile(filename: 'seeddb.bin', description: 'Seed database'),
+          BiosFile(filename: 'boot9.bin', description: 'Boot9 bootloader'),
+          BiosFile(filename: 'boot11.bin', description: 'Boot11 bootloader'),
+          BiosFile(filename: 'dspfirm.cdc', description: 'DSP firmware'),
+          BiosFile(filename: 'shared_font.bin', description: '3DS system font'),
         ],
         notes:
-            'Required for encrypted games. Place in citra/ subdirectory or Citra config.',
+            'Required for encrypted games and full system compatibility. Files will be automatically extracted to the correct subdirectories.',
       ),
 
       // Atari 7800

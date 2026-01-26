@@ -25,10 +25,22 @@ class PlatformIcons {
       case 'amiga':
       case 'atari':
       case 'commodore':
+      case 'msx':
+      case 'msx_sony':
+      case 'msx_panasonic':
+      case 'msx_philips':
+      case 'msx_toshiba':
+      case 'msx_yamaha':
+      case 'msx_european':
+      case 'msx_korean':
+      case 'msx_arabic':
+      case 'msx_brazilian':
         return Icons.computer;
       case 'dreamcast':
       case 'saturn':
         return Icons.album;
+      case 'cdi':
+        return Icons.album; // CD-i uses CDs, so album icon is appropriate
       case 'genesis':
       case 'megadrive':
       case 'mastersystem':

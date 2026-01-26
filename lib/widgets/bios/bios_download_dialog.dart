@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsaken/services/bios_download_service.dart';
+import 'package:forsaken/widgets/bios/enhanced_error_display.dart';
 
 /// Dialog that shows progress when downloading BIOS files
 class BiosDownloadDialog extends StatefulWidget {
@@ -65,9 +66,9 @@ class BiosDownloadDialog extends StatefulWidget {
 class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
   dynamic _currentProgress;
   bool _isCompleted = false;
-  bool _isCancelled = false;
   bool _hasFailed = false;
-  String? _errorMessage;
+  bool _isCancelled = false;
+  BiosDownloadError? _enhancedError;
 
   @override
   void initState() {
@@ -87,7 +88,13 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
                 _isCompleted = true;
               } else if (progress.status == DownloadStatus.failed) {
                 _hasFailed = true;
-                _errorMessage = progress.errorMessage;
+                _enhancedError = progress.errorMessage != null
+                    ? BiosDownloadError.fromException(
+                        Exception(progress.errorMessage),
+                      )
+                    : BiosDownloadError.fromException(
+                        Exception('Download failed'),
+                      );
               } else if (progress.status == DownloadStatus.cancelled) {
                 _isCancelled = true;
               }
@@ -96,7 +103,13 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
                 _isCompleted = true;
               } else if (progress.status == BatchDownloadStatus.failed) {
                 _hasFailed = true;
-                _errorMessage = progress.errorMessage;
+                _enhancedError = progress.errorMessage != null
+                    ? BiosDownloadError.fromException(
+                        Exception(progress.errorMessage),
+                      )
+                    : BiosDownloadError.fromException(
+                        Exception('Batch download failed'),
+                      );
               } else if (progress.status == BatchDownloadStatus.cancelled) {
                 _isCancelled = true;
               }
@@ -120,7 +133,7 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
       if (mounted) {
         setState(() {
           _hasFailed = true;
-          _errorMessage = e.toString();
+          _enhancedError = BiosDownloadError.fromException(e);
         });
       }
     }
@@ -131,6 +144,17 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
       _isCancelled = true;
     });
     Navigator.of(context).pop(false);
+  }
+
+  void _retryDownload() {
+    setState(() {
+      _hasFailed = false;
+      _isCompleted = false;
+      _isCancelled = false;
+      _enhancedError = null;
+      _currentProgress = null;
+    });
+    _startDownload();
   }
 
   void _close() {
@@ -175,31 +199,12 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
               const LinearProgressIndicator(),
             ],
 
-            if (_errorMessage != null) ...[
+            if (_enhancedError != null) ...[
               const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.red.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _errorMessage!,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ),
-                  ],
-                ),
+              BiosErrorDisplay(
+                error: _enhancedError!,
+                onRetry: _retryDownload,
+                showDetails: true,
               ),
             ],
           ],
@@ -237,7 +242,7 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
         ),
         const SizedBox(height: 4),
         Text(
-          progress.progressText,
+          progress.detailedProgressText,
           style: const TextStyle(fontSize: 11, color: Colors.grey),
         ),
       ],

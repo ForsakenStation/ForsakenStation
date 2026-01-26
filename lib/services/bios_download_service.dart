@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:collection';
 
 import 'package:archive/archive.dart';
 import 'package:crypto/crypto.dart';
@@ -8,6 +9,85 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 
 import 'package:forsaken/models/bios_download_mapping.dart';
+import 'package:forsaken/services/bios_size_correction_service.dart';
+
+/// Report for individual BIOS file checksum verification
+class BiosFileChecksumReport {
+  final String filename;
+  final bool exists;
+  final bool hasChecksum;
+  final String? expectedMd5;
+  final String? actualMd5;
+  final String? expectedSha1;
+  final String? actualSha1;
+  final bool? md5Match;
+  final bool? sha1Match;
+  final bool? verificationPassed;
+  final int? fileSize;
+  final int? expectedSize;
+  final String? error;
+
+  const BiosFileChecksumReport({
+    required this.filename,
+    required this.exists,
+    required this.hasChecksum,
+    this.expectedMd5,
+    this.actualMd5,
+    this.expectedSha1,
+    this.actualSha1,
+    this.md5Match,
+    this.sha1Match,
+    this.verificationPassed,
+    this.fileSize,
+    this.expectedSize,
+    this.error,
+  });
+}
+
+/// Report for platform checksum verification
+class PlatformChecksumReport {
+  final String platformId;
+  final List<BiosFileChecksumReport> files;
+
+  const PlatformChecksumReport({required this.platformId, required this.files});
+
+  int get totalFiles => files.length;
+  int get verifiedFiles =>
+      files.where((f) => f.verificationPassed == true).length;
+  int get failedFiles =>
+      files.where((f) => f.verificationPassed == false).length;
+  int get missingFiles => files.where((f) => !f.exists).length;
+}
+
+/// Comprehensive BIOS checksum verification report
+class BiosChecksumReport {
+  final int totalFiles;
+  final int verifiedFiles;
+  final int missingChecksums;
+  final int failedVerifications;
+  final Map<String, PlatformChecksumReport> platformReports;
+  final DateTime generatedAt;
+
+  const BiosChecksumReport({
+    required this.totalFiles,
+    required this.verifiedFiles,
+    required this.missingChecksums,
+    required this.failedVerifications,
+    required this.platformReports,
+    required this.generatedAt,
+  });
+
+  double get verificationCoverage {
+    if (totalFiles == 0) return 0.0;
+    return (totalFiles - missingChecksums) / totalFiles;
+  }
+
+  double get verificationSuccessRate {
+    final filesWithChecksums = totalFiles - missingChecksums;
+    if (filesWithChecksums == 0) return 0.0;
+    return verifiedFiles / filesWithChecksums;
+  }
+}
 
 /// Enhanced logging utility for BIOS download operations
 class BiosDownloadLogger {
@@ -112,6 +192,8 @@ class DownloadProgress {
   final int? totalBytes;
   final DownloadStatus status;
   final String? errorMessage;
+  final DateTime? startTime;
+  final Duration? elapsedTime;
 
   DownloadProgress({
     required this.filename,
@@ -119,6 +201,8 @@ class DownloadProgress {
     this.totalBytes,
     required this.status,
     this.errorMessage,
+    this.startTime,
+    this.elapsedTime,
   });
 
   double get progress {
@@ -129,6 +213,60 @@ class DownloadProgress {
   String get progressText {
     if (totalBytes == null) return _formatBytes(bytesDownloaded);
     return '${_formatBytes(bytesDownloaded)} / ${_formatBytes(totalBytes!)}';
+  }
+
+  /// Calculate download speed in bytes per second
+  double? get downloadSpeed {
+    if (elapsedTime == null || elapsedTime!.inMilliseconds == 0) return null;
+    return bytesDownloaded / (elapsedTime!.inMilliseconds / 1000.0);
+  }
+
+  /// Get formatted download speed text
+  String? get speedText {
+    final speed = downloadSpeed;
+    if (speed == null) return null;
+    return '${_formatBytes(speed.round())}/s';
+  }
+
+  /// Calculate estimated time to completion
+  Duration? get estimatedTimeRemaining {
+    if (totalBytes == null || downloadSpeed == null || downloadSpeed! <= 0) {
+      return null;
+    }
+    final remainingBytes = totalBytes! - bytesDownloaded;
+    if (remainingBytes <= 0) return const Duration(seconds: 0);
+    return Duration(seconds: (remainingBytes / downloadSpeed!).round());
+  }
+
+  /// Get formatted ETA text
+  String? get etaText {
+    final eta = estimatedTimeRemaining;
+    if (eta == null) return null;
+
+    if (eta.inHours > 0) {
+      return '${eta.inHours}h ${eta.inMinutes % 60}m remaining';
+    } else if (eta.inMinutes > 0) {
+      return '${eta.inMinutes}m ${eta.inSeconds % 60}s remaining';
+    } else {
+      return '${eta.inSeconds}s remaining';
+    }
+  }
+
+  /// Get comprehensive progress text with speed and ETA
+  String get detailedProgressText {
+    final buffer = StringBuffer(progressText);
+
+    if (speedText != null) {
+      buffer.write(' (${speedText!}');
+
+      if (etaText != null) {
+        buffer.write(', $etaText');
+      }
+
+      buffer.write(')');
+    }
+
+    return buffer.toString();
   }
 
   static String _formatBytes(int bytes) {
@@ -142,6 +280,8 @@ class DownloadProgress {
     int? totalBytes,
     DownloadStatus? status,
     String? errorMessage,
+    DateTime? startTime,
+    Duration? elapsedTime,
   }) {
     return DownloadProgress(
       filename: filename,
@@ -149,6 +289,8 @@ class DownloadProgress {
       totalBytes: totalBytes ?? this.totalBytes,
       status: status ?? this.status,
       errorMessage: errorMessage,
+      startTime: startTime ?? this.startTime,
+      elapsedTime: elapsedTime ?? this.elapsedTime,
     );
   }
 }
@@ -280,13 +422,45 @@ class BiosDownloadService {
 
     // Check if file already exists and has correct checksum
     final existingFile = File(fullPath);
-    if (await existingFile.exists() && file.expectedMd5 != null) {
+    if (await existingFile.exists() &&
+        (file.expectedMd5 != null || file.expectedSha1 != null)) {
       BiosDownloadLogger.logInfo(
         'Checking existing file checksum for "$filename"',
       );
       try {
-        final existingChecksum = await _calculateMd5(existingFile);
-        if (existingChecksum.toLowerCase() == file.expectedMd5!.toLowerCase()) {
+        bool checksumMatches = false;
+
+        // Check MD5 if available
+        if (file.expectedMd5 != null) {
+          final existingMd5 = await _calculateMd5(existingFile);
+          if (existingMd5.toLowerCase() == file.expectedMd5!.toLowerCase()) {
+            BiosDownloadLogger.logInfo(
+              'File "$filename" already exists with correct MD5 checksum ($existingMd5)',
+            );
+            checksumMatches = true;
+          } else {
+            BiosDownloadLogger.logWarning(
+              'File "$filename" exists but has wrong MD5 checksum (expected: ${file.expectedMd5}, got: $existingMd5)',
+            );
+          }
+        }
+
+        // Check SHA1 if available and MD5 didn't match (or wasn't available)
+        if (!checksumMatches && file.expectedSha1 != null) {
+          final existingSha1 = await _calculateSha1(existingFile);
+          if (existingSha1.toLowerCase() == file.expectedSha1!.toLowerCase()) {
+            BiosDownloadLogger.logInfo(
+              'File "$filename" already exists with correct SHA1 checksum ($existingSha1)',
+            );
+            checksumMatches = true;
+          } else {
+            BiosDownloadLogger.logWarning(
+              'File "$filename" exists but has wrong SHA1 checksum (expected: ${file.expectedSha1}, got: $existingSha1)',
+            );
+          }
+        }
+
+        if (checksumMatches) {
           final fileSize = await existingFile.length();
           onProgress?.call(
             DownloadProgress(
@@ -296,14 +470,7 @@ class BiosDownloadService {
               status: DownloadStatus.completed,
             ),
           );
-          BiosDownloadLogger.logInfo(
-            'File "$filename" already exists with correct checksum ($existingChecksum)',
-          );
           return true;
-        } else {
-          BiosDownloadLogger.logWarning(
-            'File "$filename" exists but has wrong checksum (expected: ${file.expectedMd5}, got: $existingChecksum)',
-          );
         }
       } catch (e) {
         BiosDownloadLogger.logError(
@@ -312,7 +479,7 @@ class BiosDownloadService {
         );
       }
     } else if (await existingFile.exists()) {
-      BiosDownloadLogger.logInfo(
+      BiosDownloadLogger.logWarning(
         'File "$filename" exists but no checksum available for verification',
       );
     }
@@ -341,7 +508,9 @@ class BiosDownloadService {
           filename: filename,
           fullPath: fullPath,
           expectedMd5: file.expectedMd5,
+          expectedSha1: file.expectedSha1,
           expectedSize: file.expectedSize,
+          sizeTolerance: file.sizeTolerance,
           onProgress: onProgress,
           cancellationToken: cancellationToken,
         );
@@ -669,11 +838,14 @@ class BiosDownloadService {
     required String filename,
     required String fullPath,
     String? expectedMd5,
+    String? expectedSha1,
     int? expectedSize,
+    double sizeTolerance = 0.0, // Size variance tolerance (0.0 to 1.0)
     void Function(DownloadProgress)? onProgress,
     String? cancellationToken,
   }) async {
     late http.StreamedResponse response;
+    final startTime = DateTime.now();
 
     try {
       final request = http.Request('GET', Uri.parse(url));
@@ -750,6 +922,8 @@ class BiosDownloadService {
             bytesDownloaded: bytesDownloaded,
             totalBytes: contentLength,
             status: DownloadStatus.downloading,
+            startTime: startTime,
+            elapsedTime: DateTime.now().difference(startTime),
           ),
         );
       }
@@ -759,18 +933,64 @@ class BiosDownloadService {
       // Verify file size if expected
       if (expectedSize != null) {
         final actualSize = await file.length();
-        if (actualSize != expectedSize) {
-          await file.delete();
-          throw Exception(
-            'Size mismatch: expected ${BiosDownloadLogger._formatBytes(expectedSize)}, got ${BiosDownloadLogger._formatBytes(actualSize)}',
+
+        // Calculate allowed size range based on tolerance
+        final toleranceBytes = (expectedSize * sizeTolerance).round();
+        final minSize = expectedSize - toleranceBytes;
+        final maxSize = expectedSize + toleranceBytes;
+
+        if (actualSize < minSize || actualSize > maxSize) {
+          // Use size correction service for better error analysis
+          BiosSizeCorrectionService.logSizeAnalysis(
+            filename,
+            url,
+            expectedSize,
+            actualSize,
           );
+
+          final suggestedSize = BiosSizeCorrectionService.suggestSizeCorrection(
+            url,
+            filename,
+            actualSize,
+          );
+          final areCompatible = BiosSizeCorrectionService.areCompatibleSizes(
+            expectedSize,
+            actualSize,
+          );
+
+          await file.delete();
+
+          String errorMessage;
+          if (suggestedSize != null) {
+            errorMessage =
+                'Size mismatch: expected ${BiosDownloadLogger._formatBytes(expectedSize)}, got ${BiosDownloadLogger._formatBytes(actualSize)}. '
+                'This appears to be a known size difference for this repository. '
+                'The downloaded file size (${BiosDownloadLogger._formatBytes(actualSize)}) may be correct for this source.';
+          } else if (areCompatible) {
+            errorMessage =
+                'Size mismatch: expected ${BiosDownloadLogger._formatBytes(expectedSize)}, got ${BiosDownloadLogger._formatBytes(actualSize)}. '
+                'Sizes are close but outside tolerance. This may indicate a different version of the same file.';
+          } else {
+            if (sizeTolerance > 0.0) {
+              errorMessage =
+                  'Size mismatch: expected ${BiosDownloadLogger._formatBytes(expectedSize)} ±${(sizeTolerance * 100).round()}%, got ${BiosDownloadLogger._formatBytes(actualSize)}';
+            } else {
+              errorMessage =
+                  'Size mismatch: expected ${BiosDownloadLogger._formatBytes(expectedSize)}, got ${BiosDownloadLogger._formatBytes(actualSize)}';
+            }
+          }
+
+          throw Exception(errorMessage);
         }
+
         BiosDownloadLogger.logInfo(
           'File size verification passed: ${BiosDownloadLogger._formatBytes(actualSize)}',
         );
       }
 
-      // Verify MD5 checksum if expected
+      // Verify checksums if expected
+      bool checksumVerified = false;
+
       if (expectedMd5 != null) {
         BiosDownloadLogger.logInfo('Verifying MD5 checksum for "$filename"');
         onProgress?.call(
@@ -792,6 +1012,39 @@ class BiosDownloadService {
         BiosDownloadLogger.logInfo(
           'MD5 checksum verification passed: $actualMd5',
         );
+        checksumVerified = true;
+      }
+
+      if (expectedSha1 != null) {
+        BiosDownloadLogger.logInfo('Verifying SHA1 checksum for "$filename"');
+        if (!checksumVerified) {
+          onProgress?.call(
+            DownloadProgress(
+              filename: filename,
+              bytesDownloaded: bytesDownloaded,
+              totalBytes: contentLength,
+              status: DownloadStatus.verifying,
+            ),
+          );
+        }
+
+        final actualSha1 = await _calculateSha1(file);
+        if (actualSha1.toLowerCase() != expectedSha1.toLowerCase()) {
+          await file.delete();
+          throw Exception(
+            'SHA1 checksum mismatch: expected $expectedSha1, got $actualSha1',
+          );
+        }
+        BiosDownloadLogger.logInfo(
+          'SHA1 checksum verification passed: $actualSha1',
+        );
+        checksumVerified = true;
+      }
+
+      if (expectedMd5 == null && expectedSha1 == null) {
+        BiosDownloadLogger.logWarning(
+          'No checksum verification available for "$filename" - file integrity cannot be guaranteed',
+        );
       }
 
       onProgress?.call(
@@ -800,6 +1053,8 @@ class BiosDownloadService {
           bytesDownloaded: bytesDownloaded,
           totalBytes: contentLength ?? bytesDownloaded,
           status: DownloadStatus.completed,
+          startTime: startTime,
+          elapsedTime: DateTime.now().difference(startTime),
         ),
       );
 
@@ -816,6 +1071,12 @@ class BiosDownloadService {
   Future<String> _calculateMd5(File file) async {
     final bytes = await file.readAsBytes();
     final digest = md5.convert(bytes);
+    return digest.toString();
+  }
+
+  Future<String> _calculateSha1(File file) async {
+    final bytes = await file.readAsBytes();
+    final digest = sha1.convert(bytes);
     return digest.toString();
   }
 
@@ -870,7 +1131,33 @@ class BiosDownloadService {
         for (final archiveFile in archive) {
           if (archiveFile.isFile) {
             final archiveFileName = path.basename(archiveFile.name);
-            if (archiveFileName == targetFile) {
+
+            // Check if this file matches the target file
+            bool isMatch = false;
+
+            if (extractionPath != null) {
+              // If extraction path is specified, look for files within that path
+              final normalizedArchivePath = archiveFile.name.replaceAll(
+                '\\',
+                '/',
+              );
+              final normalizedExtractionPath = extractionPath.replaceAll(
+                '\\',
+                '/',
+              );
+
+              if (normalizedArchivePath.contains(normalizedExtractionPath) &&
+                  archiveFileName == targetFile) {
+                isMatch = true;
+              }
+            } else {
+              // Default behavior: match by filename only
+              if (archiveFileName == targetFile) {
+                isMatch = true;
+              }
+            }
+
+            if (isMatch) {
               fileToExtract = archiveFile;
               break;
             }
@@ -941,6 +1228,260 @@ class BiosDownloadService {
         'Unknown platform, attempting to extract all specified files',
       );
       return extractedFiles;
+    }
+  }
+
+  /// Generate comprehensive checksum verification report for all BIOS files
+  Future<BiosChecksumReport> generateChecksumReport({
+    required Map<String, String> platformPaths,
+    List<String>? platformFilter,
+  }) async {
+    final platformReports = <String, PlatformChecksumReport>{};
+    int totalFiles = 0;
+    int verifiedFiles = 0;
+    int missingChecksums = 0;
+    int failedVerifications = 0;
+
+    for (final mapping in BiosDownloadMapping.allMappings) {
+      // Apply platform filter if specified
+      if (platformFilter != null &&
+          !platformFilter.contains(mapping.platformId)) {
+        continue;
+      }
+
+      final platformPath = platformPaths[mapping.platformId];
+      if (platformPath == null) continue;
+
+      final fileReports = <BiosFileChecksumReport>[];
+      final directory = Directory(platformPath);
+
+      if (!await directory.exists()) {
+        continue;
+      }
+
+      for (final biosFile in mapping.files) {
+        totalFiles++;
+        final filePath = path.join(platformPath, biosFile.filename);
+        final file = File(filePath);
+
+        if (!await file.exists()) {
+          fileReports.add(
+            BiosFileChecksumReport(
+              filename: biosFile.filename,
+              exists: false,
+              hasChecksum:
+                  biosFile.expectedMd5 != null || biosFile.expectedSha1 != null,
+            ),
+          );
+          continue;
+        }
+
+        final hasChecksum =
+            biosFile.expectedMd5 != null || biosFile.expectedSha1 != null;
+        if (!hasChecksum) {
+          missingChecksums++;
+        }
+
+        try {
+          String? actualMd5;
+          String? actualSha1;
+          bool md5Match = true;
+          bool sha1Match = true;
+
+          // Calculate checksums if expected
+          if (biosFile.expectedMd5 != null) {
+            actualMd5 = await _calculateMd5(file);
+            md5Match =
+                actualMd5.toLowerCase() == biosFile.expectedMd5!.toLowerCase();
+          }
+
+          if (biosFile.expectedSha1 != null) {
+            actualSha1 = await _calculateSha1(file);
+            sha1Match =
+                actualSha1.toLowerCase() ==
+                biosFile.expectedSha1!.toLowerCase();
+          }
+
+          final verificationPassed = md5Match && sha1Match;
+          if (verificationPassed && hasChecksum) {
+            verifiedFiles++;
+          } else if (!verificationPassed) {
+            failedVerifications++;
+          }
+
+          fileReports.add(
+            BiosFileChecksumReport(
+              filename: biosFile.filename,
+              exists: true,
+              hasChecksum: hasChecksum,
+              expectedMd5: biosFile.expectedMd5,
+              actualMd5: actualMd5,
+              expectedSha1: biosFile.expectedSha1,
+              actualSha1: actualSha1,
+              md5Match: md5Match,
+              sha1Match: sha1Match,
+              verificationPassed: verificationPassed,
+              fileSize: await file.length(),
+              expectedSize: biosFile.expectedSize,
+            ),
+          );
+        } catch (e) {
+          failedVerifications++;
+          fileReports.add(
+            BiosFileChecksumReport(
+              filename: biosFile.filename,
+              exists: true,
+              hasChecksum: hasChecksum,
+              error: e.toString(),
+            ),
+          );
+        }
+      }
+
+      if (fileReports.isNotEmpty) {
+        platformReports[mapping.platformId] = PlatformChecksumReport(
+          platformId: mapping.platformId,
+          files: fileReports,
+        );
+      }
+    }
+
+    return BiosChecksumReport(
+      totalFiles: totalFiles,
+      verifiedFiles: verifiedFiles,
+      missingChecksums: missingChecksums,
+      failedVerifications: failedVerifications,
+      platformReports: platformReports,
+      generatedAt: DateTime.now(),
+    );
+  }
+
+  /// Downloads BIOS files in parallel for improved performance
+  ///
+  /// Downloads multiple files concurrently with configurable parallelism.
+  /// Useful for platforms with many BIOS files or when downloading from multiple platforms.
+  Future<bool> downloadPlatformBiosParallel({
+    required String platformId,
+    required List<String> missingFiles,
+    required String destinationPath,
+    void Function(DownloadProgress)? onProgress,
+    String? cancellationToken,
+    int maxConcurrency =
+        3, // Limit concurrent downloads to avoid overwhelming servers
+  }) async {
+    final mapping = BiosDownloadMapping.getMapping(platformId);
+    if (mapping == null || !mapping.available) {
+      BiosDownloadLogger.logError(
+        'No download mapping available for platform: $platformId',
+      );
+      return false;
+    }
+
+    final startTime = DateTime.now();
+    BiosDownloadLogger.logBatchStart(platformId, missingFiles.length);
+    BiosDownloadLogger.logInfo(
+      'Starting parallel download with max concurrency: $maxConcurrency',
+    );
+
+    // Prepare download tasks
+    final tasks = <Future<bool>>[];
+    final semaphore = Semaphore(maxConcurrency);
+
+    int completedCount = 0;
+    final totalFiles = missingFiles.length;
+
+    for (final filename in missingFiles) {
+      if (_isCancelled(cancellationToken)) {
+        BiosDownloadLogger.logWarning(
+          'Parallel download cancelled for platform "$platformId"',
+        );
+        break;
+      }
+
+      final file = mapping.getFile(filename);
+      if (file == null) {
+        BiosDownloadLogger.logWarning(
+          'File "$filename" not found in mapping for platform "$platformId"',
+        );
+        continue;
+      }
+
+      // Create parallel download task with semaphore
+      final task = semaphore.acquire().then((_) async {
+        try {
+          BiosDownloadLogger.logInfo(
+            'Starting parallel download: "$filename" (${++completedCount}/$totalFiles)',
+          );
+
+          final success = await downloadFile(
+            file: file,
+            repoFolder: mapping.repoFolder,
+            destinationPath: destinationPath,
+            onProgress: onProgress, // Pass through progress as-is
+            cancellationToken: cancellationToken,
+          );
+
+          if (success) {
+            BiosDownloadLogger.logInfo(
+              'Parallel download completed: "$filename"',
+            );
+          } else {
+            BiosDownloadLogger.logError(
+              'Parallel download failed: "$filename"',
+            );
+          }
+
+          return success;
+        } finally {
+          semaphore.release();
+        }
+      });
+
+      tasks.add(task);
+    }
+
+    // Wait for all downloads to complete
+    final results = await Future.wait(tasks);
+    final successCount = results.where((success) => success).length;
+    final allSuccessful = successCount == missingFiles.length;
+
+    final duration = DateTime.now().difference(startTime);
+    BiosDownloadLogger.logBatchComplete(
+      platformId,
+      successCount,
+      missingFiles.length,
+      duration,
+    );
+
+    return allSuccessful;
+  }
+}
+
+/// Simple semaphore implementation for controlling concurrent downloads
+class Semaphore {
+  final int maxCount;
+  int _currentCount;
+  final Queue<Completer<void>> _waitQueue = Queue<Completer<void>>();
+
+  Semaphore(this.maxCount) : _currentCount = maxCount;
+
+  Future<void> acquire() async {
+    if (_currentCount > 0) {
+      _currentCount--;
+      return;
+    }
+
+    final completer = Completer<void>();
+    _waitQueue.add(completer);
+    return completer.future;
+  }
+
+  void release() {
+    if (_waitQueue.isNotEmpty) {
+      final completer = _waitQueue.removeFirst();
+      completer.complete();
+    } else {
+      _currentCount++;
     }
   }
 }

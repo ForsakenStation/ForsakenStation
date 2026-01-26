@@ -167,7 +167,7 @@
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "todo": true,
+            "todo": false,
             "corePreferences": {}
         },
         {
@@ -2024,18 +2024,6 @@
         },
         {
             "system": "wonderswan",
-            "command": [
-                {
-                    "name": "mednafen_wswan",
-                    "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
-                }
-            ],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "wonderswanc",
             "command": [
                 {
                     "name": "mednafen_wswan",

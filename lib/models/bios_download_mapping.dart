@@ -3,7 +3,9 @@ class DownloadableBiosFile {
   final String filename;
   final String? expectedMd5;
   final String? expectedSha1;
+  final String? expectedCrc32; // CRC32 checksum for additional verification
   final int? expectedSize;
+  final double sizeTolerance; // Allow size variance percentage (0.0 to 1.0)
   final String? description;
   final String? region;
   final String? customBranch; // Support for alternative branches
@@ -13,12 +15,18 @@ class DownloadableBiosFile {
   final bool requiresExtraction; // ZIP/archive files that need extraction
   final List<String>? extractedFiles; // List of files to extract from archive
   final String? extractionPath; // Relative path within archive to extract from
+  final bool
+  isOptional; // Mark as optional/extra file (not required for basic functionality)
+  final String?
+  category; // Optional category for grouping (e.g., "regional", "enhancement", "alternative")
 
   const DownloadableBiosFile({
     required this.filename,
     this.expectedMd5,
     this.expectedSha1,
+    this.expectedCrc32,
     this.expectedSize,
+    this.sizeTolerance = 0.0, // Default: exact size match required
     this.description,
     this.region,
     this.customBranch,
@@ -27,6 +35,8 @@ class DownloadableBiosFile {
     this.requiresExtraction = false,
     this.extractedFiles,
     this.extractionPath,
+    this.isOptional = false,
+    this.category,
   });
 
   /// Generates the download URL for this file
@@ -174,6 +184,42 @@ class BiosDownloadMapping {
           expectedSize: 7609,
           description: 'YM2608 ADPCM ROM',
         ),
+
+        // Archive.org massive Arcade collection (496.2MB)
+        DownloadableBiosFile(
+          filename: 'Arcade (FinalBurn Neo).zip',
+          expectedSize: 520503501, // 496.2MB - MASSIVE arcade BIOS collection
+          description:
+              'Complete Arcade BIOS Collection - FinalBurn Neo (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/Arcade%20(FinalBurn%20Neo).zip',
+          requiresExtraction: true,
+          extractedFiles: [
+            // Note: This collection contains 100+ arcade BIOS files
+            // Including all the individual files listed above plus many more
+            'neogeo.zip',
+            'airlbios.zip',
+            'awbios.zip',
+            'bubsys.zip',
+            'cchip.zip',
+            'decocass.zip',
+            'f355bios.zip',
+            'f355dlx.zip',
+            'hod2bios.zip',
+            'isgsm.zip',
+            'midssio.zip',
+            'nmk004.zip',
+            'pgm.zip',
+            'skns.zip',
+            'ym2608.zip',
+            // Plus many more arcade system BIOS files...
+          ],
+          category: 'archive_collection',
+          isOptional:
+              true, // Alternative to individual files - WARNING: Large download!
+          sizeTolerance:
+              0.1, // Allow 10% variance due to compression differences
+        ),
       ],
     ),
 
@@ -214,6 +260,30 @@ class BiosDownloadMapping {
           filename: 'tos.img',
           expectedSize: 196608,
           description: 'Atari ST TOS ROM Image',
+        ),
+
+        // Archive.org comprehensive Atari ST/STE/TT/Falcon collection (9.3MB)
+        DownloadableBiosFile(
+          filename: 'Atari - ST-STE-TT-Falcon (Hatari).zip',
+          expectedSize: 9748480, // 9.3MB
+          description:
+              'Complete Atari ST/STE/TT/Falcon BIOS Collection - Hatari (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/Atari%20-%20ST-STE-TT-Falcon%20(Hatari).zip',
+          requiresExtraction: true,
+          extractedFiles: [
+            'tos.img',
+            'tos100.img', // TOS 1.00
+            'tos102.img', // TOS 1.02
+            'tos104.img', // TOS 1.04
+            'tos162.img', // TOS 1.62
+            'tos206.img', // TOS 2.06
+            'tos306.img', // TOS 3.06
+            'tos404.img', // TOS 4.04 (TT)
+            'falcon_tos.img', // Falcon TOS
+          ],
+          category: 'archive_collection',
+          isOptional: true, // Alternative to individual files
         ),
       ],
     ),
@@ -264,11 +334,6 @@ class BiosDownloadMapping {
       platformId: 'x68000',
       repoFolder: 'Sharp - X68000',
       files: [
-        DownloadableBiosFile(
-          filename: 'iplrom.dat',
-          expectedSize: 131072,
-          description: 'X68000 IPL ROM',
-        ),
         DownloadableBiosFile(
           filename: 'iplrom30.dat',
           expectedSize: 131072,
@@ -558,6 +623,32 @@ class BiosDownloadMapping {
           customBranch: 'RetroArch',
           customPath: 'system',
         ),
+
+        // Additional BIOS from RetroPieBios repository
+        DownloadableBiosFile(
+          filename: 'scph1001.bin',
+          expectedSize: 524288,
+          description: 'SCPH-1001 BIOS (USA, v2.2)',
+          region: 'USA',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/scph1001.bin',
+        ),
+        DownloadableBiosFile(
+          filename: 'scph7001.bin',
+          expectedSize: 524288,
+          description: 'SCPH-7001 BIOS (USA, v4.1)',
+          region: 'USA',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/scph7001.bin',
+        ),
+        DownloadableBiosFile(
+          filename: 'scph101.bin',
+          expectedSize: 524288,
+          description: 'SCPH-101 BIOS (USA, PSone)',
+          region: 'USA',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/scph101.bin',
+        ),
       ],
     ),
 
@@ -617,11 +708,15 @@ class BiosDownloadMapping {
       files: [
         DownloadableBiosFile(
           filename: 'sega_101.bin',
+          expectedSize: 524288,
+          expectedSha1: '85ec9ca47d8f6807718151cbcca8b964cd8d6280',
           description: 'Saturn BIOS USA',
           region: 'USA',
         ),
         DownloadableBiosFile(
           filename: 'mpr-17933.bin',
+          expectedSize: 524288,
+          expectedSha1: '3240872c70984b6cbfda1586cab68dbc694d1408',
           description: 'Saturn BIOS Japan',
           region: 'JAP',
         ),
@@ -643,6 +738,47 @@ class BiosDownloadMapping {
           description: 'Saturn BIOS (RetroArch)',
           customBranch: 'RetroArch',
           customPath: 'system',
+        ),
+        // Alternative from RetroPieBios (optional backup source)
+        DownloadableBiosFile(
+          filename: 'saturn_bios.bin',
+          expectedSize: 524288,
+          description: 'Saturn BIOS (Alternative)',
+          isOptional: true,
+          category: 'alternative',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/roms/saturn/saturn_bios.bin',
+        ),
+
+        // Archive.org comprehensive Saturn collections
+        DownloadableBiosFile(
+          filename: 'Sega - Saturn (Beetle Saturn).zip',
+          expectedSize: 4927421, // 4.7MB
+          description:
+              'Complete Saturn BIOS Collection - Beetle Saturn (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/Sega%20-%20Saturn%20(Beetle%20Saturn).zip',
+          requiresExtraction: true,
+          extractedFiles: [
+            'sega_101.bin',
+            'mpr-17933.bin',
+            'mpr-18811-mx.ic1',
+            'mpr-19367-mx.ic1',
+          ],
+          category: 'archive_collection',
+          isOptional: true, // Alternative to individual files
+        ),
+        DownloadableBiosFile(
+          filename: 'Sega - Saturn (YabaSanshiro - Yabause).zip',
+          expectedSize: 456628, // 445KB
+          description:
+              'Saturn BIOS Collection - Yabause/YabaSanshiro (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/Sega%20-%20Saturn%20(YabaSanshiro%20-%20Yabause).zip',
+          requiresExtraction: true,
+          extractedFiles: ['saturn_bios.bin'],
+          category: 'archive_collection',
+          isOptional: true, // Alternative source
         ),
       ],
     ),
@@ -672,6 +808,15 @@ class BiosDownloadMapping {
           filename: 'bios.gg',
           expectedSize: 1024,
           description: 'Game Gear BIOS',
+        ),
+
+        // Alternative source from RetroPieBios
+        DownloadableBiosFile(
+          filename: 'bios.gg',
+          expectedSize: 1024,
+          description: 'Game Gear BIOS (RetroPieBios)',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/bios.gg',
         ),
       ],
     ),
@@ -753,6 +898,27 @@ class BiosDownloadMapping {
           expectedMd5: '2b7ccb3d86baa18f6402c176f3065082',
           description: 'PC Engine CD System Card v1',
         ),
+
+        // Archive.org comprehensive PC Engine CD collection (445KB)
+        DownloadableBiosFile(
+          filename:
+              'NEC - PC Engine - SuperGrafx - CD (Beetle PCE - PCE Fast - SGX).zip',
+          expectedSize: 455782, // 445KB
+          description:
+              'Complete PC Engine CD System Card Collection (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/NEC%20-%20PC%20Engine%20-%20SuperGrafx%20-%20CD%20(Beetle%20PCE%20-%20PCE%20Fast%20-%20SGX).zip',
+          requiresExtraction: true,
+          extractedFiles: [
+            'syscard1.pce',
+            'syscard2.pce',
+            'syscard3.pce',
+            'gecard.pce',
+            'gexpress.pce',
+          ],
+          category: 'archive_collection',
+          isOptional: true, // Alternative to individual files
+        ),
       ],
     ),
 
@@ -820,6 +986,16 @@ class BiosDownloadMapping {
           expectedMd5: '281f20ea4320404ec820fb7ec0693b38',
           description: 'Atari 5200 BIOS',
         ),
+        // Alternative from RetroPieBios
+        DownloadableBiosFile(
+          filename: '5200.rom',
+          expectedSize: 2048,
+          description: 'Atari 5200 BIOS (Alternative)',
+          isOptional: true,
+          category: 'alternative',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/roms/atari5200/5200.rom',
+        ),
       ],
     ),
 
@@ -832,6 +1008,7 @@ class BiosDownloadMapping {
           filename: 'gba_bios.bin',
           expectedSize: 16384,
           expectedMd5: 'a860e8c0b6d573d191e4ec7db1b1e4f6',
+          expectedSha1: 'fd2547724b505f487e6dcb29ec2ecff3af35a841',
           description: 'GBA BIOS',
         ),
       ],
@@ -882,6 +1059,825 @@ class BiosDownloadMapping {
       ],
     ),
 
+    // Sony MSX Computers
+    BiosDownloadMapping(
+      platformId: 'msx_sony',
+      repoFolder: 'Sony - MSX',
+      files: [
+        // Sony HB Series MSX1
+        DownloadableBiosFile(
+          filename: 'hb10.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-10 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hb20p.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-20P BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hb55.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-55 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hb75.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-75 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hb101.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-101 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hb201.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-201 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hb501p.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-501P BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hb701fd.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-701FD BIOS (MSX1 with Disk)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+
+        // Sony HB Series MSX2
+        DownloadableBiosFile(
+          filename: 'hbf1.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-F1 BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hbf1ii.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-F1II BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hbf1xd.rom',
+          expectedSize: 49152,
+          description: 'Sony HB-F1XD BIOS + Disk ROM (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hbf500.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-F500 BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hbf700.rom',
+          expectedSize: 49152,
+          description: 'Sony HB-F700 BIOS + Disk ROM (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hbf900.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-F900 BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hbf9p.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-F9P BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+
+        // Sony MSX2+ Models
+        DownloadableBiosFile(
+          filename: 'hbf1xdj.rom',
+          expectedSize: 49152,
+          description: 'Sony HB-F1XDJ BIOS + Disk ROM (MSX2+)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hbf1xv.rom',
+          expectedSize: 32768,
+          description: 'Sony HB-F1XV BIOS (MSX2+)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+      ],
+    ),
+
+    // Panasonic/National MSX Computers
+    BiosDownloadMapping(
+      platformId: 'msx_panasonic',
+      repoFolder: 'Panasonic - MSX',
+      files: [
+        // Panasonic CF Series (MSX1)
+        DownloadableBiosFile(
+          filename: 'cf2000.rom',
+          expectedSize: 32768,
+          description: 'Panasonic CF-2000 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'cf2700.rom',
+          expectedSize: 32768,
+          description: 'Panasonic CF-2700 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'cf3000.rom',
+          expectedSize: 32768,
+          description: 'Panasonic CF-3000 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'cf3300.rom',
+          expectedSize: 32768,
+          description: 'Panasonic CF-3300 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+
+        // National FS Series (MSX1)
+        DownloadableBiosFile(
+          filename: 'fs1300.rom',
+          expectedSize: 32768,
+          description: 'National FS-1300 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fs4000.rom',
+          expectedSize: 32768,
+          description: 'National FS-4000 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+
+        // Panasonic FS Series (MSX2)
+        DownloadableBiosFile(
+          filename: 'fs4500.rom',
+          expectedSize: 49152,
+          description: 'Panasonic FS-4500 BIOS + MSX-DOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fs4600.rom',
+          expectedSize: 49152,
+          description: 'Panasonic FS-4600 BIOS + MSX-DOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fs4700.rom',
+          expectedSize: 49152,
+          description: 'Panasonic FS-4700 BIOS + MSX-DOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fs5500f1.rom',
+          expectedSize: 49152,
+          description: 'Panasonic FS-5500F1 BIOS + MSX-DOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+
+        // Panasonic A1 Series (MSX2/MSX2+)
+        DownloadableBiosFile(
+          filename: 'fsa1.rom',
+          expectedSize: 32768,
+          description: 'Panasonic FS-A1 BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fsa1mk2.rom',
+          expectedSize: 32768,
+          description: 'Panasonic FS-A1MK2 BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fsa1f.rom',
+          expectedSize: 49152,
+          description: 'Panasonic FS-A1F BIOS + Disk ROM (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fsa1fm.rom',
+          expectedSize: 49152,
+          description: 'Panasonic FS-A1FM BIOS + Disk ROM (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fsa1fx.rom',
+          expectedSize: 32768,
+          description: 'Panasonic FS-A1FX BIOS (MSX2+)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fsa1wx.rom',
+          expectedSize: 32768,
+          description: 'Panasonic FS-A1WX BIOS (MSX2+)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fsa1wsx.rom',
+          expectedSize: 49152,
+          description: 'Panasonic FS-A1WSX BIOS + Kanji ROM (MSX2+)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+
+        // MSX TurboR
+        DownloadableBiosFile(
+          filename: 'fsa1st.rom',
+          expectedSize: 65536,
+          description: 'Panasonic FS-A1ST BIOS (MSX TurboR)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fsa1gt.rom',
+          expectedSize: 65536,
+          description: 'Panasonic FS-A1GT BIOS (MSX TurboR)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+      ],
+    ),
+
+    // Philips MSX Computers
+    BiosDownloadMapping(
+      platformId: 'msx_philips',
+      repoFolder: 'Philips - MSX',
+      files: [
+        // Philips VG Series (MSX1)
+        DownloadableBiosFile(
+          filename: 'vg8000.rom',
+          expectedSize: 32768,
+          description: 'Philips VG-8000 BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'vg8010.rom',
+          expectedSize: 32768,
+          description: 'Philips VG-8010 BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'vg8020.rom',
+          expectedSize: 32768,
+          description: 'Philips VG-8020 BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+
+        // Philips VG Series (MSX2)
+        DownloadableBiosFile(
+          filename: 'vg8220.rom',
+          expectedSize: 32768,
+          description: 'Philips VG-8220 BIOS (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'vg8230.rom',
+          expectedSize: 32768,
+          description: 'Philips VG-8230 BIOS (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'vg8235.rom',
+          expectedSize: 32768,
+          description: 'Philips VG-8235 BIOS (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'vg8240.rom',
+          expectedSize: 49152,
+          description: 'Philips VG-8240 BIOS + Disk ROM (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+
+        // Philips NMS Series (MSX2)
+        DownloadableBiosFile(
+          filename: 'nms8220.rom',
+          expectedSize: 32768,
+          description: 'Philips NMS-8220 BIOS (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'nms8245.rom',
+          expectedSize: 49152,
+          description: 'Philips NMS-8245 BIOS + Disk ROM (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'nms8250.rom',
+          expectedSize: 49152,
+          description: 'Philips NMS-8250 BIOS + Disk ROM (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'nms8255.rom',
+          expectedSize: 49152,
+          description: 'Philips NMS-8255 BIOS + Disk ROM (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'nms8280.rom',
+          expectedSize: 65536,
+          description: 'Philips NMS-8280 BIOS + Enhanced features (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+      ],
+    ),
+
+    // Toshiba MSX Computers (Pasopia IQ Series)
+    BiosDownloadMapping(
+      platformId: 'msx_toshiba',
+      repoFolder: 'Toshiba - MSX',
+      files: [
+        // Toshiba HX Series (MSX1)
+        DownloadableBiosFile(
+          filename: 'hx10.rom',
+          expectedSize: 32768,
+          description: 'Toshiba HX-10 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hx10s.rom',
+          expectedSize: 32768,
+          description: 'Toshiba HX-10S BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hx10dp.rom',
+          expectedSize: 49152,
+          description: 'Toshiba HX-10DP BIOS + Disk ROM (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hx20.rom',
+          expectedSize: 32768,
+          description: 'Toshiba HX-20 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hx21.rom',
+          expectedSize: 32768,
+          description: 'Toshiba HX-21 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hx22.rom',
+          expectedSize: 32768,
+          description: 'Toshiba HX-22 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hx32.rom',
+          expectedSize: 32768,
+          description: 'Toshiba HX-32 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hx51.rom',
+          expectedSize: 32768,
+          description: 'Toshiba HX-51 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+
+        // Toshiba HX Series (MSX2)
+        DownloadableBiosFile(
+          filename: 'hx23.rom',
+          expectedSize: 32768,
+          description: 'Toshiba HX-23 BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hx33.rom',
+          expectedSize: 32768,
+          description: 'Toshiba HX-33 BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hx34.rom',
+          expectedSize: 49152,
+          description: 'Toshiba HX-34 BIOS + Disk ROM (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+      ],
+    ),
+
+    // Yamaha MSX Computers
+    BiosDownloadMapping(
+      platformId: 'msx_yamaha',
+      repoFolder: 'Yamaha - MSX',
+      files: [
+        // Yamaha CX5M Music Computer Series
+        DownloadableBiosFile(
+          filename: 'cx5m.rom',
+          expectedSize: 32768,
+          description: 'Yamaha CX5M BIOS (MSX1 Music Computer)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'cx5.rom',
+          expectedSize: 32768,
+          description: 'Yamaha CX-5 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'yjs503.rom',
+          expectedSize: 32768,
+          description: 'Yamaha YJS-503 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'yjs503ii.rom',
+          expectedSize: 32768,
+          description: 'Yamaha YJS-503II BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'yjs503iir.rom',
+          expectedSize: 32768,
+          description: 'Yamaha YJS-503IIR BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'cxs2.rom',
+          expectedSize: 32768,
+          description: 'Yamaha CXS-II/128 BIOS (MSX1)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+
+        // Yamaha AX Series (MSX1)
+        DownloadableBiosFile(
+          filename: 'ax150.rom',
+          expectedSize: 32768,
+          description: 'Yamaha AX-150 BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'ax170.rom',
+          expectedSize: 32768,
+          description: 'Yamaha AX-170 BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+
+        // Yamaha YIS and AX Series (MSX2)
+        DownloadableBiosFile(
+          filename: 'ax350.rom',
+          expectedSize: 32768,
+          description: 'Yamaha AX-350 BIOS (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'ax500.rom',
+          expectedSize: 32768,
+          description: 'Yamaha AX-500 BIOS (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'yis503iiir.rom',
+          expectedSize: 32768,
+          description: 'Yamaha YIS-503IIIR BIOS (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'yis805r2.rom',
+          expectedSize: 49152,
+          description: 'Yamaha YIS-805/128R2 BIOS + Extensions (MSX2)',
+          region: 'JAP',
+          category: 'machine_specific',
+        ),
+      ],
+    ),
+
+    // European MSX Computers
+    BiosDownloadMapping(
+      platformId: 'msx_european',
+      repoFolder: 'European - MSX',
+      files: [
+        // Canon MSX Computers
+        DownloadableBiosFile(
+          filename: 'canonv8.rom',
+          expectedSize: 32768,
+          description: 'Canon V-8 BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'canonv10.rom',
+          expectedSize: 32768,
+          description: 'Canon V-10 BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'canonv20.rom',
+          expectedSize: 32768,
+          description: 'Canon V-20 BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'canonv25.rom',
+          expectedSize: 32768,
+          description: 'Canon V-25 BIOS (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'canonv30.rom',
+          expectedSize: 32768,
+          description: 'Canon V-30 BIOS (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'canonv35.rom',
+          expectedSize: 49152,
+          description: 'Canon V-35 BIOS + Disk ROM (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+
+        // Spectravideo MSX Computers
+        DownloadableBiosFile(
+          filename: 'svi728.rom',
+          expectedSize: 32768,
+          description: 'Spectravideo SVI-728 BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'svi738.rom',
+          expectedSize: 49152,
+          description: 'Spectravideo SVI-738 BIOS + Disk ROM (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'svi838.rom',
+          expectedSize: 32768,
+          description: 'Spectravideo SVI-838 BIOS (MSX2)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+
+        // Dragon Data MSX
+        DownloadableBiosFile(
+          filename: 'dragonmsx.rom',
+          expectedSize: 32768,
+          description: 'Dragon MSX BIOS (MSX1)',
+          region: 'EUR',
+          category: 'machine_specific',
+        ),
+      ],
+    ),
+
+    // Korean MSX Computers (Daewoo/Samsung)
+    BiosDownloadMapping(
+      platformId: 'msx_korean',
+      repoFolder: 'Korean - MSX',
+      files: [
+        // Daewoo MSX Systems
+        DownloadableBiosFile(
+          filename: 'cpc300.rom',
+          expectedSize: 32768,
+          description: 'Daewoo CPC-300 BIOS (MSX1)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'dpc100.rom',
+          expectedSize: 32768,
+          description: 'Daewoo IQ-1000 DPC-100 BIOS (MSX1)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'dpc180.rom',
+          expectedSize: 32768,
+          description: 'Daewoo IQ-1000 DPC-180 BIOS (MSX1)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'dpc200.rom',
+          expectedSize: 32768,
+          description: 'Daewoo IQ-1000 DPC-200 BIOS (MSX1)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'iq2000.rom',
+          expectedSize: 32768,
+          description: 'Daewoo IQ-2000 CPC-300 BIOS (MSX2)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'cpc400.rom',
+          expectedSize: 32768,
+          description: 'Daewoo X-II CPC-400 BIOS (MSX2)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+
+        // Zemmix Series (Korean MSX clones)
+        DownloadableBiosFile(
+          filename: 'zemmix.rom',
+          expectedSize: 32768,
+          description: 'Zemmix BIOS (MSX1 Compatible)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'zemmixv.rom',
+          expectedSize: 32768,
+          description: 'Zemmix V BIOS (MSX1 Compatible)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'zemmixsv.rom',
+          expectedSize: 32768,
+          description: 'Zemmix Super V BIOS (MSX2 Compatible)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'zemmixturbo.rom',
+          expectedSize: 32768,
+          description: 'Zemmix Turbo BIOS (MSX2+ Compatible)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+
+        // Samsung/GoldStar MSX
+        DownloadableBiosFile(
+          filename: 'spc800.rom',
+          expectedSize: 32768,
+          description: 'Samsung SPC-800 BIOS (MSX1)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'fc80.rom',
+          expectedSize: 32768,
+          description: 'GoldStar FC-80 BIOS (MSX1)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'gfc1080.rom',
+          expectedSize: 32768,
+          description: 'GoldStar GFC-1080 BIOS (MSX1)',
+          region: 'KOR',
+          category: 'machine_specific',
+        ),
+      ],
+    ),
+
+    // Arabic MSX Computers (Al Alamia Sakhr)
+    BiosDownloadMapping(
+      platformId: 'msx_arabic',
+      repoFolder: 'Arabic - MSX',
+      files: [
+        DownloadableBiosFile(
+          filename: 'sakhrax100.rom',
+          expectedSize: 32768,
+          description: 'Al Alamia Sakhr AX-100 BIOS (MSX1)',
+          region: 'ARA',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'sakhrax170.rom',
+          expectedSize: 32768,
+          description: 'Al Alamia Sakhr AX-170 BIOS (MSX1)',
+          region: 'ARA',
+          category: 'machine_specific',
+        ),
+      ],
+    ),
+
+    // Brazilian MSX Computers
+    BiosDownloadMapping(
+      platformId: 'msx_brazilian',
+      repoFolder: 'Brazilian - MSX',
+      files: [
+        // Gradiente Expert Series
+        DownloadableBiosFile(
+          filename: 'expert.rom',
+          expectedSize: 32768,
+          description: 'Gradiente Expert BIOS (MSX1)',
+          region: 'BRA',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'expertdd.rom',
+          expectedSize: 49152,
+          description: 'Gradiente Expert DD Plus BIOS + Disk ROM (MSX1)',
+          region: 'BRA',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'expertplus.rom',
+          expectedSize: 32768,
+          description: 'Gradiente Expert Plus BIOS (MSX1)',
+          region: 'BRA',
+          category: 'machine_specific',
+        ),
+
+        // Sharp/Epcom Hotbit Series
+        DownloadableBiosFile(
+          filename: 'hotbit11.rom',
+          expectedSize: 32768,
+          description: 'Sharp Hotbit 1.1 BIOS (MSX1)',
+          region: 'BRA',
+          category: 'machine_specific',
+        ),
+        DownloadableBiosFile(
+          filename: 'hotbit12.rom',
+          expectedSize: 32768,
+          description: 'Sharp Hotbit 1.2 BIOS (MSX1)',
+          region: 'BRA',
+          category: 'machine_specific',
+        ),
+      ],
+    ),
+
     // Amiga
     BiosDownloadMapping(
       platformId: 'amiga',
@@ -921,6 +1917,29 @@ class BiosDownloadMapping {
             'capsimg.dll',
             'libcapsimg.dylib',
           ], // Platform-specific files
+        ),
+
+        // Archive.org comprehensive Commodore Amiga collection (3.1MB)
+        DownloadableBiosFile(
+          filename: 'Commodore - Amiga (PUAE).zip',
+          expectedSize: 3250176, // 3.1MB
+          description:
+              'Complete Commodore Amiga BIOS Collection - PUAE (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/Commodore%20-%20Amiga%20(PUAE).zip',
+          requiresExtraction: true,
+          extractedFiles: [
+            'kick34005.A500', // Kickstart 1.3 (A500)
+            'kick40063.A600', // Kickstart 3.1 (A600)
+            'kick40068.A1200', // Kickstart 3.1 (A1200)
+            'kick31.A500', // Kickstart 1.2/1.3 variants
+            'kick20.A500', // Kickstart 2.0
+            'kick30.A500', // Kickstart 3.0
+            'kick13.A500', // Additional Kickstart variants
+            // Plus additional Kickstart ROMs for various Amiga models
+          ],
+          category: 'archive_collection',
+          isOptional: true, // Alternative to individual files
         ),
       ],
     ),
@@ -963,41 +1982,6 @@ class BiosDownloadMapping {
           expectedSize: 288768,
           description: 'PC-98 Font ROM',
         ),
-        DownloadableBiosFile(
-          filename: 'font.bmp',
-          expectedSize: 524350,
-          description: 'PC-98 Font Bitmap',
-        ),
-        DownloadableBiosFile(
-          filename: '2608_bd.wav',
-          expectedSize: 19192,
-          description: 'YM2608 Bass Drum Sample',
-        ),
-        DownloadableBiosFile(
-          filename: '2608_hh.wav',
-          expectedSize: 36722,
-          description: 'YM2608 Hi-Hat Sample',
-        ),
-        DownloadableBiosFile(
-          filename: '2608_rim.wav',
-          expectedSize: 5288,
-          description: 'YM2608 Rim Shot Sample',
-        ),
-        DownloadableBiosFile(
-          filename: '2608_sd.wav',
-          expectedSize: 15558,
-          description: 'YM2608 Snare Drum Sample',
-        ),
-        DownloadableBiosFile(
-          filename: '2608_tom.wav',
-          expectedSize: 23092,
-          description: 'YM2608 Tom Sample',
-        ),
-        DownloadableBiosFile(
-          filename: '2608_top.wav',
-          expectedSize: 57016,
-          description: 'YM2608 Top Cymbal Sample',
-        ),
       ],
     ),
 
@@ -1005,8 +1989,64 @@ class BiosDownloadMapping {
     BiosDownloadMapping(
       platformId: 'neogeo',
       repoFolder: 'SNK - NeoGeo CD',
-      available: false, // Archive ZIP files need special handling
-      files: [],
+      available: true, // Now available from RetroPieBios
+      files: [
+        // Neo Geo CD BIOS files from RetroPieBios
+        DownloadableBiosFile(
+          filename: 'ng-lo.rom',
+          expectedSize: 65536,
+          description: 'Neo Geo CD Low ROM',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/neocd/ng-lo.rom',
+        ),
+        DownloadableBiosFile(
+          filename: 'neocd.bin',
+          expectedSize: 524288,
+          description: 'Neo Geo CD BIOS',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/neocd/neocd.bin',
+        ),
+        DownloadableBiosFile(
+          filename: 'front-sp1.bin',
+          expectedSize: 524288, // 512KB - actual RetroPieBios file size
+          description: 'Neo Geo CD Front SP1',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/neocd/front-sp1.bin',
+        ),
+        DownloadableBiosFile(
+          filename: 'top-sp1.bin',
+          expectedSize: 524288, // 512KB - actual RetroPieBios file size
+          description: 'Neo Geo CD Top SP1',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/neocd/top-sp1.bin',
+        ),
+        // Neo Geo arcade BIOS (ZIP format)
+        DownloadableBiosFile(
+          filename: 'neogeo.zip',
+          expectedSize: 1917592,
+          description: 'Neo Geo Arcade BIOS (complete set)',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/roms/neogeo/neogeo.zip',
+        ),
+
+        // Archive.org comprehensive Neo Geo CD collection (2.1MB)
+        DownloadableBiosFile(
+          filename: 'SNK - Neo Geo CD (NeoCD).zip',
+          expectedSize: 2202009, // 2.1MB
+          description: 'Complete Neo Geo CD BIOS Collection (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/SNK%20-%20Neo%20Geo%20CD%20(NeoCD).zip',
+          requiresExtraction: true,
+          extractedFiles: [
+            'neocd.bin',
+            'ng-lo.rom',
+            'front-sp1.bin',
+            'top-sp1.bin',
+          ],
+          category: 'archive_collection',
+          isOptional: true, // Alternative to individual files
+        ),
+      ],
     ),
 
     // Fairchild Channel F
@@ -1055,6 +2095,17 @@ class BiosDownloadMapping {
           customBranch: 'RetroArch',
           customPath: 'system',
         ),
+
+        // Alternative source from RetroPieBios
+        DownloadableBiosFile(
+          filename: 'gb_bios.bin',
+          expectedSize: 256,
+          description: 'Game Boy BIOS (RetroPieBios)',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/gb_bios.bin',
+          isOptional: true,
+          category: 'alternative',
+        ),
       ],
     ),
 
@@ -1076,6 +2127,17 @@ class BiosDownloadMapping {
           description: 'GBC BIOS (RetroArch)',
           customBranch: 'RetroArch',
           customPath: 'system',
+        ),
+
+        // Alternative source from RetroPieBios
+        DownloadableBiosFile(
+          filename: 'gbc_bios.bin',
+          expectedSize: 2304,
+          description: 'GBC BIOS (RetroPieBios)',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/gbc_bios.bin',
+          isOptional: true,
+          category: 'alternative',
         ),
       ],
     ),
@@ -1153,6 +2215,15 @@ class BiosDownloadMapping {
           expectedMd5: 'fcd403db69f54290b51035d82f835e7b',
           description: 'Lynx Boot ROM',
         ),
+
+        // Alternative source from RetroPieBios
+        DownloadableBiosFile(
+          filename: 'lynxboot.img',
+          expectedSize: 512,
+          description: 'Lynx Boot ROM (RetroPieBios)',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/lynxboot.img',
+        ),
       ],
     ),
 
@@ -1166,6 +2237,16 @@ class BiosDownloadMapping {
           expectedSize: 1048576,
           expectedMd5: '08e36edbea28a017f79f8d4f7ff9b6d7',
           description: 'PC-FX BIOS v1.00',
+        ),
+        // Alternative from RetroPieBios (backup source)
+        DownloadableBiosFile(
+          filename: 'pcfx.rom',
+          expectedSize: 1048576,
+          description: 'PC-FX BIOS v1.00 (Alternative)',
+          isOptional: true,
+          category: 'alternative',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/roms/pcfx/pcfx.rom',
         ),
       ],
     ),
@@ -1254,6 +2335,27 @@ class BiosDownloadMapping {
           description: 'GameCube BIOS PAL v1.0 (EUR)',
           region: 'EUR',
         ),
+
+        // Archive.org comprehensive GameCube/Wii collection (7.4MB)
+        DownloadableBiosFile(
+          filename: 'Nintendo - GameCube - Wii (Dolphin).zip',
+          expectedSize: 7759667, // 7.4MB
+          description:
+              'Complete GameCube/Wii BIOS Collection - Dolphin (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/Nintendo%20-%20GameCube%20-%20Wii%20(Dolphin).zip',
+          requiresExtraction: true,
+          extractedFiles: [
+            'gc-ntsc-12.bin',
+            'gc-ntsc-11.bin',
+            'gc-ntsc-10.bin',
+            'gc-pal-12.bin',
+            'gc-pal-11.bin',
+            'gc-pal-10.bin',
+          ],
+          category: 'archive_collection',
+          isOptional: true, // Alternative to individual files
+        ),
       ],
     ),
 
@@ -1287,6 +2389,51 @@ class BiosDownloadMapping {
           description: '3DO Arcade Shoot About Time BIOS',
           customBranch: 'RetroArch',
           customPath: 'system',
+        ),
+
+        // Additional BIOS variants from RetroPieBios
+        DownloadableBiosFile(
+          filename: 'panafz1j.bin',
+          expectedSize: 1048576,
+          description: 'Panasonic FZ-1J BIOS (Japanese)',
+          region: 'JAP',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/panafz1j.bin',
+        ),
+        DownloadableBiosFile(
+          filename: 'panafz10e-anvil.bin',
+          expectedSize: 1048576,
+          description: 'Panasonic FZ-10E Anvil BIOS (European)',
+          region: 'EUR',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/panafz10e-anvil.bin',
+        ),
+        DownloadableBiosFile(
+          filename: 'sanyotry.bin',
+          expectedSize: 1048576,
+          description: 'Sanyo TRY BIOS',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/sanyotry.bin',
+        ),
+
+        // Archive.org comprehensive 3DO collection (6.9MB)
+        DownloadableBiosFile(
+          filename: '3DO Company, The - 3DO (Opera).zip',
+          expectedSize: 7225344, // 6.9MB
+          description: 'Complete 3DO Opera BIOS Collection (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/3DO%20Company,%20The%20-%203DO%20(Opera).zip',
+          requiresExtraction: true,
+          extractedFiles: [
+            'panafz10.bin',
+            'panafz1.bin',
+            'goldstar.bin',
+            'sanyotry.bin',
+            'panafz1j.bin',
+            'panafz10e-anvil.bin',
+          ],
+          category: 'archive_collection',
+          isOptional: true, // Alternative to individual files
         ),
       ],
     ),
@@ -1394,6 +2541,33 @@ class BiosDownloadMapping {
           customBranch: 'Other',
           customPath: 'Sony - PlayStation 2',
         ),
+
+        // Archive.org comprehensive PlayStation 2 collection (11.9MB)
+        DownloadableBiosFile(
+          filename: 'Sony - PlayStation 2 (LRPS2).zip',
+          expectedSize: 12482764, // 11.9MB
+          description: 'Complete PlayStation 2 BIOS Collection (Archive.org)',
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/Sony%20-%20PlayStation%202%20(LRPS2).zip',
+          requiresExtraction: true,
+          extractedFiles: [
+            'SCPH-10000.bin',
+            'SCPH-30004R.bin',
+            'SCPH-39001.bin',
+            'SCPH-70004.BIN',
+            'SCPH-10000.NVM',
+            'SCPH-30004R.NVM',
+            'SCPH-39001.NVM',
+            'SCPH-70004.NVM',
+            'ROM2.BIN',
+            'rom1.bin',
+            'SCPH-70004.ROM1',
+            'SCPH-70004.ROM2',
+            'SCPH-70004.EROM',
+          ],
+          category: 'archive_collection',
+          isOptional: true, // Alternative to individual files
+        ),
       ],
     ),
 
@@ -1423,6 +2597,15 @@ class BiosDownloadMapping {
           customBranch: 'RetroArch',
           customPath: 'system',
         ),
+
+        // Alternative source from RetroPieBios
+        DownloadableBiosFile(
+          filename: 'sgb_bios.bin',
+          expectedSize: 256,
+          description: 'Super Game Boy BIOS (RetroPieBios)',
+          customRepository:
+              'https://raw.githubusercontent.com/PIBSAS/RetroPieBios/master/BIOS/sgb_bios.bin',
+        ),
         DownloadableBiosFile(
           filename: 'sgb2_boot.bin',
           expectedSize: 256,
@@ -1442,6 +2625,113 @@ class BiosDownloadMapping {
           filename: 'ppge_atlas.zim',
           expectedSize: 666530,
           description: 'PPSSPP font atlas for improved text rendering',
+        ),
+      ],
+    ),
+
+    // Philips CD-i
+    BiosDownloadMapping(
+      platformId: 'cdi',
+      repoFolder: 'Philips - CD-i',
+      available: true, // Now available from archive.org
+      files: [
+        // Main CD-i BIOS files (required - any one will work)
+        DownloadableBiosFile(
+          filename: 'cdi200.rom',
+          expectedSize: 524288, // 512KB
+          description: 'CD-i 200 BIOS',
+          customRepository:
+              'https://archive.org/download/philips-cd-i-misc-bios/cdi200.rom',
+        ),
+        DownloadableBiosFile(
+          filename: 'cdi220.rom',
+          expectedSize: 524288, // 512KB
+          description: 'CD-i 220 BIOS',
+          customRepository:
+              'https://archive.org/download/philips-cd-i-misc-bios/cdi220.rom',
+        ),
+        DownloadableBiosFile(
+          filename: 'cdi220b.rom',
+          expectedSize: 524288, // 512KB
+          description: 'CD-i 220 BIOS (alternative)',
+          customRepository:
+              'https://archive.org/download/philips-cd-i-misc-bios/cdi220b.rom',
+        ),
+        // Optional files for enhanced compatibility
+        DownloadableBiosFile(
+          filename: 'cdi200a.rom',
+          expectedSize: 524288, // 512KB
+          description: 'CD-i 200A BIOS (alternative)',
+          isOptional: true,
+          category: 'regional',
+          customRepository:
+              'https://archive.org/download/philips-cd-i-misc-bios/cdi200/cdi200a.rom',
+        ),
+        DownloadableBiosFile(
+          filename: 'vmpega.rom',
+          expectedSize: 262144, // 256KB
+          description: 'CD-i Video MPEG decoder ROM',
+          isOptional: true,
+          category: 'enhancement',
+          customRepository:
+              'https://archive.org/download/philips-cd-i-misc-bios/cdi200/vmpega.rom',
+        ),
+        DownloadableBiosFile(
+          filename: 'xmpegx.rom',
+          expectedSize: 124, // 124 bytes
+          description: 'CD-i Digital Video Cartridge ROM (dummy)',
+          isOptional: true,
+          category: 'enhancement',
+          customRepository:
+              'https://archive.org/download/philips-cd-i-misc-bios/xmpegx.rom',
+        ),
+      ],
+    ),
+
+    // Nintendo 3DS
+    BiosDownloadMapping(
+      platformId: '3ds',
+      repoFolder: 'Nintendo - 3DS',
+      available: true, // Now available from archive.org
+      files: [
+        // Main system files (extracted from ZIP archive)
+        DownloadableBiosFile(
+          filename: 'Nintendo - 3DS (Citra).zip',
+          expectedSize: 6815744, // 6.5MB (approximate)
+          description: 'Nintendo 3DS Complete System Files (Citra)',
+          requiresExtraction: true,
+          extractedFiles: [
+            'aes_keys.txt',
+            'boot9.bin',
+            'boot11.bin',
+            'seeddb.bin',
+            'dspfirm.cdc',
+            'shared_font.bin',
+          ],
+          extractionPath: 'user_directory/sysdata/',
+          customRepository:
+              'https://archive.org/download/Nintendo-3DS-BIOS-DSP-Aes-Keys-SeedDB-Font/Nintendo%20-%203DS%20%28Citra%29.zip',
+        ),
+
+        // Alternative Archive.org source (RetroarchSystemFiles collection)
+        DownloadableBiosFile(
+          filename: 'Nintendo - 3DS (Citra) - RetroarchSystemFiles.zip',
+          expectedSize: 6815744, // 6.5MB
+          description:
+              'Nintendo 3DS System Files - RetroarchSystemFiles (Archive.org)',
+          requiresExtraction: true,
+          extractedFiles: [
+            'aes_keys.txt',
+            'boot9.bin',
+            'boot11.bin',
+            'seeddb.bin',
+            'dspfirm.cdc',
+            'shared_font.bin',
+          ],
+          customRepository:
+              'https://archive.org/download/RetroarchSystemFiles/Retroarch-System/Nintendo%20-%203DS%20(Citra).zip',
+          category: 'alternative',
+          isOptional: true, // Alternative source
         ),
       ],
     ),

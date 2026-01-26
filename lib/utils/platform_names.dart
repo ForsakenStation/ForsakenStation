@@ -98,6 +98,15 @@ class PlatformNames {
     'msx': 'MSX',
     'msx1': 'MSX',
     'msx2': 'MSX2',
+    'msx_sony': 'Sony MSX',
+    'msx_panasonic': 'Panasonic MSX',
+    'msx_philips': 'Philips MSX',
+    'msx_toshiba': 'Toshiba MSX',
+    'msx_yamaha': 'Yamaha MSX',
+    'msx_european': 'European MSX',
+    'msx_korean': 'Korean MSX',
+    'msx_arabic': 'Arabic MSX',
+    'msx_brazilian': 'Brazilian MSX',
     'amstradcpc': 'Amstrad CPC',
     'cpc': 'Amstrad CPC',
     'apple2': 'Apple II',
@@ -120,6 +129,7 @@ class PlatformNames {
 
     // Other Consoles
     '3do': '3DO Interactive Multiplayer',
+    'cdi': 'Philips CD-i',
     'colecovision': 'ColecoVision',
     'coleco': 'ColecoVision',
     'intellivision': 'Intellivision',

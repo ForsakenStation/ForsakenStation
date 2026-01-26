@@ -86,7 +86,8 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   Future<void> _downloadPlatformBios(BiosRequirement requirement) async {
     if (!requirement.canDownload) return;
 
-    final missingFiles = requirement.downloadableMissingFiles;
+    // Include both required and optional missing files
+    final missingFiles = requirement.downloadableMissingAllFiles;
     if (missingFiles.isEmpty) return;
 
     // Mark platform as downloading
@@ -135,8 +136,8 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
     final destinationPaths = <String, String>{};
 
     for (final requirement in _allRequirements) {
-      if (requirement.canDownload && requirement.hasDownloadableMissing) {
-        final missingFiles = requirement.downloadableMissingFiles;
+      if (requirement.canDownload && requirement.hasDownloadableMissingAny) {
+        final missingFiles = requirement.downloadableMissingAllFiles;
         if (missingFiles.isNotEmpty) {
           missingByPlatform[requirement.platform] = missingFiles;
           destinationPaths[requirement.platform] = _expandPath(
@@ -372,6 +373,26 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
     );
   }
 
+  /// Builds download button text based on requirement status
+  String _buildDownloadButtonText(BiosRequirement requirement) {
+    if (_downloadingPlatforms[requirement.platform] == true) {
+      return 'Downloading...';
+    }
+
+    final requiredCount = requirement.downloadableMissingCount;
+    final optionalCount = requirement.downloadableMissingOptionalCount;
+
+    if (requiredCount > 0 && optionalCount > 0) {
+      return 'Download $requiredCount required + $optionalCount extras';
+    } else if (requiredCount > 0) {
+      return 'Download $requiredCount required files';
+    } else if (optionalCount > 0) {
+      return 'Download $optionalCount optional extras';
+    } else {
+      return 'Download files';
+    }
+  }
+
   Widget _buildPlatformCard(BiosRequirement requirement) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -433,9 +454,22 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 4.0),
-            child: Text(
-              '${requirement.foundCount}/${requirement.totalCount} files found',
-              style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${requirement.foundCount}/${requirement.totalCount} files found',
+                  style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                ),
+                // Show optional files info if available
+                if (requirement.hasDownloadableMissingOptional) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    '+${requirement.downloadableMissingOptionalCount} optional extras available',
+                    style: TextStyle(fontSize: 12, color: Colors.blue[600]),
+                  ),
+                ],
+              ],
             ),
           ),
           children: [
@@ -512,7 +546,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
 
                   // Download button
                   if (requirement.canDownload &&
-                      requirement.hasDownloadableMissing) ...[
+                      requirement.hasDownloadableMissingAny) ...[
                     const SizedBox(height: 12),
                     const Divider(height: 1),
                     const SizedBox(height: 12),
@@ -526,7 +560,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Available for download from retroarch_system',
+                            'Available for download from multiple sources',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.purple[700],
@@ -554,11 +588,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                                 ),
                               )
                             : const Icon(Icons.download, size: 16),
-                        label: Text(
-                          _downloadingPlatforms[requirement.platform] == true
-                              ? 'Downloading...'
-                              : 'Download ${requirement.downloadableMissingCount} missing files',
-                        ),
+                        label: Text(_buildDownloadButtonText(requirement)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple,
                           foregroundColor: Colors.white,
