@@ -191,9 +191,6 @@ class EmulatorService {
           tag: 'EmulatorService',
         );
 
-        // DEBUG: Test overlay for this platform
-        await _overlayService.debugTestOverlay(platform);
-
         try {
           final overlayArgs = await _overlayService.createRetroArchOverlayArgs(
             platform,
@@ -274,20 +271,6 @@ class EmulatorService {
           tag: 'EmulatorService',
         );
       }
-
-      // In detached mode, we can't read stdout/stderr
-      // The process runs completely independently
-
-      // Don't wait for process to complete - let it run independently
-      // The process will continue running even after this method returns
-
-      // Clean up old overlay temp files in background
-      _overlayService.cleanupTempFiles().catchError((e) {
-        _debug.debug(
-          'Error cleaning up overlay files: $e',
-          tag: 'EmulatorService',
-        );
-      });
 
       return true;
     } catch (e) {
@@ -436,12 +419,6 @@ class EmulatorService {
   /// Check if a platform has overlay support
   Future<bool> hasOverlaySupport(String platform) async {
     return await _overlayService.hasOverlaySupport(platform);
-  }
-
-  /// Get all platforms with overlay support (simplified - returns empty for now)
-  Future<List<String>> getPlatformsWithOverlaySupport() async {
-    // Simplified implementation - would need to scan all platforms if needed
-    return [];
   }
 
   /// Get the default overlay for a platform

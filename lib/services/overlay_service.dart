@@ -11,7 +11,16 @@ class OverlayService {
   final DebugService _debug = DebugService.instance;
 
   /// Base path for overlay assets
-  static const String _overlayBasePath = 'assets/theme/bezeel';
+  static const String _overlayBasePath = 'assets/theme/overlays';
+
+  /// Default overlay configuration template
+  static const String _defaultOverlayConfig = '''overlays = 1
+overlay0_overlay = "{IMAGE_PATH}"
+overlay0_full_screen = true
+overlay0_descs = 0
+input_overlay_opacity = 1.0
+overlay0_alpha_mod = 1.0
+''';
 
   OverlayService._();
 
@@ -20,7 +29,7 @@ class OverlayService {
     return _instance ??= OverlayService._();
   }
 
-  /// Check if platform has overlay support by checking if folder exists
+  /// Check if platform has overlay support by checking if PNG image exists
   Future<bool> hasOverlaySupport(String platform) async {
     try {
       final manifestJson = await rootBundle.loadString('AssetManifest.json');
@@ -28,56 +37,76 @@ class OverlayService {
         jsonDecode(manifestJson),
       );
 
-      // Check if any assets exist for this platform
-      final platformPath = '$_overlayBasePath/$platform/';
-      final hasAssets = manifest.keys.any(
-        (key) => key.startsWith(platformPath),
-      );
+      final platformPngPath = '$_overlayBasePath/$platform/$platform.png';
+      final hasImage = manifest.keys.any((key) => key == platformPngPath);
 
-      _debug.debug(
-        'Platform $platform overlay support: $hasAssets',
-        tag: 'OverlayService',
-      );
-
-      return hasAssets;
+      return hasImage;
     } catch (e) {
       _debug.error('Error checking overlay support: $e', tag: 'OverlayService');
       return false;
     }
   }
 
-  /// Get default overlay config for a platform (simple version)
   Future<OverlayConfig?> getDefaultOverlay(String platform) async {
     if (!await hasOverlaySupport(platform)) {
       return null;
     }
 
-    // Try to find the main cfg file for the platform
-    final defaultCfgPath = '$_overlayBasePath/$platform/$platform.cfg';
     final defaultPngPath = '$_overlayBasePath/$platform/$platform.png';
+    final specificCfgPath = '$_overlayBasePath/$platform/$platform.cfg';
 
+    bool hasSpecificConfig = false;
     try {
-      // Check if the default config exists in assets
-      await rootBundle.loadString(defaultCfgPath);
-
+      await rootBundle.loadString(specificCfgPath);
+      hasSpecificConfig = true;
       _debug.debug(
-        'Found default overlay for $platform',
+        'Found specific config for $platform: $specificCfgPath',
         tag: 'OverlayService',
-      );
-
-      return OverlayConfig(
-        platform: platform,
-        variant: 'Default',
-        configPath: defaultCfgPath,
-        imagePath: defaultPngPath,
-        isDefault: true,
       );
     } catch (e) {
-      _debug.warning(
-        'No default overlay found for $platform: $e',
+      _debug.debug(
+        'No specific config for $platform, will use default template',
         tag: 'OverlayService',
       );
-      return null;
+    }
+
+    return OverlayConfig(
+      platform: platform,
+      variant: 'Default',
+      configPath: hasSpecificConfig
+          ? specificCfgPath
+          : null, // null means use default template
+      imagePath: defaultPngPath,
+      isDefault: true,
+    );
+  }
+
+  /// Get the base app directory for overlay storage
+  /// Same pattern as RomStorageService to ensure compatibility
+  Future<Directory> _getBaseOverlayDirectory() async {
+    final baseDir = await getApplicationSupportDirectory();
+    return Directory('${baseDir.path}/overlays');
+  }
+
+  /// Initialize overlay directory (create if it doesn't exist)
+  /// Same pattern as RomStorageService
+  Future<void> _initializeOverlayDirectory() async {
+    try {
+      final overlayDir = await _getBaseOverlayDirectory();
+
+      if (!await overlayDir.exists()) {
+        await overlayDir.create(recursive: true);
+        _debug.info(
+          'Created overlay directory: ${overlayDir.path}',
+          tag: 'OverlayService',
+        );
+      }
+    } catch (e) {
+      _debug.error(
+        'Error initializing overlay directory: $e',
+        tag: 'OverlayService',
+      );
+      rethrow;
     }
   }
 
@@ -93,85 +122,97 @@ class OverlayService {
     }
 
     try {
-      // Use application support directory - proper location for app data files
-      final appDir = await getApplicationSupportDirectory();
-      final overlayDir = Directory('${appDir.path}/overlays');
-
-      _debug.info(
-        'OVERLAY DEBUG: Using shared app directory: ${overlayDir.path}',
-        tag: 'OverlayService',
-      );
-
-      // Create overlay directory if it doesn't exist
-      if (!await overlayDir.exists()) {
-        await overlayDir.create(recursive: true);
-        _debug.info(
-          'OVERLAY DEBUG: Created overlay directory: ${overlayDir.path}',
-          tag: 'OverlayService',
-        );
-      }
-
+      // Initialize overlay directory first (like RomStorageService pattern)
+      await _initializeOverlayDirectory();
+      final overlayDir = await _getBaseOverlayDirectory();
       // Use fixed filenames - always overwrite the same files
       final configFile = File('${overlayDir.path}/current_overlay.cfg');
       final pngFile = File('${overlayDir.path}/current_overlay.png');
-
-      _debug.info(
-        'OVERLAY DEBUG: Fixed config path: ${configFile.path}',
-        tag: 'OverlayService',
-      );
-      _debug.info(
-        'OVERLAY DEBUG: Fixed PNG path: ${pngFile.path}',
-        tag: 'OverlayService',
-      );
-
-      // Always recreate files for current platform (overwrite previous ROM's overlay)
-      _debug.info(
-        'OVERLAY DEBUG: Creating overlay files for platform: $platform',
-        tag: 'OverlayService',
-      );
-
-      // Copy PNG file from assets
-      _debug.info(
-        'OVERLAY DEBUG: Loading PNG from asset: ${overlay.imagePath}',
-        tag: 'OverlayService',
-      );
-
       final pngBytes = await rootBundle.load(overlay.imagePath);
       _debug.info(
         'OVERLAY DEBUG: Loaded PNG bytes: ${pngBytes.lengthInBytes} bytes',
         tag: 'OverlayService',
       );
 
-      await pngFile.writeAsBytes(pngBytes.buffer.asUint8List());
-      _debug.info(
-        'OVERLAY DEBUG: Written PNG file: ${pngFile.path}',
-        tag: 'OverlayService',
-      );
+      // Write PNG file with explicit flush and sync
+      final pngData = pngBytes.buffer.asUint8List();
+      await pngFile.writeAsBytes(pngData, flush: true);
 
-      // Load and modify config file to point to our PNG
-      _debug.info(
-        'OVERLAY DEBUG: Loading CFG from asset: ${overlay.configPath}',
-        tag: 'OverlayService',
-      );
-
-      final cfgContent = await rootBundle.loadString(overlay.configPath);
-      _debug.info(
-        'OVERLAY DEBUG: Loaded CFG content length: ${cfgContent.length} chars',
-        tag: 'OverlayService',
-      );
+      // Force filesystem sync by closing and reopening the file
+      final pngVerifyFile = File(pngFile.path);
+      if (await pngVerifyFile.exists()) {
+        final verifySize = await pngVerifyFile.length();
+        _debug.info(
+          'OVERLAY DEBUG: PNG verification - file exists: true, size: ${verifySize}b',
+          tag: 'OverlayService',
+        );
+      } else {
+        _debug.error(
+          'OVERLAY DEBUG: PNG verification FAILED - file does not exist after write',
+          tag: 'OverlayService',
+        );
+      }
+      // Load config content (either specific or default template)
+      String cfgContent;
+      if (overlay.configPath != null) {
+        // Use platform-specific config
+        _debug.info(
+          'OVERLAY DEBUG: Loading specific CFG from asset: ${overlay.configPath}',
+          tag: 'OverlayService',
+        );
+        cfgContent = await rootBundle.loadString(overlay.configPath!);
+        _debug.info(
+          'OVERLAY DEBUG: Loaded specific CFG content length: ${cfgContent.length} chars',
+          tag: 'OverlayService',
+        );
+      } else {
+        // Use default template
+        _debug.info(
+          'OVERLAY DEBUG: Using default CFG template for platform: $platform',
+          tag: 'OverlayService',
+        );
+        cfgContent = _defaultOverlayConfig;
+        _debug.info(
+          'OVERLAY DEBUG: Default CFG template length: ${cfgContent.length} chars',
+          tag: 'OverlayService',
+        );
+      }
 
       // Replace the overlay path to point to our PNG file
-      final modifiedCfg = cfgContent.replaceAll(
-        RegExp(r'overlay0_overlay\s*=.*'),
-        'overlay0_overlay = "${pngFile.path}"',
-      );
+      final modifiedCfg = cfgContent
+          .replaceAll(
+            RegExp(r'overlay0_overlay\s*=.*'),
+            'overlay0_overlay = "${pngFile.path}"',
+          )
+          .replaceAll(
+            '{IMAGE_PATH}', // Template placeholder replacement
+            pngFile.path,
+          );
 
       _debug.info(
         'OVERLAY DEBUG: Modified CFG to use: ${pngFile.path}',
         tag: 'OverlayService',
       );
 
-      await configFile.writeAsString(modifiedCfg);
+      await configFile.writeAsString(modifiedCfg, flush: true);
+
+      // Force filesystem sync by verifying the file exists and has correct content
+      final configVerifyFile = File(configFile.path);
+      if (await configVerifyFile.exists()) {
+        final verifySize = await configVerifyFile.length();
+        final verifyContent = await configVerifyFile.readAsString();
+        final hasCorrectPath = verifyContent.contains(pngFile.path);
+        _debug.info(
+          'OVERLAY DEBUG: CFG verification - exists: true, size: ${verifySize}b, has correct path: $hasCorrectPath',
+          tag: 'OverlayService',
+        );
+      } else {
+        _debug.error(
+          'OVERLAY DEBUG: CFG verification FAILED - file does not exist after write',
+          tag: 'OverlayService',
+        );
+      }
+
       _debug.info(
         'OVERLAY DEBUG: Written CFG file: ${configFile.path}',
         tag: 'OverlayService',
@@ -187,6 +228,30 @@ class OverlayService {
         'OVERLAY DEBUG: Final verification - Config exists: $configExists (${configSize}b), PNG exists: $pngExists (${pngSize}b)',
         tag: 'OverlayService',
       );
+
+      // Try external file system verification using platform-native approach
+      if (configExists && pngExists && configSize > 0 && pngSize > 0) {
+        try {
+          // Attempt to verify external process accessibility
+          final configStat = await configFile.stat();
+          final pngStat = await pngFile.stat();
+
+          _debug.info(
+            'OVERLAY DEBUG: File stats - Config modified: ${configStat.modified}, PNG modified: ${pngStat.modified}',
+            tag: 'OverlayService',
+          );
+
+          _debug.info(
+            'OVERLAY DEBUG: File permissions - Config mode: ${configStat.mode}, PNG mode: ${pngStat.mode}',
+            tag: 'OverlayService',
+          );
+        } catch (e) {
+          _debug.warning(
+            'OVERLAY DEBUG: Could not get file stats: $e',
+            tag: 'OverlayService',
+          );
+        }
+      }
 
       if (!configExists || !pngExists || configSize == 0 || pngSize == 0) {
         _debug.error(
@@ -213,126 +278,6 @@ class OverlayService {
         tag: 'OverlayService',
       );
       return [];
-    }
-  }
-
-  /// Simple test method to verify overlay file creation without requiring UI
-  Future<void> testOverlayCreation() async {
-    _debug.info('=== TESTING OVERLAY FILE CREATION ===', tag: 'OverlayService');
-
-    const platform = 'amiga500';
-    _debug.info('Testing platform: $platform', tag: 'OverlayService');
-
-    try {
-      final hasSupport = await hasOverlaySupport(platform);
-      _debug.info('Has overlay support: $hasSupport', tag: 'OverlayService');
-
-      if (hasSupport) {
-        final args = await createRetroArchOverlayArgs(platform);
-        _debug.info('Generated args: $args', tag: 'OverlayService');
-
-        if (args.isNotEmpty && args.length >= 2) {
-          final configPath = args[1];
-          _debug.info('Config path: $configPath', tag: 'OverlayService');
-
-          // Verify files exist
-          final configFile = File(configPath);
-          final pngPath = configPath.replaceAll(
-            'current_overlay.cfg',
-            'current_overlay.png',
-          );
-          final pngFile = File(pngPath);
-
-          final configExists = await configFile.exists();
-          final pngExists = await pngFile.exists();
-
-          _debug.info('Config exists: $configExists', tag: 'OverlayService');
-          _debug.info('PNG exists: $pngExists', tag: 'OverlayService');
-
-          if (configExists && pngExists) {
-            final configSize = await configFile.length();
-            final pngSize = await pngFile.length();
-            _debug.info(
-              '✅ SUCCESS! Files created - Config: ${configSize}b, PNG: ${pngSize}b',
-              tag: 'OverlayService',
-            );
-          } else {
-            _debug.error(
-              '❌ FAILED! Files not created properly',
-              tag: 'OverlayService',
-            );
-          }
-        } else {
-          _debug.error(
-            '❌ FAILED! No overlay args generated',
-            tag: 'OverlayService',
-          );
-        }
-      } else {
-        _debug.warning(
-          '❌ Platform $platform does not have overlay support',
-          tag: 'OverlayService',
-        );
-      }
-    } catch (e, stackTrace) {
-      _debug.error('❌ ERROR in overlay test: $e', tag: 'OverlayService');
-      _debug.error('Stack trace: $stackTrace', tag: 'OverlayService');
-    }
-
-    _debug.info('=== END OVERLAY TEST ===', tag: 'OverlayService');
-  }
-
-  /// Debug method to test overlay for a platform
-  Future<void> debugTestOverlay(String platform) async {
-    _debug.info('=== OVERLAY DEBUG TEST ===', tag: 'OverlayService');
-
-    final hasSupport = await hasOverlaySupport(platform);
-    _debug.info(
-      'Platform $platform has overlay: $hasSupport',
-      tag: 'OverlayService',
-    );
-
-    if (hasSupport) {
-      final overlay = await getDefaultOverlay(platform);
-      if (overlay != null) {
-        _debug.info(
-          'Default overlay: ${overlay.imagePath}',
-          tag: 'OverlayService',
-        );
-
-        final args = await createRetroArchOverlayArgs(platform);
-        _debug.info('RetroArch args: $args', tag: 'OverlayService');
-      }
-    }
-
-    _debug.info('=== END DEBUG TEST ===', tag: 'OverlayService');
-  }
-
-  /// Cleanup temporary overlay files (called when app closes)
-  Future<void> cleanupTempFiles() async {
-    try {
-      final appDir = await getApplicationSupportDirectory();
-      final overlayDir = Directory('${appDir.path}/overlays');
-
-      if (await overlayDir.exists()) {
-        // Only clean up our specific overlay files, not the whole directory
-        final configFile = File('${overlayDir.path}/current_overlay.cfg');
-        final pngFile = File('${overlayDir.path}/current_overlay.png');
-
-        if (await configFile.exists()) {
-          await configFile.delete();
-        }
-        if (await pngFile.exists()) {
-          await pngFile.delete();
-        }
-
-        _debug.debug('Cleaned up overlay files', tag: 'OverlayService');
-      }
-    } catch (e) {
-      _debug.warning(
-        'Error cleaning up overlay files: $e',
-        tag: 'OverlayService',
-      );
     }
   }
 }

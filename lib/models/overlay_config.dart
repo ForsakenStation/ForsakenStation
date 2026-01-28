@@ -9,7 +9,7 @@ class OverlayConfig {
   final String variant;
 
   /// Path to the overlay configuration file (.cfg)
-  final String configPath;
+  final String? configPath;
 
   /// Path to the overlay image file (.png)
   final String imagePath;
@@ -20,7 +20,7 @@ class OverlayConfig {
   const OverlayConfig({
     required this.platform,
     required this.variant,
-    required this.configPath,
+    this.configPath,
     required this.imagePath,
     this.isDefault = false,
   });
@@ -38,7 +38,12 @@ class OverlayConfig {
 
   /// Check if all required files exist
   Future<bool> isValid() async {
-    final configFile = File(configPath);
+    if (configPath == null) {
+      final imageFile = File(imagePath);
+      return await imageFile.exists();
+    }
+
+    final configFile = File(configPath!);
     final imageFile = File(imagePath);
 
     return await configFile.exists() && await imageFile.exists();
