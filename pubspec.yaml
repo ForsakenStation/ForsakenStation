@@ -21,7 +21,7 @@ dependencies:
   media_kit_libs_video: ^1.0.7
   shared_preferences: ^2.5.4
   window_manager: ^0.5.1
-  file_picker: ^10.3.8
+  file_picker: 10.3.8
   google_fonts: ^8.0.0
   xml: ^6.6.1
   archive: ^4.0.7
@@ -35,19 +35,167 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.7
+  asset_fill: ^1.1.0
 
 flutter:
   uses-material-design: true
   assets:
     - .env
     - assets/config.json
+    - assets/platform_info.json
     - assets/configs/
-    - assets/data/platforms_info.json
+    - assets/data/
     - assets/images/
-    - assets/theme/images/logos/
-    - assets/theme/images/clogos/
+    - assets/theme/
+    - assets/theme/bezeel/
+    - assets/theme/bezeel/3do/
+    - assets/theme/bezeel/adam/
+    - assets/theme/bezeel/advision/
+    - assets/theme/bezeel/amiga500/
+    - assets/theme/bezeel/amstradcpc/
+    - assets/theme/bezeel/apple2/
+    - assets/theme/bezeel/arcade/
+    - assets/theme/bezeel/arcadia/
+    - assets/theme/bezeel/arduboy/
+    - assets/theme/bezeel/astrocde/
+    - assets/theme/bezeel/atari2600/
+    - assets/theme/bezeel/atari5200/
+    - assets/theme/bezeel/atari7800/
+    - assets/theme/bezeel/atari800/
+    - assets/theme/bezeel/atarijaguar/
+    - assets/theme/bezeel/atarilynx/
+    - assets/theme/bezeel/atarist/
+    - assets/theme/bezeel/atarixe/
+    - assets/theme/bezeel/atarixegs/
+    - assets/theme/bezeel/bbc_master/
+    - assets/theme/bezeel/bbcmicro/
+    - assets/theme/bezeel/boom3/
+    - assets/theme/bezeel/c64/
+    - assets/theme/bezeel/cannonball/
+    - assets/theme/bezeel/cdi/
+    - assets/theme/bezeel/chailove/
+    - assets/theme/bezeel/channelf/
+    - assets/theme/bezeel/chip_8/
+    - assets/theme/bezeel/colecovision/
+    - assets/theme/bezeel/default/
+    - assets/theme/bezeel/dinothawr/
+    - assets/theme/bezeel/dos/
+    - assets/theme/bezeel/dreamcast/
+    - assets/theme/bezeel/easyrpg/
+    - assets/theme/bezeel/ecwolf/
+    - assets/theme/bezeel/famicom/
+    - assets/theme/bezeel/fbneo/
+    - assets/theme/bezeel/fm7/
+    - assets/theme/bezeel/fmtowns/
+    - assets/theme/bezeel/funtech_super_a_can/
+    - assets/theme/bezeel/gamate/
+    - assets/theme/bezeel/gamecom/
+    - assets/theme/bezeel/gamecube/
+    - assets/theme/bezeel/gamegear/
+    - assets/theme/bezeel/gb/
+    - assets/theme/bezeel/gb2player/
+    - assets/theme/bezeel/gba/
+    - assets/theme/bezeel/gba_sp/
+    - assets/theme/bezeel/gbc/
+    - assets/theme/bezeel/gbc2players/
+    - assets/theme/bezeel/gp32/
+    - assets/theme/bezeel/gx4000/
+    - assets/theme/bezeel/hartung_gamemaster/
+    - assets/theme/bezeel/ibm_5150/
+    - assets/theme/bezeel/jakks_plug_n_play/
+    - assets/theme/bezeel/jump_n_bump/
+    - assets/theme/bezeel/kensington_vii/
+    - assets/theme/bezeel/lowres/
+    - assets/theme/bezeel/lynx/
+    - assets/theme/bezeel/mame/
+    - assets/theme/bezeel/mastersystem/
+    - assets/theme/bezeel/mattel_intellivision/
+    - assets/theme/bezeel/megadrive/
+    - assets/theme/bezeel/mr_boom/
+    - assets/theme/bezeel/msx1/
+    - assets/theme/bezeel/msx2/
+    - assets/theme/bezeel/n3ds/
+    - assets/theme/bezeel/n64/
+    - assets/theme/bezeel/naomi/
+    - assets/theme/bezeel/nds/
+    - assets/theme/bezeel/nec_supergrafx/
+    - assets/theme/bezeel/nec_turboexpress/
+    - assets/theme/bezeel/neogeo/
+    - assets/theme/bezeel/neogeocd/
+    - assets/theme/bezeel/nes/
+    - assets/theme/bezeel/ngp/
+    - assets/theme/bezeel/ngpc/
+    - assets/theme/bezeel/nintendo_playstation_prototype/
+    - assets/theme/bezeel/nintendo_super_famicom/
+    - assets/theme/bezeel/nintendo_super_game_boy/
+    - assets/theme/bezeel/nxengine/
+    - assets/theme/bezeel/odyssey2/
+    - assets/theme/bezeel/openlara/
+    - assets/theme/bezeel/palm/
+    - assets/theme/bezeel/pc88/
+    - assets/theme/bezeel/pc98/
+    - assets/theme/bezeel/pcengine/
+    - assets/theme/bezeel/pcenginecd/
+    - assets/theme/bezeel/pcfx/
+    - assets/theme/bezeel/pico8/
+    - assets/theme/bezeel/pocket_dream_console/
+    - assets/theme/bezeel/pokemonmini/
+    - assets/theme/bezeel/prboom/
+    - assets/theme/bezeel/ps2/
+    - assets/theme/bezeel/psone/
+    - assets/theme/bezeel/psp/
+    - assets/theme/bezeel/psx/
+    - assets/theme/bezeel/pv1000/
+    - assets/theme/bezeel/pvm_pvm20/
+    - assets/theme/bezeel/pvm_tm20/
+    - assets/theme/bezeel/saturn/
+    - assets/theme/bezeel/scummvm/
+    - assets/theme/bezeel/scv/
+    - assets/theme/bezeel/sega32x/
+    - assets/theme/bezeel/sega_nomad/
+    - assets/theme/bezeel/sega_pico/
+    - assets/theme/bezeel/segacd/
+    - assets/theme/bezeel/segacd32x/
+    - assets/theme/bezeel/sharp_x1/
+    - assets/theme/bezeel/snes/
+    - assets/theme/bezeel/supervision/
+    - assets/theme/bezeel/tandy_coco_3/
+    - assets/theme/bezeel/thomson_mo5/
+    - assets/theme/bezeel/thomson_to8/
+    - assets/theme/bezeel/ti99/
+    - assets/theme/bezeel/tic80/
+    - assets/theme/bezeel/turbografx16/
+    - assets/theme/bezeel/turbografxcd/
+    - assets/theme/bezeel/tv/
+    - assets/theme/bezeel/tyrquake/
+    - assets/theme/bezeel/uzebox/
+    - assets/theme/bezeel/vaporspec/
+    - assets/theme/bezeel/vc4000/
+    - assets/theme/bezeel/vectrex/
+    - assets/theme/bezeel/videoton_tvc/
+    - assets/theme/bezeel/virtualboy/
+    - assets/theme/bezeel/vitaquake2/
+    - assets/theme/bezeel/vitaquake3/
+    - assets/theme/bezeel/vsmile/
+    - assets/theme/bezeel/vtech_creativision/
+    - assets/theme/bezeel/vtech_laser_310/
+    - assets/theme/bezeel/vtech_socrates/
+    - assets/theme/bezeel/wasm4/
+    - assets/theme/bezeel/wii/
+    - assets/theme/bezeel/wonderswan/
+    - assets/theme/bezeel/wonderswancolor/
+    - assets/theme/bezeel/x68000/
+    - assets/theme/bezeel/xrick/
+    - assets/theme/bezeel/zx81/
+    - assets/theme/bezeel/zxspectrum/
+    - assets/theme/bezeel/zxspectrum2/
+    - assets/theme/bezeel/zxspectrum3/
+    - assets/theme/images/
     - assets/theme/images/backgrounds/
+    - assets/theme/images/clogos/
+    - assets/theme/images/logos/
     - assets/theme/images/systems/
+
 
 # Native Splash Screen Configuration
 flutter_native_splash:

@@ -259,6 +259,7 @@ class RomService {
   Future<List<RomItem>> loadItemsFromRoms(
     List<Rom> roms,
     String? currentSubdirectory,
+    String platformName, // Add platform name for GameList lookup
   ) async {
     final List<RomItem> items = [];
 
@@ -297,6 +298,7 @@ class RomService {
               path: subdirName, // Use subdirectory name as path
               type: RomItemType.folder,
               romCount: romsInFolder.length,
+              platform: platformName, // Add platform info
             ),
           );
         }
@@ -310,6 +312,7 @@ class RomService {
             path: rom.fileName, // Use fileName for gamelist matching
             type: RomItemType.rom,
             downloadUrl: rom.downloadUrl,
+            platform: platformName, // Add platform info
             subdirectory:
                 rom.subdirectory, // Pass subdirectory for media lookup
           ),
@@ -341,7 +344,10 @@ class RomService {
   }
 
   /// Load items from filesystem directory (legacy method)
-  Future<List<RomItem>> loadItemsInDirectory(String directoryPath) async {
+  Future<List<RomItem>> loadItemsInDirectory(
+    String directoryPath,
+    String platformName, // Add platform name for GameList lookup
+  ) async {
     final List<RomItem> items = [];
 
     try {
@@ -369,6 +375,7 @@ class RomService {
                 name: folderName,
                 path: entity.path,
                 type: RomItemType.folder,
+                platform: platformName, // Add platform info
               ),
             );
             folderCount++;
@@ -399,6 +406,7 @@ class RomService {
               path: entity.path,
               type: RomItemType.rom,
               downloadUrl: downloadUrl,
+              platform: platformName, // Add platform info
             ),
           );
           romCount++;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:forsaken/services/bios_download_service.dart';
 import 'package:forsaken/widgets/bios/enhanced_error_display.dart';
 
-/// Dialog that shows progress when downloading BIOS files
 class BiosDownloadDialog extends StatefulWidget {
   final List<String> filesToDownload;
   final String title;
@@ -18,7 +17,6 @@ class BiosDownloadDialog extends StatefulWidget {
   @override
   State<BiosDownloadDialog> createState() => _BiosDownloadDialogState();
 
-  /// Shows a dialog for downloading a single platform's BIOS files
   static Future<bool?> showSinglePlatform({
     required BuildContext context,
     required String platformName,
@@ -38,7 +36,6 @@ class BiosDownloadDialog extends StatefulWidget {
     );
   }
 
-  /// Shows a dialog for downloading multiple platforms' BIOS files
   static Future<bool?> showBatchDownload({
     required BuildContext context,
     required Map<String, List<String>> filesToDownload,

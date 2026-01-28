@@ -573,11 +573,18 @@ class _RomsScreenState extends State<RomsScreen> {
       items = await widget.romService.loadItemsFromRoms(
         _platformRoms!,
         _currentSubdirectory,
+        widget.platform.name, // Add platform name
       );
     } else {
       // File-based platform: load from filesystem
-      items = await widget.romService.loadItemsInDirectory(_currentPath);
+      items = await widget.romService.loadItemsInDirectory(
+        _currentPath,
+        widget.platform.name, // Add platform name
+      );
     }
+
+    // Update display names with GameList data if available
+    await _updateDisplayNames(items);
 
     if (mounted) {
       setState(() {
@@ -1394,6 +1401,43 @@ class _RomsScreenState extends State<RomsScreen> {
       case ViewMode.grid:
         _scrollToIndexInGrid(_selectedIndex, _calculateCrossAxisCount(context));
         break;
+    }
+  }
+
+  /// Updates display names for ROMs using GameList data if available
+  Future<void> _updateDisplayNames(List<RomItem> items) async {
+    try {
+      // Filter only ROMs (not folders) and limit concurrent GameList lookups
+      final romItems = items.where((item) => item.isRom).toList();
+      if (romItems.isEmpty) return;
+
+      // Process in smaller batches to avoid overwhelming the system
+      const batchSize = 10;
+      for (int i = 0; i < romItems.length; i += batchSize) {
+        final end = (i + batchSize < romItems.length)
+            ? i + batchSize
+            : romItems.length;
+        final batch = romItems.sublist(i, end);
+
+        // Process batch in parallel
+        final futures = batch.map((item) async {
+          await item.getDisplayNameAsync(_gamelistService);
+        });
+
+        await Future.wait(futures);
+
+        // Update UI after each batch if still mounted
+        if (mounted) {
+          setState(() {
+            // Trigger rebuild to show updated names
+          });
+        }
+      }
+    } catch (e) {
+      DebugService.instance.warning(
+        'Failed to update display names from GameList: $e',
+        tag: 'RomsScreen',
+      );
     }
   }
 

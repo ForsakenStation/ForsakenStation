@@ -5,10 +5,12 @@ import '../models/rom.dart';
 import '../models/rom_item.dart';
 import '../models/emulator_config.dart';
 import '../models/launch_result.dart';
+import '../models/overlay_config.dart';
 import 'download_service.dart';
 import 'debug_service.dart';
 import 'config_service.dart';
 import 'collection_service.dart';
+import 'overlay_service.dart';
 
 class EmulatorService {
   static EmulatorService? _instance;
@@ -18,6 +20,7 @@ class EmulatorService {
   final _debug = DebugService.instance;
   final _configService = ConfigService.instance;
   final _collectionService = CollectionService.instance;
+  final _overlayService = OverlayService.instance;
 
   EmulatorsConfig? _config;
   DateTime? _configLoadTime;
@@ -179,7 +182,41 @@ class EmulatorService {
       }
 
       // Build command arguments with ROM path
-      final args = command.buildCommand(romPath);
+      List<String> args = command.buildCommand(romPath);
+
+      // If this is RetroArch, check for overlay support and add overlay args
+      if (command.isRetroArch) {
+        _debug.info(
+          'Detected RetroArch command, checking for overlays',
+          tag: 'EmulatorService',
+        );
+
+        // DEBUG: Test overlay for this platform
+        await _overlayService.debugTestOverlay(platform);
+
+        try {
+          final overlayArgs = await _overlayService.createRetroArchOverlayArgs(
+            platform,
+          );
+          if (overlayArgs.isNotEmpty) {
+            _debug.info(
+              'Adding overlay configuration for platform: $platform',
+              tag: 'EmulatorService',
+            );
+            args.addAll(overlayArgs);
+          } else {
+            _debug.debug(
+              'No overlay configuration found for platform: $platform',
+              tag: 'EmulatorService',
+            );
+          }
+        } catch (e) {
+          _debug.warning(
+            'Error adding overlay configuration, continuing without overlay',
+            tag: 'EmulatorService',
+          );
+        }
+      }
 
       _debug.info(
         'Command: $emulatorPath ${args.join(' ')}',
@@ -243,6 +280,14 @@ class EmulatorService {
 
       // Don't wait for process to complete - let it run independently
       // The process will continue running even after this method returns
+
+      // Clean up old overlay temp files in background
+      _overlayService.cleanupTempFiles().catchError((e) {
+        _debug.debug(
+          'Error cleaning up overlay files: $e',
+          tag: 'EmulatorService',
+        );
+      });
 
       return true;
     } catch (e) {
@@ -380,5 +425,27 @@ class EmulatorService {
   /// Cancel the current download
   void cancelDownload() {
     downloadService.cancelDownload();
+  }
+
+  /// Get available overlay configurations for a platform
+  Future<List<OverlayConfig>> getAvailableOverlays(String platform) async {
+    final defaultOverlay = await _overlayService.getDefaultOverlay(platform);
+    return defaultOverlay != null ? [defaultOverlay] : [];
+  }
+
+  /// Check if a platform has overlay support
+  Future<bool> hasOverlaySupport(String platform) async {
+    return await _overlayService.hasOverlaySupport(platform);
+  }
+
+  /// Get all platforms with overlay support (simplified - returns empty for now)
+  Future<List<String>> getPlatformsWithOverlaySupport() async {
+    // Simplified implementation - would need to scan all platforms if needed
+    return [];
+  }
+
+  /// Get the default overlay for a platform
+  Future<OverlayConfig?> getDefaultOverlay(String platform) async {
+    return await _overlayService.getDefaultOverlay(platform);
   }
 }

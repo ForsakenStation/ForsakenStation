@@ -32,8 +32,8 @@ class EmulatorCommand {
       args: args.isNotEmpty
           ? args
           : (json['args'] != null
-              ? List<String>.from(json['args'] as List)
-              : const []),
+                ? List<String>.from(json['args'] as List)
+                : const []),
     );
   }
 
@@ -95,6 +95,14 @@ class EmulatorCommand {
     }).toList();
 
     return processedArgs;
+  }
+
+  /// Check if this command uses RetroArch
+  bool get isRetroArch {
+    final cmdLower = command.toLowerCase();
+    return cmdLower.contains('retroarch') ||
+        cmdLower.endsWith('retroarch') ||
+        cmdLower.endsWith('retroarch.exe');
   }
 
   @override
