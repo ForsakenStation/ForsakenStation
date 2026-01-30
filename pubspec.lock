@@ -29,10 +29,10 @@ packages:
     dependency: "direct dev"
     description:
       name: asset_fill
-      sha256: "119086ca6eaedb9ea92ac6fcee0b987842a8486f4add1018e8621ab093b15518"
+      sha256: "7c010650ed541186887351ccaae101e75bc2868d5d82d53a25ba4d9d9118dcfb"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "2.0.0"
   async:
     dependency: transitive
     description:
