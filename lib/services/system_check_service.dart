@@ -18,6 +18,11 @@ class SystemCheckService {
 
   /// Checks if a command is available in the system PATH
   Future<bool> isCommandAvailable(String command) async {
+    if (kIsWeb) {
+      // Web platform doesn't have system commands
+      return false;
+    }
+
     try {
       if (Platform.isWindows) {
         // On Windows, use 'where' command
@@ -36,6 +41,11 @@ class SystemCheckService {
 
   /// Gets the list of required tools for the current platform
   List<String> getRequiredTools() {
+    if (kIsWeb) {
+      // Web platform doesn't require system tools
+      return [];
+    }
+
     if (Platform.isLinux) {
       return _requiredTools['linux'] ?? [];
     } else if (Platform.isMacOS) {
@@ -79,6 +89,10 @@ class SystemCheckService {
   /// Gets installation instructions for missing tools
   String getInstallInstructions(List<String> tools) {
     if (tools.isEmpty) return '';
+
+    if (kIsWeb) {
+      return 'System tools are not required on the web platform.';
+    }
 
     final toolsStr = tools.join(' ');
 

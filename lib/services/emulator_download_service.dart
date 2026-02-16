@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:archive/archive.dart';
@@ -93,7 +94,7 @@ class EmulatorDownloadService {
       }
 
       // Make AppImages executable on Linux
-      if (Platform.isLinux) {
+      if (!kIsWeb && Platform.isLinux) {
         await _makeAppImagesExecutable(destDir.path);
       }
 
@@ -286,7 +287,7 @@ class EmulatorDownloadService {
 
   /// Make all AppImage files executable
   Future<void> _makeAppImagesExecutable(String directory) async {
-    if (!Platform.isLinux) return;
+    if (kIsWeb || !Platform.isLinux) return;
 
     final dir = Directory(directory);
     await for (final entity in dir.list()) {

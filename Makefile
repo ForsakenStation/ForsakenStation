@@ -57,6 +57,9 @@ appimage:
 run:
 	@echo "🚀 Running in debug mode..."
 	fvm flutter run -d linux
+run-web:
+	@echo "🚀 Running in debug mode..."
+	fvm flutter run -d chrome
 
 run-release:
 	@echo "🚀 Running in release mode..."

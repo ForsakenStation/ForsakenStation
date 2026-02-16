@@ -1,8 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:path/path.dart' as path;
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import '../models/rom.dart';
 import 'debug_service.dart';
+
+// Conditional import for dart:io
+import 'jsonl_rom_loader_io.dart'
+    if (dart.library.html) 'jsonl_rom_loader_web.dart'
+    as platform_loader;
 
 /// Service for loading ROMs from JSONL files (romLists format)
 ///
@@ -17,32 +22,54 @@ import 'debug_service.dart';
 class JsonlRomLoader {
   final _debug = DebugService.instance;
 
+  // GitHub raw URL base for romList repository
+  static const String _githubRawBase =
+      'https://raw.githubusercontent.com/ForsakenStation/romList/main/';
+
+  // Cache for web platform (platform name -> JSONL content)
+  static final Map<String, String> _webJsonlCache = {};
+
+  // Cache for platform ROM counts
+  static final Map<String, int> _platformCountsCache = {};
+
   /// Load ROMs from a JSONL file for a specific platform
-  ///
-  /// [jsonlPath] - Path to the JSONL file (e.g., "path/to/nes.jsonl")
-  /// [platform] - Platform name (e.g., "nes")
-  ///
-  /// Returns a list of Rom objects loaded from the JSONL file
   Future<List<Rom>> loadRomsFromJsonl(String jsonlPath, String platform) async {
+    if (kIsWeb) {
+      return _loadRomsFromJsonlWeb(platform);
+    } else {
+      return platform_loader.loadRomsFromJsonlIO(jsonlPath, platform);
+    }
+  }
+
+  /// Web implementation - load JSONL from GitHub
+  Future<List<Rom>> _loadRomsFromJsonlWeb(String platform) async {
     final roms = <Rom>[];
 
     try {
-      final file = File(jsonlPath);
+      // Check cache first
+      String? jsonlContent = _webJsonlCache[platform];
 
-      if (!await file.exists()) {
-        _debug.warning(
-          'JSONL file not found: $jsonlPath',
-          tag: 'JsonlRomLoader',
-        );
-        return roms;
+      if (jsonlContent == null) {
+        // Fetch from GitHub
+        final url = '$_githubRawBase$platform.jsonl';
+        _debug.info('Fetching JSONL from: $url', tag: 'JsonlRomLoader');
+
+        final response = await http.get(Uri.parse(url));
+
+        if (response.statusCode != 200) {
+          _debug.warning(
+            'Failed to fetch JSONL for $platform: HTTP ${response.statusCode}',
+            tag: 'JsonlRomLoader',
+          );
+          return roms;
+        }
+
+        jsonlContent = response.body;
+        _webJsonlCache[platform] = jsonlContent;
       }
 
-      _debug.info('Loading ROMs from JSONL: $jsonlPath', tag: 'JsonlRomLoader');
-
-      // Read file line by line
-      final lines = await file.readAsLines();
-      int fileCount = 0;
-      int dirCount = 0;
+      // Parse JSONL content
+      final lines = jsonlContent.split('\n');
 
       for (final line in lines) {
         if (line.trim().isEmpty) continue;
@@ -50,59 +77,46 @@ class JsonlRomLoader {
         try {
           final json = jsonDecode(line) as Map<String, dynamic>;
 
-          // Only process file entries (skip directories)
-          if (json['type'] != 'file') {
-            dirCount++;
-            continue;
-          }
-
-          fileCount++;
+          if (json['type'] != 'file') continue;
 
           final name = json['n'] as String? ?? '';
           final filePath = json['p'] as String? ?? '';
           final parent = json['parent'] as String? ?? '';
           final urls = json['urls'] as List<dynamic>? ?? [];
 
-          // Extract download URL from first URL entry
           String? downloadUrl;
           if (urls.isNotEmpty) {
             final firstUrl = urls[0] as Map<String, dynamic>;
             downloadUrl = firstUrl['u'] as String?;
           }
 
-          // Skip if no URL available
-          if (downloadUrl == null || downloadUrl.isEmpty) {
-            continue;
-          }
+          if (downloadUrl == null || downloadUrl.isEmpty) continue;
 
-          // Create Rom object
           final rom = Rom(
             name: name,
-            fileName: path.basename(filePath),
+            fileName: filePath.split('/').last,
             platform: platform,
-            urlFilePath: '', // Not used for JSONL ROMs
+            urlFilePath: '',
             downloadUrl: downloadUrl,
           );
 
-          // Set parent directory as subdirectory if present
-          if (parent.isNotEmpty && parent != '') {
+          if (parent.isNotEmpty) {
             rom.subdirectory = parent;
           }
 
           roms.add(rom);
         } catch (e) {
-          _debug.warning('Error parsing JSONL line: $e', tag: 'JsonlRomLoader');
           continue;
         }
       }
 
       _debug.info(
-        'Loaded ${roms.length} ROMs from $jsonlPath ($fileCount files, $dirCount directories)',
+        'Loaded ${roms.length} ROMs for platform: $platform (web)',
         tag: 'JsonlRomLoader',
       );
     } catch (e) {
       _debug.error(
-        'Error loading JSONL file: $jsonlPath',
+        'Error loading JSONL for platform: $platform',
         tag: 'JsonlRomLoader',
         error: e,
       );
@@ -111,158 +125,123 @@ class JsonlRomLoader {
     return roms;
   }
 
-  /// Load ROMs for all platforms from a directory containing JSONL files
-  ///
-  /// [jsonlDirectory] - Directory containing JSONL files
-  ///
-  /// Returns a map of platform name to list of ROMs
-  Future<Map<String, List<Rom>>> loadAllPlatformsFromJsonl(
-    String jsonlDirectory,
-  ) async {
-    final platformRoms = <String, List<Rom>>{};
-
-    try {
-      final dir = Directory(jsonlDirectory);
-
-      if (!await dir.exists()) {
-        _debug.warning(
-          'JSONL directory not found: $jsonlDirectory',
-          tag: 'JsonlRomLoader',
-        );
-        return platformRoms;
-      }
-
-      _debug.info(
-        'Loading all platforms from JSONL directory: $jsonlDirectory',
-        tag: 'JsonlRomLoader',
-      );
-
-      // Find all .jsonl files
-      await for (final entity in dir.list()) {
-        if (entity is File && entity.path.endsWith('.jsonl')) {
-          final fileName = path.basenameWithoutExtension(entity.path);
-          final roms = await loadRomsFromJsonl(entity.path, fileName);
-
-          if (roms.isNotEmpty) {
-            platformRoms[fileName] = roms;
-          }
-        }
-      }
-
-      _debug.info(
-        'Loaded ${platformRoms.length} platforms from JSONL directory',
-        tag: 'JsonlRomLoader',
-      );
-    } catch (e) {
-      _debug.error(
-        'Error loading platforms from JSONL directory: $jsonlDirectory',
-        tag: 'JsonlRomLoader',
-        error: e,
-      );
-    }
-
-    return platformRoms;
-  }
-
-  /// Count ROMs in a JSONL file without loading them all into memory
-  ///
-  /// [jsonlPath] - Path to the JSONL file
-  ///
-  /// Returns the number of file entries (ROMs) in the JSONL
-  Future<int> countRomsInJsonl(String jsonlPath) async {
-    int romCount = 0;
-
-    try {
-      final file = File(jsonlPath);
-
-      if (!await file.exists()) {
-        return 0;
-      }
-
-      // Read file line by line
-      final lines = await file.readAsLines();
-
-      for (final line in lines) {
-        if (line.trim().isEmpty) continue;
-
-        try {
-          final json = jsonDecode(line) as Map<String, dynamic>;
-
-          // Only count file entries with valid URLs
-          if (json['type'] == 'file') {
-            final urls = json['urls'] as List<dynamic>? ?? [];
-            if (urls.isNotEmpty) {
-              final firstUrl = urls[0] as Map<String, dynamic>;
-              final downloadUrl = firstUrl['u'] as String?;
-              if (downloadUrl != null && downloadUrl.isNotEmpty) {
-                romCount++;
-              }
-            }
-          }
-        } catch (e) {
-          // Skip invalid lines
-          continue;
-        }
-      }
-    } catch (e) {
-      _debug.error(
-        'Error counting ROMs in JSONL: $jsonlPath',
-        tag: 'JsonlRomLoader',
-        error: e,
-      );
-    }
-
-    return romCount;
-  }
-
-  /// Get platform names and ROM counts without loading all ROMs
-  ///
-  /// [jsonlDirectory] - Directory containing JSONL files
-  ///
-  /// Returns a map of platform name to ROM count
+  /// Get platform ROM counts
   Future<Map<String, int>> getPlatformRomCounts(String jsonlDirectory) async {
+    if (kIsWeb) {
+      return _getPlatformRomCountsWeb();
+    } else {
+      return platform_loader.getPlatformRomCountsIO(jsonlDirectory);
+    }
+  }
+
+  /// Web implementation - get platform counts from GitHub index
+  Future<Map<String, int>> _getPlatformRomCountsWeb() async {
+    // Return cached counts if available
+    if (_platformCountsCache.isNotEmpty) {
+      return Map.from(_platformCountsCache);
+    }
+
     final platformCounts = <String, int>{};
 
     try {
-      final dir = Directory(jsonlDirectory);
+      // First try to fetch a pre-computed index file with counts
+      final countsUrl = '${_githubRawBase}platform_counts.json';
+      _debug.info(
+        'Fetching platform counts from: $countsUrl',
+        tag: 'JsonlRomLoader',
+      );
 
-      if (!await dir.exists()) {
-        _debug.warning(
-          'JSONL directory not found: $jsonlDirectory',
+      final countsResponse = await http.get(Uri.parse(countsUrl));
+
+      if (countsResponse.statusCode == 200) {
+        // Parse the counts file
+        final countsJson =
+            jsonDecode(countsResponse.body) as Map<String, dynamic>;
+        for (final entry in countsJson.entries) {
+          platformCounts[entry.key] = entry.value as int;
+        }
+        _platformCountsCache.addAll(platformCounts);
+        _debug.info(
+          'Loaded ${platformCounts.length} platform counts from index',
           tag: 'JsonlRomLoader',
         );
         return platformCounts;
       }
 
+      // Fallback: fetch platforms.txt and count ROMs by loading each JSONL
+      final indexUrl = '${_githubRawBase}platforms.txt';
       _debug.info(
-        'Counting ROMs for all platforms in: $jsonlDirectory',
+        'Fetching platforms index from: $indexUrl',
         tag: 'JsonlRomLoader',
       );
 
-      // Find all .jsonl files and count ROMs
-      await for (final entity in dir.list()) {
-        if (entity is File && entity.path.endsWith('.jsonl')) {
-          final fileName = path.basenameWithoutExtension(entity.path);
-          final count = await countRomsInJsonl(entity.path);
+      final response = await http.get(Uri.parse(indexUrl));
 
-          if (count > 0) {
-            platformCounts[fileName] = count;
-          } else {
-            _debug.warning(
-              'Skipping platform "$fileName" - no ROMs with valid URLs found',
-              tag: 'JsonlRomLoader',
-            );
-          }
+      List<String> platforms;
+      if (response.statusCode == 200) {
+        platforms = response.body
+            .split('\n')
+            .map((p) => p.trim())
+            .where((p) => p.isNotEmpty)
+            .toList();
+      } else {
+        // Fallback: hardcoded list of common platforms
+        _debug.warning(
+          'Could not fetch platforms index, using fallback list',
+          tag: 'JsonlRomLoader',
+        );
+        platforms = [
+          'nes',
+          'snes',
+          'n64',
+          'gb',
+          'gbc',
+          'gba',
+          'nds',
+          'sega32x',
+          'segacd',
+          'genesis',
+          'gamegear',
+          'mastersystem',
+          'psx',
+          'psp',
+          'arcade',
+          'mame',
+          'neogeo',
+          'atari2600',
+          'atari5200',
+          'atari7800',
+          'atarijaguar',
+          'atarilynx',
+          'pcengine',
+          'pcenginecd',
+          'wonderswan',
+          'wonderswancolor',
+          '3do',
+          'colecovision',
+          'intellivision',
+          'vectrex',
+        ];
+      }
+
+      // Count ROMs for each platform by fetching the JSONL
+      // This is slower but gives accurate counts
+      for (final platform in platforms) {
+        final count = await _countRomsInJsonlWeb(platform);
+        if (count > 0) {
+          platformCounts[platform] = count;
         }
       }
 
+      _platformCountsCache.addAll(platformCounts);
+
       _debug.info(
-        'Found ${platformCounts.length} platforms with total ${platformCounts.values.fold(0, (a, b) => a + b)} ROMs',
+        'Found ${platformCounts.length} platforms with ROMs (web)',
         tag: 'JsonlRomLoader',
       );
     } catch (e) {
       _debug.error(
-        'Error getting platform ROM counts from: $jsonlDirectory',
+        'Error getting platform counts (web)',
         tag: 'JsonlRomLoader',
         error: e,
       );
@@ -271,37 +250,57 @@ class JsonlRomLoader {
     return platformCounts;
   }
 
-  /// Get list of available platforms from JSONL directory
-  ///
-  /// [jsonlDirectory] - Directory containing JSONL files
-  ///
-  /// Returns a list of platform names (without .jsonl extension)
-  Future<List<String>> getAvailablePlatforms(String jsonlDirectory) async {
-    final platforms = <String>[];
-
+  /// Count ROMs in a JSONL file from web
+  Future<int> _countRomsInJsonlWeb(String platform) async {
     try {
-      final dir = Directory(jsonlDirectory);
+      final url = '$_githubRawBase$platform.jsonl';
+      final response = await http.get(Uri.parse(url));
 
-      if (!await dir.exists()) {
-        return platforms;
+      if (response.statusCode != 200) {
+        return 0;
       }
 
-      await for (final entity in dir.list()) {
-        if (entity is File && entity.path.endsWith('.jsonl')) {
-          final fileName = path.basenameWithoutExtension(entity.path);
-          platforms.add(fileName);
+      final lines = response.body.split('\n');
+      int count = 0;
+
+      for (final line in lines) {
+        if (line.trim().isEmpty) continue;
+
+        try {
+          final json = jsonDecode(line) as Map<String, dynamic>;
+          if (json['type'] == 'file') {
+            final urls = json['urls'] as List<dynamic>? ?? [];
+            if (urls.isNotEmpty) {
+              count++;
+            }
+          }
+        } catch (e) {
+          continue;
         }
       }
 
-      platforms.sort();
-    } catch (e) {
-      _debug.error(
-        'Error getting available platforms from: $jsonlDirectory',
-        tag: 'JsonlRomLoader',
-        error: e,
-      );
-    }
+      // Cache the content for later use
+      _webJsonlCache[platform] = response.body;
 
-    return platforms;
+      return count;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  /// Count ROMs in a JSONL file
+  Future<int> countRomsInJsonl(String jsonlPath) async {
+    if (kIsWeb) {
+      // For web, we count when loading
+      return 0;
+    } else {
+      return platform_loader.countRomsInJsonlIO(jsonlPath);
+    }
+  }
+
+  /// Clear web caches
+  void clearWebCache() {
+    _webJsonlCache.clear();
+    _platformCountsCache.clear();
   }
 }

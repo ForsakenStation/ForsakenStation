@@ -1213,6 +1213,11 @@ class BiosDownloadService {
 
   /// Determines which files to extract based on the current platform
   List<String> _getPlatformSpecificFiles(List<String> extractedFiles) {
+    if (kIsWeb) {
+      // Web platform doesn't need platform-specific library files
+      return [];
+    }
+
     if (Platform.isLinux) {
       return extractedFiles.where((file) => file.endsWith('.so')).toList();
     } else if (Platform.isWindows) {

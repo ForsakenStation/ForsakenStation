@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -167,8 +167,8 @@ class _SmartSvgState extends State<SmartSvg> {
       debugPrint('✅ [SmartSvg] Loaded ${data.lengthInBytes} bytes');
       final List<int> bytes = data.buffer.asUint8List();
 
-      // Decompress using gzip
-      final List<int> decompressed = GZipCodec().decode(bytes);
+      // Decompress using gzip (archive package works on web)
+      final List<int> decompressed = GZipDecoder().decodeBytes(bytes);
       debugPrint('✅ [SmartSvg] Decompressed to ${decompressed.length} bytes');
 
       // Convert to string

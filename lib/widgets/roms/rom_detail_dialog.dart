@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/game_info.dart';
@@ -10,6 +11,7 @@ import 'package:forsaken/widgets/common/placeholder_image.dart';
 import 'package:forsaken/widgets/common/info_row.dart';
 import 'package:forsaken/widgets/common/dialog_button_bar.dart';
 import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
+import 'package:forsaken/platforms/web/web_emulator_launcher.dart';
 
 /// Dialog showing detailed information about a ROM
 class RomDetailDialog extends StatefulWidget {
@@ -103,6 +105,17 @@ class _RomDetailDialogState extends State<RomDetailDialog>
       );
     }
 
+    // Play in Browser button (if web platform and supported)
+    if (kIsWeb && WebEmulatorLauncher.isAvailableForRom(widget.item)) {
+      buttons.add(
+        DialogButton(
+          label: 'Play in Browser',
+          icon: Icons.web,
+          onPressed: _playInBrowser,
+        ),
+      );
+    }
+
     // Play button (primary)
     buttons.add(
       DialogButton(
@@ -147,6 +160,32 @@ class _RomDetailDialogState extends State<RomDetailDialog>
   void _playRom() {
     Navigator.pop(context);
     widget.onPlay();
+  }
+
+  void _playInBrowser() async {
+    // Stop dialog controls
+    stopDialogControls();
+
+    try {
+      // Close the detail dialog first
+      if (mounted) {
+        Navigator.pop(context);
+      }
+
+      // Launch web emulator fullscreen
+      await WebEmulatorLauncher.launchFullscreen(context, widget.item);
+    } catch (e) {
+      debugPrint('Failed to launch web emulator: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to launch web emulator: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _viewManual() {

@@ -28,6 +28,9 @@ dependencies:
   gamepads: ^0.1.9
   pdfrx: ^2.2.24
   crypto: ^3.0.7
+  # Web-specific dependencies
+  js: ^0.6.0
+  web: ^1.1.0
 
 dev_dependencies:
   flutter_test:

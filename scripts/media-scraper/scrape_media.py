@@ -338,7 +338,7 @@ PLATFORM_IDS = {
     "v.smile": 120,
     "vc4000": 281,
     "vectrex": 102,
-    "vic20": 73,
+    "c20": 73, #vic20
     "video system co.": 175,
     "videopac g7000": 104,
     "vircon32": 272,

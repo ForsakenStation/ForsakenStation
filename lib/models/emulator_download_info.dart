@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 /// Platform-specific download information for an emulator
 class EmulatorDownloadInfo {
@@ -26,6 +27,11 @@ class EmulatorDownloadInfo {
 
   /// Get download info for current platform
   PlatformDownload? getDownloadForCurrentPlatform() {
+    if (kIsWeb) {
+      // Web platform doesn't support emulator downloads
+      return null;
+    }
+
     if (Platform.isLinux) {
       return downloads['linux'];
     } else if (Platform.isMacOS) {
@@ -39,6 +45,11 @@ class EmulatorDownloadInfo {
   /// Get post-download commands for current platform
   List<String>? getPostDownloadCommandsForCurrentPlatform() {
     if (postDownloadCommands == null) return null;
+
+    if (kIsWeb) {
+      // Web platform doesn't support post-download commands
+      return null;
+    }
 
     if (Platform.isLinux) {
       return postDownloadCommands!['linux'];
@@ -259,7 +270,8 @@ class EmulatorCatalog {
         ],
         'macos': [
           '7z x rpcs3.7z -o./ && rm rpcs3.7z'
-          'mv RPCS3.app App'],
+              'mv RPCS3.app App',
+        ],
       },
     ),
 
@@ -532,8 +544,11 @@ class EmulatorCatalog {
       },
       postDownloadCommands: {
         'linux': ['chmod +x openbor.AppImage'],
-        'windows': ['unrar openbor.rar -o./ && rm openbor.rar', 'move OpenBOR.exe openbor.exe'],
-      }
+        'windows': [
+          'unrar openbor.rar -o./ && rm openbor.rar',
+          'move OpenBOR.exe openbor.exe',
+        ],
+      },
     ),
 
     // MUGEN
@@ -562,10 +577,16 @@ class EmulatorCatalog {
         ),
       },
       postDownloadCommands: {
-        'linux': ['7z x Ikemen_GO-v0.99.0-linux.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-linux.zip'],
-        'windows': ['7z x Ikemen_GO-v0.99.0-windows.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-windows.zip'],
-        'macos': ['7z x Ikemen_GO-v0.99.0-macos.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-macos.zip'],
-      }
+        'linux': [
+          '7z x Ikemen_GO-v0.99.0-linux.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-linux.zip',
+        ],
+        'windows': [
+          '7z x Ikemen_GO-v0.99.0-windows.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-windows.zip',
+        ],
+        'macos': [
+          '7z x Ikemen_GO-v0.99.0-macos.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-macos.zip',
+        ],
+      },
     ),
 
     // Utilities

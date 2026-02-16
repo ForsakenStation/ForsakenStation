@@ -1,0 +1,418 @@
+import 'dart:async';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'emulatorjs_bridge.dart';
+import 'web_core_manager.dart';
+import '../../models/rom_item.dart';
+import '../../models/launch_result.dart';
+import '../../services/debug_service.dart';
+
+/// Web-specific implementation of emulator service using EmulatorJS
+class WebEmulatorService {
+  static WebEmulatorService? _instance;
+
+  final DebugService _debug = DebugService.instance;
+  final WebCoreManager _coreManager = WebCoreManager.instance;
+
+  /// Currently active emulator instances
+  final Map<String, EmulatorJSBridge> _emulators = {};
+
+  /// Current ROM being played
+  RomItem? _currentRom;
+  String? _currentEmulatorId;
+
+  WebEmulatorService._();
+
+  static WebEmulatorService get instance {
+    return _instance ??= WebEmulatorService._();
+  }
+
+  /// Initialize the web emulator service
+  Future<void> initialize() async {
+    try {
+      _debug.info(
+        'Initializing WebEmulatorService...',
+        tag: 'WebEmulatorService',
+      );
+
+      // Preload essential cores
+      await _coreManager.preloadEssentialCores();
+
+      _debug.info(
+        'WebEmulatorService initialized successfully',
+        tag: 'WebEmulatorService',
+      );
+    } catch (e) {
+      _debug.error(
+        'Failed to initialize WebEmulatorService: $e',
+        tag: 'WebEmulatorService',
+      );
+      rethrow;
+    }
+  }
+
+  /// Launch a ROM in the web emulator
+  Future<LaunchResult> launchRom(
+    RomItem rom, {
+    String containerId = 'emulator-container',
+  }) async {
+    try {
+      _debug.info(
+        'Launching ROM: ${rom.name} for platform: ${rom.platform}',
+        tag: 'WebEmulatorService',
+      );
+
+      // Stop any currently running emulator
+      if (_currentEmulatorId != null) {
+        await stopEmulator(_currentEmulatorId!);
+      }
+
+      // Check if platform is specified
+      if (rom.platform == null) {
+        return LaunchResult.failure('ROM platform is not specified');
+      }
+
+      // Check if platform is supported
+      if (!_coreManager.hasCoreSupport(rom.platform!)) {
+        return LaunchResult.failure(
+          'Platform ${rom.platform} not supported in web version',
+        );
+      }
+
+      // Get core information
+      final coreInfo = _coreManager.getCoreInfo(rom.platform!);
+      if (coreInfo == null) {
+        return LaunchResult.failure(
+          'No core found for platform: ${rom.platform}',
+        );
+      }
+
+      // Create emulator instance with callbacks
+      final emulator = EmulatorJSBridge(
+        containerId: containerId,
+        callbacks: EmulatorCallbacks(
+          onReady: () {
+            _debug.info(
+              'Emulator ready for ROM: ${rom.name}',
+              tag: 'WebEmulatorService',
+            );
+          },
+          onError: (error) {
+            _debug.error('Emulator error: $error', tag: 'WebEmulatorService');
+          },
+          onLoadingProgress: (progress) {
+            _debug.debug(
+              'Loading progress: ${progress.stage} ${(progress.progress * 100).toInt()}%',
+              tag: 'WebEmulatorService',
+            );
+          },
+          onCoreLoaded: () {
+            _debug.info(
+              'Core loaded for ${rom.platform}',
+              tag: 'WebEmulatorService',
+            );
+          },
+          onRomLoaded: () {
+            _debug.info('ROM loaded: ${rom.name}', tag: 'WebEmulatorService');
+          },
+        ),
+      );
+
+      // Store emulator instance
+      _emulators[containerId] = emulator;
+      _currentEmulatorId = containerId;
+      _currentRom = rom;
+
+      // Get core URL (from assets or download)
+      final coreUrl = await _coreManager.getCoreUrl(rom.platform!);
+      _debug.info('Using core: $coreUrl', tag: 'WebEmulatorService');
+
+      // Load the core
+      await emulator.loadCore(coreUrl, rom.platform!);
+
+      // Download/load the ROM
+      final romData = await _loadRomData(rom);
+      if (romData == null) {
+        return LaunchResult.failure('Failed to load ROM data');
+      }
+
+      // Load ROM into emulator
+      await emulator.loadRom(romData, rom.name);
+
+      // Start the emulator
+      emulator.start();
+
+      _debug.info(
+        'ROM ${rom.name} launched successfully',
+        tag: 'WebEmulatorService',
+      );
+      return LaunchResult.success();
+    } catch (e, stackTrace) {
+      _debug.error(
+        'Failed to launch ROM ${rom.name}: $e',
+        tag: 'WebEmulatorService',
+      );
+      _debug.error('Stack trace: $stackTrace', tag: 'WebEmulatorService');
+
+      // Clean up on error
+      if (_currentEmulatorId != null) {
+        _emulators.remove(_currentEmulatorId!);
+        _currentEmulatorId = null;
+        _currentRom = null;
+      }
+
+      return LaunchResult.failure('Failed to launch ROM: ${e.toString()}');
+    }
+  }
+
+  /// Load ROM data from URL
+  Future<Uint8List?> _loadRomData(RomItem rom) async {
+    try {
+      _debug.info(
+        'Loading ROM data for: ${rom.name}',
+        tag: 'WebEmulatorService',
+      );
+
+      // First get the download URL if not already loaded
+      String? downloadUrl = rom.downloadUrl;
+      if (downloadUrl == null) {
+        downloadUrl = await rom.loadDownloadUrl();
+        if (downloadUrl == null) {
+          _debug.error(
+            'No download URL available for: ${rom.name}',
+            tag: 'WebEmulatorService',
+          );
+          return null;
+        }
+      }
+
+      // For web implementation, we need to download the ROM data ourselves
+      // since DownloadService is designed for file storage, not in-memory data
+      // We'll implement a simple HTTP download here
+      final response = await http.get(Uri.parse(downloadUrl));
+
+      if (response.statusCode != 200) {
+        _debug.error(
+          'Failed to download ROM: HTTP ${response.statusCode}',
+          tag: 'WebEmulatorService',
+        );
+        return null;
+      }
+
+      final romData = response.bodyBytes;
+      if (romData.isEmpty) {
+        _debug.error(
+          'ROM data is empty for: ${rom.name}',
+          tag: 'WebEmulatorService',
+        );
+        return null;
+      }
+
+      _debug.info(
+        'ROM data loaded: ${romData.length} bytes',
+        tag: 'WebEmulatorService',
+      );
+      return romData;
+    } catch (e) {
+      _debug.error('Failed to load ROM data: $e', tag: 'WebEmulatorService');
+      return null;
+    }
+  }
+
+  /// Stop an emulator instance
+  Future<void> stopEmulator(String containerId) async {
+    try {
+      final emulator = _emulators[containerId];
+      if (emulator != null) {
+        emulator.stop();
+        _emulators.remove(containerId);
+
+        if (_currentEmulatorId == containerId) {
+          _currentEmulatorId = null;
+          _currentRom = null;
+        }
+
+        _debug.info(
+          'Emulator stopped: $containerId',
+          tag: 'WebEmulatorService',
+        );
+      }
+    } catch (e) {
+      _debug.error(
+        'Error stopping emulator $containerId: $e',
+        tag: 'WebEmulatorService',
+      );
+    }
+  }
+
+  /// Pause the current emulator
+  void pauseEmulator([String? containerId]) {
+    final id = containerId ?? _currentEmulatorId;
+    if (id != null) {
+      final emulator = _emulators[id];
+      emulator?.pause();
+      _debug.info('Emulator paused: $id', tag: 'WebEmulatorService');
+    }
+  }
+
+  /// Resume the current emulator
+  void resumeEmulator([String? containerId]) {
+    final id = containerId ?? _currentEmulatorId;
+    if (id != null) {
+      final emulator = _emulators[id];
+      emulator?.resume();
+      _debug.info('Emulator resumed: $id', tag: 'WebEmulatorService');
+    }
+  }
+
+  /// Reset the current emulator
+  void resetEmulator([String? containerId]) {
+    final id = containerId ?? _currentEmulatorId;
+    if (id != null) {
+      final emulator = _emulators[id];
+      emulator?.reset();
+      _debug.info('Emulator reset: $id', tag: 'WebEmulatorService');
+    }
+  }
+
+  /// Create a save state
+  Future<Uint8List?> createSaveState([String? containerId]) async {
+    final id = containerId ?? _currentEmulatorId;
+    if (id != null) {
+      final emulator = _emulators[id];
+      if (emulator != null) {
+        try {
+          final saveData = await emulator.createSaveState();
+          _debug.info('Save state created for: $id', tag: 'WebEmulatorService');
+          return saveData;
+        } catch (e) {
+          _debug.error(
+            'Failed to create save state: $e',
+            tag: 'WebEmulatorService',
+          );
+        }
+      }
+    }
+    return null;
+  }
+
+  /// Load a save state
+  Future<bool> loadSaveState(Uint8List saveData, [String? containerId]) async {
+    final id = containerId ?? _currentEmulatorId;
+    if (id != null) {
+      final emulator = _emulators[id];
+      if (emulator != null) {
+        try {
+          await emulator.loadSaveState(saveData);
+          _debug.info('Save state loaded for: $id', tag: 'WebEmulatorService');
+          return true;
+        } catch (e) {
+          _debug.error(
+            'Failed to load save state: $e',
+            tag: 'WebEmulatorService',
+          );
+        }
+      }
+    }
+    return false;
+  }
+
+  /// Take a screenshot
+  Future<String?> getScreenshot([String? containerId]) async {
+    final id = containerId ?? _currentEmulatorId;
+    if (id != null) {
+      final emulator = _emulators[id];
+      if (emulator != null) {
+        try {
+          return await emulator.getScreenshot();
+        } catch (e) {
+          _debug.error(
+            'Failed to get screenshot: $e',
+            tag: 'WebEmulatorService',
+          );
+        }
+      }
+    }
+    return null;
+  }
+
+  /// Get emulator status
+  EmulatorStatus? getEmulatorStatus([String? containerId]) {
+    final id = containerId ?? _currentEmulatorId;
+    if (id != null) {
+      final emulator = _emulators[id];
+      return emulator?.getStatus();
+    }
+    return null;
+  }
+
+  /// Check if platform is supported
+  bool isPlatformSupported(String platform) {
+    return _coreManager.hasCoreSupport(platform);
+  }
+
+  /// Get supported platforms
+  List<String> getSupportedPlatforms() {
+    final platforms = <String>[];
+
+    for (final core in _coreManager.allCores.values) {
+      platforms.addAll(core.supportedPlatforms);
+    }
+
+    return platforms.toSet().toList()..sort();
+  }
+
+  /// Get core loading progress for a platform
+  CoreLoadingProgress getCoreLoadingProgress(String platform) {
+    return _coreManager.getLoadingState(platform);
+  }
+
+  /// Check if a ROM file is supported
+  bool isRomFileSupported(String filename) {
+    return _coreManager.isFileSupported(filename);
+  }
+
+  /// Get platform from ROM filename
+  String? getPlatformFromRomFile(String filename) {
+    return _coreManager.getPlatformFromFile(filename);
+  }
+
+  /// Get currently playing ROM
+  RomItem? get currentRom => _currentRom;
+
+  /// Check if any emulator is currently running
+  bool get isEmulatorRunning => _currentEmulatorId != null;
+
+  /// Get active emulator IDs
+  List<String> get activeEmulators => _emulators.keys.toList();
+
+  /// Cleanup all emulators
+  Future<void> cleanup() async {
+    _debug.info('Cleaning up WebEmulatorService...', tag: 'WebEmulatorService');
+
+    final emulatorIds = _emulators.keys.toList();
+    for (final id in emulatorIds) {
+      await stopEmulator(id);
+    }
+
+    _currentEmulatorId = null;
+    _currentRom = null;
+
+    _debug.info(
+      'WebEmulatorService cleanup complete',
+      tag: 'WebEmulatorService',
+    );
+  }
+
+  /// Get service statistics
+  Map<String, dynamic> getStats() {
+    return {
+      'active_emulators': _emulators.length,
+      'current_rom': _currentRom?.name,
+      'current_platform': _currentRom?.platform,
+      'supported_platforms': getSupportedPlatforms().length,
+      'core_manager_stats': _coreManager.getCacheStats(),
+    };
+  }
+}

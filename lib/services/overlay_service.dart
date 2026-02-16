@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/overlay_config.dart';
@@ -84,6 +85,11 @@ overlay0_alpha_mod = 1.0
   /// Get the base app directory for overlay storage
   /// Same pattern as RomStorageService to ensure compatibility
   Future<Directory> _getBaseOverlayDirectory() async {
+    if (kIsWeb) {
+      // For web, use simulated directory path
+      return Directory('/web-storage/overlays');
+    }
+
     final baseDir = await getApplicationSupportDirectory();
     return Directory('${baseDir.path}/overlays');
   }

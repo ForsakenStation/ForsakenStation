@@ -1,45 +1,39 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:window_manager/window_manager.dart';
 import 'package:media_kit/media_kit.dart';
 
-import 'screens/platforms_screen.dart';
 import 'screens/initializing_screen.dart';
 import 'screens/error_screen.dart';
-import 'services/rom_service.dart';
 import 'services/debug_service.dart';
 import 'services/config_service.dart';
-import 'services/gamepad_service.dart';
-import 'services/romlist_download_service.dart';
-import 'services/rom_storage_service.dart';
 import 'providers/theme_provider.dart';
 import 'utils/app_theme.dart';
+
+// Platform-specific imports (use stubs on web to avoid dart:io)
+import 'utils/platform_init.dart';
+
+// Web-specific imports (conditional for web platform)
+import 'platforms/web/web_emulator_service.dart'
+    if (dart.library.io) 'services/empty_stub.dart';
+
+// Import the app content builder based on platform
+import 'app_content_desktop.dart'
+    if (dart.library.html) 'app_content_web.dart'
+    as app_content;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize MediaKit for video playback
-  MediaKit.ensureInitialized();
+  // Initialize MediaKit for video playback (desktop only)
+  if (!kIsWeb) {
+    MediaKit.ensureInitialized();
+  }
 
-  // Initialize window manager for fullscreen support
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    await windowManager.ensureInitialized();
-
-    const windowOptions = WindowOptions(
-      size: Size(1280, 720),
-      center: true,
-      backgroundColor: Colors.transparent,
-      skipTaskbar: false,
-      titleBarStyle: TitleBarStyle.normal,
-    );
-
-    windowManager.waitUntilReadyToShow(windowOptions, () async {
-      await windowManager.show();
-      await windowManager.focus();
-      await windowManager.setFullScreen(true);
-    });
+  // Initialize window manager for fullscreen support (desktop only)
+  if (!kIsWeb) {
+    await initializePlatform();
   }
 
   // Load environment variables
@@ -55,8 +49,18 @@ Future<void> main() async {
   // Initialize ConfigService
   await ConfigService.instance.initialize();
 
-  // Initialize GamepadService
-  await GamepadService.instance.initialize();
+  // Platform-specific initialization
+  await app_content.initializePlatformServices();
+
+  // Initialize Web Emulator Service (web only)
+  if (kIsWeb) {
+    try {
+      await WebEmulatorService.instance.initialize();
+      debugPrint('Web emulator service initialized');
+    } catch (e) {
+      debugPrint('Failed to initialize web emulator service: $e');
+    }
+  }
 
   runApp(const EmulatorApp());
 }
@@ -107,54 +111,24 @@ class EmulatorApp extends StatefulWidget {
 }
 
 class _EmulatorAppState extends State<EmulatorApp> {
-  final _romlistService = RomlistDownloadService.instance;
   bool _isInitializing = true;
-  String? _jsonlPath;
   String? _errorMessage;
+  Widget? _homeScreen;
 
   @override
   void initState() {
     super.initState();
-    _initializeRomlists();
+    _initialize();
   }
 
-  Future<void> _initializeRomlists() async {
+  Future<void> _initialize() async {
     try {
-      // Initialize ROM storage directories
-      await RomStorageService.instance.initializeStorageDirectories();
-
-      // Load custom storage paths from environment (if set)
-      final configService = ConfigService.instance;
-      if (configService.romTempPath != null) {
-        RomStorageService.instance.setCustomTempPath(configService.romTempPath);
-      }
-      if (configService.romForeverPath != null) {
-        RomStorageService.instance.setCustomForeverPath(
-          configService.romForeverPath,
-        );
-      }
-
-      // Check if romlists are already downloaded
-      final isDownloaded = await _romlistService.isDownloaded();
-
-      if (!isDownloaded) {
-        // First-time setup: download romlists
-        final success = await _romlistService.downloadAndExtract();
-
-        if (!success) {
-          setState(() {
-            _errorMessage = 'Failed to download ROM lists from GitHub';
-            _isInitializing = false;
-          });
-          return;
-        }
-      }
-
-      // Get the JSONL path
-      final jsonlPath = await _romlistService.getJsonlPath();
+      // Use platform-specific initialization
+      final result = await app_content.initializeApp();
 
       setState(() {
-        _jsonlPath = jsonlPath;
+        _homeScreen = result.homeScreen;
+        _errorMessage = result.errorMessage;
         _isInitializing = false;
       });
     } catch (e) {
@@ -187,13 +161,6 @@ class _EmulatorAppState extends State<EmulatorApp> {
       );
     }
 
-    final romsPath = dotenv.env['ROMS_PATH'] ?? '';
-
-    final romService = RomService(
-      romsBasePath: romsPath,
-      jsonlBasePath: _jsonlPath!,
-    );
-
     return ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
       child: Consumer<ThemeProvider>(
@@ -204,7 +171,7 @@ class _EmulatorAppState extends State<EmulatorApp> {
             theme: AppTheme.lightTheme(),
             darkTheme: AppTheme.darkTheme(),
             themeMode: themeProvider.themeMode,
-            home: PlatformsScreen(romService: romService),
+            home: _homeScreen,
           );
         },
       ),
