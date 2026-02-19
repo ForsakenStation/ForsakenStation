@@ -27,6 +27,11 @@ class EmulatorJSBridgeStub implements EmulatorJSBridge {
   }
 
   @override
+  Future<void> loadRomFromUrl(String romUrl, String fileName) async {
+    throw UnsupportedError('Emulator not available on this platform');
+  }
+
+  @override
   void start() {
     throw UnsupportedError('Emulator not available on this platform');
   }

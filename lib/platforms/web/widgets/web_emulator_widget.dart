@@ -4,6 +4,7 @@ import '../web_emulator_service.dart';
 import '../../../models/rom_item.dart';
 import '../../../models/launch_result.dart';
 import '../../../services/debug_service.dart';
+import 'web_emulator_view.dart';
 
 /// Web-specific emulator widget that embeds EmulatorJS
 class WebEmulatorWidget extends StatefulWidget {
@@ -35,27 +36,56 @@ class _WebEmulatorWidgetState extends State<WebEmulatorWidget> {
   bool _hasError = false;
   String? _errorMessage;
   LaunchResult? _launchResult;
+  bool _viewRegistered = false;
+  bool _htmlViewRendered = false;
+  bool _emulatorLaunched = false;
 
   @override
   void initState() {
     super.initState();
-    _containerId =
-        'emulator-${widget.rom.hashCode}-${DateTime.now().millisecondsSinceEpoch}';
-    _initializeEmulator();
+    // Use a simpler ID that's valid for HTML
+    _containerId = 'emu-${DateTime.now().millisecondsSinceEpoch}';
+    _registerContainer();
   }
 
-  Future<void> _initializeEmulator() async {
-    try {
-      setState(() {
-        _isLoading = true;
-        _hasError = false;
-        _errorMessage = null;
-      });
+  void _registerContainer() {
+    if (kIsWeb) {
+      registerEmulatorContainer(_containerId);
+      _viewRegistered = true;
+      _debug.info(
+        'Registered emulator container: $_containerId',
+        tag: 'WebEmulatorWidget',
+      );
+    }
+  }
 
-      // Register the HTML element for the emulator container
-      if (kIsWeb) {
-        _registerEmulatorContainer();
+  /// Called after HtmlElementView is rendered
+  void _onHtmlViewRendered() {
+    if (_htmlViewRendered || !mounted) return;
+
+    _htmlViewRendered = true;
+    _debug.info(
+      'HTML view rendered, launching emulator...',
+      tag: 'WebEmulatorWidget',
+    );
+
+    // Launch emulator after a short delay to ensure DOM is ready
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (mounted && !_emulatorLaunched) {
+        _launchEmulator();
       }
+    });
+  }
+
+  Future<void> _launchEmulator() async {
+    if (_emulatorLaunched) return;
+    _emulatorLaunched = true;
+
+    try {
+      _debug.info(
+        'Launching ROM: ${widget.rom.name}',
+        tag: 'WebEmulatorWidget',
+      );
 
       // Launch the ROM in the emulator
       final result = await _emulatorService.launchRom(
@@ -63,91 +93,56 @@ class _WebEmulatorWidgetState extends State<WebEmulatorWidget> {
         containerId: _containerId,
       );
 
-      setState(() {
-        _launchResult = result;
-        _isLoading = false;
-        _hasError = !result.success;
-        _errorMessage = result.error;
-      });
+      if (mounted) {
+        setState(() {
+          _launchResult = result;
+          _isLoading = false;
+          _hasError = !result.success;
+          _errorMessage = result.error;
+        });
 
-      // Notify parent widget
-      widget.onLaunchResult?.call(result);
+        // Notify parent widget
+        widget.onLaunchResult?.call(result);
+      }
     } catch (e) {
-      _debug.error(
-        'Failed to initialize emulator: $e',
-        tag: 'WebEmulatorWidget',
-      );
-      setState(() {
-        _isLoading = false;
-        _hasError = true;
-        _errorMessage = 'Failed to initialize emulator: $e';
-      });
+      _debug.error('Failed to launch emulator: $e', tag: 'WebEmulatorWidget');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+          _errorMessage = 'Failed to launch emulator: $e';
+          _emulatorLaunched = false; // Allow retry
+        });
 
-      widget.onLaunchResult?.call(
-        LaunchResult.failure('Failed to initialize emulator: $e'),
-      );
+        widget.onLaunchResult?.call(
+          LaunchResult.failure('Failed to launch emulator: $e'),
+        );
+      }
     }
   }
 
-  void _registerEmulatorContainer() {
-    if (!kIsWeb) return;
-
-    // For now, we'll use a placeholder approach
-    // TODO: Implement proper HTML element registration with dart:js_interop
-    _debug.info(
-      'Registering emulator container: $_containerId',
-      tag: 'WebEmulatorWidget',
-    );
-
-    // TODO: Replace with proper platform view registration
-    // This would normally use:
-    // - html.DivElement() to create the container
-    // - ui_web.platformViewRegistry.registerViewFactory() to register it
-    // For now, we'll simulate this with a Flutter container
+  void _retryLaunch() {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+      _errorMessage = null;
+      _emulatorLaunched = false;
+    });
+    _launchEmulator();
   }
 
   @override
   void dispose() {
     // Stop the emulator when widget is disposed
-    if (!_isLoading && _launchResult?.success == true) {
+    if (_launchResult?.success == true) {
       _emulatorService.stopEmulator(_containerId);
     }
     super.dispose();
   }
 
-  Widget _buildLoadingIndicator() {
+  Widget _buildErrorOverlay() {
     return Container(
-      width: widget.width ?? double.infinity,
-      height: widget.height ?? 400,
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Loading Emulator...',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorIndicator() {
-    return Container(
-      width: widget.width ?? double.infinity,
-      height: widget.height ?? 400,
-      decoration: BoxDecoration(
-        color: Colors.red.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
-      ),
+      color: Colors.black.withValues(alpha: 0.9),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -178,134 +173,168 @@ class _WebEmulatorWidgetState extends State<WebEmulatorWidget> {
             ),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _initializeEmulator,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.withValues(alpha: 0.1),
-              foregroundColor: Colors.red,
-              side: BorderSide(color: Colors.red.withValues(alpha: 0.3)),
-            ),
-            child: const Text('Retry'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmulatorContainer() {
-    if (!kIsWeb) {
-      return Container(
-        width: widget.width ?? double.infinity,
-        height: widget.height ?? 400,
-        decoration: BoxDecoration(
-          color: Colors.grey.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Center(
-          child: Text(
-            'Web emulator only available in browser',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-      );
-    }
-
-    // For now, show a placeholder that represents the emulator
-    // TODO: Replace with actual HtmlElementView when dart:html is properly integrated
-    return Container(
-      width: widget.width ?? double.infinity,
-      height: widget.height ?? 400,
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.videogame_asset, color: Colors.white70, size: 64),
-          const SizedBox(height: 16),
-          Text(
-            'Emulator Container',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'ROM: ${widget.rom.name}',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.6),
-              fontSize: 14,
-            ),
-          ),
-          Text(
-            'Platform: ${widget.rom.platform}',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.6),
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildControlButton(Icons.play_arrow, 'Start'),
-              const SizedBox(width: 8),
-              _buildControlButton(Icons.pause, 'Pause'),
-              const SizedBox(width: 8),
-              _buildControlButton(Icons.stop, 'Stop'),
-              const SizedBox(width: 8),
-              _buildControlButton(Icons.refresh, 'Reset'),
+              ElevatedButton(
+                onPressed: _retryLaunch,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red.withValues(alpha: 0.1),
+                  foregroundColor: Colors.red,
+                  side: BorderSide(color: Colors.red.withValues(alpha: 0.3)),
+                ),
+                child: const Text('Retry'),
+              ),
+              if (widget.onClose != null) ...[
+                const SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: widget.onClose,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.withValues(alpha: 0.1),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Close'),
+                ),
+              ],
             ],
           ),
-          if (widget.onClose != null) ...[
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: widget.onClose,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red.withValues(alpha: 0.2),
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('Close Emulator'),
-            ),
-          ],
         ],
       ),
     );
-
-    // TODO: When dart:html integration is complete, use:
-    // return HtmlElementView(viewType: _containerId);
   }
 
-  Widget _buildControlButton(IconData icon, String label) {
-    return Tooltip(
-      message: label,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
-        ),
-        child: Icon(icon, color: Colors.white70, size: 20),
+  Widget _buildLoadingOverlay() {
+    return Container(
+      color: Colors.black,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Loading ${widget.rom.platform?.toUpperCase() ?? "ROM"}...',
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            widget.rom.displayName,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.6),
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return _buildLoadingIndicator();
-    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: widget.width ?? double.infinity,
+        height: widget.height ?? 400,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+        ),
+        child: Stack(
+          children: [
+            // HTML Element View for the emulator - always render this
+            if (kIsWeb && _viewRegistered)
+              Positioned.fill(
+                child: _EmulatorHtmlViewWithCallback(
+                  containerId: _containerId,
+                  width: widget.width,
+                  height: widget.height,
+                  onRendered: _onHtmlViewRendered,
+                ),
+              )
+            else
+              Positioned.fill(
+                child: createEmulatorHtmlView(
+                  containerId: _containerId,
+                  width: widget.width,
+                  height: widget.height,
+                ),
+              ),
 
-    if (_hasError) {
-      return _buildErrorIndicator();
-    }
+            // Loading overlay
+            if (_isLoading) Positioned.fill(child: _buildLoadingOverlay()),
 
-    return _buildEmulatorContainer();
+            // Error overlay
+            if (_hasError) Positioned.fill(child: _buildErrorOverlay()),
+
+            // Close button overlay (only when successfully loaded)
+            if (!_isLoading && !_hasError && widget.onClose != null)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.7),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: IconButton(
+                    onPressed: widget.onClose,
+                    icon: const Icon(Icons.close, color: Colors.white),
+                    tooltip: 'Close Emulator',
+                    iconSize: 20,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Helper widget that calls back when rendered
+class _EmulatorHtmlViewWithCallback extends StatefulWidget {
+  final String containerId;
+  final double? width;
+  final double? height;
+  final VoidCallback onRendered;
+
+  const _EmulatorHtmlViewWithCallback({
+    required this.containerId,
+    required this.onRendered,
+    this.width,
+    this.height,
+  });
+
+  @override
+  State<_EmulatorHtmlViewWithCallback> createState() =>
+      _EmulatorHtmlViewWithCallbackState();
+}
+
+class _EmulatorHtmlViewWithCallbackState
+    extends State<_EmulatorHtmlViewWithCallback> {
+  bool _notified = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Notify after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_notified) {
+        _notified = true;
+        widget.onRendered();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return createEmulatorHtmlView(
+      containerId: widget.containerId,
+      width: widget.width,
+      height: widget.height,
+    );
   }
 }

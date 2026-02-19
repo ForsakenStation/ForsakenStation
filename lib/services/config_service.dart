@@ -21,6 +21,7 @@ import 'package:path_provider/path_provider.dart';
 class ConfigService {
   static ConfigService? _instance;
   static const String _configKey = 'forsaken_emulator_config';
+  static const String _corsProxyKey = 'forsaken_cors_proxy_url';
 
   Map<String, dynamic>? _config;
   bool _hasLocalOverrides = false;
@@ -344,6 +345,26 @@ class ConfigService {
     } catch (e) {
       debugPrint('Error reloading .env: $e');
       rethrow;
+    }
+  }
+
+  /// Get CORS proxy URL from shared_preferences
+  ///
+  /// Returns null if not configured (CORS proxy disabled).
+  Future<String?> getCorsProxyUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_corsProxyKey);
+  }
+
+  /// Save CORS proxy URL to shared_preferences
+  ///
+  /// Pass null or empty string to disable CORS proxy.
+  Future<void> setCorsProxyUrl(String? url) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (url == null || url.isEmpty) {
+      await prefs.remove(_corsProxyKey);
+    } else {
+      await prefs.setString(_corsProxyKey, url);
     }
   }
 }

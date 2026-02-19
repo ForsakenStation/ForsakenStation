@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'settings_categories/emulator_management_screen.dart';
 import 'settings_categories/system_paths_screen.dart';
@@ -9,9 +10,15 @@ import 'settings_categories/download_manager_screen.dart';
 import 'settings_categories/system_check_screen.dart';
 import 'settings_categories/gamepad_test_screen.dart';
 import 'settings_categories/bios_help_screen.dart';
+import 'settings_categories/web_settings_screen.dart';
 import 'package:forsaken/services/debug_service.dart';
+import 'package:forsaken/services/config_service.dart';
 import 'package:forsaken/services/keyboard_service.dart';
 import 'package:forsaken/services/gamepad_service.dart';
+
+// Web-specific import (conditional for web platform)
+import 'package:forsaken/platforms/web/web_emulator_service.dart'
+    if (dart.library.io) 'package:forsaken/services/empty_stub.dart';
 import 'package:forsaken/widgets/common/dialog_button_bar.dart';
 import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
@@ -30,7 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _scrollController = ScrollController();
   Timer? _gamepadPollTimer;
   int _selectedIndex = 0;
-  final int _categoryCount = 9;
+  final int _categoryCount = kIsWeb ? 10 : 9;
   bool _isGamepadNavigating = false;
 
   // Height of each card + spacing (approximate)
@@ -116,7 +123,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _navigateToCategory(int index) {
     _stopGamepadPolling();
 
-    if (index == 8) {
+    // "About & Debug" is the last item (index depends on platform)
+    final aboutIndex = kIsWeb ? 9 : 8;
+    if (index == aboutIndex) {
       _showAboutDialog(context);
       if (mounted) _startGamepadPolling();
       return;
@@ -148,6 +157,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       case 7:
         screen = const BiosHelpScreen();
         break;
+      case 8:
+        // Web Settings (only reachable on web since _categoryCount is 10)
+        screen = const WebSettingsScreen();
+        break;
       default:
         return;
     }
@@ -155,9 +168,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => screen),
-    ).then((_) {
+    ).then((_) async {
+      // After returning from Web Settings, reload the proxy URL
+      // into the running WebEmulatorService instance
+      if (kIsWeb && index == 8) {
+        await _reloadCorsProxy();
+      }
       if (mounted) _startGamepadPolling();
     });
+  }
+
+  /// Reload CORS proxy URL from settings into WebEmulatorService
+  Future<void> _reloadCorsProxy() async {
+    if (!kIsWeb) return;
+    try {
+      final corsProxy = await ConfigService.instance.getCorsProxyUrl();
+      WebEmulatorService.instance.corsProxyUrl =
+          (corsProxy != null && corsProxy.isNotEmpty) ? corsProxy : null;
+    } catch (e) {
+      debugPrint('Error reloading CORS proxy: $e');
+    }
   }
 
   KeyEventResult _handleKeyEvent(KeyEvent event) {
@@ -333,9 +363,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 12),
 
+            // Web Settings (only shown on web platform)
+            if (kIsWeb) ...[
+              _buildCategoryCard(
+                context,
+                index: 8,
+                icon: Icons.language,
+                title: 'Web Settings',
+                description: 'CORS proxy and web platform configuration',
+                onTap: () => _navigateToCategory(8),
+              ),
+              const SizedBox(height: 12),
+            ],
+
             _buildCategoryCard(
               context,
-              index: 8,
+              index: kIsWeb ? 9 : 8,
               icon: Icons.info_outline,
               title: 'About & Debug',
               description: 'App information and debug settings',

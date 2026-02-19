@@ -56,7 +56,12 @@ class WebEmulatorLauncher {
   static List<String> getSupportedPlatforms() {
     if (!kIsWeb) return [];
 
-    return WebCoreManager.essentialCores.keys.toList();
+    final webCoreManager = WebCoreManager.instance;
+    final platforms = <String>{};
+    for (final core in webCoreManager.allCores.values) {
+      platforms.addAll(core.supportedPlatforms);
+    }
+    return platforms.toList()..sort();
   }
 
   /// Get core information for a platform

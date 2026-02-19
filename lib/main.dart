@@ -20,7 +20,7 @@ import 'platforms/web/web_emulator_service.dart'
 
 // Import the app content builder based on platform
 import 'app_content_desktop.dart'
-    if (dart.library.html) 'app_content_web.dart'
+    if (dart.library.js_interop) 'app_content_web.dart'
     as app_content;
 
 Future<void> main() async {
@@ -55,6 +55,12 @@ Future<void> main() async {
   // Initialize Web Emulator Service (web only)
   if (kIsWeb) {
     try {
+      // Load CORS proxy URL from settings before initializing
+      final corsProxy = await ConfigService.instance.getCorsProxyUrl();
+      if (corsProxy != null && corsProxy.isNotEmpty) {
+        WebEmulatorService.instance.corsProxyUrl = corsProxy;
+      }
+
       await WebEmulatorService.instance.initialize();
       debugPrint('Web emulator service initialized');
     } catch (e) {

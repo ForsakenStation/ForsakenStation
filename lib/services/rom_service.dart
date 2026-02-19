@@ -2,12 +2,13 @@ import 'package:flutter/foundation.dart';
 import '../models/platform.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
+import '../platforms/web/web_core_manager.dart';
 import 'debug_service.dart';
 import 'jsonl_rom_loader.dart';
 
 // Conditional import for IO-specific functionality
 import 'rom_service_io.dart'
-    if (dart.library.html) 'rom_service_web.dart'
+    if (dart.library.js_interop) 'rom_service_web.dart'
     as platform_service;
 
 class RomService {
@@ -54,6 +55,15 @@ class RomService {
         final romCount = entry.value;
 
         if (romCount > 0) {
+          // On web, only show platforms that have WASM core support
+          if (kIsWeb && !WebCoreManager.instance.hasCoreSupport(platformName)) {
+            _debug.debug(
+              'Skipping platform $platformName (no web core support)',
+              tag: 'RomService',
+            );
+            continue;
+          }
+
           platforms.add(
             Platform(
               name: platformName,

@@ -1,0 +1,13 @@
+name = "forsaken-cors-proxy"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Account ID is set automatically by `wrangler login`
+# account_id = ""
+
+# Optional: restrict to specific routes
+# [triggers]
+# crons = []
+
+# The free tier allows 100,000 requests/day
+# See: https://developers.cloudflare.com/workers/platform/pricing/

@@ -100,6 +100,13 @@
             "corePreferences": {}
         },
         {
+            "system": "atarijaguar",
+            "command": [{"name": "emulatorjs", "command": "emulatorjs://jaguar"}],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
             "system": "virtualboy",
             "command": [{"name": "emulatorjs", "command": "emulatorjs://vb"}],
             "useForeverMode": false,
@@ -183,6 +190,50 @@
             "acceptZipFiles": true,
             "corePreferences": {}
         },
+        {
+            "system": "psp",
+            "command": [{"name": "emulatorjs", "command": "emulatorjs://psp"}],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+
+        {
+            "system": "pcengine",
+            "command": [{"name": "emulatorjs", "command": "emulatorjs://pce"}],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "pcenginecd",
+            "command": [{"name": "emulatorjs", "command": "emulatorjs://pce"}],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ngp",
+            "command": [{"name": "emulatorjs", "command": "emulatorjs://ngp"}],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ngpc",
+            "command": [{"name": "emulatorjs", "command": "emulatorjs://ngpc"}],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "colecovision",
+            "command": [{"name": "emulatorjs", "command": "emulatorjs://coleco"}],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+
         {
             "system": "ebooks",
             "command": [{"name": "Pdf viewer", "command": "pdf.web"}],

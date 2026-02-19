@@ -6,7 +6,7 @@ import 'debug_service.dart';
 
 // Conditional import for dart:io
 import 'jsonl_rom_loader_io.dart'
-    if (dart.library.html) 'jsonl_rom_loader_web.dart'
+    if (dart.library.js_interop) 'jsonl_rom_loader_web.dart'
     as platform_loader;
 
 /// Service for loading ROMs from JSONL files (romLists format)
@@ -209,7 +209,6 @@ class JsonlRomLoader {
           'mame',
           'neogeo',
           'atari2600',
-          'atari5200',
           'atari7800',
           'atarijaguar',
           'atarilynx',
@@ -219,8 +218,10 @@ class JsonlRomLoader {
           'wonderswancolor',
           '3do',
           'colecovision',
-          'intellivision',
-          'vectrex',
+          'virtualboy',
+          'saturn',
+          'ngp',
+          'ngpc',
         ];
       }
 

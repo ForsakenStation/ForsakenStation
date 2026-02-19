@@ -32,8 +32,7 @@
   <title>Forsaken Emulator</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- EmulatorJS CSS -->
-  <link rel="stylesheet" href="emulatorjs/emulator.css">
+  <!-- EmulatorJS styles will be loaded dynamically from CDN -->
 
   <!-- Viewport for responsive design -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -57,13 +56,13 @@
 
   <!-- Web-specific initialization -->
   <script>
-    // Global configuration for EmulatorJS
-    window.EJS_pathtodata = 'emulatorjs/';
-    window.EJS_DEBUG_XX = false; // Set to true for debugging
+    // EmulatorJS configuration - CDN path is set in forsaken_bridge.js
+    // Debug mode can be enabled here if needed
+    window.EJS_DEBUG_XX = false;
     
-    // Ensure EmulatorJS is properly initialized before Flutter starts
     window.addEventListener('load', function() {
-      console.log('Forsaken Emulator Web - EmulatorJS initialized');
+      console.log('Forsaken Emulator Web initialized');
+      console.log('EmulatorJS CDN: https://cdn.emulatorjs.org/stable/data/');
     });
   </script>
 </body>

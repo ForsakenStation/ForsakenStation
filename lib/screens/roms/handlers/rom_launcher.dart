@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../../models/rom_item.dart';
+import '../../../platforms/web/web_emulator_launcher.dart';
 import '../../../models/emulator_config.dart';
 import '../../../models/media.dart';
 import '../../../services/emulator_service.dart';
@@ -37,6 +39,12 @@ class RomLauncher {
   /// Main entry point for launching a ROM
   /// Returns true if launch was successful, false otherwise
   Future<bool> launchRom(RomItem item) async {
+    // Web platform: use WebEmulatorLauncher
+    if (kIsWeb) {
+      return _launchWebEmulator(item);
+    }
+
+    // Desktop platform: use native emulator
     // For collections, use the ROM's platform; otherwise use default
     final actualPlatform = PlatformUtils.getActualPlatform(
       item,
@@ -87,6 +95,29 @@ class RomLauncher {
       config: config,
       onClose: requestFocus,
     );
+  }
+
+  /// Launch ROM using web emulator (EmulatorJS)
+  Future<bool> _launchWebEmulator(RomItem item) async {
+    // Check if platform is supported
+    if (!WebEmulatorLauncher.isAvailableForRom(item)) {
+      final platform = item.platform ?? platformName;
+      _showErrorDialog(
+        'Platform "$platform" is not yet supported in web browser.\n\n'
+        'Supported platforms: ${WebEmulatorLauncher.getSupportedPlatforms().join(", ")}',
+      );
+      return false;
+    }
+
+    try {
+      await WebEmulatorLauncher.launchFullscreen(context, item);
+      requestFocus();
+      return true;
+    } catch (e) {
+      _showErrorDialog('Failed to launch web emulator: $e');
+      requestFocus();
+      return false;
+    }
   }
 
   /// Launch ROM with a specific emulator command

@@ -345,7 +345,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: const Text(
-                                      'TODO',
+                                      'WIP',
                                       style: TextStyle(
                                         fontSize: 10,
                                         color: Colors.white,
@@ -662,8 +662,8 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
               ),
 
               CheckboxListTile(
-                title: const Text('TODO'),
-                subtitle: const Text('Mark as pending implementation'),
+                title: const Text('Work In Progress'),
+                subtitle: const Text('Mark as not yet fully configured'),
                 value: _todo,
                 onChanged: (value) => setState(() => _todo = value ?? false),
                 dense: true,

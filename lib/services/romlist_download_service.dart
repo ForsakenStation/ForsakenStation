@@ -3,7 +3,7 @@ import 'debug_service.dart';
 
 // Conditional import for IO-specific functionality
 import 'romlist_download_service_io.dart'
-    if (dart.library.html) 'romlist_download_service_web_impl.dart'
+    if (dart.library.js_interop) 'romlist_download_service_web_impl.dart'
     as platform_service;
 
 /// Service for downloading and managing AndroidRoms JSONL database

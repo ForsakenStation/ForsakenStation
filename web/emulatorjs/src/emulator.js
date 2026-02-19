@@ -793,11 +793,13 @@ class EmulatorJS {
 
             this.textElem.innerText = progressMessage;
             if (!this.debug) {
-                const res = await this.downloadFile(assetUrl, null, true, { method: "HEAD" });
-                const result = await this.storage.rom.get(assetUrl.split("/").pop());
-                if (result && result["content-length"] === res.headers["content-length"] && result.type === type) {
-                    await gotData(result.data);
-                    return resolve(assetUrl);
+                const headRes = await this.downloadFile(assetUrl, null, true, { method: "HEAD" });
+                if (headRes !== -1) {
+                    const result = await this.storage.rom.get(assetUrl.split("/").pop());
+                    if (result && result["content-length"] === headRes.headers["content-length"] && result.type === type) {
+                        await gotData(result.data);
+                        return resolve(assetUrl);
+                    }
                 }
             }
             const res = await this.downloadFile(assetUrl, (progress) => {
@@ -972,12 +974,21 @@ class EmulatorJS {
 
             if (!this.debug) {
                 this.downloadFile(this.config.gameUrl, null, true, { method: "HEAD" }).then(async (res) => {
+                    if (res === -1) {
+                        // HEAD request failed (e.g. CORS, 404).  Fall back to
+                        // a direct GET download instead of crashing.
+                        downloadFile();
+                        return;
+                    }
                     const name = (typeof this.config.gameUrl === "string") ? this.config.gameUrl.split("/").pop() : "game";
                     const result = await this.storage.rom.get(name);
                     if (result && result["content-length"] === res.headers["content-length"] && name !== "game") {
                         gotGameData(result.data);
                         return;
                     }
+                    downloadFile();
+                }).catch(() => {
+                    // Safety net: if anything throws, just do a direct download
                     downloadFile();
                 })
             } else {

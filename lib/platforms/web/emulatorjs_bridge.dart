@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 
 // Conditional import for web-only JS interop
-// Use dart.library.html to detect web platform (dart:js is available when dart:html is)
+// Use dart.library.js_interop to detect web platform
 import 'emulatorjs_bridge_stub.dart'
-    if (dart.library.html) 'emulatorjs_bridge_web.dart';
+    if (dart.library.js_interop) 'emulatorjs_bridge_web.dart';
 
 /// Loading progress data
 class EmulatorLoadingProgress {
@@ -77,6 +77,9 @@ abstract class EmulatorJSBridge {
 
   /// Load a ROM into the emulator
   Future<void> loadRom(Uint8List romData, String fileName);
+
+  /// Load a ROM from a URL (EmulatorJS downloads it directly)
+  Future<void> loadRomFromUrl(String romUrl, String fileName);
 
   /// Start the emulator
   void start();

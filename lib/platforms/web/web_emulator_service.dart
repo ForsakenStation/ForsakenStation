@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 import 'emulatorjs_bridge.dart';
 import 'web_core_manager.dart';
 import '../../models/rom_item.dart';
 import '../../models/launch_result.dart';
 import '../../services/debug_service.dart';
+import '../../services/download_resolver_service.dart';
 
 /// Web-specific implementation of emulator service using EmulatorJS
 class WebEmulatorService {
@@ -14,6 +14,12 @@ class WebEmulatorService {
 
   final DebugService _debug = DebugService.instance;
   final WebCoreManager _coreManager = WebCoreManager.instance;
+  final DownloadResolverService _downloadResolver = DownloadResolverService();
+
+  /// CORS proxy base URL. Set to null or empty to disable.
+  /// The target URL is passed as a `?url=` query parameter.
+  /// Example: 'https://my-worker.workers.dev/' → 'https://my-worker.workers.dev/?url=https://example.com/rom.zip'
+  String? corsProxyUrl;
 
   /// Currently active emulator instances
   final Map<String, EmulatorJSBridge> _emulators = {};
@@ -131,17 +137,20 @@ class WebEmulatorService {
       // Load the core
       await emulator.loadCore(coreUrl, rom.platform!);
 
-      // Download/load the ROM
-      final romData = await _loadRomData(rom);
-      if (romData == null) {
-        return LaunchResult.failure('Failed to load ROM data');
+      // Resolve the ROM download URL
+      final romUrl = await _resolveRomUrl(rom);
+      if (romUrl == null) {
+        return LaunchResult.failure('Failed to resolve ROM download URL');
       }
 
-      // Load ROM into emulator
-      await emulator.loadRom(romData, rom.name);
-
-      // Start the emulator
-      emulator.start();
+      // Pass the URL directly to EmulatorJS (avoids CORS issues with
+      // Dart HTTP client since EmulatorJS handles the download).
+      // loadRomFromUrl() launches EmulatorJS with EJS_startOnLoaded=true,
+      // so the emulator auto-starts once the ROM is ready.
+      // Do NOT call start() here — the WASM core/gameManager may not be
+      // initialized yet, causing "Cannot read properties of undefined
+      // (reading 'toggleMainLoop')" errors.
+      await emulator.loadRomFromUrl(romUrl, rom.name);
 
       _debug.info(
         'ROM ${rom.name} launched successfully',
@@ -166,15 +175,18 @@ class WebEmulatorService {
     }
   }
 
-  /// Load ROM data from URL
-  Future<Uint8List?> _loadRomData(RomItem rom) async {
+  /// Resolve ROM download URL for web playback.
+  ///
+  /// Resolves special URLs (MediaFire, Google Drive, Dropbox) to direct
+  /// download links, then optionally wraps with a CORS proxy.
+  Future<String?> _resolveRomUrl(RomItem rom) async {
     try {
       _debug.info(
-        'Loading ROM data for: ${rom.name}',
+        'Resolving ROM URL for: ${rom.name}',
         tag: 'WebEmulatorService',
       );
 
-      // First get the download URL if not already loaded
+      // Get the raw download URL
       String? downloadUrl = rom.downloadUrl;
       if (downloadUrl == null) {
         downloadUrl = await rom.loadDownloadUrl();
@@ -187,37 +199,69 @@ class WebEmulatorService {
         }
       }
 
-      // For web implementation, we need to download the ROM data ourselves
-      // since DownloadService is designed for file storage, not in-memory data
-      // We'll implement a simple HTTP download here
-      final response = await http.get(Uri.parse(downloadUrl));
-
-      if (response.statusCode != 200) {
-        _debug.error(
-          'Failed to download ROM: HTTP ${response.statusCode}',
-          tag: 'WebEmulatorService',
-        );
-        return null;
-      }
-
-      final romData = response.bodyBytes;
-      if (romData.isEmpty) {
-        _debug.error(
-          'ROM data is empty for: ${rom.name}',
-          tag: 'WebEmulatorService',
-        );
-        return null;
-      }
-
-      _debug.info(
-        'ROM data loaded: ${romData.length} bytes',
-        tag: 'WebEmulatorService',
+      // Resolve special URLs (MediaFire → direct, Google Drive → direct, etc.)
+      final resolvedUrl = await _downloadResolver.resolveDownloadUrl(
+        downloadUrl,
       );
-      return romData;
+      if (resolvedUrl == null) {
+        _debug.error(
+          'Failed to resolve download URL: $downloadUrl',
+          tag: 'WebEmulatorService',
+        );
+        return null;
+      }
+
+      // Apply CORS proxy if configured
+      final finalUrl = _applyCorsProxy(resolvedUrl);
+
+      _debug.info('ROM URL resolved: $finalUrl', tag: 'WebEmulatorService');
+      return finalUrl;
     } catch (e) {
-      _debug.error('Failed to load ROM data: $e', tag: 'WebEmulatorService');
+      _debug.error('Failed to resolve ROM URL: $e', tag: 'WebEmulatorService');
       return null;
     }
+  }
+
+  /// Domains known to send CORS headers — no proxy needed.
+  /// NOTE: archive.org does NOT send CORS headers for XHR/fetch from
+  /// arbitrary origins, so it must NOT be listed here.
+  static const _corsFriendlyDomains = <String>[];
+
+  /// Returns `true` when the [url] host is (or is a subdomain of) a
+  /// CORS-friendly domain, so the proxy can be skipped.
+  bool _isCorsFriendly(String url) {
+    try {
+      final host = Uri.parse(url).host.toLowerCase();
+      return _corsFriendlyDomains.any(
+        (domain) => host == domain || host.endsWith('.$domain'),
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Wrap a URL with the CORS proxy if configured.
+  ///
+  /// Skips the proxy for domains that already serve CORS headers.
+  ///
+  /// Produces: `{corsProxyUrl}?url={encodedTargetUrl}`
+  ///
+  /// The ROM is downloaded by the JS bridge via fetch (not by EmulatorJS
+  /// directly), so the proxy URL format doesn't need to encode the
+  /// filename — the bridge converts the response to a blob: URL.
+  String _applyCorsProxy(String url) {
+    if (corsProxyUrl == null || corsProxyUrl!.isEmpty) {
+      return url;
+    }
+    if (_isCorsFriendly(url)) {
+      _debug.info(
+        'Skipping CORS proxy for CORS-friendly URL: $url',
+        tag: 'WebEmulatorService',
+      );
+      return url;
+    }
+    final base = corsProxyUrl!.endsWith('/') ? corsProxyUrl! : '$corsProxyUrl/';
+    return '$base?url=${Uri.encodeComponent(url)}';
   }
 
   /// Stop an emulator instance

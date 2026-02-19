@@ -1,12 +1,25 @@
-// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
-
 import 'dart:async';
-import 'dart:js' as js;
-import 'dart:typed_data';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
+
 import 'package:flutter/foundation.dart';
+
 import 'emulatorjs_bridge.dart';
 
-/// Web implementation of EmulatorJSBridge using dart:js
+// --- JS interop bindings ---
+
+/// Binding for window.createForsakenEmulator(containerId, callbacks)
+@JS('createForsakenEmulator')
+external JSObject? _createForsakenEmulator(
+  JSString containerId,
+  JSObject callbacks,
+);
+
+/// Access window.ForsakenEmulators[containerId]
+@JS('ForsakenEmulators')
+external JSObject? get _forsakenEmulators;
+
+/// Web implementation of EmulatorJSBridge using dart:js_interop
 class EmulatorJSBridgeWeb implements EmulatorJSBridge {
   @override
   final String containerId;
@@ -14,7 +27,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
   @override
   final EmulatorCallbacks callbacks;
 
-  js.JsObject? _jsEmulator;
+  JSObject? _jsEmulator;
   bool _initialized = false;
 
   EmulatorJSBridgeWeb({
@@ -36,88 +49,91 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
         '[EmulatorJS] Starting initialization for container: $containerId',
       );
 
-      // Create JavaScript callbacks object using jsify
-      final jsCallbacks = js.JsObject.jsify({
-        'onReady': () {
-          debugPrint('[EmulatorJS] Ready');
-          callbacks.onReady?.call();
-        },
-        'onError': (dynamic error) {
-          final errorMsg = error.toString();
-          debugPrint('[EmulatorJS] Error: $errorMsg');
-          callbacks.onError?.call(errorMsg);
-        },
-        'onLoadingProgress': (dynamic progress) {
-          try {
-            final progressObj = progress as js.JsObject;
-            final stage = progressObj['stage'] as String? ?? 'unknown';
-            final progressValue = (progressObj['progress'] as num? ?? 0)
-                .toDouble();
-            final message = progressObj['message'] as String? ?? '';
+      // Create JavaScript callbacks object
+      final jsCallbacks =
+          {
+                'onReady': (() {
+                  debugPrint('[EmulatorJS] Ready');
+                  callbacks.onReady?.call();
+                }).toJS,
+                'onError': ((JSString error) {
+                  final errorMsg = error.toDart;
+                  debugPrint('[EmulatorJS] Error: $errorMsg');
+                  callbacks.onError?.call(errorMsg);
+                }).toJS,
+                'onLoadingProgress': ((JSObject progress) {
+                  try {
+                    final stage =
+                        (progress.getProperty('stage'.toJS) as JSString?)
+                            ?.toDart ??
+                        'unknown';
+                    final progressValue =
+                        (progress.getProperty('progress'.toJS) as JSNumber?)
+                            ?.toDartDouble ??
+                        0.0;
+                    final message =
+                        (progress.getProperty('message'.toJS) as JSString?)
+                            ?.toDart ??
+                        '';
 
-            callbacks.onLoadingProgress?.call(
-              EmulatorLoadingProgress(
-                stage: stage,
-                progress: progressValue,
-                message: message,
-              ),
-            );
-          } catch (e) {
-            debugPrint('[EmulatorJS] Progress callback error: $e');
-          }
-        },
-        'onCoreLoaded': () {
-          debugPrint('[EmulatorJS] Core loaded');
-          callbacks.onCoreLoaded?.call();
-        },
-        'onRomLoaded': () {
-          debugPrint('[EmulatorJS] ROM loaded');
-          callbacks.onRomLoaded?.call();
-        },
-        'onPause': () {
-          debugPrint('[EmulatorJS] Paused');
-          callbacks.onPause?.call();
-        },
-        'onResume': () {
-          debugPrint('[EmulatorJS] Resumed');
-          callbacks.onResume?.call();
-        },
-      });
+                    callbacks.onLoadingProgress?.call(
+                      EmulatorLoadingProgress(
+                        stage: stage,
+                        progress: progressValue,
+                        message: message,
+                      ),
+                    );
+                  } catch (e) {
+                    debugPrint('[EmulatorJS] Progress callback error: $e');
+                  }
+                }).toJS,
+                'onCoreLoaded': (() {
+                  debugPrint('[EmulatorJS] Core loaded');
+                  callbacks.onCoreLoaded?.call();
+                }).toJS,
+                'onRomLoaded': (() {
+                  debugPrint('[EmulatorJS] ROM loaded');
+                  callbacks.onRomLoaded?.call();
+                }).toJS,
+                'onPause': (() {
+                  debugPrint('[EmulatorJS] Paused');
+                  callbacks.onPause?.call();
+                }).toJS,
+                'onResume': (() {
+                  debugPrint('[EmulatorJS] Resumed');
+                  callbacks.onResume?.call();
+                }).toJS,
+              }.jsify()
+              as JSObject;
 
       debugPrint(
         '[EmulatorJS] Callbacks created, attempting to instantiate...',
       );
 
-      // Use eval to create the instance - this avoids _Namespace issues
-      // This is a workaround for dart:js limitations with constructors
-      final evalCode = '''
-        (function(containerId, callbacks) {
-          return window.createForsakenEmulator(containerId, callbacks);
-        })
-      ''';
-
       try {
-        // Create a function from the eval code
-        final factory =
-            js.context.callMethod('eval', [evalCode]) as js.JsFunction;
+        // Call window.createForsakenEmulator(containerId, callbacks)
+        _jsEmulator = _createForsakenEmulator(containerId.toJS, jsCallbacks);
 
-        // Call the factory function with our parameters
-        _jsEmulator = factory.apply([containerId, jsCallbacks]) as js.JsObject;
-
-        _initialized = true;
-        debugPrint(
-          '[EmulatorJS] Bridge initialized successfully for container: $containerId',
-        );
+        if (_jsEmulator != null) {
+          _initialized = true;
+          debugPrint(
+            '[EmulatorJS] Bridge initialized successfully for container: $containerId',
+          );
+        } else {
+          throw Exception('createForsakenEmulator returned null');
+        }
       } catch (e) {
         debugPrint('[EmulatorJS] Failed to create instance: $e');
 
         // Fallback: Try direct access to window.ForsakenEmulators
         try {
           debugPrint('[EmulatorJS] Trying fallback method...');
-          final emulators = js.context['ForsakenEmulators'];
+          final emulators = _forsakenEmulators;
           if (emulators != null) {
-            _jsEmulator = emulators[containerId] as js.JsObject?;
-            if (_jsEmulator != null) {
+            final instance =
+                emulators.getProperty(containerId.toJS) as JSObject?;
+            if (instance != null) {
+              _jsEmulator = instance;
               _initialized = true;
               debugPrint(
                 '[EmulatorJS] Retrieved existing instance from ForsakenEmulators',
@@ -140,9 +156,12 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     }
   }
 
+  /// Call a method on the JS emulator object, handling Promises.
+  /// Supports 0-2 arguments (covers all current use cases).
   Future<T> _callAsyncMethod<T>(
     String method, [
-    List<dynamic> args = const [],
+    JSAny? arg1,
+    JSAny? arg2,
   ]) async {
     _ensureInitialized();
 
@@ -150,29 +169,35 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
       throw Exception('Emulator not initialized');
     }
 
-    final result = _jsEmulator!.callMethod(method, args);
+    final JSAny? result;
+    if (arg2 != null) {
+      result = _jsEmulator!.callMethod(method.toJS, arg1, arg2);
+    } else if (arg1 != null) {
+      result = _jsEmulator!.callMethod(method.toJS, arg1);
+    } else {
+      result = _jsEmulator!.callMethod(method.toJS);
+    }
 
-    // Check if result is a Promise
-    if (result is js.JsObject && result.hasProperty('then')) {
-      // Convert Promise to Future
-      final completer = Completer<T>();
-
-      result.callMethod('then', [
-        (dynamic value) {
-          completer.complete(value as T);
-        },
-      ]);
-
-      result.callMethod('catch', [
-        (dynamic error) {
-          completer.completeError(error);
-        },
-      ]);
-
-      return completer.future;
+    // Check if result is a Promise (has a .then property)
+    if (result != null && result.isA<JSPromise>()) {
+      final future = (result as JSPromise).toDart;
+      final value = await future;
+      return value as T;
     }
 
     return result as T;
+  }
+
+  /// Call a void method (no return value)
+  void _callVoidMethod(String method, [JSAny? arg1, JSAny? arg2]) {
+    if (_jsEmulator == null) return;
+    if (arg2 != null) {
+      _jsEmulator!.callMethod(method.toJS, arg1, arg2);
+    } else if (arg1 != null) {
+      _jsEmulator!.callMethod(method.toJS, arg1);
+    } else {
+      _jsEmulator!.callMethod(method.toJS);
+    }
   }
 
   @override
@@ -186,7 +211,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     try {
       debugPrint('[EmulatorJS] Loading core: $platform from $coreUrl');
 
-      await _callAsyncMethod<void>('loadCore', [coreUrl, platform]);
+      await _callAsyncMethod<void>('loadCore', coreUrl.toJS, platform.toJS);
 
       debugPrint('[EmulatorJS] Core loaded successfully: $platform');
     } catch (e) {
@@ -209,13 +234,40 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
         '[EmulatorJS] Loading ROM: $fileName (${romData.length} bytes)',
       );
 
-      // Pass Uint8List directly - dart:js will handle the conversion
-      await _callAsyncMethod<void>('loadRom', [romData, fileName]);
+      // Convert Uint8List to JS Uint8Array
+      final jsArray = romData.toJS;
+
+      await _callAsyncMethod<void>('loadRom', jsArray, fileName.toJS);
 
       debugPrint('[EmulatorJS] ROM loaded successfully: $fileName');
     } catch (e) {
       debugPrint('[EmulatorJS] ROM loading error: $e');
       callbacks.onError?.call('Failed to load ROM: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> loadRomFromUrl(String romUrl, String fileName) async {
+    _ensureInitialized();
+
+    if (!_initialized || _jsEmulator == null) {
+      throw Exception('Emulator not initialized');
+    }
+
+    try {
+      debugPrint('[EmulatorJS] Loading ROM from URL: $romUrl ($fileName)');
+
+      await _callAsyncMethod<void>(
+        'loadRomFromUrl',
+        romUrl.toJS,
+        fileName.toJS,
+      );
+
+      debugPrint('[EmulatorJS] ROM loaded from URL successfully: $fileName');
+    } catch (e) {
+      debugPrint('[EmulatorJS] ROM URL loading error: $e');
+      callbacks.onError?.call('Failed to load ROM from URL: $e');
       rethrow;
     }
   }
@@ -230,7 +282,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
 
     try {
       debugPrint('[EmulatorJS] Starting emulator');
-      _jsEmulator!.callMethod('start');
+      _callVoidMethod('start');
     } catch (e) {
       debugPrint('[EmulatorJS] Start error: $e');
       callbacks.onError?.call('Failed to start emulator: $e');
@@ -244,7 +296,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
 
     try {
       debugPrint('[EmulatorJS] Pausing emulator');
-      _jsEmulator!.callMethod('pause');
+      _callVoidMethod('pause');
     } catch (e) {
       debugPrint('[EmulatorJS] Pause error: $e');
     }
@@ -256,7 +308,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
 
     try {
       debugPrint('[EmulatorJS] Resuming emulator');
-      _jsEmulator!.callMethod('resume');
+      _callVoidMethod('resume');
     } catch (e) {
       debugPrint('[EmulatorJS] Resume error: $e');
     }
@@ -268,7 +320,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
 
     try {
       debugPrint('[EmulatorJS] Resetting emulator');
-      _jsEmulator!.callMethod('reset');
+      _callVoidMethod('reset');
     } catch (e) {
       debugPrint('[EmulatorJS] Reset error: $e');
     }
@@ -280,7 +332,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
 
     try {
       debugPrint('[EmulatorJS] Stopping emulator');
-      _jsEmulator!.callMethod('stop');
+      _callVoidMethod('stop');
     } catch (e) {
       debugPrint('[EmulatorJS] Stop error: $e');
     }
@@ -297,12 +349,31 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     try {
       debugPrint('[EmulatorJS] Creating save state');
 
-      await _callAsyncMethod('createSaveState');
+      final result = await _callAsyncMethod<JSAny?>('createSaveState');
 
-      // Convert JavaScript ArrayBuffer to Uint8List
-      // For now, return dummy data - this will be improved once we test with actual core
-      debugPrint('[EmulatorJS] Save state created');
-      return Uint8List(1024);
+      if (result == null) {
+        debugPrint('[EmulatorJS] Save state returned null');
+        return Uint8List(0);
+      }
+
+      // If the JS side returns a Uint8Array, convert directly
+      if (result.isA<JSUint8Array>()) {
+        final jsBytes = result as JSUint8Array;
+        final bytes = jsBytes.toDart;
+        debugPrint('[EmulatorJS] Save state created: ${bytes.length} bytes');
+        return bytes;
+      }
+
+      // If it's an ArrayBuffer, wrap in Uint8Array first
+      if (result.isA<JSArrayBuffer>()) {
+        final jsBytes = JSUint8Array(result as JSArrayBuffer);
+        final bytes = jsBytes.toDart;
+        debugPrint('[EmulatorJS] Save state created: ${bytes.length} bytes');
+        return bytes;
+      }
+
+      debugPrint('[EmulatorJS] Save state returned unexpected type');
+      return Uint8List(0);
     } catch (e) {
       debugPrint('[EmulatorJS] Save state error: $e');
       rethrow;
@@ -320,7 +391,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     try {
       debugPrint('[EmulatorJS] Loading save state: ${saveData.length} bytes');
 
-      await _callAsyncMethod<void>('loadSaveState', [saveData]);
+      await _callAsyncMethod<void>('loadSaveState', saveData.toJS);
 
       debugPrint('[EmulatorJS] Save state loaded successfully');
     } catch (e) {
@@ -340,10 +411,15 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     try {
       debugPrint('[EmulatorJS] Taking screenshot');
 
-      final result = await _callAsyncMethod<String>('getScreenshot');
+      final result = await _callAsyncMethod<JSAny?>('getScreenshot');
 
-      debugPrint('[EmulatorJS] Screenshot captured');
-      return result;
+      if (result != null && result.isA<JSString>()) {
+        final screenshot = (result as JSString).toDart;
+        debugPrint('[EmulatorJS] Screenshot captured');
+        return screenshot;
+      }
+
+      return null;
     } catch (e) {
       debugPrint('[EmulatorJS] Screenshot error: $e');
       return null;
@@ -362,14 +438,28 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     }
 
     try {
-      final jsStatus = _jsEmulator!.callMethod('getStatus') as js.JsObject;
+      final jsStatus = _jsEmulator!.callMethod('getStatus'.toJS) as JSObject;
+
+      final isLoaded =
+          (jsStatus.getProperty('isLoaded'.toJS) as JSBoolean?)?.toDart ??
+          false;
+      final currentCore =
+          (jsStatus.getProperty('currentCore'.toJS) as JSString?)?.toDart;
+      final currentRom =
+          (jsStatus.getProperty('currentRom'.toJS) as JSString?)?.toDart;
+      final isLoading =
+          (jsStatus.getProperty('isLoading'.toJS) as JSBoolean?)?.toDart ??
+          false;
+      final container =
+          (jsStatus.getProperty('container'.toJS) as JSString?)?.toDart ??
+          containerId;
 
       return EmulatorStatus(
-        isLoaded: jsStatus['isLoaded'] as bool? ?? false,
-        currentCore: jsStatus['currentCore'] as String?,
-        currentRom: jsStatus['currentRom'] as String?,
-        isLoading: jsStatus['isLoading'] as bool? ?? false,
-        container: jsStatus['container'] as String? ?? containerId,
+        isLoaded: isLoaded,
+        currentCore: currentCore,
+        currentRom: currentRom,
+        isLoading: isLoading,
+        container: container,
       );
     } catch (e) {
       debugPrint('[EmulatorJS] Get status error: $e');

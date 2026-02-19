@@ -21,16 +21,16 @@ dependencies:
   media_kit_libs_video: ^1.0.7
   shared_preferences: ^2.5.4
   window_manager: ^0.5.1
-  file_picker: 10.3.8
-  google_fonts: ^8.0.0
+  file_picker: ^10.3.10
+  google_fonts: ^8.0.2
   xml: ^6.6.1
-  archive: ^4.0.7
+  archive: ^4.0.9
   gamepads: ^0.1.9
   pdfrx: ^2.2.24
   crypto: ^3.0.7
   # Web-specific dependencies
-  js: ^0.6.0
-  web: ^1.1.0
+  js: 0.6.7
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -50,149 +50,6 @@ flutter:
     - assets/data/
     - assets/images/
     - assets/theme/
-#    - assets/theme/overlays/
-#    - assets/theme/overlays/3do/
-#    - assets/theme/overlays/adam/
-#    - assets/theme/overlays/advision/
-#    - assets/theme/overlays/amiga500/
-#    - assets/theme/overlays/amstradcpc/
-#    - assets/theme/overlays/apple2/
-#    - assets/theme/overlays/arcade/
-#    - assets/theme/overlays/arcadia/
-#    - assets/theme/overlays/arduboy/
-#    - assets/theme/overlays/astrocde/
-#    - assets/theme/overlays/atari2600/
-#    - assets/theme/overlays/atari5200/
-#    - assets/theme/overlays/atari7800/
-#    - assets/theme/overlays/atari800/
-#    - assets/theme/overlays/atarijaguar/
-#    - assets/theme/overlays/atarilynx/
-#    - assets/theme/overlays/atarist/
-#    - assets/theme/overlays/atarixe/
-#    - assets/theme/overlays/atarixegs/
-#    - assets/theme/overlays/bbc_master/
-#    - assets/theme/overlays/bbcmicro/
-#    - assets/theme/overlays/boom3/
-#    - assets/theme/overlays/c64/
-#    - assets/theme/overlays/cannonball/
-#    - assets/theme/overlays/cdi/
-#    - assets/theme/overlays/chailove/
-#    - assets/theme/overlays/channelf/
-#    - assets/theme/overlays/chip_8/
-#    - assets/theme/overlays/colecovision/
-#    - assets/theme/overlays/default/
-#    - assets/theme/overlays/dinothawr/
-#    - assets/theme/overlays/dos/
-#    - assets/theme/overlays/dreamcast/
-#    - assets/theme/overlays/easyrpg/
-#    - assets/theme/overlays/ecwolf/
-#    - assets/theme/overlays/famicom/
-#    - assets/theme/overlays/fbneo/
-#    - assets/theme/overlays/fm7/
-#    - assets/theme/overlays/fmtowns/
-#    - assets/theme/overlays/funtech_super_a_can/
-#    - assets/theme/overlays/gamate/
-#    - assets/theme/overlays/gamecom/
-#    - assets/theme/overlays/gamecube/
-#    - assets/theme/overlays/gamegear/
-#    - assets/theme/overlays/gb/
-#    - assets/theme/overlays/gb2player/
-#    - assets/theme/overlays/gba/
-#    - assets/theme/overlays/gba_sp/
-#    - assets/theme/overlays/gbc/
-#    - assets/theme/overlays/gbc2players/
-#    - assets/theme/overlays/gp32/
-#    - assets/theme/overlays/gx4000/
-#    - assets/theme/overlays/hartung_gamemaster/
-#    - assets/theme/overlays/ibm_5150/
-#    - assets/theme/overlays/jakks_plug_n_play/
-#    - assets/theme/overlays/jump_n_bump/
-#    - assets/theme/overlays/kensington_vii/
-#    - assets/theme/overlays/lowres/
-#    - assets/theme/overlays/lynx/
-#    - assets/theme/overlays/mame/
-#    - assets/theme/overlays/mastersystem/
-#    - assets/theme/overlays/mattel_intellivision/
-#    - assets/theme/overlays/megadrive/
-#    - assets/theme/overlays/mr_boom/
-#    - assets/theme/overlays/msx1/
-#    - assets/theme/overlays/msx2/
-#    - assets/theme/overlays/n3ds/
-#    - assets/theme/overlays/n64/
-#    - assets/theme/overlays/naomi/
-#    - assets/theme/overlays/nds/
-#    - assets/theme/overlays/nec_supergrafx/
-#    - assets/theme/overlays/nec_turboexpress/
-#    - assets/theme/overlays/neogeo/
-#    - assets/theme/overlays/neogeocd/
-#    - assets/theme/overlays/nes/
-#    - assets/theme/overlays/ngp/
-#    - assets/theme/overlays/ngpc/
-#    - assets/theme/overlays/nintendo_playstation_prototype/
-#    - assets/theme/overlays/nintendo_super_famicom/
-#    - assets/theme/overlays/nintendo_super_game_boy/
-#    - assets/theme/overlays/nxengine/
-#    - assets/theme/overlays/odyssey2/
-#    - assets/theme/overlays/openlara/
-#    - assets/theme/overlays/palm/
-#    - assets/theme/overlays/pc88/
-#    - assets/theme/overlays/pc98/
-#    - assets/theme/overlays/pcengine/
-#    - assets/theme/overlays/pcenginecd/
-#    - assets/theme/overlays/pcfx/
-#    - assets/theme/overlays/pico8/
-#    - assets/theme/overlays/pocket_dream_console/
-#    - assets/theme/overlays/pokemonmini/
-#    - assets/theme/overlays/prboom/
-#    - assets/theme/overlays/ps2/
-#    - assets/theme/overlays/psone/
-#    - assets/theme/overlays/psp/
-#    - assets/theme/overlays/psx/
-#    - assets/theme/overlays/pv1000/
-#    - assets/theme/overlays/pvm_pvm20/
-#    - assets/theme/overlays/pvm_tm20/
-#    - assets/theme/overlays/saturn/
-#    - assets/theme/overlays/scummvm/
-#    - assets/theme/overlays/scv/
-#    - assets/theme/overlays/sega32x/
-#    - assets/theme/overlays/sega_nomad/
-#    - assets/theme/overlays/sega_pico/
-#    - assets/theme/overlays/segacd/
-#    - assets/theme/overlays/segacd32x/
-#    - assets/theme/overlays/sharp_x1/
-#    - assets/theme/overlays/snes/
-#    - assets/theme/overlays/supervision/
-#    - assets/theme/overlays/tandy_coco_3/
-#    - assets/theme/overlays/thomson_mo5/
-#    - assets/theme/overlays/thomson_to8/
-#    - assets/theme/overlays/ti99/
-#    - assets/theme/overlays/tic80/
-#    - assets/theme/overlays/turbografx16/
-#    - assets/theme/overlays/turbografxcd/
-#    - assets/theme/overlays/tv/
-#    - assets/theme/overlays/tyrquake/
-#    - assets/theme/overlays/uzebox/
-#    - assets/theme/overlays/vaporspec/
-#    - assets/theme/overlays/vc4000/
-#    - assets/theme/overlays/vectrex/
-#    - assets/theme/overlays/videoton_tvc/
-#    - assets/theme/overlays/virtualboy/
-#    - assets/theme/overlays/vitaquake2/
-#    - assets/theme/overlays/vitaquake3/
-#    - assets/theme/overlays/vsmile/
-#    - assets/theme/overlays/vtech_creativision/
-#    - assets/theme/overlays/vtech_laser_310/
-#    - assets/theme/overlays/vtech_socrates/
-#    - assets/theme/overlays/wasm4/
-#    - assets/theme/overlays/wii/
-#    - assets/theme/overlays/wonderswan/
-#    - assets/theme/overlays/wonderswancolor/
-#    - assets/theme/overlays/x68000/
-#    - assets/theme/overlays/xrick/
-#    - assets/theme/overlays/zx81/
-#    - assets/theme/overlays/zxspectrum/
-#    - assets/theme/overlays/zxspectrum2/
-#    - assets/theme/overlays/zxspectrum3/
     - assets/theme/images/
     - assets/theme/images/backgrounds/
     - assets/theme/images/clogos/
