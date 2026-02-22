@@ -46,7 +46,7 @@ class _WebEmulatorScreenState extends State<WebEmulatorScreen> {
   }
 
   void _closeEmulator() {
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(_launchResult?.success ?? false);
   }
 
   void _toggleFullscreen() {

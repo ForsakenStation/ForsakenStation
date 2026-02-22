@@ -16,6 +16,7 @@ class RomDetailPanel extends StatefulWidget {
   final RomMedia? media;
   final GameInfo? gameInfo;
   final VoidCallback onLaunch;
+  final VoidCallback? onFolderTap;
   final VoidCallback? onLoadMedia;
   final VoidCallback? onLoadGameInfo;
   final bool showMediaCarousel;
@@ -28,6 +29,7 @@ class RomDetailPanel extends StatefulWidget {
     required this.media,
     this.gameInfo,
     required this.onLaunch,
+    this.onFolderTap,
     this.onLoadMedia,
     this.onLoadGameInfo,
     this.showMediaCarousel = true,
@@ -122,7 +124,7 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: widget.onLaunch,
+                onPressed: widget.onFolderTap ?? widget.onLaunch,
                 icon: const Icon(Icons.folder_open),
                 label: const Text('Open Folder'),
                 style: ElevatedButton.styleFrom(

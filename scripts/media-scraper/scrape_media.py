@@ -276,7 +276,7 @@ PLATFORM_IDS = {
     "pecom 64": 125,
     "pet": 240,
     "philips vg 5000": 261,
-    "pico-8": 234,
+    "pico8": 234,
     "pinball fx2": 143,
     "pinball fx3": 201,
     "playchoice": 184,
@@ -336,7 +336,7 @@ PLATFORM_IDS = {
     "type x": 112,
     "universal": 188,
     "uzebox": 216,
-    "v.smile": 120,
+    "vsmile": 120,
     "vc4000": 281,
     "vectrex": 102,
     "c20": 73,  # vic20

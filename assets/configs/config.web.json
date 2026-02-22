@@ -600,6 +600,234 @@
       "useForeverMode": false,
       "acceptZipFiles": true,
       "corePreferences": {}
+    },
+    {
+      "system": "amiga1200",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://amiga"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "amigacd32",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://amiga"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "amigacdtv",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://amiga"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "fds",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://nes"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "fbneo",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://arcade"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "neogeocd",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://arcade"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "atomiswave",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://arcade"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "cps",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://arcade"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "cps1",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://arcade"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "cps2",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://arcade"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "cps3",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://arcade"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "c20",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://vic20"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "gx4000",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://cap32"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "segastv",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://segaSaturn"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "megadrive-msu",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://segaMD"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "snes-msu1",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://snes"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "satellaview",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://snes"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "sufami",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://snes"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "lynx",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://lynx"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
     }
   ]
 }

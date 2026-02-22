@@ -18,6 +18,7 @@ class RomsListView extends StatelessWidget {
   final MediaService mediaService;
   final Function(RomItem) loadMediaForItem;
   final Function(RomItem) onRomLaunch;
+  final Function(RomItem)? onFolderTap;
   final Function(RomItem) showRomDetailDialog;
   final Future<void> Function(RomItem item) loadGameInfoForItem;
   final Map<String, GameInfo> gameInfoCache;
@@ -36,6 +37,7 @@ class RomsListView extends StatelessWidget {
     required this.mediaService,
     required this.loadMediaForItem,
     required this.onRomLaunch,
+    this.onFolderTap,
     required this.showRomDetailDialog,
     required this.loadGameInfoForItem,
     required this.gameInfoCache,
@@ -151,6 +153,7 @@ class RomsListView extends StatelessWidget {
       media: mediaCache[item.name],
       gameInfo: gameInfoCache[item.name],
       onLaunch: () => onRomLaunch(item),
+      onFolderTap: onFolderTap != null ? () => onFolderTap!(item) : null,
       onLoadMedia: () => loadMediaForItem(item),
       onLoadGameInfo: () => loadGameInfoForItem(item),
       showMediaCarousel: true,

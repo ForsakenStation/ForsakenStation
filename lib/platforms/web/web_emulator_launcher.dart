@@ -17,7 +17,8 @@ class WebEmulatorLauncher {
   }
 
   /// Launch ROM in fullscreen web emulator
-  static Future<void> launchFullscreen(
+  /// Returns true if the ROM was successfully loaded and played
+  static Future<bool> launchFullscreen(
     BuildContext context,
     RomItem rom,
   ) async {
@@ -25,10 +26,11 @@ class WebEmulatorLauncher {
       throw Exception('Web emulation only available in browser');
     }
 
-    await Navigator.push(
+    final result = await Navigator.push<bool>(
       context,
       MaterialPageRoute(builder: (context) => WebEmulatorScreen(rom: rom)),
     );
+    return result ?? false;
   }
 
   /// Launch ROM in dialog web emulator

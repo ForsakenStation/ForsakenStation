@@ -110,9 +110,9 @@ class RomLauncher {
     }
 
     try {
-      await WebEmulatorLauncher.launchFullscreen(context, item);
+      final success = await WebEmulatorLauncher.launchFullscreen(context, item);
       requestFocus();
-      return true;
+      return success;
     } catch (e) {
       _showErrorDialog('Failed to launch web emulator: $e');
       requestFocus();

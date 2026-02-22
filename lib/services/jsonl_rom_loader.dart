@@ -193,7 +193,11 @@ class JsonlRomLoader {
         platforms = [
           // Nintendo
           'nes',
+          'fds',
           'snes',
+          'snes-msu1',
+          'satellaview',
+          'sufami',
           'n64',
           'gb',
           'gbc',
@@ -203,9 +207,12 @@ class JsonlRomLoader {
           'sega32x',
           'segacd',
           'genesis',
+          'megadrive',
+          'megadrive-msu',
           'gamegear',
           'mastersystem',
           'saturn',
+          'segastv',
           // Sony
           'psx',
           'psp',
@@ -213,15 +220,24 @@ class JsonlRomLoader {
           'arcade',
           'mame',
           'neogeo',
+          'neogeocd',
+          'fbneo',
+          'atomiswave',
+          'cps',
+          'cps1',
+          'cps2',
+          'cps3',
           // Atari
           'atari2600',
           'atari5200',
           'atari7800',
           'atarijaguar',
           'atarilynx',
+          'lynx',
           // NEC
           'pcengine',
           'pcenginecd',
+          'pcfx',
           // SNK
           'ngp',
           'ngpc',
@@ -235,14 +251,22 @@ class JsonlRomLoader {
           'cdi',
           // Commodore
           'c64',
+          'c128',
           'pet',
           'cplus4',
-          // Classic computers
+          'c20',
+          // Amiga
           'amiga500',
+          'amiga1200',
+          'amigacd32',
+          'amigacdtv',
+          // Classic computers
           'amstradcpc',
+          'gx4000',
           'zxspectrum',
           'zx81',
           'dos',
+          'doom',
         ];
       }
 

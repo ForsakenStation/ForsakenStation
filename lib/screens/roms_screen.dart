@@ -1164,6 +1164,7 @@ class _RomsScreenState extends State<RomsScreen> {
       mediaService: _mediaService,
       loadMediaForItem: _loadMediaForItem,
       onRomLaunch: _handleRomLaunch,
+      onFolderTap: _navigateToFolder,
       showRomDetailDialog: _showRomDetailDialog,
       loadGameInfoForItem: _loadGameInfoForItem,
       gameInfoCache: _controller.gameInfoCache,

@@ -37,6 +37,11 @@ class RomItem {
   });
 
   String get displayName {
+    // Folders: return raw name without cleaning
+    if (isFolder) {
+      return name;
+    }
+
     // Return cached display name if available
     if (_cachedDisplayName != null) {
       return _cachedDisplayName!;

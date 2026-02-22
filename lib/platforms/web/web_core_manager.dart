@@ -117,7 +117,7 @@ class WebCoreManager {
       extensions: ['.nes', '.zip'],
       size: '~1MB',
       included: true,
-      supportedPlatforms: ['nes'],
+      supportedPlatforms: ['nes', 'fds'],
     ),
     'snes': WebCoreInfo(
       platform: 'snes',
@@ -126,7 +126,7 @@ class WebCoreManager {
       extensions: ['.smc', '.sfc', '.zip'],
       size: '~2MB',
       included: true,
-      supportedPlatforms: ['snes'],
+      supportedPlatforms: ['snes', 'satellaview', 'sufami', 'snes-msu1'],
     ),
     'genesis': WebCoreInfo(
       platform: 'genesis',
@@ -138,6 +138,7 @@ class WebCoreManager {
       supportedPlatforms: [
         'genesis',
         'megadrive',
+        'megadrive-msu',
         'sms',
         'mastersystem',
         'gamegear',
@@ -187,7 +188,7 @@ class WebCoreManager {
       size: '~5MB',
       included: false,
       downloadUrl: 'cores/',
-      supportedPlatforms: ['saturn'],
+      supportedPlatforms: ['saturn', 'segastv'],
     ),
     'nds': WebCoreInfo(
       platform: 'nds',
@@ -207,7 +208,17 @@ class WebCoreManager {
       size: '~15MB',
       included: false,
       downloadUrl: 'cores/',
-      supportedPlatforms: ['arcade', 'neogeo', 'cps1', 'cps2', 'cps3'],
+      supportedPlatforms: [
+        'arcade',
+        'neogeo',
+        'neogeocd',
+        'cps',
+        'cps1',
+        'cps2',
+        'cps3',
+        'fbneo',
+        'atomiswave',
+      ],
     ),
     'mame': WebCoreInfo(
       platform: 'mame',
@@ -349,7 +360,7 @@ class WebCoreManager {
       size: '~2MB',
       included: false,
       downloadUrl: 'cores/',
-      supportedPlatforms: ['amstradcpc', 'cpc'],
+      supportedPlatforms: ['amstradcpc', 'cpc', 'gx4000'],
     ),
     'zxspectrum': WebCoreInfo(
       platform: 'zxspectrum',
@@ -426,6 +437,8 @@ class WebCoreManager {
         'amiga500',
         'amiga600',
         'amiga1200',
+        'amigacd32',
+        'amigacdtv',
         'cdtv',
       ],
     ),
@@ -579,7 +592,7 @@ class WebCoreManager {
       size: '~5MB',
       included: false,
       downloadUrl: 'cores/',
-      supportedPlatforms: ['vic20'],
+      supportedPlatforms: ['vic20', 'c20'],
     ),
 
     // --- Alt cores for existing platforms ---
