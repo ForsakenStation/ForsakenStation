@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
+import '../common/download_badge.dart';
 import '../common/placeholder_image.dart';
 
 /// Reusable ROM card widget for grid and carousel views
@@ -13,7 +14,7 @@ import '../common/placeholder_image.dart';
 /// - Download status badge (if applicable)
 /// - Selection state
 /// - Platform name (for collection views)
-class RomGridCard extends StatelessWidget {
+class RomGridCard extends StatefulWidget {
   final RomItem item;
   final bool isSelected;
   final VoidCallback onTap;
@@ -38,22 +39,54 @@ class RomGridCard extends StatelessWidget {
   });
 
   @override
+  State<RomGridCard> createState() => _RomGridCardState();
+}
+
+class _RomGridCardState extends State<RomGridCard> {
+  Future<bool>? _downloadFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateDownloadFuture();
+  }
+
+  @override
+  void didUpdateWidget(RomGridCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.item != widget.item ||
+        oldWidget.isRomDownloaded != widget.isRomDownloaded) {
+      _updateDownloadFuture();
+    }
+  }
+
+  void _updateDownloadFuture() {
+    if (widget.isRomDownloaded != null &&
+        widget.item.downloadUrl != null &&
+        widget.item.downloadUrl!.isNotEmpty) {
+      _downloadFuture = widget.isRomDownloaded!(widget.item);
+    } else {
+      _downloadFuture = null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final imagePath = media != null
-        ? mediaService.getBestImagePath(media!)
+    final imagePath = widget.media != null
+        ? widget.mediaService.getBestImagePath(widget.media!)
         : null;
 
     final cardContent = Card(
       clipBehavior: Clip.antiAlias,
-      elevation: isSelected ? 8 : 4,
+      elevation: widget.isSelected ? 8 : 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: isSelected
+        side: widget.isSelected
             ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
             : BorderSide.none,
       ),
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: Stack(
           children: [
             // Main content (image + title)
@@ -78,8 +111,11 @@ class RomGridCard extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        item.displayName,
-                        maxLines: showPlatform && item.platform != null ? 1 : 2,
+                        widget.item.displayName,
+                        maxLines:
+                            widget.showPlatform && widget.item.platform != null
+                            ? 1
+                            : 2,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
@@ -87,10 +123,11 @@ class RomGridCard extends StatelessWidget {
                           fontSize: 12,
                         ),
                       ),
-                      if (showPlatform && item.platform != null) ...[
+                      if (widget.showPlatform &&
+                          widget.item.platform != null) ...[
                         const SizedBox(height: 2),
                         Text(
-                          item.platform!,
+                          widget.item.platform!,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
@@ -107,54 +144,26 @@ class RomGridCard extends StatelessWidget {
             ),
 
             // Download indicator badge
-            if (item.downloadUrl != null &&
-                item.downloadUrl!.isNotEmpty &&
-                isRomDownloaded != null)
-              _buildDownloadBadge(context),
+            if (_downloadFuture != null)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: DownloadBadge(future: _downloadFuture!),
+              ),
           ],
         ),
       ),
     );
 
     // Wrap with size constraints if provided
-    if (width != null || height != null) {
-      return SizedBox(width: width, height: height, child: cardContent);
+    if (widget.width != null || widget.height != null) {
+      return SizedBox(
+        width: widget.width,
+        height: widget.height,
+        child: cardContent,
+      );
     }
 
     return cardContent;
-  }
-
-  Widget _buildDownloadBadge(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: isRomDownloaded!(item),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data == true) {
-          return Positioned(
-            top: 8,
-            right: 8,
-            child: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.9),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.cloud_done,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-          );
-        }
-        return const SizedBox.shrink();
-      },
-    );
   }
 }

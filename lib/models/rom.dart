@@ -1,5 +1,5 @@
 import '../services/debug_service.dart';
-import 'dart:io';
+import '../utils/file_utils.dart';
 
 class Rom {
   final String name;
@@ -24,9 +24,8 @@ class Rom {
 
   Future<String?> loadDownloadUrl() async {
     try {
-      final file = File(urlFilePath);
-      if (await file.exists()) {
-        final content = await file.readAsString();
+      if (await fileExists(urlFilePath)) {
+        final content = await readFileAsString(urlFilePath);
         downloadUrl = content.trim();
         return downloadUrl;
       }

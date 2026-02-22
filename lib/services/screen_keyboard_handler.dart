@@ -93,7 +93,7 @@ enum ScreenViewMode { grid, list, carousel }
 /// ```dart
 /// final handler = ScreenKeyboardHandler(
 ///   keyboardService: KeyboardService.instance,
-///   config: ScreenKeyboardConfig<Platform>(
+///   config: ScreenKeyboardConfig<EmulatorPlatform>(
 ///     getDisplayName: (p) => p.name,
 ///     getItems: () => _platforms,
 ///     getCurrentIndex: () => _selectedIndex,

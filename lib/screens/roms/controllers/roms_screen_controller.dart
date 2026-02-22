@@ -14,6 +14,7 @@ class RomsScreenController {
 
   // Media loading control with debouncing
   Timer? _mediaLoadTimer;
+  Timer? _preloadTimer;
   bool _isNavigating = false;
   final Set<int> _preloadedThumbnailIndices = {};
 
@@ -39,6 +40,7 @@ class RomsScreenController {
   /// Dispose resources
   void dispose() {
     _mediaLoadTimer?.cancel();
+    _preloadTimer?.cancel();
   }
 
   /// Clear all caches
@@ -207,7 +209,8 @@ class RomsScreenController {
     final preloadRange = filteredItems.length > 5000 ? 20 : 100;
 
     // Wait additional 100ms before starting background preload
-    Timer(const Duration(milliseconds: 100), () async {
+    _preloadTimer?.cancel();
+    _preloadTimer = Timer(const Duration(milliseconds: 100), () async {
       if (!isMounted() || _isNavigating) return;
 
       final startIndex = (selectedIndex - preloadRange).clamp(

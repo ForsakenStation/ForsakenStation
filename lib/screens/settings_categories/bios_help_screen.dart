@@ -20,7 +20,7 @@ class BiosHelpScreen extends StatefulWidget {
 class _BiosHelpScreenState extends State<BiosHelpScreen> {
   final KeyboardService _keyboardService = KeyboardService.instance;
   final ScrollController _scrollController = ScrollController();
-  final BiosDownloadService _downloadService = BiosDownloadService();
+  final BiosDownloadService _downloadService = BiosDownloadService.instance;
 
   bool _isLoading = true;
   bool _showOnlyMissing = false;
@@ -39,7 +39,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
 
   @override
   void dispose() {
-    _downloadService.dispose();
+    // Note: We don't dispose the singleton service here anymore
     _scrollController.dispose();
     super.dispose();
   }
@@ -47,13 +47,15 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   Future<void> _loadBiosData() async {
     setState(() => _isLoading = true);
     try {
-      final requirements = await BiosCheckService.scanAllBios();
+      final requirements = await BiosCheckService.instance.scanAllBios();
+      if (!mounted) return;
       setState(() {
         _allRequirements = requirements;
         _updateFilteredList();
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       DebugService.instance.error(
         'Error loading BIOS data: $e',
         tag: 'BiosHelp',
@@ -65,7 +67,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   void _updateFilteredList() {
     setState(() {
       if (_showOnlyMissing) {
-        _filteredRequirements = BiosCheckService.filterMissing(
+        _filteredRequirements = BiosCheckService.instance.filterMissing(
           _allRequirements,
         );
       } else {
@@ -166,6 +168,8 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
       missingByPlatform,
     );
     if (!shouldProceed) return;
+
+    if (!mounted) return;
 
     _currentDownloadToken = _downloadService.createCancellationToken();
 
@@ -611,7 +615,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   }
 
   Widget _buildSummary() {
-    final stats = BiosCheckService.getStatistics(_allRequirements);
+    final stats = BiosCheckService.instance.getStatistics(_allRequirements);
     final downloadableCount = _allRequirements
         .where((req) => req.canDownload && req.hasDownloadableMissing)
         .length;

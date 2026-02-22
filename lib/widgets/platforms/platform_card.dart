@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../models/platform.dart';
+import '../../models/emulator_platform.dart';
 import '../../utils/platform_icons.dart';
 import '../common/smart_svg.dart';
 
 /// Card widget for displaying a platform in grid view
 class PlatformCard extends StatefulWidget {
-  final Platform platform;
+  final EmulatorPlatform platform;
   final VoidCallback onTap;
   final String? logoPath;
   final String? backgroundPath;
@@ -38,6 +38,20 @@ class _PlatformCardState extends State<PlatformCard> {
     }
     if (widget.backgroundPath == null) {
       widget.onLoadBackground();
+    }
+  }
+
+  @override
+  void didUpdateWidget(PlatformCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Re-trigger loading if platform changed and paths are still null
+    if (oldWidget.platform.name != widget.platform.name) {
+      if (widget.logoPath == null) {
+        widget.onLoadLogo();
+      }
+      if (widget.backgroundPath == null) {
+        widget.onLoadBackground();
+      }
     }
   }
 

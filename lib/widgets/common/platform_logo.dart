@@ -37,8 +37,7 @@ class _PlatformLogoState extends State<PlatformLogo> {
 
   Future<void> _loadLogo() async {
     try {
-      final mediaService =
-          widget.mediaService ?? MediaService(mediaBasePath: '');
+      final mediaService = widget.mediaService ?? MediaService.instance;
       final logoPath = await mediaService.getSystemLogo(widget.platformName);
 
       if (mounted) {

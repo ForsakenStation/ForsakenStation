@@ -4,25 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../services/gamepad_service.dart';
 
-/// Layout de botones en diálogo
+/// Button layout in dialogs
 enum ButtonLayout {
-  /// Botones en fila horizontal (default)
+  /// Buttons in a horizontal row (default)
   horizontal,
 
-  /// Botones en columna vertical
+  /// Buttons in a vertical column
   vertical,
 }
 
-/// Mixin para diálogos con controles estándar de teclado y gamepad
+/// Mixin for dialogs with standard keyboard and gamepad controls
 ///
-/// Proporciona manejo integrado de:
-/// - ESC key para cancelar/cerrar
-/// - B button (gamepad) para cancelar/cerrar
-/// - Gamepad polling automático
-/// - Helper para wrap con KeyboardListener
-/// - NUEVO: Navegación entre botones con D-pad/arrows
+/// Provides integrated handling for:
+/// - ESC key to cancel/close
+/// - B button (gamepad) to cancel/close
+/// - Automatic gamepad polling
+/// - Helper to wrap with KeyboardListener
+/// - Button navigation with D-pad/arrows
 ///
-/// Uso básico (sin navegación entre botones):
+/// Basic usage (without button navigation):
 /// ```dart
 /// class MyDialogState extends State<MyDialog>
 ///     with DialogControlsMixin<MyDialog> {
@@ -51,7 +51,7 @@ enum ButtonLayout {
 /// }
 /// ```
 ///
-/// Uso avanzado (con navegación entre botones):
+/// Advanced usage (with button navigation):
 /// ```dart
 /// class MyDialogState extends State<MyDialog>
 ///     with DialogControlsMixin<MyDialog> {
@@ -62,12 +62,12 @@ enum ButtonLayout {
 ///     startDialogControlsWithNavigation(
 ///       onCancel: () => Navigator.pop(context, false),
 ///       buttonCount: 3,
-///       defaultIndex: 2, // Play button por defecto
+///       defaultIndex: 2, // Play button by default
 ///       onButtonSelected: (index) {
-///         setState(() {}); // Rebuild para actualizar UI
+///         setState(() {}); // Rebuild to update UI
 ///       },
 ///       onConfirm: () {
-///         // Ejecutar acción del botón seleccionado
+///         // Execute action of selected button
 ///         _buttons[selectedButtonIndex].onPressed();
 ///       },
 ///       layout: ButtonLayout.horizontal,
@@ -81,8 +81,8 @@ enum ButtonLayout {
 ///       child: Dialog(
 ///         child: Column(
 ///           children: [
-///             // ... contenido ...
-///             // Botones con visual feedback del seleccionado
+///             // ... content ...
+///             // Buttons with visual feedback for selection
 ///           ],
 ///         ),
 ///       ),
@@ -94,81 +94,81 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
   Timer? _dialogGamepadTimer;
   FocusNode? _dialogFocusNode;
 
-  // Estado de navegación entre botones
+  // Button navigation state
   int _selectedButtonIndex = 0;
   int _buttonCount = 0;
   ButtonLayout _buttonLayout = ButtonLayout.horizontal;
   void Function(int selectedIndex)? _onButtonSelected;
   void Function()? _onConfirm;
 
-  /// Obtiene el índice del botón actualmente seleccionado
+  /// Gets the index of the currently selected button
   int get selectedButtonIndex => _selectedButtonIndex;
 
-  /// Obtiene el número total de botones
+  /// Gets the total number of buttons
   int get buttonCount => _buttonCount;
 
-  /// Obtiene el layout actual de botones
+  /// Gets the current button layout
   ButtonLayout get buttonLayout => _buttonLayout;
 
-  /// Inicia los controles del diálogo (sin navegación entre botones)
+  /// Starts dialog controls (without button navigation)
   ///
-  /// Configura un timer de polling para gamepad que automáticamente
-  /// maneja el B button como cancelar/cerrar.
+  /// Configures a gamepad polling timer that automatically
+  /// handles the B button as cancel/close.
   ///
-  /// [onCancel]: Callback cuando se presiona B button (requerido).
-  ///             Típicamente: `() => Navigator.pop(context)`
-  /// [customHandler]: Handler adicional para otros controles (opcional).
-  ///                  Se ejecuta ANTES de verificar B button.
-  ///                  Útil para acciones custom sin navegación.
-  /// [interval]: Intervalo de polling (default: 50ms).
+  /// [onCancel]: Callback when B button is pressed (required).
+  ///             Typically: `() => Navigator.pop(context)`
+  /// [customHandler]: Additional handler for other controls (optional).
+  ///                  Runs BEFORE checking B button.
+  ///                  Useful for custom actions without navigation.
+  /// [interval]: Polling interval (default: 50ms).
   void startDialogControls({
     required VoidCallback onCancel,
     void Function()? customHandler,
     Duration interval = const Duration(milliseconds: 50),
   }) {
-    // Cancelar timer previo si existe
+    // Cancel previous timer if exists
     _dialogGamepadTimer?.cancel();
 
-    // Iniciar polling de gamepad
+    // Start gamepad polling
     _dialogGamepadTimer = Timer.periodic(interval, (_) {
       if (!mounted) return;
 
       final gamepad = GamepadService.instance;
 
-      // Ejecutar handler custom primero (si existe)
+      // Execute custom handler first (if exists)
       customHandler?.call();
 
-      // B button = Cancel/Close (comportamiento estándar)
+      // B button = Cancel/Close (standard behavior)
       if (gamepad.isBackPressed()) {
         onCancel();
       }
 
-      // IMPORTANTE: actualizar estados al final
+      // IMPORTANT: update states at the end
       gamepad.updatePreviousButtonStates();
     });
   }
 
-  /// Inicia los controles del diálogo CON navegación entre botones
+  /// Starts dialog controls WITH button navigation
   ///
-  /// Además de ESC/B button para cerrar, habilita:
-  /// - D-pad/arrows para navegar entre botones
-  /// - A button para confirmar el botón seleccionado
-  /// - Tab/Shift+Tab también funcionan (manejado por Flutter)
+  /// In addition to ESC/B button to close, enables:
+  /// - D-pad/arrows to navigate between buttons
+  /// - A button to confirm selected button
+  /// - Tab/Shift+Tab also work (managed by Flutter)
   ///
-  /// [onCancel]: Callback cuando se presiona B button o ESC.
-  /// [buttonCount]: Número total de botones en el diálogo.
-  /// [onButtonSelected]: Callback cuando cambia la selección.
-  ///                     Recibe el nuevo índice seleccionado.
-  ///                     Típicamente: `(index) => setState(() {})`.
-  /// [onConfirm]: Callback cuando se presiona A button (opcional).
-  ///              Si no se proporciona, A button no hace nada.
-  ///              Típicamente: ejecutar acción del botón seleccionado.
-  /// [layout]: Layout de botones (horizontal o vertical).
-  ///           Afecta cómo se navega:
-  ///           - Horizontal: Left/Right navega, Up/Down no
-  ///           - Vertical: Up/Down navega, Left/Right no
-  /// [defaultIndex]: Índice inicial seleccionado (default: 0).
-  /// [interval]: Intervalo de polling (default: 50ms).
+  /// [onCancel]: Callback when B button or ESC is pressed.
+  /// [buttonCount]: Total number of buttons in the dialog.
+  /// [onButtonSelected]: Callback when selection changes.
+  ///                     Receives the new selected index.
+  ///                     Typically: `(index) => setState(() {})`.
+  /// [onConfirm]: Callback when A button is pressed (optional).
+  ///              If not provided, A button does nothing.
+  ///              Typically: execute action of selected button.
+  /// [layout]: Button layout (horizontal or vertical).
+  ///           Affects how navigation works:
+  ///           - Horizontal: Left/Right navigates, Up/Down does not
+  ///           - Vertical: Up/Down navigates, Left/Right does not
+  /// [defaultIndex]: Initial selected index (default: 0).
+  /// [interval]: Polling interval (default: 50ms).
   void startDialogControlsWithNavigation({
     required VoidCallback onCancel,
     required int buttonCount,
@@ -178,26 +178,26 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
     int defaultIndex = 0,
     Duration interval = const Duration(milliseconds: 50),
   }) {
-    // Guardar configuración
+    // Save configuration
     _buttonCount = buttonCount;
     _buttonLayout = layout;
     _onButtonSelected = onButtonSelected;
     _onConfirm = onConfirm;
     _selectedButtonIndex = defaultIndex.clamp(0, buttonCount - 1);
 
-    // Cancelar timer previo si existe
+    // Cancel previous timer if exists
     _dialogGamepadTimer?.cancel();
 
-    // Iniciar polling con navegación
+    // Start polling with navigation
     _dialogGamepadTimer = Timer.periodic(interval, (_) {
       if (!mounted) return;
 
       final gamepad = GamepadService.instance;
 
-      // Manejar navegación direccional
+      // Handle directional navigation
       _handleButtonNavigation(gamepad);
 
-      // A button = Confirmar botón seleccionado
+      // A button = Confirm selected button
       if (gamepad.isSelectPressed()) {
         _onConfirm?.call();
       }
@@ -207,12 +207,12 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
         onCancel();
       }
 
-      // Actualizar estados
+      // Update states
       gamepad.updatePreviousButtonStates();
     });
   }
 
-  /// Maneja la navegación entre botones con gamepad
+  /// Handles button navigation with gamepad
   void _handleButtonNavigation(GamepadService gamepad) {
     if (_buttonCount == 0) return;
 
@@ -221,16 +221,16 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
 
     int newIndex = _selectedButtonIndex;
 
-    // Navegación según layout
+    // Navigation according to layout
     if (_buttonLayout == ButtonLayout.horizontal) {
-      // Horizontal: solo left/right
+      // Horizontal: only left/right
       if (direction == 'left') {
         newIndex = _selectedButtonIndex - 1;
       } else if (direction == 'right') {
         newIndex = _selectedButtonIndex + 1;
       }
     } else {
-      // Vertical: solo up/down
+      // Vertical: only up/down
       if (direction == 'up') {
         newIndex = _selectedButtonIndex - 1;
       } else if (direction == 'down') {
@@ -245,16 +245,14 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
       newIndex = 0;
     }
 
-    // Si cambió, notificar
+    // If changed, notify
     if (newIndex != _selectedButtonIndex) {
       _selectedButtonIndex = newIndex;
       _onButtonSelected?.call(_selectedButtonIndex);
     }
   }
 
-  /// Selecciona el siguiente botón (programáticamente)
-  ///
-  /// Útil si necesitas cambiar la selección desde código.
+  /// Selects the next button (programmatically)
   void selectNextButton() {
     if (_buttonCount == 0) return;
     final newIndex = (_selectedButtonIndex + 1) % _buttonCount;
@@ -264,7 +262,7 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
     }
   }
 
-  /// Selecciona el botón anterior (programáticamente)
+  /// Selects the previous button (programmatically)
   void selectPreviousButton() {
     if (_buttonCount == 0) return;
     final newIndex = (_selectedButtonIndex - 1 + _buttonCount) % _buttonCount;
@@ -274,9 +272,9 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
     }
   }
 
-  /// Establece el botón seleccionado (programáticamente)
+  /// Sets the selected button (programmatically)
   ///
-  /// [index]: Índice del botón a seleccionar (clamped al rango válido)
+  /// [index]: Index of the button to select (clamped to valid range)
   void setSelectedButton(int index) {
     if (_buttonCount == 0) return;
     final newIndex = index.clamp(0, _buttonCount - 1);
@@ -286,38 +284,38 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
     }
   }
 
-  /// Detiene los controles del diálogo
+  /// Stops dialog controls
   ///
-  /// Limpia el timer y el focus node.
-  /// Se llama automáticamente en dispose().
+  /// Clears timer and focus node.
+  /// Called automatically in dispose().
   void stopDialogControls() {
     _dialogGamepadTimer?.cancel();
     _dialogGamepadTimer = null;
     _dialogFocusNode?.dispose();
     _dialogFocusNode = null;
 
-    // Reset estado de navegación
+    // Reset navigation state
     _selectedButtonIndex = 0;
     _buttonCount = 0;
     _onButtonSelected = null;
     _onConfirm = null;
   }
 
-  /// Envuelve el widget del diálogo con KeyboardListener para manejar teclas
+  /// Wraps the dialog widget with KeyboardListener to handle keys
   ///
-  /// Crea un FocusNode automático si no existe y configura el listener
-  /// para las teclas ESC y flechas (si hay navegación activa).
+  /// Creates an automatic FocusNode if not exists and configures the listener
+  /// for ESC and arrow keys (if navigation is active).
   ///
-  /// [child]: Widget del diálogo (típicamente AlertDialog o Dialog)
-  /// [onEscape]: Callback cuando se presiona ESC (requerido).
-  ///             Típicamente: `() => Navigator.pop(context)`
+  /// [child]: Dialog widget (typically AlertDialog or Dialog)
+  /// [onEscape]: Callback when ESC is pressed (required).
+  ///             Typically: `() => Navigator.pop(context)`
   ///
-  /// Retorna el widget envuelto con KeyboardListener.
+  /// Returns the widget wrapped with KeyboardListener.
   Widget wrapWithKeyboardHandler({
     required Widget child,
     required VoidCallback onEscape,
   }) {
-    // Crear focus node si no existe (lazy initialization)
+    // Create focus node if not exists (lazy initialization)
     _dialogFocusNode ??= FocusNode();
 
     return KeyboardListener(
@@ -328,22 +326,22 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
 
         final key = event.logicalKey;
 
-        // ESC = Cancelar
+        // ESC = Cancel
         if (key == LogicalKeyboardKey.escape) {
           onEscape();
           return;
         }
 
-        // Si hay navegación activa, manejar flechas y Enter/Space
+        // If navigation is active, handle arrows and Enter/Space
         if (_buttonCount > 0) {
-          // Enter/Space = Confirmar botón seleccionado
+          // Enter/Space = Confirm selected button
           if (key == LogicalKeyboardKey.enter ||
               key == LogicalKeyboardKey.space) {
             _onConfirm?.call();
             return;
           }
 
-          // Flechas = Navegar entre botones
+          // Arrows = Navigate between buttons
           bool handled = false;
           if (_buttonLayout == ButtonLayout.horizontal) {
             if (key == LogicalKeyboardKey.arrowLeft) {
@@ -372,7 +370,7 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
     );
   }
 
-  /// Verifica si el polling está activo
+  /// Checks if polling is active
   bool get isDialogPollingActive =>
       _dialogGamepadTimer != null && _dialogGamepadTimer!.isActive;
 
@@ -383,21 +381,21 @@ mixin DialogControlsMixin<T extends StatefulWidget> on State<T> {
   }
 }
 
-/// Helper para mostrar diálogos con blur background y barrier oscuro
+/// Helper to show dialogs with blur background and dark barrier
 ///
-/// Proporciona el patrón estándar de diálogo usado en la app:
+/// Provides the standard dialog pattern used in the app:
 /// - Blur background (5px gaussian)
-/// - Barrier oscuro (70% opacity)
+/// - Dark barrier (70% opacity)
 /// - Configurable dismissible
 ///
-/// Uso:
+/// Usage:
 /// ```dart
 /// showDialogWithBlur<bool>(
 ///   context: context,
 ///   dialog: MyCustomDialog(),
 /// ).then((result) {
 ///   if (result == true) {
-///     // Usuario confirmó
+///     // User confirmed
 ///   }
 /// });
 /// ```

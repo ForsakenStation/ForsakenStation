@@ -471,7 +471,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
               ),
               const SizedBox(height: 8),
               Text(
-                'Version 1.0.0',
+                'Version $kAppVersion',
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),

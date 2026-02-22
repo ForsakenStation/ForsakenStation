@@ -2,13 +2,13 @@ import 'rom.dart';
 import 'package:path/path.dart' as file_path;
 import '../utils/platform_names.dart';
 
-class Platform {
+class EmulatorPlatform {
   final String name;
   final String path;
   final List<Rom> roms; // For file-based platforms or cached JSONL ROMs
   final int? _romCount; // For JSONL platforms: pre-calculated count
 
-  Platform({
+  EmulatorPlatform({
     required this.name,
     required this.path,
     this.roms = const [],
@@ -17,9 +17,9 @@ class Platform {
 
   String get displayName {
     // Check if this is a collection
-    if (name == 'recently_played') return 'Jugados Recientemente';
-    if (name == 'downloaded') return 'Descargados';
-    if (name == 'favorites') return 'Favoritos';
+    if (name == 'recently_played') return 'Recently Played';
+    if (name == 'downloaded') return 'Downloaded';
+    if (name == 'favorites') return 'Favorites';
 
     return PlatformNames.getDisplayName(name);
   }
@@ -39,6 +39,6 @@ class Platform {
 
   @override
   String toString() {
-    return 'Platform(name: $displayName, roms: $romCount)';
+    return 'EmulatorPlatform(name: $displayName, roms: $romCount)';
   }
 }

@@ -2,32 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 import 'package:forsaken/mixins/dialog_controls_mixin.dart';
 
-/// Modelo de datos para un botón en diálogo
+/// Data model for a dialog button
 ///
-/// Contiene toda la información necesaria para renderizar un botón:
-/// - Label y acción
-/// - Icono opcional
-/// - Estilo (primary/secondary)
-/// - Indicador de gamepad opcional
+/// Contains all information needed to render a button:
+/// - Label and action
+/// - Optional icon
+/// - Style (primary/secondary)
+/// - Optional gamepad indicator
 class DialogButton {
-  /// Texto del botón
+  /// Button text
   final String label;
 
-  /// Callback cuando se presiona el botón
+  /// Callback when button is pressed
   final VoidCallback onPressed;
 
-  /// Icono opcional (mostrado antes del label)
+  /// Optional icon (shown before label)
   final IconData? icon;
 
-  /// Si es true, se renderiza con estilo destacado (ElevatedButton)
-  /// Si es false, se usa TextButton
+  /// If true, renders with prominent style (ElevatedButton)
+  /// If false, uses TextButton
   final bool primary;
 
-  /// Botón de gamepad asociado (para mostrar indicador)
-  /// Solo se muestra si hay gamepad conectado
+  /// Associated gamepad button (to show indicator)
+  /// Only shown if a gamepad is connected
   final GamepadButton? gamepadButton;
 
-  /// Si el botón está habilitado (default: true)
+  /// Whether the button is enabled (default: true)
   final bool enabled;
 
   const DialogButton({
@@ -40,18 +40,18 @@ class DialogButton {
   });
 }
 
-/// Barra de botones para diálogos con navegación gamepad/teclado
+/// Button bar for dialogs with gamepad/keyboard navigation
 ///
-/// Características:
-/// - Navegación con D-pad/arrows entre botones
-/// - Visual feedback del botón seleccionado (border + scale)
-/// - Indicadores de gamepad opcionales
-/// - Layout horizontal o vertical
-/// - A button = activar botón seleccionado
-/// - B button = cancelar (gestionado por DialogControlsMixin)
+/// Features:
+/// - Navigation with D-pad/arrows between buttons
+/// - Visual feedback for selected button (border + scale)
+/// - Optional gamepad indicators
+/// - Horizontal or vertical layout
+/// - A button = activate selected button
+/// - B button = cancel (managed by DialogControlsMixin)
 ///
-/// IMPORTANTE: Este widget debe usarse junto con DialogControlsMixin
-/// para que la navegación funcione correctamente.
+/// IMPORTANT: This widget must be used together with DialogControlsMixin
+/// for navigation to function correctly.
 ///
 /// Uso:
 /// ```dart
@@ -107,19 +107,19 @@ class DialogButton {
 /// }
 /// ```
 class DialogButtonBar extends StatelessWidget {
-  /// Lista de botones a mostrar
+  /// List of buttons to show
   final List<DialogButton> buttons;
 
-  /// Índice del botón actualmente seleccionado
+  /// Index of the currently selected button
   final int selectedIndex;
 
-  /// Layout de los botones (horizontal o vertical)
+  /// Button layout (horizontal or vertical)
   final ButtonLayout layout;
 
-  /// Alineación de los botones en el eje principal
+  /// Button alignment on the main axis
   final MainAxisAlignment alignment;
 
-  /// Espaciado entre botones
+  /// Spacing between buttons
   final double spacing;
 
   const DialogButtonBar({
@@ -133,18 +133,18 @@ class DialogButtonBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Si no hay botones, no renderizar nada
+    // If no buttons, render nothing
     if (buttons.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    // Construir widgets de botones
+    // Build button widgets
     final buttonWidgets = List.generate(
       buttons.length,
       (index) => _buildButton(context, index),
     );
 
-    // Renderizar según layout
+    // Render based on layout
     if (layout == ButtonLayout.horizontal) {
       return Row(
         mainAxisAlignment: alignment,
@@ -159,15 +159,15 @@ class DialogButtonBar extends StatelessWidget {
     }
   }
 
-  /// Construye un botón individual con visual feedback
+  /// Builds an individual button with visual feedback
   Widget _buildButton(BuildContext context, int index) {
     final button = buttons[index];
     final isSelected = index == selectedIndex;
 
-    // Visual feedback del botón seleccionado
-    // Envolver en un Container con padding para dar espacio al borde
+    // Visual feedback for selected button
+    // Wrap in a Padding to give space for the border
     return Padding(
-      padding: const EdgeInsets.all(2.0), // Espacio para el borde
+      padding: const EdgeInsets.all(2.0), // Space for border
       child: AnimatedScale(
         scale: isSelected ? 1.02 : 1.0,
         duration: const Duration(milliseconds: 150),
@@ -189,9 +189,9 @@ class DialogButtonBar extends StatelessWidget {
     );
   }
 
-  /// Construye el contenido del botón (ElevatedButton o TextButton)
+  /// Builds the button content (ElevatedButton or TextButton)
   Widget _buildButtonContent(BuildContext context, DialogButton button) {
-    // Construir label con icono opcional
+    // Build label with optional icon
     final labelWidget = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -208,10 +208,10 @@ class DialogButtonBar extends StatelessWidget {
       ],
     );
 
-    // Padding estándar para botones
+    // Standard button padding
     const buttonPadding = EdgeInsets.symmetric(horizontal: 24, vertical: 16);
 
-    // Renderizar según estilo
+    // Render based on style
     if (button.primary) {
       return ElevatedButton(
         onPressed: button.enabled ? button.onPressed : null,
@@ -227,7 +227,7 @@ class DialogButtonBar extends StatelessWidget {
     }
   }
 
-  /// Helper para intercalar widgets con separadores
+  /// Helper to intersperse widgets with separators
   List<Widget> _intersperse(List<Widget> widgets, Widget separator) {
     if (widgets.isEmpty) return [];
     if (widgets.length == 1) return widgets;
@@ -240,62 +240,5 @@ class DialogButtonBar extends StatelessWidget {
       }
     }
     return result;
-  }
-}
-
-/// Builder para construir una barra de botones con navegación automática
-///
-/// Simplifica la creación de diálogos con múltiples botones navegables.
-/// Maneja automáticamente la integración con DialogControlsMixin.
-///
-/// Uso:
-/// ```dart
-/// DialogButtonBarBuilder(
-///   buttons: [
-///     DialogButton(label: 'Cancel', onPressed: _cancel),
-///     DialogButton(label: 'OK', primary: true, gamepadButton: GamepadButton.a, onPressed: _confirm),
-///   ],
-///   onButtonSelected: (index) {
-///     // Opcional: manejar cambio de selección
-///   },
-/// )
-/// ```
-class DialogButtonBarBuilder extends StatefulWidget {
-  final List<DialogButton> buttons;
-  final void Function(int index)? onButtonSelected;
-  final ButtonLayout layout;
-  final MainAxisAlignment alignment;
-  final int defaultSelectedIndex;
-
-  const DialogButtonBarBuilder({
-    super.key,
-    required this.buttons,
-    this.onButtonSelected,
-    this.layout = ButtonLayout.horizontal,
-    this.alignment = MainAxisAlignment.end,
-    this.defaultSelectedIndex = 0,
-  });
-
-  @override
-  State<DialogButtonBarBuilder> createState() => _DialogButtonBarBuilderState();
-}
-
-class _DialogButtonBarBuilderState extends State<DialogButtonBarBuilder> {
-  int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.defaultSelectedIndex;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DialogButtonBar(
-      buttons: widget.buttons,
-      selectedIndex: _selectedIndex,
-      layout: widget.layout,
-      alignment: widget.alignment,
-    );
   }
 }

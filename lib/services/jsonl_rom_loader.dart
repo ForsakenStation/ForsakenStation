@@ -20,6 +20,7 @@ import 'jsonl_rom_loader_io.dart'
 /// - parent: parent directory name
 /// - urls: array of URL objects with 'u' property
 class JsonlRomLoader {
+  static JsonlRomLoader? _instance;
   final _debug = DebugService.instance;
 
   // GitHub raw URL base for romList repository
@@ -27,10 +28,17 @@ class JsonlRomLoader {
       'https://raw.githubusercontent.com/ForsakenStation/romList/main/';
 
   // Cache for web platform (platform name -> JSONL content)
-  static final Map<String, String> _webJsonlCache = {};
+  final Map<String, String> _webJsonlCache = {};
 
   // Cache for platform ROM counts
-  static final Map<String, int> _platformCountsCache = {};
+  final Map<String, int> _platformCountsCache = {};
+
+  JsonlRomLoader._();
+
+  static JsonlRomLoader get instance {
+    _instance ??= JsonlRomLoader._();
+    return _instance!;
+  }
 
   /// Load ROMs from a JSONL file for a specific platform
   Future<List<Rom>> loadRomsFromJsonl(String jsonlPath, String platform) async {

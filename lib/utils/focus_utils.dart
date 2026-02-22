@@ -94,23 +94,21 @@ class FocusUtils {
     required void Function(KeyEvent event) onKeyEvent,
     bool autofocus = true,
   }) {
-    final focusNode = FocusNode();
-
-    return KeyboardListener(
-      focusNode: focusNode,
+    return Focus(
       autofocus: autofocus,
-      onKeyEvent: onKeyEvent,
+      onKeyEvent: (node, event) {
+        onKeyEvent(event);
+        return KeyEventResult.ignored;
+      },
       child: child,
     );
   }
 
-  /// Crea un FocusNode con auto-dispose cuando el widget se desmonta
+  /// Crea un FocusNode simple
   ///
-  /// NOTA: Usar con cuidado. Preferir crear FocusNodes como campos de clase
-  /// y hacer dispose manualmente en dispose() para mejor control.
-  ///
-  /// Esto es útil para casos simples donde necesitas un FocusNode temporal.
-  static FocusNode createAutoDisposeFocusNode() {
+  /// NOTA: El caller es responsable de llamar dispose() manualmente.
+  /// Preferir crear FocusNodes como campos de clase y hacer dispose en dispose().
+  static FocusNode createFocusNode() {
     return FocusNode();
   }
 

@@ -370,13 +370,21 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
 
   @override
   void stop() {
-    if (!_initialized || _jsEmulator == null) return;
+    if (!_initialized || _jsEmulator == null) {
+      _instances.remove(containerId);
+      return;
+    }
 
     try {
       DebugService.instance.info('Stopping emulator', tag: 'EmulatorJS');
       _callVoidMethod('stop');
     } catch (e) {
       DebugService.instance.error('Stop error: $e', tag: 'EmulatorJS');
+    } finally {
+      // Clean up instance
+      _instances.remove(containerId);
+      _jsEmulator = null;
+      _initialized = false;
     }
   }
 

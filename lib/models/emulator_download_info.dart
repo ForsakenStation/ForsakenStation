@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
+import '../utils/platform_utils.dart' as platform_utils;
 
 /// Platform-specific download information for an emulator
 class EmulatorDownloadInfo {
@@ -32,11 +32,11 @@ class EmulatorDownloadInfo {
       return null;
     }
 
-    if (Platform.isLinux) {
+    if (platform_utils.isLinux) {
       return downloads['linux'];
-    } else if (Platform.isMacOS) {
+    } else if (platform_utils.isMacOS) {
       return downloads['macos'];
-    } else if (Platform.isWindows) {
+    } else if (platform_utils.isWindows) {
       return downloads['windows'];
     }
     return null;
@@ -51,11 +51,11 @@ class EmulatorDownloadInfo {
       return null;
     }
 
-    if (Platform.isLinux) {
+    if (platform_utils.isLinux) {
       return postDownloadCommands!['linux'];
-    } else if (Platform.isMacOS) {
+    } else if (platform_utils.isMacOS) {
       return postDownloadCommands!['macos'];
-    } else if (Platform.isWindows) {
+    } else if (platform_utils.isWindows) {
       return postDownloadCommands!['windows'];
     }
     return null;

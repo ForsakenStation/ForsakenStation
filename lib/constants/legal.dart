@@ -1,5 +1,7 @@
 // Legal disclaimer and related constants for Forsaken Emulator.
 
+const String kAppVersion = '1.0.0';
+
 const String kLegalDisclaimer =
     'LEGAL DISCLAIMER\n'
     '\n'

@@ -1,7 +1,7 @@
 import '../services/debug_service.dart';
 import '../services/gamelist_service.dart';
 import '../models/game_info.dart';
-import 'dart:io';
+import '../utils/file_utils.dart';
 import 'language_info.dart';
 import 'region_info.dart';
 import 'rom_tags.dart';
@@ -152,9 +152,8 @@ class RomItem {
     if (type != RomItemType.rom) return null;
 
     try {
-      final file = File(path);
-      if (await file.exists()) {
-        final content = await file.readAsString();
+      if (await fileExists(path)) {
+        final content = await readFileAsString(path);
         return content.trim();
       }
     } catch (e) {

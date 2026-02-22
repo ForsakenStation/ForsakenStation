@@ -8,13 +8,11 @@ import '../utils/platform_utils.dart';
 
 /// Handles saving downloaded ROMs permanently to storage
 class RomSaveHandler {
-  final BuildContext context;
   final String platformName; // Default platform
   final VoidCallback requestFocus;
   final bool isCollection; // Whether this is a collection view
 
   RomSaveHandler({
-    required this.context,
     required this.platformName,
     required this.requestFocus,
     this.isCollection = false,
@@ -22,7 +20,11 @@ class RomSaveHandler {
 
   /// Check if a ROM should be saved and handle the save process
   /// Returns true if user chose to save, false if declined, null if already saved
-  Future<bool?> handleRomSave(RomItem item, String? imagePath) async {
+  Future<bool?> handleRomSave(
+    BuildContext context,
+    RomItem item,
+    String? imagePath,
+  ) async {
     final storageService = RomStorageService.instance;
 
     // For collections, use the ROM's platform; otherwise use default
@@ -52,11 +54,18 @@ class RomSaveHandler {
     }
 
     // Ask user if they want to save ROM permanently
-    return await _askToSaveRomPermanently(item, imagePath, actualPlatform);
+    if (!context.mounted) return false;
+    return await _askToSaveRomPermanently(
+      context,
+      item,
+      imagePath,
+      actualPlatform,
+    );
   }
 
   /// Ask user if they want to save ROM permanently after playing
   Future<bool> _askToSaveRomPermanently(
+    BuildContext context,
     RomItem item,
     String? imagePath,
     String actualPlatform,
@@ -76,16 +85,20 @@ class RomSaveHandler {
 
     // If user chose to save permanently
     if (result == true) {
-      return await _saveRomPermanently(item, actualPlatform);
+      return await _saveRomPermanently(context, item, actualPlatform);
     } else {
-      _showNotSavedMessage(item);
+      _showNotSavedMessage(context, item);
       requestFocus();
       return false;
     }
   }
 
   /// Save ROM to permanent storage
-  Future<bool> _saveRomPermanently(RomItem item, String actualPlatform) async {
+  Future<bool> _saveRomPermanently(
+    BuildContext context,
+    RomItem item,
+    String actualPlatform,
+  ) async {
     try {
       final storageService = RomStorageService.instance;
 
@@ -142,7 +155,7 @@ class RomSaveHandler {
   }
 
   /// Show message when user chooses not to save
-  void _showNotSavedMessage(RomItem item) {
+  void _showNotSavedMessage(BuildContext context, RomItem item) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
+import '../common/download_badge.dart';
 
 /// ROM card widget for list view (horizontal layout)
 ///
@@ -12,7 +13,7 @@ import '../../services/media_service.dart';
 /// - Media indicators (if available)
 /// - Play/folder icon on right
 /// - Download status badge (if applicable)
-class RomListCard extends StatelessWidget {
+class RomListCard extends StatefulWidget {
   final RomItem item;
   final bool isSelected;
   final VoidCallback onTap;
@@ -35,20 +36,53 @@ class RomListCard extends StatelessWidget {
   });
 
   @override
+  State<RomListCard> createState() => _RomListCardState();
+}
+
+class _RomListCardState extends State<RomListCard> {
+  Future<bool>? _downloadFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateDownloadFuture();
+  }
+
+  @override
+  void didUpdateWidget(RomListCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.item != widget.item ||
+        oldWidget.isRomDownloaded != widget.isRomDownloaded) {
+      _updateDownloadFuture();
+    }
+  }
+
+  void _updateDownloadFuture() {
+    if (!widget.item.isFolder &&
+        widget.isRomDownloaded != null &&
+        widget.item.downloadUrl != null &&
+        widget.item.downloadUrl!.isNotEmpty) {
+      _downloadFuture = widget.isRomDownloaded!(widget.item);
+    } else {
+      _downloadFuture = null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: isSelected ? 8 : 1,
+      elevation: widget.isSelected ? 8 : 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: isSelected
+        side: widget.isSelected
             ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
             : BorderSide.none,
       ),
-      color: isSelected
+      color: widget.isSelected
           ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
           : null,
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Row(
@@ -61,27 +95,28 @@ class RomListCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      item.displayName,
+                      widget.item.displayName,
                       style: const TextStyle(fontWeight: FontWeight.w500),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (showPlatform && item.platform != null) ...[
+                    if (widget.showPlatform &&
+                        widget.item.platform != null) ...[
                       const SizedBox(height: 2),
                       Text(
-                        item.platform!,
+                        widget.item.platform!,
                         style: TextStyle(fontSize: 12, color: Colors.grey[400]),
                       ),
                     ],
                   ],
                 ),
               ),
-              if (!item.isFolder && !showPlatform) ...[
+              if (!widget.item.isFolder && !widget.showPlatform) ...[
                 const SizedBox(width: 8),
                 _buildMediaIndicators(),
               ],
               Icon(
-                item.isFolder ? Icons.chevron_right : Icons.play_arrow,
+                widget.item.isFolder ? Icons.chevron_right : Icons.play_arrow,
                 color: Colors.grey[600],
               ),
             ],
@@ -93,7 +128,7 @@ class RomListCard extends StatelessWidget {
 
   Widget _buildThumbnail(BuildContext context) {
     // Show loading spinner
-    if (isLoading) {
+    if (widget.isLoading) {
       return Container(
         width: 60,
         height: 60,
@@ -111,8 +146,8 @@ class RomListCard extends StatelessWidget {
       );
     }
 
-    final imagePath = media != null
-        ? mediaService.getBestImagePath(media!)
+    final imagePath = widget.media != null
+        ? widget.mediaService.getBestImagePath(widget.media!)
         : null;
 
     // Stack for image + download badge
@@ -138,33 +173,11 @@ class RomListCard extends StatelessWidget {
           _defaultThumbnail(),
 
         // Download badge
-        if (!item.isFolder &&
-            item.downloadUrl != null &&
-            item.downloadUrl!.isNotEmpty &&
-            isRomDownloaded != null)
+        if (_downloadFuture != null)
           Positioned(
             top: 0,
             right: 0,
-            child: FutureBuilder<bool>(
-              future: isRomDownloaded!(item),
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data == true) {
-                  return Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.9),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.cloud_done,
-                      color: Colors.white,
-                      size: 14,
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
+            child: DownloadBadge(future: _downloadFuture!, compact: true),
           ),
       ],
     );
@@ -183,39 +196,39 @@ class RomListCard extends StatelessWidget {
   }
 
   Widget _buildMediaIndicators() {
-    if (media == null || !media!.hasAnyMedia) {
+    if (widget.media == null || !widget.media!.hasAnyMedia) {
       return const SizedBox.shrink();
     }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (media!.box3d?.exists ?? false)
+        if (widget.media!.box3d?.exists ?? false)
           const Padding(
             padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.view_in_ar, size: 16, color: Colors.purple),
           ),
-        if (media!.cover?.exists ?? false)
+        if (widget.media!.cover?.exists ?? false)
           const Padding(
             padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.image, size: 16, color: Colors.blue),
           ),
-        if (media!.marquee?.exists ?? false)
+        if (widget.media!.marquee?.exists ?? false)
           const Padding(
             padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.rectangle, size: 16, color: Colors.indigo),
           ),
-        if (media!.screenshot?.exists ?? false)
+        if (widget.media!.screenshot?.exists ?? false)
           const Padding(
             padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.photo_camera, size: 16, color: Colors.green),
           ),
-        if (media!.mixImage?.exists ?? false)
+        if (widget.media!.mixImage?.exists ?? false)
           const Padding(
             padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.collections, size: 16, color: Colors.teal),
           ),
-        if (media!.video?.exists ?? false)
+        if (widget.media!.video?.exists ?? false)
           const Padding(
             padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.videocam, size: 16, color: Colors.orange),

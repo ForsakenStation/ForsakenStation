@@ -5,7 +5,7 @@ import 'package:forsaken/widgets/bios/enhanced_error_display.dart';
 class BiosDownloadDialog extends StatefulWidget {
   final List<String> filesToDownload;
   final String title;
-  final Future<bool> Function(void Function(dynamic)) downloadFunction;
+  final Future<bool> Function(void Function(Object)) downloadFunction;
 
   const BiosDownloadDialog({
     super.key,
@@ -61,7 +61,7 @@ class BiosDownloadDialog extends StatefulWidget {
 }
 
 class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
-  dynamic _currentProgress;
+  Object? _currentProgress;
   bool _isCompleted = false;
   bool _hasFailed = false;
   bool _isCancelled = false;

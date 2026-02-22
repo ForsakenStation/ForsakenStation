@@ -1,19 +1,11 @@
 // Web app content - uses HTTP-based services instead of dart:io
-import 'package:flutter/material.dart';
 
+import 'models/app_init_result.dart';
 import 'screens/platforms_screen.dart';
 import 'services/rom_service.dart';
 import 'services/gamepad_service.dart';
 import 'services/romlist_download_service.dart';
 import 'services/rom_storage_service.dart';
-
-/// Result of app initialization
-class AppInitResult {
-  final Widget? homeScreen;
-  final String? errorMessage;
-
-  AppInitResult({this.homeScreen, this.errorMessage});
-}
 
 /// Initialize platform-specific services (web)
 Future<void> initializePlatformServices() async {

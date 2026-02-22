@@ -1,16 +1,24 @@
-import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as path;
 import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/rom.dart';
 import 'package:forsaken/models/rom_item.dart';
+import 'package:forsaken/utils/file_utils.dart';
+import 'package:forsaken/services/config_service.dart';
 import 'debug_service.dart';
 
 class MediaService {
-  final String mediaBasePath;
+  static MediaService? _instance;
   final _debug = DebugService.instance;
 
-  MediaService({required this.mediaBasePath});
+  MediaService._();
+
+  static MediaService get instance {
+    _instance ??= MediaService._();
+    return _instance!;
+  }
+
+  String get mediaBasePath => ConfigService.instance.mediaPath;
 
   Future<RomMedia> getMediaForRom(Rom rom) async {
     final romNameWithoutExt = rom.displayName;
@@ -276,9 +284,7 @@ class MediaService {
       tag: 'MediaService',
     );
 
-    final mediaDir = Directory(platformMediaPath);
-
-    if (!await mediaDir.exists()) {
+    if (!await directoryExists(platformMediaPath)) {
       _debug.debug(
         'Directory does not exist: $platformMediaPath',
         tag: 'MediaService',
@@ -291,10 +297,9 @@ class MediaService {
 
     for (var ext in extensions) {
       final mediaPath = path.join(platformMediaPath, '$romName.$ext');
-      final file = File(mediaPath);
 
       _debug.debug('Checking: $mediaPath', tag: 'MediaService');
-      if (await file.exists()) {
+      if (await fileExists(mediaPath)) {
         _debug.debug('Found media file: $mediaPath', tag: 'MediaService');
         return Media(
           romName: romName,
@@ -362,20 +367,7 @@ class MediaService {
 
   Future<List<String>> getSystemBoxartPaths(String platform) async {
     final boxartPath = path.join(mediaBasePath, platform, '3dboxes');
-    final boxartDir = Directory(boxartPath);
-
-    if (!await boxartDir.exists()) {
-      return [];
-    }
-
-    final paths = <String>[];
-    await for (var file in boxartDir.list()) {
-      if (file is File) {
-        paths.add(file.path);
-      }
-    }
-
-    return paths;
+    return await listFiles(boxartPath);
   }
 
   /// Get the best available image for display

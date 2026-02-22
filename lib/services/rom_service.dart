@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import '../models/platform.dart';
+import '../models/emulator_platform.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
 import '../platforms/web/web_core_manager.dart';
@@ -15,14 +15,14 @@ class RomService {
   final String romsBasePath;
   final String? jsonlBasePath;
   final _debug = DebugService.instance;
-  final _jsonlLoader = JsonlRomLoader();
+  final _jsonlLoader = JsonlRomLoader.instance;
 
   // Cache for loaded JSONL platform ROMs
   final Map<String, List<Rom>> _jsonlRomsCache = {};
 
   RomService({required this.romsBasePath, this.jsonlBasePath});
 
-  Future<List<Platform>> loadPlatforms() async {
+  Future<List<EmulatorPlatform>> loadPlatforms() async {
     // Always use JSONL loader (works on both web and desktop)
     if (jsonlBasePath != null && jsonlBasePath!.isNotEmpty) {
       return await loadPlatformsFromJsonl();
@@ -37,8 +37,8 @@ class RomService {
   }
 
   /// Load platforms from JSONL files
-  Future<List<Platform>> loadPlatformsFromJsonl() async {
-    final List<Platform> platforms = [];
+  Future<List<EmulatorPlatform>> loadPlatformsFromJsonl() async {
+    final List<EmulatorPlatform> platforms = [];
 
     try {
       _debug.info(
@@ -65,7 +65,7 @@ class RomService {
           }
 
           platforms.add(
-            Platform(
+            EmulatorPlatform(
               name: platformName,
               path: '',
               roms: [],
@@ -160,7 +160,7 @@ class RomService {
     return platform_service.loadRomsForPlatform(platformPath, platformName);
   }
 
-  /// Load items (ROMs and folders) from Platform.roms list
+  /// Load items (ROMs and folders) from EmulatorPlatform.roms list
   Future<List<RomItem>> loadItemsFromRoms(
     List<Rom> roms,
     String? currentSubdirectory,
@@ -253,7 +253,7 @@ class RomService {
     return platform_service.loadItemsInDirectory(directoryPath, platformName);
   }
 
-  Future<Platform?> getPlatformByName(String platformName) async {
+  Future<EmulatorPlatform?> getPlatformByName(String platformName) async {
     final platforms = await loadPlatforms();
     try {
       return platforms.firstWhere(

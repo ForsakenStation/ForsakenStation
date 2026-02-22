@@ -1,4 +1,4 @@
-import 'dart:io';
+import '../utils/file_utils.dart';
 
 enum MediaType {
   box3d, // 3dboxes
@@ -27,7 +27,7 @@ class Media {
     required this.path,
   });
 
-  bool get exists => File(path).existsSync();
+  bool get exists => fileExistsSync(path);
 
   String get typeName {
     switch (type) {

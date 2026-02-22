@@ -4,9 +4,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../models/platform.dart';
+import '../models/emulator_platform.dart';
 import '../services/rom_service.dart';
-import '../services/config_service.dart';
 import '../services/media_service.dart';
 import '../services/keyboard_service.dart';
 import '../services/gamepad_service.dart';
@@ -25,8 +24,6 @@ import '../services/debug_service.dart';
 import 'roms_screen.dart';
 import 'settings_screen.dart';
 
-enum ViewMode { grid, carousel }
-
 class PlatformsScreen extends StatefulWidget {
   final RomService romService;
 
@@ -38,7 +35,7 @@ class PlatformsScreen extends StatefulWidget {
 
 class _PlatformsScreenState extends State<PlatformsScreen>
     with WidgetsBindingObserver, RouteAware {
-  List<Platform> _platforms = [];
+  List<EmulatorPlatform> _platforms = [];
   bool _isLoading = true;
   String? _errorMessage;
   late MediaService _mediaService;
@@ -46,12 +43,12 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   late GamepadService _gamepadService;
   late PlatformInfoService _platformInfoService;
   late CollectionService _collectionService;
-  late ScreenKeyboardHandler<Platform> _keyboardHandler;
+  late ScreenKeyboardHandler<EmulatorPlatform> _keyboardHandler;
   Timer? _gamepadPollTimer;
   final Map<String, String?> _systemImagesCache = {};
   final Map<String, String?> _systemLogosCache = {};
   final Map<String, String> _systemBackgroundsCache = {};
-  ViewMode _viewMode = ViewMode.carousel;
+  ScreenViewMode _viewMode = ScreenViewMode.carousel;
   late PageController _carouselController;
   late ScrollController _gridScrollController;
   late FocusNode _carouselFocusNode;
@@ -63,8 +60,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   @override
   void initState() {
     super.initState();
-    final mediaPath = ConfigService.instance.mediaPath;
-    _mediaService = MediaService(mediaBasePath: mediaPath);
+    _mediaService = MediaService.instance;
     _keyboardService = KeyboardService.instance;
     _gamepadService = GamepadService.instance;
     _platformInfoService = PlatformInfoService.instance;
@@ -75,28 +71,28 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     _gridFocusNode = FocusNode();
 
     // Initialize keyboard handler
-    _keyboardHandler = ScreenKeyboardHandler<Platform>(
+    _keyboardHandler = ScreenKeyboardHandler<EmulatorPlatform>(
       keyboardService: _keyboardService,
-      config: ScreenKeyboardConfig<Platform>(
+      config: ScreenKeyboardConfig<EmulatorPlatform>(
         getDisplayName: (platform) => platform.name,
         getItems: () => _platforms,
-        getCurrentIndex: () => _viewMode == ViewMode.grid
+        getCurrentIndex: () => _viewMode == ScreenViewMode.grid
             ? _gridSelectedIndex
             : _carouselCurrentIndex,
         setCurrentIndex: (newIndex) {
           setState(() {
-            if (_viewMode == ViewMode.grid) {
+            if (_viewMode == ScreenViewMode.grid) {
               _gridSelectedIndex = newIndex;
             } else {
               _carouselCurrentIndex = newIndex;
             }
           });
         },
-        getColumns: () => _viewMode == ViewMode.grid
+        getColumns: () => _viewMode == ScreenViewMode.grid
             ? _calculateCrossAxisCount(context)
             : null,
         scrollToIndex: (index, {columns, centerItem = false}) {
-          if (_viewMode == ViewMode.grid) {
+          if (_viewMode == ScreenViewMode.grid) {
             _scrollToIndex(index, columns ?? _calculateCrossAxisCount(context));
           } else {
             _carouselController.animateToPage(
@@ -109,13 +105,13 @@ class _PlatformsScreenState extends State<PlatformsScreen>
         onSelect: _handleSelection,
         onBack: _showExitDialog,
         onRefresh: _loadPlatforms,
-        onToggleView: _toggleViewMode,
+        onToggleView: _toggleScreenViewMode,
         onShowHelp: _showHelpDialog,
         onHideNavigationHint: _hideNavigationHint,
         onCustomShortcut: (key) {
           // Handle platform info shortcut (I key)
           if (key == LogicalKeyboardKey.keyI) {
-            _showPlatformInfo();
+            _showEmulatorPlatformInfo();
             return true;
           }
           // Handle settings shortcut (Tab key)
@@ -229,7 +225,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
     // Handle view toggle (Y button)
     if (_gamepadService.isViewTogglePressed()) {
-      _toggleViewMode();
+      _toggleScreenViewMode();
       _gamepadService.updatePreviousButtonStates();
       return;
     }
@@ -242,7 +238,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
 
     // Handle navigation
-    if (_viewMode == ViewMode.grid) {
+    if (_viewMode == ScreenViewMode.grid) {
       _handleGamepadGridNavigation();
     } else {
       _handleGamepadCarouselNavigation();
@@ -304,12 +300,12 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       final platforms = await widget.romService.loadPlatforms();
 
       // Convert collections to "virtual" platforms
-      final collectionPlatforms = collections.map((collection) {
+      final collectionEmulatorPlatforms = collections.map((collection) {
         DebugService.instance.info(
           'Creating platform for collection: ${collection.id}',
           tag: 'PlatformsScreen',
         );
-        return Platform(
+        return EmulatorPlatform(
           name: collection.id, // Use collection ID as platform name
           path: '', // Collections don't have paths
           roms: collection.roms,
@@ -318,7 +314,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       }).toList();
 
       DebugService.instance.info(
-        'Total collections: ${collectionPlatforms.length}',
+        'Total collections: ${collectionEmulatorPlatforms.length}',
         tag: 'PlatformsScreen',
       );
       DebugService.instance.info(
@@ -329,7 +325,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       if (mounted) {
         setState(() {
           // Combine collections + platforms
-          _platforms = [...collectionPlatforms, ...platforms];
+          _platforms = [...collectionEmulatorPlatforms, ...platforms];
           _isLoading = false;
         });
 
@@ -347,7 +343,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
         // Request focus after loading platforms
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            _requestFocusForCurrentViewMode();
+            _requestFocusForCurrentScreenViewMode();
           }
         });
       }
@@ -362,7 +358,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   }
 
   /// Check if a platform is actually a collection
-  bool _isCollection(Platform platform) {
+  bool _isCollection(EmulatorPlatform platform) {
     return platform.name == 'recently_played' ||
         platform.name == 'downloaded' ||
         platform.name == 'favorites';
@@ -381,8 +377,8 @@ class _PlatformsScreenState extends State<PlatformsScreen>
           _platforms.removeWhere((p) => _isCollection(p));
 
           // Add fresh collection platforms at the beginning
-          final collectionPlatforms = collections.map((collection) {
-            return Platform(
+          final collectionEmulatorPlatforms = collections.map((collection) {
+            return EmulatorPlatform(
               name: collection.id,
               path: '',
               roms: collection.roms,
@@ -390,7 +386,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
             );
           }).toList();
 
-          _platforms.insertAll(0, collectionPlatforms);
+          _platforms.insertAll(0, collectionEmulatorPlatforms);
         });
 
         DebugService.instance.info(
@@ -519,34 +515,35 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
   }
 
-  void _toggleViewMode() {
+  void _toggleScreenViewMode() {
     setState(() {
-      if (_viewMode == ViewMode.grid) {
-        _viewMode = ViewMode.carousel;
+      if (_viewMode == ScreenViewMode.grid) {
+        _viewMode = ScreenViewMode.carousel;
         _carouselCurrentIndex = 0;
         _carouselController = PageController();
       } else {
-        _viewMode = ViewMode.grid;
+        _viewMode = ScreenViewMode.grid;
       }
     });
 
     // Request focus for the new view mode after the widget rebuilds
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        _requestFocusForCurrentViewMode();
+        _requestFocusForCurrentScreenViewMode();
       }
     });
   }
 
   /// Request focus for the current view mode's FocusNode
-  void _requestFocusForCurrentViewMode() {
+  void _requestFocusForCurrentScreenViewMode() {
     switch (_viewMode) {
-      case ViewMode.grid:
+      case ScreenViewMode.grid:
         if (!_gridFocusNode.hasFocus) {
           _gridFocusNode.requestFocus();
         }
         break;
-      case ViewMode.carousel:
+      case ScreenViewMode.carousel:
+      case ScreenViewMode.list:
         if (!_carouselFocusNode.hasFocus) {
           _carouselFocusNode.requestFocus();
         }
@@ -556,10 +553,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
   /// Centralized keyboard event handler - delegates to ScreenKeyboardHandler
   KeyEventResult _handleKeyEvent(KeyEvent event) {
-    final viewMode = _viewMode == ViewMode.grid
-        ? ScreenViewMode.grid
-        : ScreenViewMode.carousel;
-    return _keyboardHandler.handleKeyEvent(event, viewMode);
+    return _keyboardHandler.handleKeyEvent(event, _viewMode);
   }
 
   /// Show help dialog with keyboard shortcuts
@@ -580,22 +574,26 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   }
 
   /// Show platform information dialog
-  Future<void> _showPlatformInfo() async {
-    final selectedPlatform = _viewMode == ViewMode.grid
+  Future<void> _showEmulatorPlatformInfo() async {
+    final selectedEmulatorPlatform = _viewMode == ScreenViewMode.grid
         ? _platforms[_gridSelectedIndex]
         : _platforms[_carouselCurrentIndex];
 
     final platformInfo = await _platformInfoService.getPlatformInfo(
-      selectedPlatform.name,
+      selectedEmulatorPlatform.name,
     );
 
     if (platformInfo != null && mounted) {
-      PlatformInfoDialog.show(context, selectedPlatform.name, platformInfo);
+      PlatformInfoDialog.show(
+        context,
+        selectedEmulatorPlatform.name,
+        platformInfo,
+      );
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'No hay información disponible para ${selectedPlatform.displayName}',
+            'No hay información disponible para ${selectedEmulatorPlatform.displayName}',
           ),
         ),
       );
@@ -604,10 +602,10 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
   /// Handle selection based on current view mode
   void _handleSelection() {
-    final selectedPlatform = _viewMode == ViewMode.grid
+    final selectedEmulatorPlatform = _viewMode == ScreenViewMode.grid
         ? _platforms[_gridSelectedIndex]
         : _platforms[_carouselCurrentIndex];
-    _navigateToRoms(selectedPlatform);
+    _navigateToRoms(selectedEmulatorPlatform);
   }
 
   @override
@@ -636,10 +634,10 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                   onSelected: (value) {
                     switch (value) {
                       case 'platform_info':
-                        _showPlatformInfo();
+                        _showEmulatorPlatformInfo();
                         break;
                       case 'toggle_view':
-                        _toggleViewMode();
+                        _toggleScreenViewMode();
                         break;
                       case 'refresh':
                         _loadPlatforms();
@@ -662,7 +660,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                           children: [
                             Icon(Icons.info_outline),
                             SizedBox(width: 12),
-                            Text('Platform Info'),
+                            Text('EmulatorPlatform Info'),
                           ],
                         ),
                       ),
@@ -671,13 +669,13 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                       child: Row(
                         children: [
                           Icon(
-                            _viewMode == ViewMode.grid
+                            _viewMode == ScreenViewMode.grid
                                 ? Icons.view_carousel
                                 : Icons.grid_view,
                           ),
                           const SizedBox(width: 12),
                           Text(
-                            _viewMode == ViewMode.grid
+                            _viewMode == ScreenViewMode.grid
                                 ? 'Carousel View'
                                 : 'Grid View',
                           ),
@@ -713,17 +711,17 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                 if (_platforms.isNotEmpty)
                   IconButton(
                     icon: const Icon(Icons.info_outline),
-                    onPressed: _showPlatformInfo,
-                    tooltip: 'Platform Info (I)',
+                    onPressed: _showEmulatorPlatformInfo,
+                    tooltip: 'EmulatorPlatform Info (I)',
                   ),
                 IconButton(
                   icon: Icon(
-                    _viewMode == ViewMode.grid
+                    _viewMode == ScreenViewMode.grid
                         ? Icons.view_carousel
                         : Icons.grid_view,
                   ),
-                  onPressed: _toggleViewMode,
-                  tooltip: _viewMode == ViewMode.grid
+                  onPressed: _toggleScreenViewMode,
+                  tooltip: _viewMode == ScreenViewMode.grid
                       ? 'Carousel View'
                       : 'Grid View',
                 ),
@@ -763,7 +761,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
   /// Get current selected index based on view mode
   int _getCurrentIndex() {
-    return _viewMode == ViewMode.carousel
+    return _viewMode == ScreenViewMode.carousel
         ? _carouselCurrentIndex
         : _gridSelectedIndex;
   }
@@ -845,7 +843,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       );
     }
 
-    if (_viewMode == ViewMode.carousel) {
+    if (_viewMode == ScreenViewMode.carousel) {
       return _buildCarouselView();
     }
 
@@ -891,7 +889,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     return 2;
   }
 
-  void _navigateToRoms(Platform platform) async {
+  void _navigateToRoms(EmulatorPlatform platform) async {
     final isCollection = _isCollection(platform);
 
     // Stop gamepad polling to avoid handler overlap
@@ -991,7 +989,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
   }
 
-  Widget _buildCarouselItem(Platform platform) {
+  Widget _buildCarouselItem(EmulatorPlatform platform) {
     // Trigger lazy loading of image and logo
     if (!_systemImagesCache.containsKey(platform.name)) {
       _loadSystemImage(platform.name);
@@ -1054,13 +1052,13 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                       : _buildFallbackIcon(platform.name, 200),
                 ),
               ),
-              // Platform info
+              // EmulatorPlatform info
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 48.0),
                 child: Column(
                   children: [
-                    // Platform name/logo
-                    _buildPlatformNameOrLogo(platform, logoPath),
+                    // EmulatorPlatform name/logo
+                    _buildEmulatorPlatformNameOrLogo(platform, logoPath),
                     const SizedBox(height: 16),
                     // ROM count
                     Container(
@@ -1095,7 +1093,10 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     );
   }
 
-  Widget _buildPlatformNameOrLogo(Platform platform, String? logoPath) {
+  Widget _buildEmulatorPlatformNameOrLogo(
+    EmulatorPlatform platform,
+    String? logoPath,
+  ) {
     if (logoPath != null) {
       final isColorLogo = logoPath.contains('/clogos/');
       Color? logoColor;
@@ -1110,15 +1111,15 @@ class _PlatformsScreenState extends State<PlatformsScreen>
         logoPath,
         height: 80,
         color: logoColor,
-        fallback: _buildPlatformNameText(platform),
+        fallback: _buildEmulatorPlatformNameText(platform),
       );
     } else {
       // No logo found, use text
-      return _buildPlatformNameText(platform);
+      return _buildEmulatorPlatformNameText(platform);
     }
   }
 
-  Widget _buildPlatformNameText(Platform platform) {
+  Widget _buildEmulatorPlatformNameText(EmulatorPlatform platform) {
     return Text(
       platform.displayName,
       style: Theme.of(
@@ -1172,7 +1173,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       ),
       child: Center(
         child: Icon(
-          _getPlatformIcon(platformName),
+          _getEmulatorPlatformIcon(platformName),
           size: size * 0.5,
           color: Theme.of(context).colorScheme.primary,
         ),
@@ -1180,7 +1181,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     );
   }
 
-  IconData _getPlatformIcon(String platformName) {
+  IconData _getEmulatorPlatformIcon(String platformName) {
     return PlatformIcons.getIconForPlatform(platformName);
   }
 }

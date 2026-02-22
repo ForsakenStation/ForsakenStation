@@ -92,6 +92,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
   }
 
   void _addEmulator() {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
       builder: (context) => EmulatorEditDialog(
@@ -100,13 +101,13 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             await _configService.addEmulator(emulator);
             await _loadEmulators();
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 const SnackBar(content: Text('Emulator added successfully')),
               );
             }
           } catch (e) {
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 SnackBar(content: Text('Error adding emulator: $e')),
               );
             }
@@ -117,6 +118,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
   }
 
   void _editEmulator(Map<String, dynamic> emulator) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
       builder: (context) => EmulatorEditDialog(
@@ -129,13 +131,13 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             );
             await _loadEmulators();
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 const SnackBar(content: Text('Emulator updated successfully')),
               );
             }
           } catch (e) {
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 SnackBar(content: Text('Error updating emulator: $e')),
               );
             }
@@ -146,6 +148,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
   }
 
   void _deleteEmulator(String system) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -169,13 +172,13 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                     await _configService.removeEmulator(system);
                     await _loadEmulators();
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      scaffoldMessenger.showSnackBar(
                         const SnackBar(content: Text('Emulator deleted')),
                       );
                     }
                   } catch (e) {
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      scaffoldMessenger.showSnackBar(
                         SnackBar(content: Text('Error deleting emulator: $e')),
                       );
                     }

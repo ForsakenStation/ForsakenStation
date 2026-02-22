@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/legal.dart';
 
 class InitializingScreen extends StatefulWidget {
   const InitializingScreen({super.key});
@@ -157,7 +158,7 @@ class _InitializingScreenState extends State<InitializingScreen>
                   Padding(
                     padding: const EdgeInsets.only(bottom: 32),
                     child: Text(
-                      'v1.0.0',
+                      'v$kAppVersion',
                       style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ),

@@ -275,23 +275,3 @@ class _NavigationOverlayState extends State<NavigationOverlay>
     );
   }
 }
-
-/// Extension to easily add navigation overlay to any widget
-extension NavigationOverlayExtension on Widget {
-  Widget withNavigationOverlay({
-    required String screenName,
-    required Map<String, String> keyboardControls,
-    required Map<String, String> gamepadControls,
-  }) {
-    return Stack(
-      children: [
-        this,
-        NavigationOverlay(
-          screenName: screenName,
-          keyboardControls: keyboardControls,
-          gamepadControls: gamepadControls,
-        ),
-      ],
-    );
-  }
-}

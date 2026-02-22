@@ -216,9 +216,8 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
     }
 
     // Handle save (Ctrl+S)
-    if ((event.logicalKey == LogicalKeyboardKey.keyS) &&
-        (event.logicalKey == LogicalKeyboardKey.controlLeft ||
-            event.logicalKey == LogicalKeyboardKey.controlRight)) {
+    if (event.logicalKey == LogicalKeyboardKey.keyS &&
+        HardwareKeyboard.instance.isControlPressed) {
       if (!_isSaving) {
         _savePaths();
       }

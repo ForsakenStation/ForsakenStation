@@ -438,6 +438,8 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       final isDownloaded = await _romListService.isGameListsDownloaded();
       final isGenerated = await _romListService.isRomsGenerated();
 
+      if (!mounted) return;
+
       // Ask user what they want to do
       final action = await showDialog<String>(
         context: context,

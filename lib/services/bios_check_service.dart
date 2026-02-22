@@ -3,8 +3,17 @@ import 'package:path/path.dart' as path;
 import 'package:forsaken/models/bios_requirement.dart';
 
 class BiosCheckService {
+  static BiosCheckService? _instance;
+
+  BiosCheckService._();
+
+  static BiosCheckService get instance {
+    _instance ??= BiosCheckService._();
+    return _instance!;
+  }
+
   /// Expands ~ to home directory in path
-  static String _expandPath(String filePath) {
+  String _expandPath(String filePath) {
     if (filePath.startsWith('~/')) {
       final home = Platform.environment['HOME'] ?? '';
       return filePath.replaceFirst('~', home);
@@ -13,12 +22,12 @@ class BiosCheckService {
   }
 
   /// Checks if a specific BIOS file exists in any of the given locations
-  static bool checkBiosFile(List<String> locations, String filename) {
+  Future<bool> checkBiosFile(List<String> locations, String filename) async {
     for (final location in locations) {
       final expandedPath = _expandPath(location);
       final fullPath = path.join(expandedPath, filename);
       final file = File(fullPath);
-      if (file.existsSync()) {
+      if (await file.exists()) {
         return true;
       }
     }
@@ -26,7 +35,7 @@ class BiosCheckService {
   }
 
   /// Scans all BIOS requirements and updates found status
-  static Future<List<BiosRequirement>> scanAllBios() async {
+  Future<List<BiosRequirement>> scanAllBios() async {
     final requirements = BiosRequirement.getDefaultRequirements();
     final scannedRequirements = <BiosRequirement>[];
 
@@ -34,7 +43,10 @@ class BiosCheckService {
       final updatedFiles = <BiosFile>[];
 
       for (final biosFile in requirement.files) {
-        final found = checkBiosFile(requirement.locations, biosFile.filename);
+        final found = await checkBiosFile(
+          requirement.locations,
+          biosFile.filename,
+        );
         updatedFiles.add(biosFile.copyWith(found: found));
       }
 
@@ -45,21 +57,17 @@ class BiosCheckService {
   }
 
   /// Returns only requirements with missing files
-  static List<BiosRequirement> filterMissing(
-    List<BiosRequirement> requirements,
-  ) {
+  List<BiosRequirement> filterMissing(List<BiosRequirement> requirements) {
     return requirements.where((req) => !req.hasAllFiles).toList();
   }
 
   /// Returns only required BIOS (not optional)
-  static List<BiosRequirement> filterRequired(
-    List<BiosRequirement> requirements,
-  ) {
+  List<BiosRequirement> filterRequired(List<BiosRequirement> requirements) {
     return requirements.where((req) => req.required).toList();
   }
 
   /// Returns statistics about BIOS files
-  static Map<String, int> getStatistics(List<BiosRequirement> requirements) {
+  Map<String, int> getStatistics(List<BiosRequirement> requirements) {
     int totalPlatforms = requirements.length;
     int platformsComplete = requirements.where((r) => r.hasAllFiles).length;
     int platformsPartial = requirements

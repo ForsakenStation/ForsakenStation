@@ -5,11 +5,11 @@ import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/game_info.dart';
 import 'package:forsaken/widgets/roms/media_carousel.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
-import 'package:forsaken/widgets/common/info_row.dart';
 import 'package:forsaken/widgets/common/language_flags.dart';
 import 'package:forsaken/widgets/common/star_rating.dart';
 import 'package:forsaken/widgets/common/region_flags.dart';
 import 'package:forsaken/widgets/common/rom_tag_badges.dart';
+import 'package:forsaken/widgets/roms/rom_info_section.dart';
 
 class RomDetailPanel extends StatefulWidget {
   final RomItem item;
@@ -193,61 +193,8 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                 ),
                 const SizedBox(height: 16),
 
-                // Description
-                InfoRow(
-                  label: 'Description',
-                  value:
-                      widget.gameInfo?.desc ??
-                      'No description available for this ROM.',
-                ),
-                const SizedBox(height: 16),
-
-                // Game info grid - always show fields even if empty
-
-                // Row 1: Release Date, Developer
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: InfoRow(
-                        label: 'Release Date',
-                        value:
-                            widget.gameInfo?.releaseDate?.toString().split(
-                              ' ',
-                            )[0] ??
-                            '',
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: InfoRow(
-                        label: 'Developer',
-                        value: widget.gameInfo?.developer ?? '',
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Row 2: Publisher, Genre
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: InfoRow(
-                        label: 'Publisher',
-                        value: widget.gameInfo?.publisher ?? '',
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: InfoRow(
-                        label: 'Genre',
-                        value: widget.gameInfo?.genre ?? '',
-                      ),
-                    ),
-                  ],
-                ),
+                // Game info section (Description, Release Date, Developer, etc.)
+                RomInfoSection(gameInfo: widget.gameInfo),
                 const SizedBox(height: 16),
 
                 // Row 3: Language and regions
@@ -300,26 +247,6 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // Row 4: Players, Rating
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: InfoRow(
-                        label: 'Players',
-                        value: widget.gameInfo?.playersText ?? '',
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: InfoRow(
-                        label: 'Rating',
-                        value: widget.gameInfo?.ratingPercentage ?? '--',
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),

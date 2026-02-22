@@ -7,6 +7,7 @@ import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/models/emulator_config.dart';
 import 'package:forsaken/services/gamepad_service.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
+import 'package:forsaken/utils/format_utils.dart';
 import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
 /// Dialog shown while downloading and launching a ROM
@@ -99,14 +100,7 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog>
     });
   }
 
-  String _formatBytes(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024) {
-      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-    }
-    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
-  }
+  String _formatBytes(int bytes) => formatBytes(bytes);
 
   String _formatSpeed(double bytesPerSecond) {
     if (bytesPerSecond < 1024) {

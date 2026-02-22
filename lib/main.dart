@@ -171,7 +171,16 @@ class _EmulatorAppState extends State<EmulatorApp> {
         theme: AppTheme.lightTheme(),
         darkTheme: AppTheme.darkTheme(),
         themeMode: ThemeMode.system,
-        home: ErrorScreen(message: _errorMessage!),
+        home: ErrorScreen(
+          message: _errorMessage!,
+          onRetry: () {
+            setState(() {
+              _isInitializing = true;
+              _errorMessage = null;
+            });
+            _initialize();
+          },
+        ),
       );
     }
 

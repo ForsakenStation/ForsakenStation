@@ -36,6 +36,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   final Map<String, mk.Player> _videoPlayers = {};
   final Map<String, VideoController> _videoControllers = {};
   final Map<String, bool> _videoLoadingStates = {}; // Track loading state
+  final FocusNode _keyboardFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -125,6 +126,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     _stopGamepadPolling();
     _disposeAllPlayers();
     _pageController.dispose();
+    _keyboardFocusNode.dispose();
     super.dispose();
   }
 
@@ -169,7 +171,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: KeyboardListener(
-        focusNode: FocusNode()..requestFocus(),
+        focusNode: _keyboardFocusNode,
         autofocus: true,
         onKeyEvent: (event) {
           if (event is KeyDownEvent) {

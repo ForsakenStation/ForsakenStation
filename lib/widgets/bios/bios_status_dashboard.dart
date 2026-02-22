@@ -73,13 +73,14 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
               final downloadableFile = mapping?.getFile(biosFile.filename);
               if (downloadableFile?.expectedMd5 != null ||
                   downloadableFile?.expectedSha1 != null) {
-                final verificationResult = await BiosChecksumService.verifyFile(
-                  file: file,
-                  expectedMd5: downloadableFile?.expectedMd5,
-                  expectedSha1: downloadableFile?.expectedSha1,
-                  expectedCrc32: downloadableFile?.expectedCrc32,
-                  expectedSize: downloadableFile?.expectedSize,
-                );
+                final verificationResult = await BiosChecksumService.instance
+                    .verifyFile(
+                      file: file,
+                      expectedMd5: downloadableFile?.expectedMd5,
+                      expectedSha1: downloadableFile?.expectedSha1,
+                      expectedCrc32: downloadableFile?.expectedCrc32,
+                      expectedSize: downloadableFile?.expectedSize,
+                    );
                 verified = verificationResult.success;
                 if (verified) verifiedFiles++;
               }

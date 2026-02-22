@@ -3,14 +3,15 @@ import 'dart:io';
 import 'dart:collection';
 
 import 'package:archive/archive.dart';
-import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 
 import 'package:forsaken/models/bios_download_mapping.dart';
 import 'package:forsaken/services/bios_size_correction_service.dart';
+import 'package:forsaken/services/bios_checksum_service.dart';
 import 'package:forsaken/services/debug_service.dart';
+import 'package:forsaken/utils/format_utils.dart';
 
 /// Report for individual BIOS file checksum verification
 class BiosFileChecksumReport {
@@ -181,11 +182,7 @@ class BiosDownloadLogger {
     }
   }
 
-  static String _formatBytes(int bytes) {
-    if (bytes < 1024) return '${bytes}B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)}KB';
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)}MB';
-  }
+  static String _formatBytes(int bytes) => formatBytes(bytes, compact: true);
 }
 
 /// Represents the download progress for a single file
@@ -272,11 +269,7 @@ class DownloadProgress {
     return buffer.toString();
   }
 
-  static String _formatBytes(int bytes) {
-    if (bytes < 1024) return '${bytes}B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)}KB';
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)}MB';
-  }
+  static String _formatBytes(int bytes) => formatBytes(bytes, compact: true);
 
   DownloadProgress copyWith({
     int? bytesDownloaded,
@@ -354,18 +347,23 @@ enum BatchDownloadStatus { pending, downloading, completed, failed, cancelled }
 
 /// Service for downloading BIOS files from retroarch_system repository
 class BiosDownloadService {
+  static BiosDownloadService? _instance;
   static const int _maxRetries = 3;
   static const Duration _timeout = Duration(seconds: 30);
 
   final http.Client _client = http.Client();
-  bool _isDisposed = false;
+
+  BiosDownloadService._();
+
+  static BiosDownloadService get instance {
+    _instance ??= BiosDownloadService._();
+    return _instance!;
+  }
 
   /// Cancellation tokens for active downloads
   final Map<String, bool> _cancellationTokens = {};
 
   void dispose() {
-    _isDisposed = true;
-    _client.close();
     _cancellationTokens.clear();
   }
 
@@ -377,8 +375,6 @@ class BiosDownloadService {
     void Function(DownloadProgress)? onProgress,
     String? cancellationToken,
   }) async {
-    if (_isDisposed) throw StateError('Service has been disposed');
-
     final url = file.getDownloadUrl(repoFolder);
     final filename = file.filename;
     final fullPath = path.join(destinationPath, filename);
@@ -944,22 +940,17 @@ class BiosDownloadService {
 
         if (actualSize < minSize || actualSize > maxSize) {
           // Use size correction service for better error analysis
-          BiosSizeCorrectionService.logSizeAnalysis(
+          BiosSizeCorrectionService.instance.logSizeAnalysis(
             filename,
             url,
             expectedSize,
             actualSize,
           );
 
-          final suggestedSize = BiosSizeCorrectionService.suggestSizeCorrection(
-            url,
-            filename,
-            actualSize,
-          );
-          final areCompatible = BiosSizeCorrectionService.areCompatibleSizes(
-            expectedSize,
-            actualSize,
-          );
+          final suggestedSize = BiosSizeCorrectionService.instance
+              .suggestSizeCorrection(url, filename, actualSize);
+          final areCompatible = BiosSizeCorrectionService.instance
+              .areCompatibleSizes(expectedSize, actualSize);
 
           await file.delete();
 
@@ -1071,17 +1062,11 @@ class BiosDownloadService {
     }
   }
 
-  Future<String> _calculateMd5(File file) async {
-    final bytes = await file.readAsBytes();
-    final digest = md5.convert(bytes);
-    return digest.toString();
-  }
+  Future<String> _calculateMd5(File file) =>
+      BiosChecksumService.instance.calculateMd5(file);
 
-  Future<String> _calculateSha1(File file) async {
-    final bytes = await file.readAsBytes();
-    final digest = sha1.convert(bytes);
-    return digest.toString();
-  }
+  Future<String> _calculateSha1(File file) =>
+      BiosChecksumService.instance.calculateSha1(file);
 
   /// Extracts files from a ZIP archive to the destination directory
   Future<bool> _extractArchive({

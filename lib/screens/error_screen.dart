@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String message;
+  final VoidCallback? onRetry;
 
-  const ErrorScreen({super.key, required this.message});
+  const ErrorScreen({super.key, required this.message, this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +24,10 @@ class ErrorScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(message, textAlign: TextAlign.center),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  // Restart the app
-                  // On web/desktop, user needs to manually refresh
-                  // On mobile, this would work with hot restart
-                },
-                child: const Text('Retry'),
-              ),
+              if (onRetry != null) ...[
+                const SizedBox(height: 24),
+                ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
+              ],
             ],
           ),
         ),

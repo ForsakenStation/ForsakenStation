@@ -95,12 +95,7 @@ class _SmartSvgState extends State<SmartSvg> {
 
   @override
   Widget build(BuildContext context) {
-    DebugService.instance.debug(
-      'Building widget for: ${widget.assetPath}',
-      tag: 'SmartSvg',
-    );
     if (_isSvgz(widget.assetPath)) {
-      DebugService.instance.debug('Detected SVGZ format', tag: 'SmartSvg');
       // Handle SVGZ - load and decompress using cached future
       return FutureBuilder<String>(
         future: _decompressFuture,

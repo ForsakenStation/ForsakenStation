@@ -135,53 +135,17 @@ overlay0_alpha_mod = 1.0
       final configFile = File('${overlayDir.path}/current_overlay.cfg');
       final pngFile = File('${overlayDir.path}/current_overlay.png');
       final pngBytes = await rootBundle.load(overlay.imagePath);
-      _debug.info(
-        'OVERLAY DEBUG: Loaded PNG bytes: ${pngBytes.lengthInBytes} bytes',
-        tag: 'OverlayService',
-      );
 
-      // Write PNG file with explicit flush and sync
+      // Write PNG file with explicit flush
       final pngData = pngBytes.buffer.asUint8List();
       await pngFile.writeAsBytes(pngData, flush: true);
 
-      // Force filesystem sync by closing and reopening the file
-      final pngVerifyFile = File(pngFile.path);
-      if (await pngVerifyFile.exists()) {
-        final verifySize = await pngVerifyFile.length();
-        _debug.info(
-          'OVERLAY DEBUG: PNG verification - file exists: true, size: ${verifySize}b',
-          tag: 'OverlayService',
-        );
-      } else {
-        _debug.error(
-          'OVERLAY DEBUG: PNG verification FAILED - file does not exist after write',
-          tag: 'OverlayService',
-        );
-      }
       // Load config content (either specific or default template)
       String cfgContent;
       if (overlay.configPath != null) {
-        // Use platform-specific config
-        _debug.info(
-          'OVERLAY DEBUG: Loading specific CFG from asset: ${overlay.configPath}',
-          tag: 'OverlayService',
-        );
         cfgContent = await rootBundle.loadString(overlay.configPath!);
-        _debug.info(
-          'OVERLAY DEBUG: Loaded specific CFG content length: ${cfgContent.length} chars',
-          tag: 'OverlayService',
-        );
       } else {
-        // Use default template
-        _debug.info(
-          'OVERLAY DEBUG: Using default CFG template for platform: $platform',
-          tag: 'OverlayService',
-        );
         cfgContent = _defaultOverlayConfig;
-        _debug.info(
-          'OVERLAY DEBUG: Default CFG template length: ${cfgContent.length} chars',
-          tag: 'OverlayService',
-        );
       }
 
       // Replace the overlay path to point to our PNG file
@@ -195,34 +159,7 @@ overlay0_alpha_mod = 1.0
             pngFile.path,
           );
 
-      _debug.info(
-        'OVERLAY DEBUG: Modified CFG to use: ${pngFile.path}',
-        tag: 'OverlayService',
-      );
-
       await configFile.writeAsString(modifiedCfg, flush: true);
-
-      // Force filesystem sync by verifying the file exists and has correct content
-      final configVerifyFile = File(configFile.path);
-      if (await configVerifyFile.exists()) {
-        final verifySize = await configVerifyFile.length();
-        final verifyContent = await configVerifyFile.readAsString();
-        final hasCorrectPath = verifyContent.contains(pngFile.path);
-        _debug.info(
-          'OVERLAY DEBUG: CFG verification - exists: true, size: ${verifySize}b, has correct path: $hasCorrectPath',
-          tag: 'OverlayService',
-        );
-      } else {
-        _debug.error(
-          'OVERLAY DEBUG: CFG verification FAILED - file does not exist after write',
-          tag: 'OverlayService',
-        );
-      }
-
-      _debug.info(
-        'OVERLAY DEBUG: Written CFG file: ${configFile.path}',
-        tag: 'OverlayService',
-      );
 
       // Verify files exist and have content
       final configExists = await configFile.exists();
@@ -230,45 +167,16 @@ overlay0_alpha_mod = 1.0
       final configSize = configExists ? await configFile.length() : 0;
       final pngSize = pngExists ? await pngFile.length() : 0;
 
-      _debug.info(
-        'OVERLAY DEBUG: Final verification - Config exists: $configExists (${configSize}b), PNG exists: $pngExists (${pngSize}b)',
-        tag: 'OverlayService',
-      );
-
-      // Try external file system verification using platform-native approach
-      if (configExists && pngExists && configSize > 0 && pngSize > 0) {
-        try {
-          // Attempt to verify external process accessibility
-          final configStat = await configFile.stat();
-          final pngStat = await pngFile.stat();
-
-          _debug.info(
-            'OVERLAY DEBUG: File stats - Config modified: ${configStat.modified}, PNG modified: ${pngStat.modified}',
-            tag: 'OverlayService',
-          );
-
-          _debug.info(
-            'OVERLAY DEBUG: File permissions - Config mode: ${configStat.mode}, PNG mode: ${pngStat.mode}',
-            tag: 'OverlayService',
-          );
-        } catch (e) {
-          _debug.warning(
-            'OVERLAY DEBUG: Could not get file stats: $e',
-            tag: 'OverlayService',
-          );
-        }
-      }
-
       if (!configExists || !pngExists || configSize == 0 || pngSize == 0) {
         _debug.error(
-          'OVERLAY DEBUG: File creation failed - Config: $configExists/${configSize}b, PNG: $pngExists/${pngSize}b',
+          'Overlay file creation failed - Config: $configExists/${configSize}b, PNG: $pngExists/${pngSize}b',
           tag: 'OverlayService',
         );
         return [];
       }
 
-      _debug.info(
-        'OVERLAY DEBUG: SUCCESS! RetroArch will use overlay: ${configFile.path}',
+      _debug.debug(
+        'Created overlay config at: ${configFile.path}',
         tag: 'OverlayService',
       );
 
@@ -276,11 +184,7 @@ overlay0_alpha_mod = 1.0
       return ['--appendconfig', configFile.path];
     } catch (e, stackTrace) {
       _debug.error(
-        'OVERLAY DEBUG: Error creating overlay args: $e',
-        tag: 'OverlayService',
-      );
-      _debug.error(
-        'OVERLAY DEBUG: Stack trace: $stackTrace',
+        'Error creating overlay args: $e\n$stackTrace',
         tag: 'OverlayService',
       );
       return [];

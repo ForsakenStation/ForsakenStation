@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../services/debug_service.dart';
+import '../../utils/format_utils.dart';
 
 /// Information about a RetroArch core for web
 class WebCoreInfo {
@@ -896,11 +897,7 @@ class WebCoreManager {
   }
 
   /// Format bytes into human-readable string
-  static String _formatBytes(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-  }
+  static String _formatBytes(int bytes) => formatBytes(bytes);
 
   /// Update loading state for a core and emit to stream
   void _updateLoadingState(String platform, CoreLoadingProgress progress) {

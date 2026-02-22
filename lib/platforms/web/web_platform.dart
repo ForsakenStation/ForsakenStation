@@ -1,7 +1,7 @@
-/// Web platform exports for Forsaken Emulator
-///
-/// This library provides web-specific functionality for running
-/// retro games using EmulatorJS and RetroArch WASM cores.
+// Web platform exports for Forsaken Emulator
+//
+// This library provides web-specific functionality for running
+// retro games using EmulatorJS and RetroArch WASM cores.
 
 // Core services
 export 'web_core_manager.dart';

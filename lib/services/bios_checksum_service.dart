@@ -5,40 +5,50 @@ import 'debug_service.dart';
 
 /// Service for generating and verifying BIOS file checksums
 class BiosChecksumService {
+  static BiosChecksumService? _instance;
+  final _debug = DebugService.instance;
+
+  BiosChecksumService._();
+
+  static BiosChecksumService get instance {
+    _instance ??= BiosChecksumService._();
+    return _instance!;
+  }
+
   /// Calculate MD5 checksum of a file
-  static Future<String> calculateMd5(File file) async {
+  Future<String> calculateMd5(File file) async {
     final bytes = await file.readAsBytes();
     final digest = md5.convert(bytes);
     return digest.toString();
   }
 
   /// Calculate SHA1 checksum of a file
-  static Future<String> calculateSha1(File file) async {
+  Future<String> calculateSha1(File file) async {
     final bytes = await file.readAsBytes();
     final digest = sha1.convert(bytes);
     return digest.toString();
   }
 
   /// Calculate SHA256 checksum of a file
-  static Future<String> calculateSha256(File file) async {
+  Future<String> calculateSha256(File file) async {
     final bytes = await file.readAsBytes();
     final digest = sha256.convert(bytes);
     return digest.toString();
   }
 
   /// Calculate CRC32 checksum of a file
-  static Future<String> calculateCrc32(File file) async {
+  Future<String> calculateCrc32(File file) async {
     final bytes = await file.readAsBytes();
     final crc32 = _calculateCrc32(bytes);
     return crc32.toRadixString(16).padLeft(8, '0').toUpperCase();
   }
 
-  /// Internal CRC32 calculation using standard CRC32 algorithm
-  static int _calculateCrc32(Uint8List bytes) {
-    const int crc32Poly = 0xEDB88320;
+  /// Pre-computed CRC32 lookup table (computed once)
+  static final List<int> _crc32Table = _buildCrc32Table();
 
-    // Pre-computed CRC32 lookup table
-    final List<int> crcTable = List<int>.filled(256, 0);
+  static List<int> _buildCrc32Table() {
+    const int crc32Poly = 0xEDB88320;
+    final table = List<int>.filled(256, 0);
     for (int i = 0; i < 256; i++) {
       int crc = i;
       for (int j = 0; j < 8; j++) {
@@ -48,20 +58,24 @@ class BiosChecksumService {
           crc = crc >> 1;
         }
       }
-      crcTable[i] = crc;
+      table[i] = crc;
     }
+    return table;
+  }
 
+  /// Internal CRC32 calculation using standard CRC32 algorithm
+  int _calculateCrc32(Uint8List bytes) {
     // Calculate CRC32
     int crc = 0xFFFFFFFF;
     for (int byte in bytes) {
-      crc = crcTable[(crc ^ byte) & 0xFF] ^ (crc >> 8);
+      crc = _crc32Table[(crc ^ byte) & 0xFF] ^ (crc >> 8);
     }
 
     return crc ^ 0xFFFFFFFF;
   }
 
   /// Generate comprehensive checksum information for a file
-  static Future<Map<String, dynamic>> generateFileInfo(File file) async {
+  Future<Map<String, dynamic>> generateFileInfo(File file) async {
     if (!await file.exists()) {
       throw FileSystemException('File does not exist', file.path);
     }
@@ -84,7 +98,7 @@ class BiosChecksumService {
   }
 
   /// Verify file integrity using multiple checksum methods
-  static Future<ChecksumVerificationResult> verifyFile({
+  Future<ChecksumVerificationResult> verifyFile({
     required File file,
     String? expectedMd5,
     String? expectedSha1,
@@ -181,7 +195,7 @@ class BiosChecksumService {
   }
 
   /// Generate checksums for multiple files in a directory
-  static Future<List<Map<String, dynamic>>> generateDirectoryInfo(
+  Future<List<Map<String, dynamic>>> generateDirectoryInfo(
     Directory directory, {
     List<String>? fileExtensions,
     bool recursive = false,
@@ -208,7 +222,7 @@ class BiosChecksumService {
           final fileInfo = await generateFileInfo(entity);
           results.add(fileInfo);
         } catch (e) {
-          DebugService.instance.error(
+          _debug.error(
             'Error processing file ${entity.path}: $e',
             tag: 'BiosChecksum',
           );

@@ -1,4 +1,4 @@
-import 'dart:io';
+import '../utils/file_utils.dart';
 
 /// Represents an overlay configuration for RetroArch
 class OverlayConfig {
@@ -39,14 +39,10 @@ class OverlayConfig {
   /// Check if all required files exist
   Future<bool> isValid() async {
     if (configPath == null) {
-      final imageFile = File(imagePath);
-      return await imageFile.exists();
+      return await fileExists(imagePath);
     }
 
-    final configFile = File(configPath!);
-    final imageFile = File(imagePath);
-
-    return await configFile.exists() && await imageFile.exists();
+    return await fileExists(configPath!) && await fileExists(imagePath);
   }
 
   @override

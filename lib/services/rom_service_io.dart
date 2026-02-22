@@ -1,7 +1,7 @@
 // IO implementation for RomService (desktop/mobile)
 import 'dart:io';
 import 'package:path/path.dart' as path;
-import '../models/platform.dart';
+import '../models/emulator_platform.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
 import 'debug_service.dart';
@@ -9,8 +9,10 @@ import 'debug_service.dart';
 final _debug = DebugService.instance;
 
 /// Load platforms from directory structure (IO implementation)
-Future<List<Platform>> loadPlatformsFromFiles(String romsBasePath) async {
-  final List<Platform> platforms = [];
+Future<List<EmulatorPlatform>> loadPlatformsFromFiles(
+  String romsBasePath,
+) async {
+  final List<EmulatorPlatform> platforms = [];
 
   try {
     final romsDir = Directory(romsBasePath);
@@ -32,7 +34,11 @@ Future<List<Platform>> loadPlatformsFromFiles(String romsBasePath) async {
         final roms = await loadRomsForPlatform(platformDir.path, platformName);
 
         platforms.add(
-          Platform(name: platformName, path: platformDir.path, roms: roms),
+          EmulatorPlatform(
+            name: platformName,
+            path: platformDir.path,
+            roms: roms,
+          ),
         );
       }
     }

@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 import '../services/debug_service.dart';
+import '../utils/file_utils.dart';
+import '../utils/platform_utils.dart' as platform_utils;
 
 /// Represents a single emulator command configuration
 class EmulatorCommand {
@@ -82,10 +83,7 @@ class EmulatorCommand {
 
       // Expand ~ to home directory
       if (processed.startsWith('~/')) {
-        final home =
-            Platform.environment['HOME'] ??
-            Platform.environment['USERPROFILE'] ??
-            '';
+        final home = platform_utils.homeDirectory;
         if (home.isNotEmpty) {
           processed = processed.replaceFirst('~/', '$home/');
         }
@@ -219,8 +217,7 @@ class EmulatorsConfig {
   static Future<EmulatorsConfig?> loadFromFile(String filePath) async {
     final debug = DebugService.instance;
     try {
-      final file = File(filePath);
-      if (!await file.exists()) {
+      if (!await fileExists(filePath)) {
         debug.error(
           'Config file does not exist: $filePath',
           tag: 'EmulatorsConfig',
@@ -228,7 +225,7 @@ class EmulatorsConfig {
         return null;
       }
 
-      final contents = await file.readAsString();
+      final contents = await readFileAsString(filePath);
       final json = jsonDecode(contents) as Map<String, dynamic>;
       return EmulatorsConfig.fromJson(json);
     } catch (e) {

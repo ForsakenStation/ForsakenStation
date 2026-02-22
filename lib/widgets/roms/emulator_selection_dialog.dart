@@ -40,6 +40,7 @@ class EmulatorSelectionDialog extends StatefulWidget {
 class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog>
     with DialogControlsMixin<EmulatorSelectionDialog> {
   int _selectedIndex = 0;
+  final FocusNode _keyboardFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -48,6 +49,12 @@ class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog>
       onCancel: () => Navigator.pop(context),
       customHandler: _handleCustomGamepadInput,
     );
+  }
+
+  @override
+  void dispose() {
+    _keyboardFocusNode.dispose();
+    super.dispose();
   }
 
   void _handleCustomGamepadInput() {
@@ -79,7 +86,7 @@ class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog>
     final hasGamepad = GamepadService.instance.isGamepadConnected;
 
     return KeyboardListener(
-      focusNode: FocusNode()..requestFocus(),
+      focusNode: _keyboardFocusNode,
       autofocus: true,
       onKeyEvent: (event) {
         if (event is! KeyDownEvent) return;

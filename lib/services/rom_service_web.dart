@@ -1,10 +1,12 @@
 // Web stub for RomService platform-specific functions
 // These are not used on web - the main class handles web via JSONL HTTP
-import '../models/platform.dart';
+import '../models/emulator_platform.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
 
-Future<List<Platform>> loadPlatformsFromFiles(String romsBasePath) async {
+Future<List<EmulatorPlatform>> loadPlatformsFromFiles(
+  String romsBasePath,
+) async {
   // Not available on web
   return [];
 }

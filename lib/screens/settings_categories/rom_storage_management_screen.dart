@@ -10,6 +10,7 @@ import '../../mixins/screen_navigation_mixin.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
+import '../../utils/format_utils.dart';
 
 /// Type of navigable item
 enum _NavigableItemType { appBarButton, platformCard, romItem }
@@ -65,7 +66,7 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
 
   // Navigation state
   int _selectedIndex = 0;
-  List<_NavigableItem> _navigableItems = [];
+  final List<_NavigableItem> _navigableItems = [];
   bool _isGamepadConnected = false;
 
   // Track expanded platforms
@@ -354,11 +355,6 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     }
   }
 
-  /// Get index of navigable item by ID
-  int _getItemIndex(String id) {
-    return _navigableItems.indexWhere((item) => item.id == id);
-  }
-
   /// Check if a navigable item is currently selected
   bool _isItemSelected(String id) {
     if (_selectedIndex < 0 || _selectedIndex >= _navigableItems.length) {
@@ -399,14 +395,7 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     return romsByPlatform;
   }
 
-  String _formatBytes(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024) {
-      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-    }
-    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
-  }
+  String _formatBytes(int bytes) => formatBytes(bytes);
 
   Future<void> _deleteRom(
     String platform,

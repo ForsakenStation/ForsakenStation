@@ -16,7 +16,6 @@ import '../utils/platform_utils.dart';
 /// Handles ROM launching logic including emulator selection,
 /// download progress, and launch execution.
 class RomLauncher {
-  final BuildContext context;
   final EmulatorService emulatorService;
   final MediaService mediaService;
   final String platformName; // Default platform (for non-collection views)
@@ -26,7 +25,6 @@ class RomLauncher {
   final bool isCollection; // Whether this is a collection view
 
   RomLauncher({
-    required this.context,
     required this.emulatorService,
     required this.mediaService,
     required this.platformName,
@@ -38,10 +36,10 @@ class RomLauncher {
 
   /// Main entry point for launching a ROM
   /// Returns true if launch was successful, false otherwise
-  Future<bool> launchRom(RomItem item) async {
+  Future<bool> launchRom(BuildContext context, RomItem item) async {
     // Web platform: use WebEmulatorLauncher
     if (kIsWeb) {
-      return _launchWebEmulator(item);
+      return _launchWebEmulator(context, item);
     }
 
     // Desktop platform: use native emulator
@@ -58,8 +56,11 @@ class RomLauncher {
 
     final config = await emulatorService.loadPlatformConfig(actualPlatform);
 
+    if (!context.mounted) return false;
+
     if (config == null || config.commands.isEmpty) {
       _showErrorDialog(
+        context,
         'No emulator configured for $actualDisplayName.\n\n'
         'Please add configuration for "$actualPlatform" in:\n'
         '${ConfigService.instance.emulatorsConfigPath}',
@@ -70,7 +71,8 @@ class RomLauncher {
     // If multiple commands, show selection dialog
     EmulatorCommand? selectedCommand;
     if (config.hasMultipleCommands) {
-      selectedCommand = await _showEmulatorSelectionDialog(config);
+      selectedCommand = await _showEmulatorSelectionDialog(context, config);
+      if (!context.mounted) return false;
       if (selectedCommand == null) {
         return false; // User cancelled
       }
@@ -79,15 +81,21 @@ class RomLauncher {
     }
 
     if (selectedCommand == null) {
-      _showErrorDialog('No emulator command available');
+      _showErrorDialog(context, 'No emulator command available');
       return false;
     }
 
-    return await _launchWithCommand(item, selectedCommand, actualPlatform);
+    return await _launchWithCommand(
+      context,
+      item,
+      selectedCommand,
+      actualPlatform,
+    );
   }
 
   /// Show emulator selection dialog when multiple commands available
   Future<EmulatorCommand?> _showEmulatorSelectionDialog(
+    BuildContext context,
     EmulatorConfig config,
   ) async {
     return await EmulatorSelectionDialog.show(
@@ -98,11 +106,12 @@ class RomLauncher {
   }
 
   /// Launch ROM using web emulator (EmulatorJS)
-  Future<bool> _launchWebEmulator(RomItem item) async {
+  Future<bool> _launchWebEmulator(BuildContext context, RomItem item) async {
     // Check if platform is supported
     if (!WebEmulatorLauncher.isAvailableForRom(item)) {
       final platform = item.platform ?? platformName;
       _showErrorDialog(
+        context,
         'Platform "$platform" is not yet supported in web browser.\n\n'
         'Supported platforms: ${WebEmulatorLauncher.getSupportedPlatforms().join(", ")}',
       );
@@ -111,10 +120,12 @@ class RomLauncher {
 
     try {
       final success = await WebEmulatorLauncher.launchFullscreen(context, item);
+      if (!context.mounted) return success;
       requestFocus();
       return success;
     } catch (e) {
-      _showErrorDialog('Failed to launch web emulator: $e');
+      if (!context.mounted) return false;
+      _showErrorDialog(context, 'Failed to launch web emulator: $e');
       requestFocus();
       return false;
     }
@@ -122,6 +133,7 @@ class RomLauncher {
 
   /// Launch ROM with a specific emulator command
   Future<bool> _launchWithCommand(
+    BuildContext context,
     RomItem item,
     EmulatorCommand command,
     String actualPlatform,
@@ -212,6 +224,7 @@ class RomLauncher {
         return true;
       } else if (!wasCancelled) {
         _showErrorDialog(
+          context,
           'Failed to launch ROM.\n\n'
           'Check that:\n'
           '• Emulator is installed correctly\n'
@@ -227,14 +240,14 @@ class RomLauncher {
       if (!context.mounted) return false;
       if (!wasCancelled) {
         Navigator.pop(context); // Close loading dialog
-        _showErrorDialog('Error launching ROM: $e');
+        _showErrorDialog(context, 'Error launching ROM: $e');
       }
       requestFocus();
       return false;
     }
   }
 
-  void _showErrorDialog(String message) {
+  void _showErrorDialog(BuildContext context, String message) {
     ErrorDialog.show(context: context, message: message, onClose: requestFocus);
   }
 }

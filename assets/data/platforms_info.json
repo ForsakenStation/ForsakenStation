@@ -459,10 +459,20 @@
     "resolution": "Hasta 640x480",
     "colors": "16.8 millones de colores"
   },
-  "amiga": {
+  "amiga1200": {
     "fullName": "Commodore Amiga",
     "manufacturer": "Commodore",
-    "releaseYear": 1985,
+    "releaseYear": 1991,
+    "generation": null,
+    "description": "Revolucionaria computadora personal con capacidades multimedia avanzadas. Popular para gaming en Europa con títulos legendarios como Lemmings, Monkey Island y Sensible Soccer.",
+    "cpu": "Motorola 68000 a 7.16 MHz",
+    "resolution": "Hasta 640x512",
+    "colors": "4,096 colores disponibles"
+  },
+  "amiga500": {
+    "fullName": "Commodore Amiga",
+    "manufacturer": "Commodore",
+    "releaseYear": 1990,
     "generation": null,
     "description": "Revolucionaria computadora personal con capacidades multimedia avanzadas. Popular para gaming en Europa con títulos legendarios como Lemmings, Monkey Island y Sensible Soccer.",
     "cpu": "Motorola 68000 a 7.16 MHz",

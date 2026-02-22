@@ -1,9 +1,9 @@
-import 'platform.dart';
+import 'emulator_platform.dart';
 import 'collection.dart';
 
 /// Union type to represent either a Platform or a Collection in the platforms list
 class PlatformOrCollection {
-  final Platform? platform;
+  final EmulatorPlatform? platform;
   final Collection? collection;
 
   PlatformOrCollection.platform(this.platform) : collection = null;

@@ -12,7 +12,7 @@ import 'package:forsaken/screens/roms/handlers/rom_save_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
-import 'package:forsaken/models/platform.dart';
+import 'package:forsaken/models/emulator_platform.dart';
 import 'package:forsaken/models/rom.dart';
 import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/services/debug_service.dart';
@@ -34,10 +34,8 @@ import 'package:forsaken/widgets/roms/fullscreen_image_viewer.dart';
 import 'package:forsaken/widgets/roms/rom_detail_dialog.dart';
 import 'package:forsaken/screens/settings_screen.dart';
 
-enum ViewMode { list, grid, carousel }
-
 class RomsScreen extends StatefulWidget {
-  final Platform platform;
+  final EmulatorPlatform platform;
   final RomService romService;
   final bool isCollection; // True if this is a collection view
 
@@ -60,7 +58,7 @@ class _RomsScreenState extends State<RomsScreen> {
   final List<String> _pathHistory = [];
   bool _isLoading = true;
   List<Rom>? _platformRoms; // Cached ROMs for JSONL platform
-  ViewMode _viewMode = ViewMode.list;
+  ScreenViewMode _viewMode = ScreenViewMode.list;
   int _selectedIndex = 0;
   final Map<String, bool> _downloadedRomsCache =
       {}; // Cache for downloaded ROM status
@@ -85,9 +83,9 @@ class _RomsScreenState extends State<RomsScreen> {
   Timer? _gamepadPollTimer;
   final _debug = DebugService.instance;
 
-  // Platform navigation support
-  List<Platform>? _allPlatforms;
-  int? _currentPlatformIndex;
+  // EmulatorPlatform navigation support
+  List<EmulatorPlatform>? _allEmulatorPlatforms;
+  int? _currentEmulatorPlatformIndex;
 
   // Search/filter functionality
   final TextEditingController _searchController = TextEditingController();
@@ -106,14 +104,15 @@ class _RomsScreenState extends State<RomsScreen> {
       if (mounted) {
         final width = MediaQuery.of(context).size.width;
         setState(() {
-          _viewMode = width < 600 ? ViewMode.carousel : ViewMode.list;
+          _viewMode = width < 600
+              ? ScreenViewMode.carousel
+              : ScreenViewMode.list;
         });
       }
     });
 
     // Initialize services synchronously
-    final mediaPath = ConfigService.instance.mediaPath;
-    _mediaService = MediaService(mediaBasePath: mediaPath);
+    _mediaService = MediaService.instance;
     _emulatorService = EmulatorService.instance;
     _keyboardService = KeyboardService.instance;
     _gamepadService = GamepadService.instance;
@@ -126,7 +125,6 @@ class _RomsScreenState extends State<RomsScreen> {
       gamelistService: _gamelistService,
     );
     _romLauncher = RomLauncher(
-      context: context,
       emulatorService: _emulatorService,
       mediaService: _mediaService,
       platformName: widget.platform.name,
@@ -136,7 +134,6 @@ class _RomsScreenState extends State<RomsScreen> {
       isCollection: widget.isCollection,
     );
     _romSaveHandler = RomSaveHandler(
-      context: context,
       platformName: widget.platform.name,
       requestFocus: _requestFocusForCurrentViewMode,
       isCollection: widget.isCollection,
@@ -167,9 +164,9 @@ class _RomsScreenState extends State<RomsScreen> {
         },
         getColumns: () => _calculateCrossAxisCount(context),
         scrollToIndex: (index, {columns, centerItem = false}) {
-          if (_viewMode == ViewMode.grid) {
+          if (_viewMode == ScreenViewMode.grid) {
             _scrollToIndexInGrid(index, columns!, centerItem: centerItem);
-          } else if (_viewMode == ViewMode.list) {
+          } else if (_viewMode == ScreenViewMode.list) {
             _scrollToIndexInList(index, centerItem: centerItem);
           } else {
             _scrollToCarouselIndex(index, centerItem: centerItem);
@@ -184,7 +181,7 @@ class _RomsScreenState extends State<RomsScreen> {
           }
         },
         onRefresh: _loadItems,
-        onToggleView: _toggleViewMode,
+        onToggleView: _toggleScreenViewMode,
         onSearch: _activateSearchMode,
         onShowHelp: _showHelpDialog,
         onScheduleMediaLoad: _scheduleMediaLoad,
@@ -215,18 +212,18 @@ class _RomsScreenState extends State<RomsScreen> {
             });
             return true;
           }
-          // Platform navigation (only in list mode at root)
-          if (_viewMode == ViewMode.list &&
+          // EmulatorPlatform navigation (only in list mode at root)
+          if (_viewMode == ScreenViewMode.list &&
               _pathHistory.isEmpty &&
               _currentSubdirectory == null) {
             if (key == LogicalKeyboardKey.arrowLeft ||
                 key == LogicalKeyboardKey.keyQ) {
-              _navigateToPreviousPlatform();
+              _navigateToPreviousEmulatorPlatform();
               return true;
             }
             if (key == LogicalKeyboardKey.arrowRight ||
                 key == LogicalKeyboardKey.keyE) {
-              _navigateToNextPlatform();
+              _navigateToNextEmulatorPlatform();
               return true;
             }
           }
@@ -254,6 +251,8 @@ class _RomsScreenState extends State<RomsScreen> {
   Future<void> _initializeGamelistService() async {
     final gamelistPath = await ConfigService.instance.gamelistPath;
 
+    if (!mounted) return;
+
     // Update gamelist service with correct path
     _gamelistService = GamelistService(gamelistBasePath: gamelistPath);
 
@@ -265,12 +264,16 @@ class _RomsScreenState extends State<RomsScreen> {
 
     // Update rom launcher with new controller
     _romLauncher = RomLauncher(
-      context: context,
       emulatorService: _emulatorService,
       mediaService: _mediaService,
       platformName: widget.platform.name,
       platformDisplayName: widget.platform.displayName,
       mediaCache: _controller.mediaCache,
+      requestFocus: _requestFocusForCurrentViewMode,
+      isCollection: widget.isCollection,
+    );
+    _romSaveHandler = RomSaveHandler(
+      platformName: widget.platform.name,
       requestFocus: _requestFocusForCurrentViewMode,
       isCollection: widget.isCollection,
     );
@@ -342,15 +345,15 @@ class _RomsScreenState extends State<RomsScreen> {
 
     // Handle view toggle (Right stick click)
     if (_gamepadService.isViewTogglePressed()) {
-      _toggleViewMode();
+      _toggleScreenViewMode();
       _gamepadService.updatePreviousButtonStates();
       return;
     }
 
     // Handle navigation based on view mode
-    if (_viewMode == ViewMode.grid) {
+    if (_viewMode == ScreenViewMode.grid) {
       _handleGamepadGridNavigation();
-    } else if (_viewMode == ViewMode.list) {
+    } else if (_viewMode == ScreenViewMode.list) {
       _handleGamepadListNavigation();
     } else {
       _handleGamepadCarouselNavigation();
@@ -444,8 +447,8 @@ class _RomsScreenState extends State<RomsScreen> {
       final platforms = await widget.romService.loadPlatforms();
       if (!mounted) return; // Check mounted before setState
       setState(() {
-        _allPlatforms = platforms;
-        _currentPlatformIndex = platforms.indexWhere(
+        _allEmulatorPlatforms = platforms;
+        _currentEmulatorPlatformIndex = platforms.indexWhere(
           (p) => p.name == widget.platform.name,
         );
       });
@@ -455,25 +458,30 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   /// Navigate to previous platform
-  void _navigateToPreviousPlatform() {
-    if (_allPlatforms == null || _currentPlatformIndex == null) return;
-    if (_currentPlatformIndex! <= 0) return;
+  void _navigateToPreviousEmulatorPlatform() {
+    if (_allEmulatorPlatforms == null || _currentEmulatorPlatformIndex == null)
+      return;
+    if (_currentEmulatorPlatformIndex! <= 0) return;
 
-    final previousPlatform = _allPlatforms![_currentPlatformIndex! - 1];
-    _navigateToPlatform(previousPlatform);
+    final previousEmulatorPlatform =
+        _allEmulatorPlatforms![_currentEmulatorPlatformIndex! - 1];
+    _navigateToEmulatorPlatform(previousEmulatorPlatform);
   }
 
   /// Navigate to next platform
-  void _navigateToNextPlatform() {
-    if (_allPlatforms == null || _currentPlatformIndex == null) return;
-    if (_currentPlatformIndex! >= _allPlatforms!.length - 1) return;
+  void _navigateToNextEmulatorPlatform() {
+    if (_allEmulatorPlatforms == null || _currentEmulatorPlatformIndex == null)
+      return;
+    if (_currentEmulatorPlatformIndex! >= _allEmulatorPlatforms!.length - 1)
+      return;
 
-    final nextPlatform = _allPlatforms![_currentPlatformIndex! + 1];
-    _navigateToPlatform(nextPlatform);
+    final nextEmulatorPlatform =
+        _allEmulatorPlatforms![_currentEmulatorPlatformIndex! + 1];
+    _navigateToEmulatorPlatform(nextEmulatorPlatform);
   }
 
   /// Navigate to a specific platform
-  void _navigateToPlatform(Platform platform) {
+  void _navigateToEmulatorPlatform(EmulatorPlatform platform) {
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
@@ -768,39 +776,39 @@ class _RomsScreenState extends State<RomsScreen> {
     }
   }
 
-  IconData _getViewModeIcon() {
+  IconData _getScreenViewModeIcon() {
     switch (_viewMode) {
-      case ViewMode.grid:
+      case ScreenViewMode.grid:
         return Icons.view_list;
-      case ViewMode.list:
+      case ScreenViewMode.list:
         return Icons.view_carousel;
-      case ViewMode.carousel:
+      case ScreenViewMode.carousel:
         return Icons.grid_view;
     }
   }
 
-  String _getViewModeTooltip() {
+  String _getScreenViewModeTooltip() {
     switch (_viewMode) {
-      case ViewMode.grid:
+      case ScreenViewMode.grid:
         return 'List View';
-      case ViewMode.list:
+      case ScreenViewMode.list:
         return 'Carousel View';
-      case ViewMode.carousel:
+      case ScreenViewMode.carousel:
         return 'Grid View';
     }
   }
 
-  void _toggleViewMode() {
+  void _toggleScreenViewMode() {
     setState(() {
       switch (_viewMode) {
-        case ViewMode.grid:
-          _viewMode = ViewMode.list;
+        case ScreenViewMode.grid:
+          _viewMode = ScreenViewMode.list;
           break;
-        case ViewMode.list:
-          _viewMode = ViewMode.carousel;
+        case ScreenViewMode.list:
+          _viewMode = ScreenViewMode.carousel;
           break;
-        case ViewMode.carousel:
-          _viewMode = ViewMode.grid;
+        case ScreenViewMode.carousel:
+          _viewMode = ScreenViewMode.grid;
           break;
       }
     });
@@ -809,7 +817,7 @@ class _RomsScreenState extends State<RomsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _requestFocusForCurrentViewMode();
-      _requestScrollToIndexCurrentViewMode();
+      _requestScrollToIndexCurrentScreenViewMode();
       // Load media for the new view
       if (_filteredItems.isNotEmpty) {
         _scheduleMediaLoad();
@@ -820,17 +828,17 @@ class _RomsScreenState extends State<RomsScreen> {
   /// Request focus for the current view mode's FocusNode
   void _requestFocusForCurrentViewMode() {
     switch (_viewMode) {
-      case ViewMode.grid:
+      case ScreenViewMode.grid:
         if (!_gridFocusNode.hasFocus) {
           _gridFocusNode.requestFocus();
         }
         break;
-      case ViewMode.list:
+      case ScreenViewMode.list:
         if (!_listFocusNode.hasFocus) {
           _listFocusNode.requestFocus();
         }
         break;
-      case ViewMode.carousel:
+      case ScreenViewMode.carousel:
         if (!_carouselFocusNode.hasFocus) {
           _carouselFocusNode.requestFocus();
         }
@@ -838,21 +846,9 @@ class _RomsScreenState extends State<RomsScreen> {
     }
   }
 
-  /// Convert ViewMode to ScreenViewMode
-  ScreenViewMode _getScreenViewMode() {
-    switch (_viewMode) {
-      case ViewMode.grid:
-        return ScreenViewMode.grid;
-      case ViewMode.list:
-        return ScreenViewMode.list;
-      case ViewMode.carousel:
-        return ScreenViewMode.carousel;
-    }
-  }
-
   /// Main keyboard event handler - delegates to ScreenKeyboardHandler
   KeyEventResult _handleKeyEvent(KeyEvent event) {
-    return _keyboardHandler.handleKeyEvent(event, _getScreenViewMode());
+    return _keyboardHandler.handleKeyEvent(event, _viewMode);
   }
 
   /// Show help dialog with keyboard shortcuts
@@ -876,7 +872,7 @@ class _RomsScreenState extends State<RomsScreen> {
     } else {
       // Carousel and List: launch directly
       // Grid: show detail dialog
-      if (_viewMode == ViewMode.grid) {
+      if (_viewMode == ScreenViewMode.grid) {
         _showRomDetailDialog(item);
       } else {
         _handleRomLaunch(item);
@@ -972,7 +968,7 @@ class _RomsScreenState extends State<RomsScreen> {
                             },
                           ),
                         )
-                      : _buildTitile(),
+                      : _buildTitle(),
                   actions: _buildAppBarActions(context),
                 ),
                 // Body
@@ -1007,7 +1003,7 @@ class _RomsScreenState extends State<RomsScreen> {
     );
   }
 
-  Widget _buildTitile() {
+  Widget _buildTitle() {
     String? subFolder = _getCurrentFolderName();
     return Container(
       margin: const EdgeInsets.only(right: 1),
@@ -1047,7 +1043,7 @@ class _RomsScreenState extends State<RomsScreen> {
           onSelected: (value) {
             switch (value) {
               case 'toggle_view':
-                _toggleViewMode();
+                _toggleScreenViewMode();
                 break;
               case 'refresh':
                 _loadItems();
@@ -1059,9 +1055,9 @@ class _RomsScreenState extends State<RomsScreen> {
               value: 'toggle_view',
               child: Row(
                 children: [
-                  Icon(_getViewModeIcon()),
+                  Icon(_getScreenViewModeIcon()),
                   const SizedBox(width: 12),
-                  Text(_getViewModeTooltip()),
+                  Text(_getScreenViewModeTooltip()),
                 ],
               ),
             ),
@@ -1095,9 +1091,9 @@ class _RomsScreenState extends State<RomsScreen> {
           ),
         const ThemeSelector(),
         IconButton(
-          icon: Icon(_getViewModeIcon()),
-          onPressed: _toggleViewMode,
-          tooltip: _getViewModeTooltip(),
+          icon: Icon(_getScreenViewModeIcon()),
+          onPressed: _toggleScreenViewMode,
+          tooltip: _getScreenViewModeTooltip(),
         ),
         IconButton(
           icon: const Icon(Icons.refresh),
@@ -1137,9 +1133,9 @@ class _RomsScreenState extends State<RomsScreen> {
       );
     }
 
-    if (_viewMode == ViewMode.carousel) {
+    if (_viewMode == ScreenViewMode.carousel) {
       return _buildCarouselView();
-    } else if (_viewMode == ViewMode.list) {
+    } else if (_viewMode == ScreenViewMode.list) {
       return _buildListView();
     } else {
       return _buildGridView();
@@ -1350,11 +1346,11 @@ class _RomsScreenState extends State<RomsScreen> {
         : null;
 
     // Launch ROM using handler
-    final success = await _romLauncher.launchRom(item);
+    final success = await _romLauncher.launchRom(context, item);
 
     // If launch was successful and ROM was downloaded, ask to save
     if (success && isDownloading && mounted) {
-      await _romSaveHandler.handleRomSave(item, imagePath);
+      await _romSaveHandler.handleRomSave(context, item, imagePath);
     }
   }
 
@@ -1390,15 +1386,15 @@ class _RomsScreenState extends State<RomsScreen> {
     return isDownloaded;
   }
 
-  void _requestScrollToIndexCurrentViewMode() {
+  void _requestScrollToIndexCurrentScreenViewMode() {
     switch (_viewMode) {
-      case ViewMode.list:
+      case ScreenViewMode.list:
         _scrollToIndexInList(_selectedIndex);
         break;
-      case ViewMode.carousel:
+      case ScreenViewMode.carousel:
         _scrollToCarouselIndex(_selectedIndex);
         break;
-      case ViewMode.grid:
+      case ScreenViewMode.grid:
         _scrollToIndexInGrid(_selectedIndex, _calculateCrossAxisCount(context));
         break;
     }
@@ -1444,7 +1440,7 @@ class _RomsScreenState extends State<RomsScreen> {
   /// Get bottom bar actions based on current view mode and context
   List<BottomBarAction> _getBottomBarActions() {
     return RomsScreenBottomBarActions.getActions(
-      isListView: _viewMode == ViewMode.list,
+      isListView: _viewMode == ScreenViewMode.list,
       isAtRoot: _pathHistory.isEmpty && _currentSubdirectory == null,
     );
   }

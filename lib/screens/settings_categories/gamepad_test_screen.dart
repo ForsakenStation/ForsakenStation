@@ -412,7 +412,9 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
 
   Widget _buildTestButton(String label, bool isPressed) {
     if (isPressed) {
-      _testAction(label);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _testAction(label);
+      });
     }
 
     return Padding(
