@@ -67,6 +67,7 @@ class PlatformNames {
     // Atari
     'atari2600': 'Atari 2600',
     'atari5200': 'Atari 5200',
+    '5200': 'Atari 5200',
     'atari7800': 'Atari 7800',
     'atarijaguar': 'Atari Jaguar',
     'jaguar': 'Atari Jaguar',
@@ -93,8 +94,10 @@ class PlatformNames {
     'vic20': 'Commodore VIC-20',
     'cdtv': 'Commodore CDTV',
     'cplus4': 'Commodore Plus/4',
+    'plus4': 'Commodore Plus/4',
     'zxspectrum': 'ZX Spectrum',
     'spectrum': 'ZX Spectrum',
+    'zx81': 'Sinclair ZX81',
     'msx': 'MSX',
     'msx1': 'MSX',
     'msx2': 'MSX2',
@@ -161,6 +164,8 @@ class PlatformNames {
     // PC
     'pc': 'PC',
     'dos': 'MS-DOS',
+    'doom': 'DOOM',
+    'prboom': 'DOOM',
     'windows': 'Windows',
     'linux': 'Linux',
     'scummvm': 'ScummVM',

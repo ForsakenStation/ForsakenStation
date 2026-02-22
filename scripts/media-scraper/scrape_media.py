@@ -10,6 +10,7 @@ from the API (name, description, release date, genre, developer, etc.).
 
 Requirements:
   pip install requests Pillow python-dotenv
+  System: ImageMagick (magick) for WebP conversion
 
 Setup:
   1. Create an account at https://www.screenscraper.fr/
@@ -42,6 +43,7 @@ Examples:
 import argparse
 import json
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -107,7 +109,6 @@ MEDIA_TYPES = {
 # https://www.screenscraper.fr/api/systemesListe.php
 
 PLATFORM_IDS = {
-
     "famicom": 3,
     "superfamicom": 4,
     "arcadia": 84,
@@ -338,7 +339,7 @@ PLATFORM_IDS = {
     "v.smile": 120,
     "vc4000": 281,
     "vectrex": 102,
-    "c20": 73, #vic20
+    "c20": 73,  # vic20
     "video system co.": 175,
     "videopac g7000": 104,
     "vircon32": 272,
@@ -360,6 +361,7 @@ PLATFORM_IDS = {
     "zxspectrum": 76,
     "zx81": 77,
 }
+
 
 def log(level: str, message: str):
     """Print colored log message"""
@@ -511,6 +513,11 @@ class ScreenScraperAPI:
                     for chunk in response.iter_content(chunk_size=8192):
                         f.write(chunk)
 
+                # Convert PNG/JPG to WebP for smaller file size
+                converted = convert_to_webp(output_path)
+                if converted:
+                    output_path = converted
+
                 return True
             else:
                 log("warning", f"Download failed: HTTP {response.status_code}")
@@ -519,6 +526,35 @@ class ScreenScraperAPI:
             log("error", f"Download error: {e}")
 
         return False
+
+
+def convert_to_webp(image_path: Path) -> Optional[Path]:
+    """Convert a PNG or JPG image to WebP using ImageMagick, then remove the original.
+
+    Returns the new .webp path on success, or None if conversion failed or skipped.
+    """
+    if image_path.suffix.lower() not in (".png", ".jpg", ".jpeg"):
+        return None
+
+    webp_path = image_path.with_suffix(".webp")
+    try:
+        result = subprocess.run(
+            ["magick", str(image_path), str(webp_path)],
+            capture_output=True,
+            timeout=30,
+        )
+        if result.returncode == 0 and webp_path.exists():
+            image_path.unlink()
+            return webp_path
+        else:
+            log("warning", f"WebP conversion failed for {image_path.name}")
+            return None
+    except FileNotFoundError:
+        # ImageMagick not installed — keep original
+        return None
+    except Exception as e:
+        log("warning", f"WebP conversion error: {e}")
+        return None
 
 
 def extract_rom_info(jsonl_file: Path) -> List[Dict]:

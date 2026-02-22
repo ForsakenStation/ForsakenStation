@@ -1,245 +1,605 @@
 {
-    "ask_to_save": true,
-    "emulators": [
+  "ask_to_save": true,
+  "emulators": [
+    {
+      "system": "nes",
+      "command": [
         {
-            "system": "nes",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://nes"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "snes",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://snes"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "genesis",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://genesis"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "megadrive",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://segaMD"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "gb",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://gb"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "gbc",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://gbc"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "gba",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://gba"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "n64",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://n64"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "psx",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://psx"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "nds",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://nds"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "atari2600",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://atari2600"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "atari7800",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://atari7800"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "atarilynx",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://lynx"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "jaguar",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://jaguar"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "atarijaguar",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://jaguar"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "virtualboy",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://vb"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "wonderswan",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://ws"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "wonderswancolor",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://wsc"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "mastersystem",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://segaMS"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "gamegear",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://segaGG"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "segacd",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://segaCD"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "sega32x",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://sega32x"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "saturn",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://segaSaturn"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "arcade",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://arcade"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "mame",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://mame"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "neogeo",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://arcade"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "3do",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://3do"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "psp",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://psp"}],
-            "useForeverMode": false,
-            "acceptZipFiles": false,
-            "corePreferences": {}
-        },
-
-        {
-            "system": "pcengine",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://pce"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "pcenginecd",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://pce"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "ngp",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://ngp"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "ngpc",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://ngpc"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "colecovision",
-            "command": [{"name": "emulatorjs", "command": "emulatorjs://coleco"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-
-        {
-            "system": "ebooks",
-            "command": [{"name": "Pdf viewer", "command": "pdf.web"}],
-            "useForeverMode": false,
-            "acceptZipFiles": true,
-            "corePreferences": {}
+          "name": "emulatorjs",
+          "command": "emulatorjs://nes"
         }
-    ]
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "snes",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://snes"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "genesis",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://genesis"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "megadrive",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://segaMD"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "gb",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://gb"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "gbc",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://gbc"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "gba",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://gba"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "n64",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://n64"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "psx",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://psx"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "nds",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://nds"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "atari2600",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://atari2600"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "atari7800",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://atari7800"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "atarilynx",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://lynx"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "jaguar",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://jaguar"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "atarijaguar",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://jaguar"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "virtualboy",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://vb"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "wonderswan",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://ws"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "wonderswancolor",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://wsc"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "mastersystem",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://segaMS"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "gamegear",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://segaGG"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "segacd",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://segaCD"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "sega32x",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://sega32x"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "saturn",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://segaSaturn"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "arcade",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://arcade"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "mame",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://mame"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "neogeo",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://arcade"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "3do",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://3do"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "psp",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://psp"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": false,
+      "corePreferences": {}
+    },
+    {
+      "system": "pcengine",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://pce"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "pcenginecd",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://pce"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "ngp",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://ngp"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "ngpc",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://ngpc"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "colecovision",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://coleco"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "atari5200",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://atari5200"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "amstradcpc",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://cap32"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "zxspectrum",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://fuse"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "zx81",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://81"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "pcfx",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://pcfx"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "doom",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://prboom"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "amiga",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://amiga"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "amiga500",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://amiga"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "cdi",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://same_cdi"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "dos",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://dos"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": false,
+      "corePreferences": {}
+    },
+    {
+      "system": "c64",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://c64"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "c128",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://c128"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "pet",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://pet"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "plus4",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://plus4"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "cplus4",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://plus4"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "vic20",
+      "command": [
+        {
+          "name": "emulatorjs",
+          "command": "emulatorjs://vic20"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "ebooks",
+      "command": [
+        {
+          "name": "Pdf viewer",
+          "command": "pdf.web"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    }
+  ]
 }

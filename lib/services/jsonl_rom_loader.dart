@@ -191,6 +191,7 @@ class JsonlRomLoader {
           tag: 'JsonlRomLoader',
         );
         platforms = [
+          // Nintendo
           'nes',
           'snes',
           'n64',
@@ -198,30 +199,50 @@ class JsonlRomLoader {
           'gbc',
           'gba',
           'nds',
+          // Sega
           'sega32x',
           'segacd',
           'genesis',
           'gamegear',
           'mastersystem',
+          'saturn',
+          // Sony
           'psx',
           'psp',
+          // Arcade
           'arcade',
           'mame',
           'neogeo',
+          // Atari
           'atari2600',
+          'atari5200',
           'atari7800',
           'atarijaguar',
           'atarilynx',
+          // NEC
           'pcengine',
           'pcenginecd',
+          // SNK
+          'ngp',
+          'ngpc',
+          // Bandai
           'wonderswan',
           'wonderswancolor',
+          // Other consoles
           '3do',
           'colecovision',
           'virtualboy',
-          'saturn',
-          'ngp',
-          'ngpc',
+          'cdi',
+          // Commodore
+          'c64',
+          'pet',
+          'cplus4',
+          // Classic computers
+          'amiga500',
+          'amstradcpc',
+          'zxspectrum',
+          'zx81',
+          'dos',
         ];
       }
 
