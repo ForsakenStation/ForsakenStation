@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart' as mk;
 import 'package:media_kit_video/media_kit_video.dart';
 import '../../models/media.dart';
+import '../../services/debug_service.dart';
 import '../../services/gamepad_service.dart';
 
 /// Full screen image viewer with zoom, pan, and navigation capabilities
@@ -274,26 +275,27 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 // Keyboard hint
-                                if (!GamepadService
-                                    .instance
-                                    .isGamepadConnected) Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: const Text(
-                                    'ESC',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
+                                if (!GamepadService.instance.isGamepadConnected)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: const Text(
+                                      'ESC',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                ),
                                 // Gamepad hint (if connected)
                                 if (GamepadService
                                     .instance
@@ -509,24 +511,25 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // Keyboard hint
-                        if (!GamepadService.instance.isGamepadConnected) Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Text(
-                            'SPACE',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
+                        if (!GamepadService.instance.isGamepadConnected)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Text(
+                              'SPACE',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
                         // Gamepad hint (if connected)
                         if (GamepadService.instance.isGamepadConnected) ...[
                           const SizedBox(width: 8),
@@ -679,18 +682,24 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
   }
 
   void _toggleVideoPlayPause() {
-    debugPrint('🎬 _toggleVideoPlayPause() called');
+    DebugService.instance.debug(
+      '_toggleVideoPlayPause() called',
+      tag: 'MediaViewer',
+    );
 
     if (_imageMedia.isEmpty) {
-      debugPrint('  ✗ _imageMedia is empty');
+      DebugService.instance.debug('_imageMedia is empty', tag: 'MediaViewer');
       return;
     }
 
     final media = _imageMedia[_currentIndex];
-    debugPrint('  → Current media: ${media.path}, isVideo: ${media.isVideo}');
+    DebugService.instance.debug(
+      'Current media: ${media.path}, isVideo: ${media.isVideo}',
+      tag: 'MediaViewer',
+    );
 
     if (!media.isVideo) {
-      debugPrint('  ✗ Not a video');
+      DebugService.instance.debug('Not a video', tag: 'MediaViewer');
       return;
     }
 
@@ -699,24 +708,34 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
     final isLoading = _isVideoLoading(media);
     final hasPlayer = _videoPlayers.containsKey(media.path);
 
-    debugPrint(
-      '  → Video ready: $isReady, loading: $isLoading, has player: $hasPlayer',
+    DebugService.instance.debug(
+      'Video ready: $isReady, loading: $isLoading, has player: $hasPlayer',
+      tag: 'MediaViewer',
     );
 
     if (!isReady) {
-      debugPrint('  ✗ Video not ready yet');
+      DebugService.instance.debug('Video not ready yet', tag: 'MediaViewer');
       return;
     }
 
     final player = _videoPlayers[media.path];
     if (player != null) {
       final currentlyPlaying = player.state.playing;
-      debugPrint('  ✓ Player found! Currently playing: $currentlyPlaying');
-      debugPrint('  → Calling playOrPause()...');
+      DebugService.instance.debug(
+        'Player found! Currently playing: $currentlyPlaying',
+        tag: 'MediaViewer',
+      );
+      DebugService.instance.debug(
+        'Calling playOrPause()...',
+        tag: 'MediaViewer',
+      );
 
       player.playOrPause();
 
-      debugPrint('  ✓ playOrPause() called successfully');
+      DebugService.instance.debug(
+        'playOrPause() called successfully',
+        tag: 'MediaViewer',
+      );
 
       // Force UI update and show controls temporarily
       setState(() {
@@ -724,9 +743,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
       });
       _startAutoHideTimer();
 
-      debugPrint('  ✓ UI updated');
+      DebugService.instance.debug('UI updated', tag: 'MediaViewer');
     } else {
-      debugPrint('  ✗ Player is null!');
+      DebugService.instance.debug('Player is null!', tag: 'MediaViewer');
     }
   }
 
@@ -756,7 +775,10 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         });
       }
     } catch (e) {
-      debugPrint('Error loading video: $e');
+      DebugService.instance.error(
+        'Error loading video: $e',
+        tag: 'MediaViewer',
+      );
       if (mounted) {
         setState(() {
           _videoLoadingStates[media.path] = false;
@@ -852,15 +874,16 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Keyboard arrow
-                if (!isGamepadConnected) Icon(
-                  icon == Icons.arrow_back
-                      ? Icons.keyboard_arrow_left
-                      : Icons.keyboard_arrow_right,
-                  color: enabled
-                      ? Colors.white
-                      : Colors.white.withValues(alpha: 0.5),
-                  size: 16,
-                ),
+                if (!isGamepadConnected)
+                  Icon(
+                    icon == Icons.arrow_back
+                        ? Icons.keyboard_arrow_left
+                        : Icons.keyboard_arrow_right,
+                    color: enabled
+                        ? Colors.white
+                        : Colors.white.withValues(alpha: 0.5),
+                    size: 16,
+                  ),
                 // Gamepad D-pad (if connected)
                 if (isGamepadConnected) ...[
                   const SizedBox(width: 6),

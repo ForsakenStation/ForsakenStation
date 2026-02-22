@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'debug_service.dart';
 
 /// Service for generating and verifying BIOS file checksums
 class BiosChecksumService {
@@ -207,7 +208,10 @@ class BiosChecksumService {
           final fileInfo = await generateFileInfo(entity);
           results.add(fileInfo);
         } catch (e) {
-          debugPrint('Error processing file ${entity.path}: $e');
+          DebugService.instance.error(
+            'Error processing file ${entity.path}: $e',
+            tag: 'BiosChecksum',
+          );
         }
       }
     }

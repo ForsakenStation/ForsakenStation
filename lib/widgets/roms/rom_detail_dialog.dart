@@ -5,6 +5,7 @@ import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/models/media.dart';
 import 'package:forsaken/models/game_info.dart';
 import 'package:forsaken/screens/pdf_viewer_screen.dart';
+import 'package:forsaken/services/debug_service.dart';
 import 'package:forsaken/mixins/dialog_controls_mixin.dart';
 import 'package:forsaken/widgets/roms/media_carousel.dart';
 import 'package:forsaken/widgets/common/placeholder_image.dart';
@@ -175,7 +176,10 @@ class _RomDetailDialogState extends State<RomDetailDialog>
       // Launch web emulator fullscreen
       await WebEmulatorLauncher.launchFullscreen(context, widget.item);
     } catch (e) {
-      debugPrint('Failed to launch web emulator: $e');
+      DebugService.instance.error(
+        'Failed to launch web emulator: $e',
+        tag: 'RomDetail',
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

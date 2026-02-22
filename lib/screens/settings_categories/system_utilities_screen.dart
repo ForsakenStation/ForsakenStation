@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import '../../services/config_service.dart';
+import '../../services/debug_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../widgets/common/dialog_button_bar.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
@@ -132,7 +133,10 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
               await entity.delete();
               deletedCount++;
             } catch (e) {
-              debugPrint('Error deleting temp file: $e');
+              DebugService.instance.error(
+                'Error deleting temp file: $e',
+                tag: 'SystemUtilities',
+              );
             }
           }
         }

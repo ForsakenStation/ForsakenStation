@@ -40,8 +40,11 @@ Future<void> main() async {
   try {
     await dotenv.load(fileName: ".env");
   } catch (e) {
-    debugPrint('Error loading .env file: $e');
-    debugPrint('Please create a .env file with ROMS_PATH and MEDIA_PATH');
+    DebugService.instance.error('Error loading .env file: $e', tag: 'Main');
+    DebugService.instance.warning(
+      'Please create a .env file with ROMS_PATH and MEDIA_PATH',
+      tag: 'Main',
+    );
   }
 
   _initializeDebugService();
@@ -62,9 +65,15 @@ Future<void> main() async {
       }
 
       await WebEmulatorService.instance.initialize();
-      debugPrint('Web emulator service initialized');
+      DebugService.instance.info(
+        'Web emulator service initialized',
+        tag: 'Main',
+      );
     } catch (e) {
-      debugPrint('Failed to initialize web emulator service: $e');
+      DebugService.instance.error(
+        'Failed to initialize web emulator service: $e',
+        tag: 'Main',
+      );
     }
   }
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'debug_service.dart';
 
 /// Service for checking system requirements
 ///
@@ -34,7 +35,10 @@ class SystemCheckService {
         return result.exitCode == 0;
       }
     } catch (e) {
-      debugPrint('Error checking command availability: $e');
+      DebugService.instance.error(
+        'Error checking command availability: $e',
+        tag: 'SystemCheck',
+      );
       return false;
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:forsaken/services/debug_service.dart';
 import 'package:flutter/services.dart';
 import 'package:forsaken/models/bios_requirement.dart';
 import 'package:forsaken/models/bios_requirement_download.dart';
@@ -53,7 +54,10 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      debugPrint('Error loading BIOS data: $e');
+      DebugService.instance.error(
+        'Error loading BIOS data: $e',
+        tag: 'BiosHelp',
+      );
       setState(() => _isLoading = false);
     }
   }

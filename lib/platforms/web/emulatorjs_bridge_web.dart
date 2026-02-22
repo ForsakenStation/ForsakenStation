@@ -4,6 +4,7 @@ import 'dart:js_interop_unsafe';
 
 import 'package:flutter/foundation.dart';
 
+import '../../services/debug_service.dart';
 import 'emulatorjs_bridge.dart';
 
 // --- JS interop bindings ---
@@ -45,20 +46,24 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     if (!kIsWeb) return;
 
     try {
-      debugPrint(
-        '[EmulatorJS] Starting initialization for container: $containerId',
+      DebugService.instance.info(
+        'Starting initialization for container: $containerId',
+        tag: 'EmulatorJS',
       );
 
       // Create JavaScript callbacks object
       final jsCallbacks =
           {
                 'onReady': (() {
-                  debugPrint('[EmulatorJS] Ready');
+                  DebugService.instance.info('Ready', tag: 'EmulatorJS');
                   callbacks.onReady?.call();
                 }).toJS,
                 'onError': ((JSString error) {
                   final errorMsg = error.toDart;
-                  debugPrint('[EmulatorJS] Error: $errorMsg');
+                  DebugService.instance.error(
+                    'Error: $errorMsg',
+                    tag: 'EmulatorJS',
+                  );
                   callbacks.onError?.call(errorMsg);
                 }).toJS,
                 'onLoadingProgress': ((JSObject progress) {
@@ -84,30 +89,34 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
                       ),
                     );
                   } catch (e) {
-                    debugPrint('[EmulatorJS] Progress callback error: $e');
+                    DebugService.instance.error(
+                      'Progress callback error: $e',
+                      tag: 'EmulatorJS',
+                    );
                   }
                 }).toJS,
                 'onCoreLoaded': (() {
-                  debugPrint('[EmulatorJS] Core loaded');
+                  DebugService.instance.info('Core loaded', tag: 'EmulatorJS');
                   callbacks.onCoreLoaded?.call();
                 }).toJS,
                 'onRomLoaded': (() {
-                  debugPrint('[EmulatorJS] ROM loaded');
+                  DebugService.instance.info('ROM loaded', tag: 'EmulatorJS');
                   callbacks.onRomLoaded?.call();
                 }).toJS,
                 'onPause': (() {
-                  debugPrint('[EmulatorJS] Paused');
+                  DebugService.instance.info('Paused', tag: 'EmulatorJS');
                   callbacks.onPause?.call();
                 }).toJS,
                 'onResume': (() {
-                  debugPrint('[EmulatorJS] Resumed');
+                  DebugService.instance.info('Resumed', tag: 'EmulatorJS');
                   callbacks.onResume?.call();
                 }).toJS,
               }.jsify()
               as JSObject;
 
-      debugPrint(
-        '[EmulatorJS] Callbacks created, attempting to instantiate...',
+      DebugService.instance.info(
+        'Callbacks created, attempting to instantiate...',
+        tag: 'EmulatorJS',
       );
 
       try {
@@ -116,18 +125,25 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
 
         if (_jsEmulator != null) {
           _initialized = true;
-          debugPrint(
-            '[EmulatorJS] Bridge initialized successfully for container: $containerId',
+          DebugService.instance.info(
+            'Bridge initialized successfully for container: $containerId',
+            tag: 'EmulatorJS',
           );
         } else {
           throw Exception('createForsakenEmulator returned null');
         }
       } catch (e) {
-        debugPrint('[EmulatorJS] Failed to create instance: $e');
+        DebugService.instance.error(
+          'Failed to create instance: $e',
+          tag: 'EmulatorJS',
+        );
 
         // Fallback: Try direct access to window.ForsakenEmulators
         try {
-          debugPrint('[EmulatorJS] Trying fallback method...');
+          DebugService.instance.warning(
+            'Trying fallback method...',
+            tag: 'EmulatorJS',
+          );
           final emulators = _forsakenEmulators;
           if (emulators != null) {
             final instance =
@@ -135,13 +151,17 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
             if (instance != null) {
               _jsEmulator = instance;
               _initialized = true;
-              debugPrint(
-                '[EmulatorJS] Retrieved existing instance from ForsakenEmulators',
+              DebugService.instance.info(
+                'Retrieved existing instance from ForsakenEmulators',
+                tag: 'EmulatorJS',
               );
             }
           }
         } catch (e2) {
-          debugPrint('[EmulatorJS] Fallback also failed: $e2');
+          DebugService.instance.error(
+            'Fallback also failed: $e2',
+            tag: 'EmulatorJS',
+          );
         }
 
         if (!_initialized) {
@@ -149,8 +169,11 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
         }
       }
     } catch (e, stackTrace) {
-      debugPrint('[EmulatorJS] Initialization error: $e');
-      debugPrint('[EmulatorJS] Stack trace: $stackTrace');
+      DebugService.instance.error(
+        'Initialization error: $e',
+        tag: 'EmulatorJS',
+        stackTrace: stackTrace,
+      );
       callbacks.onError?.call('Failed to initialize emulator: $e');
       rethrow;
     }
@@ -209,13 +232,19 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     }
 
     try {
-      debugPrint('[EmulatorJS] Loading core: $platform from $coreUrl');
+      DebugService.instance.info(
+        'Loading core: $platform from $coreUrl',
+        tag: 'EmulatorJS',
+      );
 
       await _callAsyncMethod<void>('loadCore', coreUrl.toJS, platform.toJS);
 
-      debugPrint('[EmulatorJS] Core loaded successfully: $platform');
+      DebugService.instance.info(
+        'Core loaded successfully: $platform',
+        tag: 'EmulatorJS',
+      );
     } catch (e) {
-      debugPrint('[EmulatorJS] Core loading error: $e');
+      DebugService.instance.error('Core loading error: $e', tag: 'EmulatorJS');
       callbacks.onError?.call('Failed to load core: $e');
       rethrow;
     }
@@ -230,8 +259,9 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     }
 
     try {
-      debugPrint(
-        '[EmulatorJS] Loading ROM: $fileName (${romData.length} bytes)',
+      DebugService.instance.debug(
+        'Loading ROM: $fileName (${romData.length} bytes)',
+        tag: 'EmulatorJS',
       );
 
       // Convert Uint8List to JS Uint8Array
@@ -239,9 +269,12 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
 
       await _callAsyncMethod<void>('loadRom', jsArray, fileName.toJS);
 
-      debugPrint('[EmulatorJS] ROM loaded successfully: $fileName');
+      DebugService.instance.info(
+        'ROM loaded successfully: $fileName',
+        tag: 'EmulatorJS',
+      );
     } catch (e) {
-      debugPrint('[EmulatorJS] ROM loading error: $e');
+      DebugService.instance.error('ROM loading error: $e', tag: 'EmulatorJS');
       callbacks.onError?.call('Failed to load ROM: $e');
       rethrow;
     }
@@ -256,7 +289,10 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     }
 
     try {
-      debugPrint('[EmulatorJS] Loading ROM from URL: $romUrl ($fileName)');
+      DebugService.instance.info(
+        'Loading ROM from URL: $romUrl ($fileName)',
+        tag: 'EmulatorJS',
+      );
 
       await _callAsyncMethod<void>(
         'loadRomFromUrl',
@@ -264,9 +300,15 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
         fileName.toJS,
       );
 
-      debugPrint('[EmulatorJS] ROM loaded from URL successfully: $fileName');
+      DebugService.instance.info(
+        'ROM loaded from URL successfully: $fileName',
+        tag: 'EmulatorJS',
+      );
     } catch (e) {
-      debugPrint('[EmulatorJS] ROM URL loading error: $e');
+      DebugService.instance.error(
+        'ROM URL loading error: $e',
+        tag: 'EmulatorJS',
+      );
       callbacks.onError?.call('Failed to load ROM from URL: $e');
       rethrow;
     }
@@ -281,10 +323,10 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     }
 
     try {
-      debugPrint('[EmulatorJS] Starting emulator');
+      DebugService.instance.info('Starting emulator', tag: 'EmulatorJS');
       _callVoidMethod('start');
     } catch (e) {
-      debugPrint('[EmulatorJS] Start error: $e');
+      DebugService.instance.error('Start error: $e', tag: 'EmulatorJS');
       callbacks.onError?.call('Failed to start emulator: $e');
       rethrow;
     }
@@ -295,10 +337,10 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     if (!_initialized || _jsEmulator == null) return;
 
     try {
-      debugPrint('[EmulatorJS] Pausing emulator');
+      DebugService.instance.info('Pausing emulator', tag: 'EmulatorJS');
       _callVoidMethod('pause');
     } catch (e) {
-      debugPrint('[EmulatorJS] Pause error: $e');
+      DebugService.instance.error('Pause error: $e', tag: 'EmulatorJS');
     }
   }
 
@@ -307,10 +349,10 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     if (!_initialized || _jsEmulator == null) return;
 
     try {
-      debugPrint('[EmulatorJS] Resuming emulator');
+      DebugService.instance.info('Resuming emulator', tag: 'EmulatorJS');
       _callVoidMethod('resume');
     } catch (e) {
-      debugPrint('[EmulatorJS] Resume error: $e');
+      DebugService.instance.error('Resume error: $e', tag: 'EmulatorJS');
     }
   }
 
@@ -319,10 +361,10 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     if (!_initialized || _jsEmulator == null) return;
 
     try {
-      debugPrint('[EmulatorJS] Resetting emulator');
+      DebugService.instance.info('Resetting emulator', tag: 'EmulatorJS');
       _callVoidMethod('reset');
     } catch (e) {
-      debugPrint('[EmulatorJS] Reset error: $e');
+      DebugService.instance.error('Reset error: $e', tag: 'EmulatorJS');
     }
   }
 
@@ -331,10 +373,10 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     if (!_initialized || _jsEmulator == null) return;
 
     try {
-      debugPrint('[EmulatorJS] Stopping emulator');
+      DebugService.instance.info('Stopping emulator', tag: 'EmulatorJS');
       _callVoidMethod('stop');
     } catch (e) {
-      debugPrint('[EmulatorJS] Stop error: $e');
+      DebugService.instance.error('Stop error: $e', tag: 'EmulatorJS');
     }
   }
 
@@ -347,12 +389,15 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     }
 
     try {
-      debugPrint('[EmulatorJS] Creating save state');
+      DebugService.instance.info('Creating save state', tag: 'EmulatorJS');
 
       final result = await _callAsyncMethod<JSAny?>('createSaveState');
 
       if (result == null) {
-        debugPrint('[EmulatorJS] Save state returned null');
+        DebugService.instance.warning(
+          'Save state returned null',
+          tag: 'EmulatorJS',
+        );
         return Uint8List(0);
       }
 
@@ -360,7 +405,10 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
       if (result.isA<JSUint8Array>()) {
         final jsBytes = result as JSUint8Array;
         final bytes = jsBytes.toDart;
-        debugPrint('[EmulatorJS] Save state created: ${bytes.length} bytes');
+        DebugService.instance.debug(
+          'Save state created: ${bytes.length} bytes',
+          tag: 'EmulatorJS',
+        );
         return bytes;
       }
 
@@ -368,14 +416,20 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
       if (result.isA<JSArrayBuffer>()) {
         final jsBytes = JSUint8Array(result as JSArrayBuffer);
         final bytes = jsBytes.toDart;
-        debugPrint('[EmulatorJS] Save state created: ${bytes.length} bytes');
+        DebugService.instance.debug(
+          'Save state created: ${bytes.length} bytes',
+          tag: 'EmulatorJS',
+        );
         return bytes;
       }
 
-      debugPrint('[EmulatorJS] Save state returned unexpected type');
+      DebugService.instance.warning(
+        'Save state returned unexpected type',
+        tag: 'EmulatorJS',
+      );
       return Uint8List(0);
     } catch (e) {
-      debugPrint('[EmulatorJS] Save state error: $e');
+      DebugService.instance.error('Save state error: $e', tag: 'EmulatorJS');
       rethrow;
     }
   }
@@ -389,13 +443,22 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     }
 
     try {
-      debugPrint('[EmulatorJS] Loading save state: ${saveData.length} bytes');
+      DebugService.instance.debug(
+        'Loading save state: ${saveData.length} bytes',
+        tag: 'EmulatorJS',
+      );
 
       await _callAsyncMethod<void>('loadSaveState', saveData.toJS);
 
-      debugPrint('[EmulatorJS] Save state loaded successfully');
+      DebugService.instance.info(
+        'Save state loaded successfully',
+        tag: 'EmulatorJS',
+      );
     } catch (e) {
-      debugPrint('[EmulatorJS] Load save state error: $e');
+      DebugService.instance.error(
+        'Load save state error: $e',
+        tag: 'EmulatorJS',
+      );
       rethrow;
     }
   }
@@ -409,19 +472,19 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     }
 
     try {
-      debugPrint('[EmulatorJS] Taking screenshot');
+      DebugService.instance.info('Taking screenshot', tag: 'EmulatorJS');
 
       final result = await _callAsyncMethod<JSAny?>('getScreenshot');
 
       if (result != null && result.isA<JSString>()) {
         final screenshot = (result as JSString).toDart;
-        debugPrint('[EmulatorJS] Screenshot captured');
+        DebugService.instance.info('Screenshot captured', tag: 'EmulatorJS');
         return screenshot;
       }
 
       return null;
     } catch (e) {
-      debugPrint('[EmulatorJS] Screenshot error: $e');
+      DebugService.instance.error('Screenshot error: $e', tag: 'EmulatorJS');
       return null;
     }
   }
@@ -462,7 +525,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
         container: container,
       );
     } catch (e) {
-      debugPrint('[EmulatorJS] Get status error: $e');
+      DebugService.instance.error('Get status error: $e', tag: 'EmulatorJS');
       return EmulatorStatus(
         isLoaded: false,
         isLoading: false,

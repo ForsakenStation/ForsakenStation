@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import '../models/platform_info.dart';
+import 'debug_service.dart';
 
 /// Service for loading and caching platform information
 ///
@@ -37,7 +37,10 @@ class PlatformInfoService {
 
       return _platformInfoCache!;
     } catch (e) {
-      debugPrint('Error loading platform info: $e');
+      DebugService.instance.error(
+        'Error loading platform info: $e',
+        tag: 'PlatformInfo',
+      );
       return {};
     }
   }

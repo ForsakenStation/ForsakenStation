@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:forsaken/models/bios_download_mapping.dart';
 import 'package:forsaken/services/bios_size_correction_service.dart';
+import 'package:forsaken/services/debug_service.dart';
 
 /// Report for individual BIOS file checksum verification
 class BiosFileChecksumReport {
@@ -91,12 +92,14 @@ class BiosChecksumReport {
 
 /// Enhanced logging utility for BIOS download operations
 class BiosDownloadLogger {
+  static const String _tag = 'BiosDownload';
+
   static void logInfo(String message) {
-    debugPrint('[BIOS_DOWNLOAD] INFO: $message');
+    DebugService.instance.info(message, tag: _tag);
   }
 
   static void logWarning(String message) {
-    debugPrint('[BIOS_DOWNLOAD] WARNING: $message');
+    DebugService.instance.warning(message, tag: _tag);
   }
 
   static void logError(
@@ -104,12 +107,12 @@ class BiosDownloadLogger {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    debugPrint('[BIOS_DOWNLOAD] ERROR: $message');
+    DebugService.instance.error(message, tag: _tag);
     if (error != null) {
-      debugPrint('[BIOS_DOWNLOAD] ERROR_DETAILS: $error');
+      DebugService.instance.error('Details: $error', tag: _tag);
     }
     if (stackTrace != null && kDebugMode) {
-      debugPrint('[BIOS_DOWNLOAD] STACK_TRACE: $stackTrace');
+      DebugService.instance.error('Stack trace: $stackTrace', tag: _tag);
     }
   }
 

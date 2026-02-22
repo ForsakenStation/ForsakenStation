@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'debug_service.dart';
 import 'keyboard_service.dart';
 
 /// Configuration for screen-specific keyboard handling
@@ -271,7 +272,10 @@ class ScreenKeyboardHandler<T> {
   KeyEventResult _handleGridNavigation(LogicalKeyboardKey key) {
     final columns = config.getColumns?.call();
     if (columns == null) {
-      debugPrint('Grid mode requires getColumns callback');
+      DebugService.instance.warning(
+        'Grid mode requires getColumns callback',
+        tag: 'ScreenKeyboard',
+      );
       return KeyEventResult.ignored;
     }
 

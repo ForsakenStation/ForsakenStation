@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
+import 'debug_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
@@ -47,13 +48,23 @@ class ConfigService {
       // Try to load config (will try shared_preferences first, then assets)
       await loadConfig();
 
-      debugPrint('ConfigService initialized');
-      debugPrint(
-        'Config source: ${_hasLocalOverrides ? 'shared_preferences' : 'assets/config.json'}',
+      DebugService.instance.info(
+        'ConfigService initialized',
+        tag: 'ConfigService',
       );
-      debugPrint('Has local overrides: $_hasLocalOverrides');
+      DebugService.instance.info(
+        'Config source: ${_hasLocalOverrides ? 'shared_preferences' : 'assets/config.json'}',
+        tag: 'ConfigService',
+      );
+      DebugService.instance.debug(
+        'Has local overrides: $_hasLocalOverrides',
+        tag: 'ConfigService',
+      );
     } catch (e) {
-      debugPrint('Error initializing ConfigService: $e');
+      DebugService.instance.error(
+        'Error initializing ConfigService: $e',
+        tag: 'ConfigService',
+      );
       // Don't throw - allow app to continue with empty config
       _config = {'emulators': []};
     }
@@ -99,7 +110,10 @@ class ConfigService {
       final configString = prefs.getString(_configKey);
 
       if (configString != null && configString.isNotEmpty) {
-        debugPrint('Loading config from shared_preferences');
+        DebugService.instance.debug(
+          'Loading config from shared_preferences',
+          tag: 'ConfigService',
+        );
         _config = json.decode(configString) as Map<String, dynamic>;
         _hasLocalOverrides = true;
         return _config!;
@@ -107,14 +121,20 @@ class ConfigService {
 
       // If no local config, load platform-specific config from assets
       final platformConfigPath = _getPlatformConfigFile();
-      debugPrint('Loading config from assets: $platformConfigPath');
+      DebugService.instance.debug(
+        'Loading config from assets: $platformConfigPath',
+        tag: 'ConfigService',
+      );
 
       String assetString;
       try {
         assetString = await rootBundle.loadString(platformConfigPath);
       } catch (e) {
         // If platform-specific config not found, fallback to default
-        debugPrint('Platform-specific config not found, using default: $e');
+        DebugService.instance.info(
+          'Platform-specific config not found, using default: $e',
+          tag: 'ConfigService',
+        );
         assetString = await rootBundle.loadString('assets/config.json');
       }
 
@@ -123,7 +143,10 @@ class ConfigService {
 
       return _config!;
     } catch (e) {
-      debugPrint('Error loading config: $e');
+      DebugService.instance.error(
+        'Error loading config: $e',
+        tag: 'ConfigService',
+      );
       _config = {'emulators': []};
       _hasLocalOverrides = false;
       return _config!;
@@ -135,10 +158,16 @@ class ConfigService {
   /// Clears cache and reloads from shared_preferences or assets
   /// Useful when config file has been modified externally
   Future<void> reloadConfig() async {
-    debugPrint('Force reloading config from source');
+    DebugService.instance.info(
+      'Force reloading config from source',
+      tag: 'ConfigService',
+    );
     _config = null;
     await loadConfig(forceReload: true);
-    debugPrint('Config reloaded successfully');
+    DebugService.instance.info(
+      'Config reloaded successfully',
+      tag: 'ConfigService',
+    );
   }
 
   /// Save configuration to shared_preferences
@@ -155,9 +184,15 @@ class ConfigService {
       _config = config;
       _hasLocalOverrides = true;
 
-      debugPrint('Config saved to shared_preferences');
+      DebugService.instance.info(
+        'Config saved to shared_preferences',
+        tag: 'ConfigService',
+      );
     } catch (e) {
-      debugPrint('Error saving config: $e');
+      DebugService.instance.error(
+        'Error saving config: $e',
+        tag: 'ConfigService',
+      );
       rethrow;
     }
   }
@@ -169,13 +204,22 @@ class ConfigService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_configKey);
-      debugPrint('Deleted local config overrides from shared_preferences');
+      DebugService.instance.info(
+        'Deleted local config overrides from shared_preferences',
+        tag: 'ConfigService',
+      );
 
       // Reload from assets
       await loadConfig();
-      debugPrint('Reset to default config from assets');
+      DebugService.instance.info(
+        'Reset to default config from assets',
+        tag: 'ConfigService',
+      );
     } catch (e) {
-      debugPrint('Error resetting config: $e');
+      DebugService.instance.error(
+        'Error resetting config: $e',
+        tag: 'ConfigService',
+      );
       rethrow;
     }
   }
@@ -330,9 +374,15 @@ class ConfigService {
 
       await envFile.writeAsString(buffer.toString());
 
-      debugPrint('Environment variables saved to .env file');
+      DebugService.instance.info(
+        'Environment variables saved to .env file',
+        tag: 'ConfigService',
+      );
     } catch (e) {
-      debugPrint('Error saving .env file: $e');
+      DebugService.instance.error(
+        'Error saving .env file: $e',
+        tag: 'ConfigService',
+      );
       rethrow;
     }
   }
@@ -341,9 +391,15 @@ class ConfigService {
   Future<void> reloadEnv() async {
     try {
       await dotenv.load(fileName: '.env');
-      debugPrint('Environment variables reloaded');
+      DebugService.instance.info(
+        'Environment variables reloaded',
+        tag: 'ConfigService',
+      );
     } catch (e) {
-      debugPrint('Error reloading .env: $e');
+      DebugService.instance.error(
+        'Error reloading .env: $e',
+        tag: 'ConfigService',
+      );
       rethrow;
     }
   }

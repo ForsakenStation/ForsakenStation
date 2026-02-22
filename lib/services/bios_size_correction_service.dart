@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'debug_service.dart';
 
 /// Service for handling BIOS file size corrections and suggestions
 class BiosSizeCorrectionService {
@@ -38,8 +38,9 @@ class BiosSizeCorrectionService {
 
         // If the actual size matches our known correction, suggest it
         if (actualSize == expectedSize) {
-          log(
+          DebugService.instance.debug(
             'Size correction suggested for $filename from $repoKey: $actualSize bytes',
+            tag: 'BiosSizeCorrection',
           );
           return actualSize;
         }
@@ -47,13 +48,19 @@ class BiosSizeCorrectionService {
 
       // Check if this is a reasonable size for the file type
       if (_isReasonableFileSize(filename, actualSize)) {
-        log('Size appears reasonable for $filename: $actualSize bytes');
+        DebugService.instance.debug(
+          'Size appears reasonable for $filename: $actualSize bytes',
+          tag: 'BiosSizeCorrection',
+        );
         return actualSize;
       }
 
       return null;
     } catch (e) {
-      log('Error suggesting size correction: $e');
+      DebugService.instance.error(
+        'Error suggesting size correction: $e',
+        tag: 'BiosSizeCorrection',
+      );
       return null;
     }
   }
@@ -124,12 +131,19 @@ class BiosSizeCorrectionService {
     final tolerance = suggestSizeTolerance(filename, expectedSize);
     final compatible = areCompatibleSizes(expectedSize, actualSize);
 
-    log('BIOS Size Analysis for $filename:');
-    log('  Expected: $expectedSize bytes');
-    log('  Actual: $actualSize bytes');
-    log('  Suggested correction: ${suggestion ?? 'None'}');
-    log('  Suggested tolerance: ${(tolerance * 100).toStringAsFixed(1)}%');
-    log('  Sizes compatible: $compatible');
-    log('  URL: $url');
+    final debug = DebugService.instance;
+    debug.debug('BIOS Size Analysis for $filename:', tag: 'BiosSizeCorrection');
+    debug.debug('  Expected: $expectedSize bytes', tag: 'BiosSizeCorrection');
+    debug.debug('  Actual: $actualSize bytes', tag: 'BiosSizeCorrection');
+    debug.debug(
+      '  Suggested correction: ${suggestion ?? 'None'}',
+      tag: 'BiosSizeCorrection',
+    );
+    debug.debug(
+      '  Suggested tolerance: ${(tolerance * 100).toStringAsFixed(1)}%',
+      tag: 'BiosSizeCorrection',
+    );
+    debug.debug('  Sizes compatible: $compatible', tag: 'BiosSizeCorrection');
+    debug.debug('  URL: $url', tag: 'BiosSizeCorrection');
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'package:path/path.dart' as path;
+import '../services/debug_service.dart';
 import '../services/gamepad_service.dart';
 
 /// Full-screen PDF viewer with page navigation and zoom
@@ -55,7 +56,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         });
       }
     } catch (e) {
-      debugPrint('Error loading PDF: $e');
+      DebugService.instance.error('Error loading PDF: $e', tag: 'PdfViewer');
     }
   }
 

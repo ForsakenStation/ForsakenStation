@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../models/rom_item.dart';
+import '../../../services/debug_service.dart';
 import '../../../services/rom_storage_service.dart';
 import '../../../widgets/roms/save_rom_dialog.dart';
 import '../utils/platform_utils.dart';
@@ -43,7 +44,10 @@ class RomSaveHandler {
         return null;
       }
     } catch (e) {
-      debugPrint('Error checking ROM storage status: $e');
+      DebugService.instance.error(
+        'Error checking ROM storage status: $e',
+        tag: 'RomSave',
+      );
       // Continue to ask user to save, even if check failed
     }
 

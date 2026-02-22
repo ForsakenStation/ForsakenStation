@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:forsaken/services/debug_service.dart';
 import 'package:forsaken/services/gamepad_service.dart';
 
 /// Mixin para manejar gamepad polling de forma consistente
@@ -148,7 +149,10 @@ mixin GamepadPollingMixin<T extends StatefulWidget> on State<T> {
         interval ?? _currentInterval ?? const Duration(milliseconds: 50);
 
     if (handlerToUse == null) {
-      debugPrint('GamepadPollingMixin: Cannot resume, no handler configured');
+      DebugService.instance.warning(
+        'Cannot resume, no handler configured',
+        tag: 'GamepadPolling',
+      );
       return;
     }
 

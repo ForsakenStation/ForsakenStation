@@ -12,6 +12,26 @@
  * sidestep the problem entirely.
  */
 
+// ---------------------------------------------------------------------------
+// Debug gating — set window.FORSAKEN_DEBUG = true to enable console output.
+// Can be toggled from Dart via js_interop.
+// ---------------------------------------------------------------------------
+if (window.FORSAKEN_DEBUG === undefined) {
+    window.FORSAKEN_DEBUG = false;
+}
+
+function _log(...args) {
+    if (window.FORSAKEN_DEBUG) console.log(...args);
+}
+
+function _warn(...args) {
+    if (window.FORSAKEN_DEBUG) console.warn(...args);
+}
+
+function _error(...args) {
+    if (window.FORSAKEN_DEBUG) console.error(...args);
+}
+
 const EMULATORJS_CDN = 'https://cdn.emulatorjs.org/stable/data/';
 
 /**
@@ -153,8 +173,8 @@ function _getState(containerId) {
             callbacks: {
                 onReady: () => {
                 },
-                onError: (error) => console.error('EmulatorJS Error:', error),
-                onLoadingProgress: (progress) => console.log('Loading:', progress),
+                onError: (error) => _error('EmulatorJS Error:', error),
+                onLoadingProgress: (progress) => _log('Loading:', progress),
                 onCoreLoaded: () => {
                 },
                 onRomLoaded: () => {
@@ -189,8 +209,8 @@ class ForsakenEmulatorJS {
         s.callbacks = {
             onReady: options.onReady || (() => {
             }),
-            onError: options.onError || ((error) => console.error('EmulatorJS Error:', error)),
-            onLoadingProgress: options.onLoadingProgress || ((progress) => console.log('Loading:', progress)),
+            onError: options.onError || ((error) => _error('EmulatorJS Error:', error)),
+            onLoadingProgress: options.onLoadingProgress || ((progress) => _log('Loading:', progress)),
             onCoreLoaded: options.onCoreLoaded || (() => {
             }),
             onRomLoaded: options.onRomLoaded || (() => {
@@ -214,7 +234,7 @@ class ForsakenEmulatorJS {
         const startTime = Date.now();
         let attempts = 0;
 
-        console.log(`[ForsakenEmulator] Waiting for container: ${containerId}`);
+        _log(`[ForsakenEmulator] Waiting for container: ${containerId}`);
 
         while (Date.now() - startTime < maxWaitMs) {
             // Try multiple selectors
@@ -244,7 +264,7 @@ class ForsakenEmulatorJS {
             }
 
             if (element) {
-                console.log(`[ForsakenEmulator] Container found after ${attempts} attempts: ${containerId}`);
+                _log(`[ForsakenEmulator] Container found after ${attempts} attempts: ${containerId}`);
                 return element;
             }
 
@@ -252,9 +272,9 @@ class ForsakenEmulatorJS {
             await new Promise(resolve => setTimeout(resolve, 100));
         }
 
-        console.error('[ForsakenEmulator] Container not found. Available elements:');
-        console.error('  - IDs:', Array.from(document.querySelectorAll('[id]')).map(e => e.id).slice(0, 20));
-        console.error('  - Platform views:', document.querySelectorAll('flt-platform-view').length);
+        _error('[ForsakenEmulator] Container not found. Available elements:');
+        _error('  - IDs:', Array.from(document.querySelectorAll('[id]')).map(e => e.id).slice(0, 20));
+        _error('  - Platform views:', document.querySelectorAll('flt-platform-view').length);
 
         throw new Error(`Container element with ID '${containerId}' not found after ${maxWaitMs}ms (${attempts} attempts)`);
     }
@@ -280,10 +300,10 @@ class ForsakenEmulatorJS {
 
             _showMessage(containerId, 'Ready to load game', 'Select a ROM to start playing');
 
-            console.log('ForsakenEmulatorJS initialized for container:', containerId);
+            _log('ForsakenEmulatorJS initialized for container:', containerId);
             return true;
         } catch (error) {
-            console.error('ForsakenEmulatorJS initialization failed:', error);
+            _error('ForsakenEmulatorJS initialization failed:', error);
             s.callbacks.onError(error.message);
             return false;
         }
@@ -302,7 +322,7 @@ class ForsakenEmulatorJS {
         // Fallback: scan state store for the single entry (most apps have one)
         const keys = Object.keys(window._forsakenState || {});
         if (keys.length === 1) return keys[ 0 ];
-        console.error('[ForsakenEmulator] Cannot resolve containerId — this._cid is', cid);
+        _error('[ForsakenEmulator] Cannot resolve containerId — this._cid is', cid);
         return null;
     }
 
@@ -355,9 +375,9 @@ class ForsakenEmulatorJS {
             _showMessage(cid, `${platform.toUpperCase()} ready`, 'Waiting for ROM...');
 
             s.callbacks.onCoreLoaded();
-            console.log(`Core prepared: ${systemName} (system) for platform: ${platform}`);
+            _log(`Core prepared: ${systemName} (system) for platform: ${platform}`);
             if (coreUrl) {
-                console.log(`Core pre-cached URL: ${coreUrl}`);
+                _log(`Core pre-cached URL: ${coreUrl}`);
             }
 
         } catch (error) {
@@ -399,26 +419,26 @@ class ForsakenEmulatorJS {
         try {
             const platform = s.currentPlatform || '';
             if (!platform) {
-                console.warn('[ForsakenIDB] currentPlatform is empty — ROM cache key will use empty platform string');
+                _warn('[ForsakenIDB] currentPlatform is empty — ROM cache key will use empty platform string');
             }
-            console.log(`[ForsakenIDB] loadRomFromUrl: platform="${platform}" fileName="${fileName}"`);
+            _log(`[ForsakenIDB] loadRomFromUrl: platform="${platform}" fileName="${fileName}"`);
             let romData = null;
 
             // --- Check IndexedDB cache (forever first, then temp) ---
             try {
                 const foreverData = await window.forsakenRomStorage.getFromForever(platform, fileName);
                 if (foreverData) {
-                    console.log(`ROM found in forever storage: ${fileName} (${foreverData.byteLength} bytes)`);
+                    _log(`ROM found in forever storage: ${fileName} (${foreverData.byteLength} bytes)`);
                     romData = foreverData;
                 } else {
                     const tempData = await window.forsakenRomStorage.getFromTemp(platform, fileName);
                     if (tempData) {
-                        console.log(`ROM found in temp storage: ${fileName} (${tempData.byteLength} bytes)`);
+                        _log(`ROM found in temp storage: ${fileName} (${tempData.byteLength} bytes)`);
                         romData = tempData;
                     }
                 }
             } catch (cacheErr) {
-                console.warn('IndexedDB cache lookup failed, will download:', cacheErr);
+                _warn('IndexedDB cache lookup failed, will download:', cacheErr);
             }
 
             if (romData) {
@@ -437,26 +457,26 @@ class ForsakenEmulatorJS {
                 });
                 _showMessage(cid, 'Downloading ROM', fileName, true);
 
-                console.log(`Fetching ROM: ${fileName} from ${romUrl}`);
+                _log(`Fetching ROM: ${fileName} from ${romUrl}`);
                 const response = await fetch(romUrl);
                 if (!response.ok) {
                     throw new Error(`ROM download failed: ${response.status} ${response.statusText}`);
                 }
 
                 romData = await response.arrayBuffer();
-                console.log(`ROM downloaded: ${fileName} (${romData.byteLength} bytes)`);
+                _log(`ROM downloaded: ${fileName} (${romData.byteLength} bytes)`);
 
                 // Save to temp storage for future use.
                 // Clone the ArrayBuffer so we keep a pristine copy — the original
                 // may be consumed / neutered when creating the Blob below.
                 try {
                     const romDataCopy = romData.slice(0);
-                    console.log(`[ForsakenIDB] Saving to temp: platform=${platform} fileName=${fileName} size=${romDataCopy.byteLength} isArrayBuffer=${romDataCopy instanceof ArrayBuffer}`);
+                    _log(`[ForsakenIDB] Saving to temp: platform=${platform} fileName=${fileName} size=${romDataCopy.byteLength} isArrayBuffer=${romDataCopy instanceof ArrayBuffer}`);
                     await window.forsakenRomStorage.saveToTemp(platform, fileName, romDataCopy);
-                    console.log(`[ForsakenIDB] ROM saved to temp storage: ${fileName}`);
+                    _log(`[ForsakenIDB] ROM saved to temp storage: ${fileName}`);
                 } catch (saveErr) {
-                    console.error('[ForsakenIDB] FAILED to cache ROM in IndexedDB:', saveErr);
-                    console.error('[ForsakenIDB] Error details:', saveErr.name, saveErr.message, saveErr.stack);
+                    _error('[ForsakenIDB] FAILED to cache ROM in IndexedDB:', saveErr);
+                    _error('[ForsakenIDB] Error details:', saveErr.name, saveErr.message, saveErr.stack);
                 }
             }
 
@@ -525,7 +545,7 @@ class ForsakenEmulatorJS {
             s.currentRomBlob = URL.createObjectURL(blob);
             s.currentRom = fileName;
 
-            console.log(`ROM prepared: ${fileName} (${romBytes.length} bytes)`);
+            _log(`ROM prepared: ${fileName} (${romBytes.length} bytes)`);
 
             s.callbacks.onLoadingProgress({
                 stage: 'rom',
@@ -569,12 +589,12 @@ class ForsakenEmulatorJS {
                 s.emulatorInstance.play();
             }
         } else {
-            console.log('Emulator not fully started yet — EJS_startOnLoaded will handle it.');
+            _log('Emulator not fully started yet — EJS_startOnLoaded will handle it.');
         }
 
         s.isRunning = true;
         s.callbacks.onReady();
-        console.log('Emulator started');
+        _log('Emulator started');
     }
 
     /**
@@ -589,7 +609,7 @@ class ForsakenEmulatorJS {
             s.emulatorInstance.pause();
             s.isRunning = false;
             s.callbacks.onPause();
-            console.log('Emulator paused');
+            _log('Emulator paused');
         }
     }
 
@@ -605,7 +625,7 @@ class ForsakenEmulatorJS {
             s.emulatorInstance.play();
             s.isRunning = true;
             s.callbacks.onResume();
-            console.log('Emulator resumed');
+            _log('Emulator resumed');
         }
     }
 
@@ -619,7 +639,7 @@ class ForsakenEmulatorJS {
 
         if (s.emulatorInstance && s.emulatorInstance.started && typeof s.emulatorInstance.restart === 'function') {
             s.emulatorInstance.restart();
-            console.log('Emulator reset');
+            _log('Emulator reset');
         }
     }
 
@@ -631,13 +651,13 @@ class ForsakenEmulatorJS {
         if (!cid) return;
         const s = _getState(cid);
 
-        console.log('Stopping emulator...');
+        _log('Stopping emulator...');
 
         if (s.emulatorInstance && typeof s.emulatorInstance.pause === 'function') {
             try {
                 s.emulatorInstance.pause();
             } catch (e) {
-                console.warn('Error pausing emulator:', e);
+                _warn('Error pausing emulator:', e);
             }
         }
 
@@ -658,7 +678,7 @@ class ForsakenEmulatorJS {
             _showMessage(cid, 'Emulator stopped', 'Select a ROM to play again');
         }
 
-        console.log('Emulator stopped');
+        _log('Emulator stopped');
     }
 
     /**
@@ -677,14 +697,14 @@ class ForsakenEmulatorJS {
         try {
             if (typeof s.emulatorInstance.saveState === 'function') {
                 const state = s.emulatorInstance.saveState();
-                console.log('Save state created');
+                _log('Save state created');
                 return state;
             } else {
-                console.warn('Save state not supported by this core');
+                _warn('Save state not supported by this core');
                 return new ArrayBuffer(0);
             }
         } catch (e) {
-            console.error('Error creating save state:', e);
+            _error('Error creating save state:', e);
             throw e;
         }
     }
@@ -705,12 +725,12 @@ class ForsakenEmulatorJS {
         try {
             if (typeof s.emulatorInstance.loadState === 'function') {
                 s.emulatorInstance.loadState(saveData);
-                console.log('Save state loaded');
+                _log('Save state loaded');
             } else {
-                console.warn('Load state not supported by this core');
+                _warn('Load state not supported by this core');
             }
         } catch (e) {
-            console.error('Error loading save state:', e);
+            _error('Error loading save state:', e);
             throw e;
         }
     }
@@ -731,18 +751,18 @@ class ForsakenEmulatorJS {
         try {
             if (typeof s.emulatorInstance.screenshot === 'function') {
                 const screenshot = s.emulatorInstance.screenshot();
-                console.log('Screenshot captured');
+                _log('Screenshot captured');
                 return screenshot;
             } else {
                 const canvas = s.container.querySelector('canvas');
                 if (canvas) {
                     return canvas.toDataURL('image/png');
                 }
-                console.warn('Screenshot not available');
+                _warn('Screenshot not available');
                 return null;
             }
         } catch (e) {
-            console.error('Error taking screenshot:', e);
+            _error('Error taking screenshot:', e);
             return null;
         }
     }
@@ -783,7 +803,7 @@ class ForsakenEmulatorJS {
                 s.emulatorInstance.fullscreen(true);
             }
         } catch (e) {
-            console.error('Error entering fullscreen:', e);
+            _error('Error entering fullscreen:', e);
         }
     }
 
@@ -802,7 +822,7 @@ class ForsakenEmulatorJS {
                 s.emulatorInstance.fullscreen(false);
             }
         } catch (e) {
-            console.error('Error exiting fullscreen:', e);
+            _error('Error exiting fullscreen:', e);
         }
     }
 
@@ -887,11 +907,11 @@ async function _launchEmulatorJS(containerId) {
         throw new Error('Core and ROM must be set before launching');
     }
 
-    console.log('Launching EmulatorJS...');
-    console.log('System:', s.currentCore);
-    console.log('Platform:', s.currentPlatform);
-    console.log('ROM URL:', s.currentRomBlob);
-    console.log('ROM Name:', s.currentRom);
+    _log('Launching EmulatorJS...');
+    _log('System:', s.currentCore);
+    _log('Platform:', s.currentPlatform);
+    _log('ROM URL:', s.currentRomBlob);
+    _log('ROM Name:', s.currentRom);
 
     // Clear the container
     s.container.innerHTML = '';
@@ -918,17 +938,17 @@ async function _launchEmulatorJS(containerId) {
 
     // Callbacks
     window.EJS_onGameStart = () => {
-        console.log('EmulatorJS: Game started');
+        _log('EmulatorJS: Game started');
         s.isRunning = true;
         s.callbacks.onReady();
     };
 
     window.EJS_onLoadState = (state) => {
-        console.log('EmulatorJS: State loaded');
+        _log('EmulatorJS: State loaded');
     };
 
     window.EJS_onSaveState = (state) => {
-        console.log('EmulatorJS: State saved');
+        _log('EmulatorJS: State saved');
     };
 
     // Remove any existing EmulatorJS script to reload fresh
@@ -942,7 +962,7 @@ async function _launchEmulatorJS(containerId) {
         try {
             window.EJS_emulator = null;
         } catch (e) {
-            console.warn('Could not clear existing emulator:', e);
+            _warn('Could not clear existing emulator:', e);
         }
     }
 
@@ -953,13 +973,13 @@ async function _launchEmulatorJS(containerId) {
         script.src = `${EMULATORJS_CDN}loader.js`;
 
         script.onload = () => {
-            console.log('EmulatorJS loader script loaded');
+            _log('EmulatorJS loader script loaded');
 
             const checkEmulator = setInterval(() => {
                 if (window.EJS_emulator) {
                     clearInterval(checkEmulator);
                     s.emulatorInstance = window.EJS_emulator;
-                    console.log('EmulatorJS instance ready');
+                    _log('EmulatorJS instance ready');
                     resolve();
                 }
             }, 100);
@@ -996,32 +1016,32 @@ const ROM_STORE_FOREVER = 'forever_roms';
  */
 function _openRomDB() {
     return new Promise((resolve, reject) => {
-        console.log('[ForsakenIDB] Opening database:', FORSAKEN_DB_NAME, 'v' + FORSAKEN_DB_VERSION);
+        _log('[ForsakenIDB] Opening database:', FORSAKEN_DB_NAME, 'v' + FORSAKEN_DB_VERSION);
         const request = indexedDB.open(FORSAKEN_DB_NAME, FORSAKEN_DB_VERSION);
 
         request.onupgradeneeded = (event) => {
-            console.log('[ForsakenIDB] onupgradeneeded — creating object stores');
+            _log('[ForsakenIDB] onupgradeneeded — creating object stores');
             const db = event.target.result;
             if (!db.objectStoreNames.contains(ROM_STORE_TEMP)) {
                 db.createObjectStore(ROM_STORE_TEMP, { keyPath: ['platform', 'fileName'] });
-                console.log('[ForsakenIDB] Created store:', ROM_STORE_TEMP);
+                _log('[ForsakenIDB] Created store:', ROM_STORE_TEMP);
             }
             if (!db.objectStoreNames.contains(ROM_STORE_FOREVER)) {
                 db.createObjectStore(ROM_STORE_FOREVER, { keyPath: ['platform', 'fileName'] });
-                console.log('[ForsakenIDB] Created store:', ROM_STORE_FOREVER);
+                _log('[ForsakenIDB] Created store:', ROM_STORE_FOREVER);
             }
         };
 
         request.onsuccess = () => {
-            console.log('[ForsakenIDB] Database opened successfully, stores:', Array.from(request.result.objectStoreNames));
+            _log('[ForsakenIDB] Database opened successfully, stores:', Array.from(request.result.objectStoreNames));
             resolve(request.result);
         };
         request.onerror = () => {
-            console.error('[ForsakenIDB] Database open error:', request.error);
+            _error('[ForsakenIDB] Database open error:', request.error);
             reject(request.error);
         };
         request.onblocked = () => {
-            console.warn('[ForsakenIDB] Database open BLOCKED — close other tabs using this DB');
+            _warn('[ForsakenIDB] Database open BLOCKED — close other tabs using this DB');
         };
     });
 }
@@ -1035,7 +1055,7 @@ function _openRomDB() {
  * @returns {Promise<boolean>}
  */
 async function _saveRomToStore(storeName, platform, fileName, data) {
-    console.log(`[ForsakenIDB] saveToStore: store=${storeName} platform=${platform} fileName=${fileName} dataType=${typeof data} isArrayBuffer=${data instanceof ArrayBuffer} isUint8Array=${data instanceof Uint8Array} size=${data?.byteLength ?? '?'}`);
+    _log(`[ForsakenIDB] saveToStore: store=${storeName} platform=${platform} fileName=${fileName} dataType=${typeof data} isArrayBuffer=${data instanceof ArrayBuffer} isUint8Array=${data instanceof Uint8Array} size=${data?.byteLength ?? '?'}`);
 
     // Validate inputs
     if (!platform || typeof platform !== 'string') {
@@ -1052,7 +1072,7 @@ async function _saveRomToStore(storeName, platform, fileName, data) {
     let arrayBufferData = data;
     if (data instanceof Uint8Array) {
         arrayBufferData = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
-        console.log('[ForsakenIDB] Converted Uint8Array to ArrayBuffer, size:', arrayBufferData.byteLength);
+        _log('[ForsakenIDB] Converted Uint8Array to ArrayBuffer, size:', arrayBufferData.byteLength);
     } else if (!(data instanceof ArrayBuffer)) {
         throw new Error(`[ForsakenIDB] Data must be ArrayBuffer or Uint8Array, got ${typeof data} (constructor: ${data?.constructor?.name})`);
     }
@@ -1074,31 +1094,31 @@ async function _saveRomToStore(storeName, platform, fileName, data) {
                 size: arrayBufferData.byteLength,
                 savedAt: Date.now(),
             };
-            console.log('[ForsakenIDB] Putting record with key:', [platform, fileName], 'size:', arrayBufferData.byteLength);
+            _log('[ForsakenIDB] Putting record with key:', [platform, fileName], 'size:', arrayBufferData.byteLength);
             const putRequest = store.put(record);
             putRequest.onsuccess = () => {
-                console.log(`[ForsakenIDB] put() succeeded for: ${storeName}/${platform}/${fileName}`);
+                _log(`[ForsakenIDB] put() succeeded for: ${storeName}/${platform}/${fileName}`);
             };
             putRequest.onerror = (event) => {
-                console.error(`[ForsakenIDB] put() error:`, putRequest.error, event);
+                _error(`[ForsakenIDB] put() error:`, putRequest.error, event);
             };
             tx.oncomplete = () => {
-                console.log(`[ForsakenIDB] Save complete: ${storeName}/${platform}/${fileName} (${arrayBufferData.byteLength} bytes)`);
+                _log(`[ForsakenIDB] Save complete: ${storeName}/${platform}/${fileName} (${arrayBufferData.byteLength} bytes)`);
                 db.close();
                 resolve(true);
             };
             tx.onerror = (event) => {
-                console.error(`[ForsakenIDB] Save tx error:`, tx.error, event);
+                _error(`[ForsakenIDB] Save tx error:`, tx.error, event);
                 db.close();
                 reject(tx.error);
             };
             tx.onabort = (event) => {
-                console.error(`[ForsakenIDB] Save tx ABORTED:`, tx.error, event);
+                _error(`[ForsakenIDB] Save tx ABORTED:`, tx.error, event);
                 db.close();
                 reject(tx.error || new Error('Transaction aborted'));
             };
         } catch (e) {
-            console.error('[ForsakenIDB] Synchronous error in save:', e);
+            _error('[ForsakenIDB] Synchronous error in save:', e);
             db.close();
             reject(e);
         }
@@ -1343,7 +1363,7 @@ function createForsakenEmulator(containerId, options = {}) {
         try {
             window.ForsakenEmulators[ containerId ].stop();
         } catch (e) {
-            console.warn('Error cleaning up existing emulator:', e);
+            _warn('Error cleaning up existing emulator:', e);
         }
     }
 
@@ -1386,8 +1406,8 @@ if (typeof module !== 'undefined' && module.exports) {
     };
 }
 
-console.log('Forsaken EmulatorJS Bridge loaded (EmulatorJS CDN integration)');
-console.log('Supported platforms:', Object.keys(PLATFORM_TO_SYSTEM).join(', '));
+_log('Forsaken EmulatorJS Bridge loaded (EmulatorJS CDN integration)');
+_log('Supported platforms:', Object.keys(PLATFORM_TO_SYSTEM).join(', '));
 
 // ---------------------------------------------------------------------------
 // Proactively open the IndexedDB database on page load so that:
@@ -1397,9 +1417,9 @@ console.log('Supported platforms:', Object.keys(PLATFORM_TO_SYSTEM).join(', '));
 (async () => {
     try {
         const db = await _openRomDB();
-        console.log('[ForsakenIDB] Database pre-initialized successfully. Stores:', Array.from(db.objectStoreNames));
+        _log('[ForsakenIDB] Database pre-initialized successfully. Stores:', Array.from(db.objectStoreNames));
         db.close();
     } catch (e) {
-        console.error('[ForsakenIDB] Failed to pre-initialize database:', e);
+        _error('[ForsakenIDB] Failed to pre-initialize database:', e);
     }
 })();

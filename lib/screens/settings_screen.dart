@@ -186,7 +186,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       WebEmulatorService.instance.corsProxyUrl =
           (corsProxy != null && corsProxy.isNotEmpty) ? corsProxy : null;
     } catch (e) {
-      debugPrint('Error reloading CORS proxy: $e');
+      DebugService.instance.error(
+        'Error reloading CORS proxy: $e',
+        tag: 'Settings',
+      );
     }
   }
 

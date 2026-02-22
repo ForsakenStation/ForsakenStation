@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../services/config_service.dart';
+import '../../services/debug_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../services/gamepad_service.dart';
 import '../../services/rom_storage_service.dart';
@@ -164,7 +165,10 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
         _foreverPathDisplay = foreverDir.path;
       });
     } catch (e) {
-      debugPrint('Error loading storage info: $e');
+      DebugService.instance.error(
+        'Error loading storage info: $e',
+        tag: 'SystemPaths',
+      );
     }
   }
 

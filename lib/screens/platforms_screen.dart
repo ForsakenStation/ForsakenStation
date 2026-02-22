@@ -21,6 +21,7 @@ import '../widgets/common/help_dialog.dart';
 import '../widgets/common/exit_dialog.dart';
 import '../widgets/common/smart_svg.dart';
 import '../widgets/common/controls_bottom_bar.dart';
+import '../services/debug_service.dart';
 import 'roms_screen.dart';
 import 'settings_screen.dart';
 
@@ -167,7 +168,10 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   void _onGamepadConnected(String gamepadName) {
     if (!mounted) return;
 
-    debugPrint('🎮 Gamepad connected: $gamepadName');
+    DebugService.instance.info(
+      'Gamepad connected: $gamepadName',
+      tag: 'PlatformsScreen',
+    );
 
     // Use post-frame callback to ensure ScaffoldMessenger is available
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -301,8 +305,9 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
       // Convert collections to "virtual" platforms
       final collectionPlatforms = collections.map((collection) {
-        debugPrint(
-          '🎮 [PlatformsScreen] Creating platform for collection: ${collection.id}',
+        DebugService.instance.info(
+          'Creating platform for collection: ${collection.id}',
+          tag: 'PlatformsScreen',
         );
         return Platform(
           name: collection.id, // Use collection ID as platform name
@@ -312,10 +317,14 @@ class _PlatformsScreenState extends State<PlatformsScreen>
         );
       }).toList();
 
-      debugPrint(
-        '📋 [PlatformsScreen] Total collections: ${collectionPlatforms.length}',
+      DebugService.instance.info(
+        'Total collections: ${collectionPlatforms.length}',
+        tag: 'PlatformsScreen',
       );
-      debugPrint('📋 [PlatformsScreen] Total platforms: ${platforms.length}');
+      DebugService.instance.info(
+        'Total platforms: ${platforms.length}',
+        tag: 'PlatformsScreen',
+      );
 
       if (mounted) {
         setState(() {
@@ -324,11 +333,15 @@ class _PlatformsScreenState extends State<PlatformsScreen>
           _isLoading = false;
         });
 
-        debugPrint(
-          '✅ [PlatformsScreen] Loaded ${_platforms.length} total platforms',
+        DebugService.instance.info(
+          'Loaded ${_platforms.length} total platforms',
+          tag: 'PlatformsScreen',
         );
         for (var p in _platforms.take(5)) {
-          debugPrint('   - ${p.name} (${p.displayName})');
+          DebugService.instance.debug(
+            '   - ${p.name} (${p.displayName})',
+            tag: 'PlatformsScreen',
+          );
         }
 
         // Request focus after loading platforms
@@ -380,12 +393,16 @@ class _PlatformsScreenState extends State<PlatformsScreen>
           _platforms.insertAll(0, collectionPlatforms);
         });
 
-        debugPrint(
-          '🔄 [PlatformsScreen] Reloaded collections: ${collections.length}',
+        DebugService.instance.info(
+          'Reloaded collections: ${collections.length}',
+          tag: 'PlatformsScreen',
         );
       }
     } catch (e) {
-      debugPrint('⚠️ [PlatformsScreen] Failed to reload collections: $e');
+      DebugService.instance.warning(
+        'Failed to reload collections: $e',
+        tag: 'PlatformsScreen',
+      );
     }
   }
 
@@ -395,10 +412,14 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
 
     // Load system image
-    debugPrint('🔍 [PlatformsScreen] Loading system image for: $platformName');
+    DebugService.instance.debug(
+      'Loading system image for: $platformName',
+      tag: 'PlatformsScreen',
+    );
     final imagePath = await _mediaService.getSystemImage(platformName);
-    debugPrint(
-      '📷 [PlatformsScreen] System image result for $platformName: $imagePath',
+    DebugService.instance.debug(
+      'System image result for $platformName: $imagePath',
+      tag: 'PlatformsScreen',
     );
 
     if (mounted) {
@@ -415,10 +436,14 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
 
     // Load system logo
-    debugPrint('🔍 [PlatformsScreen] Loading system logo for: $platformName');
+    DebugService.instance.debug(
+      'Loading system logo for: $platformName',
+      tag: 'PlatformsScreen',
+    );
     final logoPath = await _mediaService.getSystemLogo(platformName);
-    debugPrint(
-      '🏷️ [PlatformsScreen] System logo result for $platformName: $logoPath',
+    DebugService.instance.debug(
+      'System logo result for $platformName: $logoPath',
+      tag: 'PlatformsScreen',
     );
 
     if (mounted) {
@@ -435,14 +460,16 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
 
     // Load system background (always returns a path, default if not found)
-    debugPrint(
-      '🔍 [PlatformsScreen] Loading system background for: $platformName',
+    DebugService.instance.debug(
+      'Loading system background for: $platformName',
+      tag: 'PlatformsScreen',
     );
     final backgroundPath = await _mediaService.getSystemBackground(
       platformName,
     );
-    debugPrint(
-      '🖼️ [PlatformsScreen] System background result for $platformName: $backgroundPath',
+    DebugService.instance.debug(
+      'System background result for $platformName: $backgroundPath',
+      tag: 'PlatformsScreen',
     );
 
     if (mounted) {

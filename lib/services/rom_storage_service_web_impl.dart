@@ -11,6 +11,8 @@ import 'dart:async';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
+import 'debug_service.dart';
+
 // ---------------------------------------------------------------------------
 // JS interop helpers
 // ---------------------------------------------------------------------------
@@ -68,19 +70,21 @@ Future<void> initializeStorageDirectories(
           (stats.getProperty('tempCount'.toJS) as JSNumber?)?.toDartInt ?? 0;
       final foreverCount =
           (stats.getProperty('foreverCount'.toJS) as JSNumber?)?.toDartInt ?? 0;
-      // ignore: avoid_print
-      print(
-        '[RomStorageWeb] IndexedDB initialized — temp: $tempCount ROMs, forever: $foreverCount ROMs',
+      DebugService.instance.info(
+        'IndexedDB initialized — temp: $tempCount ROMs, forever: $foreverCount ROMs',
+        tag: 'RomStorageWeb',
       );
     } else {
-      // ignore: avoid_print
-      print(
-        '[RomStorageWeb] WARNING: getStats returned null — forsakenRomStorage bridge may not be loaded',
+      DebugService.instance.warning(
+        'getStats returned null — forsakenRomStorage bridge may not be loaded',
+        tag: 'RomStorageWeb',
       );
     }
   } catch (e) {
-    // ignore: avoid_print
-    print('[RomStorageWeb] WARNING: IndexedDB initialization check failed: $e');
+    DebugService.instance.warning(
+      'IndexedDB initialization check failed: $e',
+      tag: 'RomStorageWeb',
+    );
   }
 }
 

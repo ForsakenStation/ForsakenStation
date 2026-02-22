@@ -2,6 +2,7 @@ import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../services/debug_service.dart';
 
 /// Smart SVG widget that handles both .svg and .svgz (gzip-compressed) files
 /// Automatically detects format and decompresses SVGZ in memory
@@ -94,9 +95,12 @@ class _SmartSvgState extends State<SmartSvg> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('🎨 [SmartSvg] Building widget for: ${widget.assetPath}');
+    DebugService.instance.debug(
+      'Building widget for: ${widget.assetPath}',
+      tag: 'SmartSvg',
+    );
     if (_isSvgz(widget.assetPath)) {
-      debugPrint('📦 [SmartSvg] Detected SVGZ format');
+      DebugService.instance.debug('Detected SVGZ format', tag: 'SmartSvg');
       // Handle SVGZ - load and decompress using cached future
       return FutureBuilder<String>(
         future: _decompressFuture,
@@ -113,7 +117,10 @@ class _SmartSvgState extends State<SmartSvg> {
           }
 
           if (snapshot.hasError) {
-            debugPrint('Error loading SVGZ: ${snapshot.error}');
+            DebugService.instance.error(
+              'Error loading SVGZ: ${snapshot.error}',
+              tag: 'SmartSvg',
+            );
             return _buildErrorWidget();
           }
 
@@ -161,24 +168,37 @@ class _SmartSvgState extends State<SmartSvg> {
   /// Load and decompress SVGZ file from assets
   Future<String> _loadAndDecompressSvgz(String assetPath) async {
     try {
-      debugPrint('🔧 [SmartSvg] Loading SVGZ from: $assetPath');
+      DebugService.instance.debug(
+        'Loading SVGZ from: $assetPath',
+        tag: 'SmartSvg',
+      );
       // Load compressed data from assets
       final ByteData data = await rootBundle.load(assetPath);
-      debugPrint('✅ [SmartSvg] Loaded ${data.lengthInBytes} bytes');
+      DebugService.instance.debug(
+        'Loaded ${data.lengthInBytes} bytes',
+        tag: 'SmartSvg',
+      );
       final List<int> bytes = data.buffer.asUint8List();
 
       // Decompress using gzip (archive package works on web)
       final List<int> decompressed = GZipDecoder().decodeBytes(bytes);
-      debugPrint('✅ [SmartSvg] Decompressed to ${decompressed.length} bytes');
+      DebugService.instance.debug(
+        'Decompressed to ${decompressed.length} bytes',
+        tag: 'SmartSvg',
+      );
 
       // Convert to string
       final result = String.fromCharCodes(decompressed);
-      debugPrint(
-        '✅ [SmartSvg] Successfully converted to string (${result.length} chars)',
+      DebugService.instance.debug(
+        'Successfully converted to string (${result.length} chars)',
+        tag: 'SmartSvg',
       );
       return result;
     } catch (e) {
-      debugPrint('❌ [SmartSvg] Failed to decompress SVGZ from $assetPath: $e');
+      DebugService.instance.error(
+        'Failed to decompress SVGZ from $assetPath: $e',
+        tag: 'SmartSvg',
+      );
       rethrow;
     }
   }
