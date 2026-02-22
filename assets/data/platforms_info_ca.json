@@ -1,0 +1,682 @@
+{
+    "nes": {
+        "fullName": "Nintendo Entertainment System",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1983,
+        "generation": 3,
+        "description": "La NES va revolucionar la indústria dels videojocs després de la crisi de 1983, establint estàndards de qualitat i presentant franquícies icòniques com Super Mario Bros., The Legend of Zelda i Metroid.",
+        "cpu": "Ricoh 2A03 (MOS 6502) a 1.79 MHz",
+        "resolution": "256x240",
+        "colors": "54 colors disponibles"
+    },
+    "snes": {
+        "fullName": "Super Nintendo Entertainment System",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1990,
+        "generation": 4,
+        "description": "El successor de la NES que va introduir gràfics de 16 bits, el xip Mode 7 per a efectes pseudo-3D i alguns dels millors jocs de la història com Super Mario World, A Link to the Past i Super Metroid.",
+        "cpu": "Ricoh 5A22 (65C816) a 3.58 MHz",
+        "resolution": "256x224 a 512x448",
+        "colors": "32,768 colors disponibles"
+    },
+    "n64": {
+        "fullName": "Nintendo 64",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1996,
+        "generation": 5,
+        "description": "La primera consola de Nintendo en oferir gràfics 3D reals. Famosa per títols innovadors com Super Mario 64, The Legend of Zelda: Ocarina of Time i GoldenEye 007. Utilitzava cartutxos en lloc de CDs.",
+        "cpu": "NEC VR4300 a 93.75 MHz",
+        "resolution": "Fins a 640x480",
+        "colors": "16.8 milions de colors"
+    },
+    "gamecube": {
+        "fullName": "Nintendo GameCube",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "Consola compacta amb un disseny distintiu i controls ergonòmics. Va destacar pel seu potent maquinari i excel·lents jocs first-party com Super Smash Bros. Melee, Metroid Prime i The Legend of Zelda: Wind Waker.",
+        "cpu": "IBM PowerPC Gekko a 486 MHz",
+        "resolution": "Fins a 640x480",
+        "colors": "16.8 milions de colors"
+    },
+    "wii": {
+        "fullName": "Nintendo Wii",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2006,
+        "generation": 7,
+        "description": "Va revolucionar el gaming amb controls per moviment, fent-lo accessible per a tota la família. La seva biblioteca inclou Wii Sports, Super Mario Galaxy i The Legend of Zelda: Twilight Princess.",
+        "cpu": "IBM PowerPC Broadway a 729 MHz",
+        "resolution": "Fins a 480p",
+        "colors": "16.8 milions de colors"
+    },
+    "wiiu": {
+        "fullName": "Nintendo Wii U",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2012,
+        "generation": 8,
+        "description": "Va introduir l'innovador GamePad amb pantalla tàctil, permetent joc asimètric i off-TV. Llar de títols excepcionals com Super Mario 3D World, Splatoon i The Legend of Zelda: Breath of the Wild.",
+        "cpu": "IBM PowerPC Espresso a 1.24 GHz",
+        "resolution": "Fins a 1080p",
+        "colors": "16.8 milions de colors"
+    },
+    "switch": {
+        "fullName": "Nintendo Switch",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2017,
+        "generation": 8,
+        "description": "Consola híbrida que funciona com a portàtil i de sobretaula. Ha estat un èxit massiu amb jocs com The Legend of Zelda: Tears of the Kingdom, Animal Crossing: New Horizons i Super Mario Odyssey.",
+        "cpu": "NVIDIA Custom Tegra X1",
+        "resolution": "Fins a 1080p (dock), 720p (portàtil)",
+        "colors": "16.8 milions de colors"
+    },
+    "gb": {
+        "fullName": "Game Boy",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1989,
+        "generation": 4,
+        "description": "La portàtil que va definir el gaming mòbil. La seva llarga durada de bateria i biblioteca de jocs clàssics com Tetris, Pokémon i Super Mario Land la van convertir en un fenomen cultural.",
+        "cpu": "Sharp LR35902 a 4.19 MHz",
+        "resolution": "160x144",
+        "colors": "4 tons de gris"
+    },
+    "gbc": {
+        "fullName": "Game Boy Color",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1998,
+        "generation": 5,
+        "description": "Evolució de la Game Boy amb pantalla a color. Compatible amb jocs de Game Boy original i amb una biblioteca pròpia que inclou Pokémon Crystal i The Legend of Zelda: Oracle series.",
+        "cpu": "Sharp LR35902 a 8.38 MHz",
+        "resolution": "160x144",
+        "colors": "32,768 colors disponibles"
+    },
+    "gba": {
+        "fullName": "Game Boy Advance",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "Portàtil de 32 bits amb capacitats similars a la SNES. El seu catàleg inclou obres mestres com Advance Wars, Metroid Fusion i remakes de clàssics de NES i SNES.",
+        "cpu": "ARM7TDMI a 16.78 MHz",
+        "resolution": "240x160",
+        "colors": "32,768 colors disponibles"
+    },
+    "nds": {
+        "fullName": "Nintendo DS",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2004,
+        "generation": 7,
+        "description": "Revolucionària consola amb doble pantalla i tàctil. Va introduir formes innovadores de jugar amb títols com Brain Age, Nintendogs i New Super Mario Bros.",
+        "cpu": "ARM946E-S a 67 MHz + ARM7TDMI a 33 MHz",
+        "resolution": "256x192 (cada pantalla)",
+        "colors": "262,144 colors"
+    },
+    "3ds": {
+        "fullName": "Nintendo 3DS",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2011,
+        "generation": 8,
+        "description": "Primera consola portàtil amb 3D estereoscòpic sense ulleres. Àmplia biblioteca amb jocs com Pokémon X/Y, Super Mario 3D Land i The Legend of Zelda: A Link Between Worlds.",
+        "cpu": "Dual-core ARM11 MPCore a 268 MHz",
+        "resolution": "400x240 (pantalla superior), 320x240 (inferior)",
+        "colors": "16.8 milions de colors"
+    },
+    "vb": {
+        "fullName": "Nintendo Virtual Boy",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1995,
+        "generation": 5,
+        "description": "Famosa consola de Nintendo que prometia submergir el jugador en realitat virtual mitjançant gràfics estereoscòpics monocromàtics (vermell i negre). Va ser un fracàs comercial a causa de la seva incomoditat.",
+        "cpu": "NEC V810 a 20 MHz",
+        "resolution": "384x224",
+        "colors": "4 tons de vermell"
+    },
+    "genesis": {
+        "fullName": "Sega Genesis / Mega Drive",
+        "manufacturer": "Sega",
+        "releaseYear": 1988,
+        "generation": 4,
+        "description": "La consola que va desafiar Nintendo als 90 amb la seva actitud 'cool' i Sonic the Hedgehog. Llar de clàssics com Streets of Rage, Golden Axe i Phantasy Star.",
+        "cpu": "Motorola 68000 a 7.6 MHz",
+        "resolution": "320x224",
+        "colors": "512 colors disponibles"
+    },
+    "segacd": {
+        "fullName": "Sega CD / Mega-CD",
+        "manufacturer": "Sega",
+        "releaseYear": 1991,
+        "generation": 4,
+        "description": "Expansió de CD-ROM per a Mega Drive que permetia gràfics millorats, àudio de qualitat CD i animacions FMV. Va destacar per jocs com Sonic CD i Snatcher.",
+        "cpu": "Motorola 68000 a 12.5 MHz",
+        "resolution": "320x224",
+        "colors": "512 colors disponibles"
+    },
+    "sega32x": {
+        "fullName": "Sega 32X",
+        "manufacturer": "Sega",
+        "releaseYear": 1994,
+        "generation": 4,
+        "description": "Expansió de 32 bits per a Genesis que va millorar significativament els gràfics. Malgrat la seva curta vida, va oferir ports notables com Doom i Virtua Fighter.",
+        "cpu": "Dual Hitachi SH-2 a 23 MHz",
+        "resolution": "320x224",
+        "colors": "32,768 colors disponibles"
+    },
+    "saturn": {
+        "fullName": "Sega Saturn",
+        "manufacturer": "Sega",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "Consola de 32 bits coneguda per la seva excel·lent biblioteca de jocs 2D i arcade ports. Títols destacats inclouen Panzer Dragoon Saga, Nights into Dreams i Virtua Fighter 2.",
+        "cpu": "Dual Hitachi SH-2 a 28.6 MHz",
+        "resolution": "Fins a 704x480",
+        "colors": "16.8 milions de colors"
+    },
+    "dreamcast": {
+        "fullName": "Sega Dreamcast",
+        "manufacturer": "Sega",
+        "releaseYear": 1998,
+        "generation": 6,
+        "description": "L'última consola de Sega i la primera amb mòdem integrat. Avançada al seu temps amb jocs innovadors com Shenmue, Jet Set Radio i Phantasy Star Online.",
+        "cpu": "Hitachi SH-4 a 200 MHz",
+        "resolution": "Fins a 640x480",
+        "colors": "16.8 milions de colors"
+    },
+    "gamegear": {
+        "fullName": "Sega Game Gear",
+        "manufacturer": "Sega",
+        "releaseYear": 1990,
+        "generation": 4,
+        "description": "Portàtil a color que competia amb Game Boy. Pantalla retroil·luminada i biblioteca de jocs de qualitat, però amb menor durada de bateria. Va destacar per Sonic i Shinobi.",
+        "cpu": "Zilog Z80 a 3.58 MHz",
+        "resolution": "160x144",
+        "colors": "4,096 colors disponibles"
+    },
+    "ms": {
+        "fullName": "Sega Master System",
+        "manufacturer": "Sega",
+        "releaseYear": 1985,
+        "generation": 3,
+        "description": "Consola de 8 bits de Sega que va competir directament amb la NES. Tot i que va tenir menys èxit global, va ser immensament popular a Europa i Brasil, destacant per jocs com Alex Kidd i Sonic.",
+        "cpu": "Zilog Z80 a 3.58 MHz",
+        "resolution": "256x192",
+        "colors": "64 colors disponibles (32 en pantalla)"
+    },
+    "sg1000": {
+        "fullName": "Sega SG-1000",
+        "manufacturer": "Sega",
+        "releaseYear": 1983,
+        "generation": 2,
+        "description": "La primera videoconsola de sobretaula de Sega. Lanzada el mateix dia que la Famicom de Nintendo al Japó, va establir les bases per al que més tard es convertiria en la Master System.",
+        "cpu": "Zilog Z80 a 3.58 MHz",
+        "resolution": "256x192",
+        "colors": "16 colors disponibles"
+    },
+    "psx": {
+        "fullName": "Sony PlayStation",
+        "manufacturer": "Sony",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "La consola que va portar Sony al mercat de videojocs i va popularitzar els CD-ROMs. Biblioteca massiva amb clàssics com Final Fantasy VII, Metal Gear Solid i Crash Bandicoot.",
+        "cpu": "MIPS R3000A a 33.87 MHz",
+        "resolution": "Fins a 640x480",
+        "colors": "16.8 milions de colors"
+    },
+    "ps2": {
+        "fullName": "Sony PlayStation 2",
+        "manufacturer": "Sony",
+        "releaseYear": 2000,
+        "generation": 6,
+        "description": "La consola més venuda de la història. Reproductor de DVD incorporat i biblioteca incomparable amb títols com God of War, Shadow of the Colossus i Grand Theft Auto: San Andreas.",
+        "cpu": "Emotion Engine a 294.91 MHz",
+        "resolution": "Fins a 1280x720",
+        "colors": "16.8 milions de colors"
+    },
+    "ps3": {
+        "fullName": "Sony PlayStation 3",
+        "manufacturer": "Sony",
+        "releaseYear": 2006,
+        "generation": 7,
+        "description": "Potent consola amb Cell Processor i Blu-ray. Va introduir PlayStation Network i trofeus. Va destacar amb The Last of Us, Uncharted series i God of War III.",
+        "cpu": "Cell Broadband Engine a 3.2 GHz",
+        "resolution": "Fins a 1080p",
+        "colors": "16.8 milions de colors"
+    },
+    "ps4": {
+        "fullName": "Sony PlayStation 4",
+        "manufacturer": "Sony",
+        "releaseYear": 2013,
+        "generation": 8,
+        "description": "Consola enfocada en gaming amb arquitectura x86. Gran èxit amb exclusius com Bloodborne, Spider-Man, Horizon Zero Dawn i God of War (2018).",
+        "cpu": "AMD Jaguar 8-core a 1.6 GHz",
+        "resolution": "Fins a 1080p (4K en PS4 Pro)",
+        "colors": "16.8 milions de colors"
+    },
+    "ps5": {
+        "fullName": "Sony PlayStation 5",
+        "manufacturer": "Sony",
+        "releaseYear": 2020,
+        "generation": 9,
+        "description": "Consola de nova generació amb SSD ultra ràpid, ray tracing i l'innovador DualSense amb feedback hàptic. Jocs destacats inclouen Demon's Souls Remake i Returnal.",
+        "cpu": "AMD Zen 2 8-core a 3.5 GHz",
+        "resolution": "Fins a 4K (8K suportat)",
+        "colors": "16.8 milions de colors amb HDR"
+    },
+    "psp": {
+        "fullName": "PlayStation Portable",
+        "manufacturer": "Sony",
+        "releaseYear": 2004,
+        "generation": 7,
+        "description": "Portàtil multimèdia amb pantalla widescreen i capacitats multimèdia avançades. Biblioteca de qualitat amb God of War: Chains of Olympus, Monster Hunter i Lumines.",
+        "cpu": "MIPS R4000 a 333 MHz",
+        "resolution": "480x272",
+        "colors": "16.8 milions de colors"
+    },
+    "psvita": {
+        "fullName": "PlayStation Vita",
+        "manufacturer": "Sony",
+        "releaseYear": 2011,
+        "generation": 8,
+        "description": "Successora de PSP amb pantalla OLED tàctil i touchpad del darrere. Malgrat la seva curta vida comercial, va cultivar una base de fans dedicada amb títols com Persona 4 Golden i Uncharted: Golden Abyss.",
+        "cpu": "ARM Cortex-A9 MPCore quad-core",
+        "resolution": "960x544",
+        "colors": "16.8 milions de colors"
+    },
+    "xbox": {
+        "fullName": "Microsoft Xbox",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "Primera incursió de Microsoft en consoles amb maquinari potent basat en PC. Va introduir Xbox Live i Halo: Combat Evolved, que va revolucionar els FPS en consoles.",
+        "cpu": "Intel Pentium III a 733 MHz",
+        "resolution": "Fins a 1080i",
+        "colors": "16.8 milions de colors"
+    },
+    "xbox360": {
+        "fullName": "Microsoft Xbox 360",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2005,
+        "generation": 7,
+        "description": "Va perfeccionar el gaming online amb Xbox Live millorat i sistema de assoliments. Biblioteca excepcional amb Halo 3, Gears of War i Mass Effect.",
+        "cpu": "PowerPC Tri-Core Xenon a 3.2 GHz",
+        "resolution": "Fins a 1080p",
+        "colors": "16.8 milions de colors"
+    },
+    "xboxone": {
+        "fullName": "Microsoft Xbox One",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2013,
+        "generation": 8,
+        "description": "Consola multimèdia all-in-one amb enfocament en entreteniment. Va destacar per la seva retrocompatibilitat i serveis com Xbox Game Pass. Títols clau inclouen Forza Horizon series i Halo 5.",
+        "cpu": "AMD Jaguar 8-core a 1.75 GHz",
+        "resolution": "Fins a 1080p (4K en Xbox One X)",
+        "colors": "16.8 milions de colors amb HDR"
+    },
+    "xboxseriesx": {
+        "fullName": "Microsoft Xbox Series X/S",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2020,
+        "generation": 9,
+        "description": "Consoles de nova generació enfocades en rendiment i velocitat. Series X ofereix 4K natiu i ray tracing, mentre Series S és més compacta i econòmica. Totes dues amb Quick Resume i Game Pass.",
+        "cpu": "AMD Zen 2 8-core a 3.8 GHz",
+        "resolution": "Fins a 4K (8K suportat en Series X)",
+        "colors": "16.8 milions de colors amb HDR"
+    },
+    "atari2600": {
+        "fullName": "Atari 2600",
+        "manufacturer": "Atari",
+        "releaseYear": 1977,
+        "generation": 2,
+        "description": "Una de les primeres consoles d'èxit amb cartutxos intercanviables. Va popularitzar clàssics arcade a la llar com Space Invaders, Pac-Man i Pitfall!",
+        "cpu": "MOS 6507 a 1.19 MHz",
+        "resolution": "160x192",
+        "colors": "128 colors disponibles"
+    },
+    "vectrex": {
+        "fullName": "Vectrex",
+        "manufacturer": "General Consumer Electronics",
+        "releaseYear": 1982,
+        "generation": 2,
+        "description": "Consola única que incloïa el seu propi monitor de vectors. A diferència d'altres consoles que utilitzaven píxels, la Vectrex dibuixava línies suaus, oferint una estètica arcade única a casa.",
+        "cpu": "Motorola 68A09 a 1.5 MHz",
+        "resolution": "Vectorial (9x11 polzades)",
+        "colors": "Monocromàtic (utilitzava làmines de color)"
+    },
+    "atari5200": {
+        "fullName": "Atari 5200",
+        "manufacturer": "Atari",
+        "releaseYear": 1982,
+        "generation": 3,
+        "description": "Successor del 2600 amb millors gràfics i so. Basat en el maquinari de les computadores Atari 8-bit. Va destacar pels seus ports arcade i controladors analògics.",
+        "cpu": "MOS 6502C a 1.79 MHz",
+        "resolution": "320x192",
+        "colors": "256 colors disponibles"
+    },
+    "atari7800": {
+        "fullName": "Atari 7800",
+        "manufacturer": "Atari",
+        "releaseYear": 1986,
+        "generation": 3,
+        "description": "Consola retrocompatible amb Atari 2600 dissenyada per competir amb NES. Va millorar significativament els gràfics i va oferir excel·lents versions de jocs arcade.",
+        "cpu": "Atari SALLY (6502) a 1.79 MHz",
+        "resolution": "320x240",
+        "colors": "256 colors disponibles"
+    },
+    "atarilynx": {
+        "fullName": "Atari Lynx",
+        "manufacturer": "Atari",
+        "releaseYear": 1989,
+        "generation": 4,
+        "description": "Primera consola portàtil a color amb pantalla retroil·luminada. Tècnicament superior a Game Boy però amb menor èxit comercial. Va destacar per la seva capacitat de joc multijugador.",
+        "cpu": "MOS 65SC02 a 4 MHz",
+        "resolution": "160x102",
+        "colors": "4,096 colors disponibles"
+    },
+    "atarijaguar": {
+        "fullName": "Atari Jaguar",
+        "manufacturer": "Atari",
+        "releaseYear": 1993,
+        "generation": 5,
+        "description": "Autoproclamada com la primera consola de 64 bits. L'última consola d'Atari va tenir una biblioteca limitada però inclou títols de culte com Tempest 2000 i Alien vs Predator.",
+        "cpu": "Motorola 68000 a 13.3 MHz",
+        "resolution": "Fins a 720x576",
+        "colors": "16.8 milions de colors"
+    },
+    "colecovision": {
+        "fullName": "ColecoVision",
+        "manufacturer": "Coleco",
+        "releaseYear": 1982,
+        "generation": 3,
+        "description": "Consola que va destacar per les seves excel·lents adaptacions de jocs arcade. Oferia gràfics superiors als seus competidors de l'època com Donkey Kong i Zaxxon.",
+        "cpu": "Zilog Z80A a 3.58 MHz",
+        "resolution": "256x192",
+        "colors": "16 colors disponibles"
+    },
+    "o2": {
+        "fullName": "Magnavox Odyssey 2 / Philips Videopac",
+        "manufacturer": "Magnavox / Philips",
+        "releaseYear": 1978,
+        "generation": 2,
+        "description": "Successora de la primera consola de la història. Incloïa un teclat complet a la unitat principal i va destacar per la seva síntesi de veu i jocs d'estratègia.",
+        "cpu": "Intel 8048 a 1.79 MHz",
+        "resolution": "160x200",
+        "colors": "16 colors seleccionables"
+    },
+    "intellivision": {
+        "fullName": "Intellivision",
+        "manufacturer": "Mattel Electronics",
+        "releaseYear": 1979,
+        "generation": 2,
+        "description": "Primera consola de 16 bits que va rivalitzar amb Atari 2600. Innovador controlador amb teclat numèric i disc direccional. Biblioteca diversa de jocs esportius i estratègia.",
+        "cpu": "General Instrument CP1610 a 0.89 MHz",
+        "resolution": "159x96",
+        "colors": "16 colors disponibles"
+    },
+    "neogeo": {
+        "fullName": "SNK Neo Geo",
+        "manufacturer": "SNK",
+        "releaseYear": 1990,
+        "generation": 4,
+        "description": "Sistema arcade i domèstic amb maquinari idèntic. Coneguda pels seus jocs de lluita i run-and-gun d'alta qualitat com Metal Slug, The King of Fighters i Samurai Shodown.",
+        "cpu": "Motorola 68000 a 12 MHz",
+        "resolution": "320x224",
+        "colors": "65,536 colors disponibles"
+    },
+    "neogeocd": {
+        "fullName": "SNK Neo Geo CD",
+        "manufacturer": "SNK",
+        "releaseYear": 1994,
+        "generation": 4,
+        "description": "Versió més econòmica del Neo Geo que utilitzava CDs. Mateixos jocs però amb llargs temps de càrrega. Popular per fer accessibles els costosos jocs de Neo Geo.",
+        "cpu": "Motorola 68000 a 12 MHz",
+        "resolution": "320x224",
+        "colors": "65,536 colors disponibles"
+    },
+    "ngp": {
+        "fullName": "Neo Geo Pocket",
+        "manufacturer": "SNK",
+        "releaseYear": 1998,
+        "generation": 5,
+        "description": "Portàtil de SNK amb pantalla monocromàtica. Va destacar pel seu excel·lent stick analògic i versions portàtils de franquícies Neo Geo.",
+        "cpu": "Toshiba TLCS-900H a 6.144 MHz",
+        "resolution": "160x152",
+        "colors": "8 tons de gris"
+    },
+    "ngpc": {
+        "fullName": "Neo Geo Pocket Color",
+        "manufacturer": "SNK",
+        "releaseYear": 1999,
+        "generation": 5,
+        "description": "Versió a color de NGP amb excel·lents jocs de lluita i puzzles. Retrocompatible amb NGP. Malgrat la seva qualitat, no va poder competir amb Game Boy Color.",
+        "cpu": "Toshiba TLCS-900H a 6.144 MHz",
+        "resolution": "160x152",
+        "colors": "4,096 colors disponibles"
+    },
+    "wonderswan": {
+        "fullName": "WonderSwan",
+        "manufacturer": "Bandai",
+        "releaseYear": 1999,
+        "generation": 5,
+        "description": "Portàtil japonesa dissenyada pel creador de Game Boy. Va destacar pel seu baix consum de bateria i biblioteca de JRPGs. Popular al Japó però mai llançada internacionalment.",
+        "cpu": "NEC V30 MZ a 3.072 MHz",
+        "resolution": "224x144",
+        "colors": "8 tons de gris"
+    },
+    "wonderswancolor": {
+        "fullName": "WonderSwan Color",
+        "manufacturer": "Bandai",
+        "releaseYear": 2000,
+        "generation": 6,
+        "description": "Versió a color de WonderSwan retrocompatible amb jocs originals. Biblioteca de qualitat amb Final Fantasy i ports de jocs clàssics.",
+        "cpu": "NEC V30 MZ a 3.072 MHz",
+        "resolution": "224x144",
+        "colors": "241 colors de 4,096"
+    },
+    "pokemini": {
+        "fullName": "Nintendo Pokémon Mini",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "La consola amb cartutxos intercanviables més petita del món. Incloïa sensors de moviment i vibració, enfocant-se exclusivament en la franquícia Pokémon.",
+        "cpu": "Epson S1C88 a 4 MHz",
+        "resolution": "96x64",
+        "colors": "Monocromàtic (blanc i negre)"
+    },
+    "playdia": {
+        "fullName": "Bandai Playdia",
+        "manufacturer": "Bandai",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "Consola de 8 bits basada en CD que utilitzava un control infraroig. Estava dirigida a un públic jove i se centrava en programari interactiu i anime, com Dragon Ball Z i Sailor Moon.",
+        "cpu": "Toshiba TMP87C800F a 8 MHz",
+        "resolution": "Fins a 640x480",
+        "colors": "16.8 milions de colors"
+    },
+    "pippin": {
+        "fullName": "Apple Pippin",
+        "manufacturer": "Apple / Bandai",
+        "releaseYear": 1996,
+        "generation": 5,
+        "description": "Plataforma multimèdia dissenyada per Apple i fabricada principalment per Bandai. Basada en l'arquitectura Macintosh, va intentar ser una barreja entre ordinador i consola, però el seu alt preu va limitar el seu èxit.",
+        "cpu": "PowerPC 603 a 66 MHz",
+        "resolution": "Fins a 640x480",
+        "colors": "16.7 milions de colors"
+    },
+    "pcengine": {
+        "fullName": "PC Engine / TurboGrafx-16",
+        "manufacturer": "NEC / Hudson Soft",
+        "releaseYear": 1987,
+        "generation": 4,
+        "description": "Consola de 8 bits amb xip gràfic de 16 bits que va rivalitzar amb Mega Drive al Japó. Excel·lent biblioteca de shoot 'em ups i RPGs. Gran èxit al Japó però limitat a Occident.",
+        "cpu": "HuC6280 a 7.16 MHz",
+        "resolution": "256x224",
+        "colors": "512 colors disponibles"
+    },
+    "pcenginecd": {
+        "fullName": "PC Engine CD / TurboGrafx-CD",
+        "manufacturer": "NEC / Hudson Soft",
+        "releaseYear": 1988,
+        "generation": 4,
+        "description": "Primera expansió de CD-ROM amb èxit per a consoles. Va permetre àudio CD de qualitat i gràfics millorats. Biblioteca destacada amb Ys series i Castlevania: Rondo of Blood.",
+        "cpu": "HuC6280 a 7.16 MHz",
+        "resolution": "256x224",
+        "colors": "512 colors disponibles"
+    },
+    "supervision": {
+        "fullName": "Watara Supervision",
+        "manufacturer": "Watara",
+        "releaseYear": 1992,
+        "generation": 4,
+        "description": "Consola portàtil monocromàtica llançada com una alternativa econòmica a la Game Boy. Tenia una pantalla més gran però una biblioteca de jocs més limitada i de menor qualitat.",
+        "cpu": "65C02 a 4 MHz",
+        "resolution": "160x160",
+        "colors": "4 tons de gris"
+    },
+    "pcfx": {
+        "fullName": "PC-FX",
+        "manufacturer": "NEC",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "Successor de PC Engine enfocat en anime i FMV. Mai llançat fora del Japó. Biblioteca petita però de culte, principalment visual novels i anime games.",
+        "cpu": "NEC V810 a 21.5 MHz",
+        "resolution": "Fins a 640x480",
+        "colors": "16.8 milions de colors"
+    },
+    "x68000": {
+        "fullName": "Sharp X68000",
+        "manufacturer": "Sharp",
+        "releaseYear": 1987,
+        "generation": null,
+        "description": "Potent estació de treball japonesa famosa pels seus 'perfect ports' de jocs arcade de Capcom i Konami. Maquinari extremadament avançat per a la seva època.",
+        "cpu": "Motorola 68000 a 10 MHz",
+        "resolution": "Fins a 768x512",
+        "colors": "65,536 colors disponibles"
+    },
+    "3do": {
+        "fullName": "3DO Interactive Multiplayer",
+        "manufacturer": "The 3DO Company",
+        "releaseYear": 1993,
+        "generation": 5,
+        "description": "Ambiciosa consola multimèdia amb tecnologia avançada però preu prohibitiu. Va destacar per jocs innovadors com Gex, Road Rash i The Need for Speed original.",
+        "cpu": "ARM60 a 12.5 MHz",
+        "resolution": "Fins a 640x480",
+        "colors": "16.8 milions de colors"
+    },
+    "cdi": {
+        "fullName": "Philips CD-i",
+        "manufacturer": "Philips",
+        "releaseYear": 1991,
+        "generation": 4,
+        "description": "Sistema multimèdia interactiu recordat principalment per les seves infames entregues de Zelda i Mario produïdes sota llicència. Estava enfocat més en l'educació i multimèdia que en el joc pur.",
+        "cpu": "Philips SCC68070 a 15.5 MHz",
+        "resolution": "Fins a 768x560",
+        "colors": "16.7 milions de colors"
+    },
+    "amiga1200": {
+        "fullName": "Commodore Amiga 1200",
+        "manufacturer": "Commodore",
+        "releaseYear": 1992,
+        "generation": 4,
+        "description": "El model més avançat de la línia Amiga per al mercat domèstic. Amb el xipset AGA, va permetre una potència gràfica molt superior, sent capaç de mostrar fins a 256 colors simultanis d'una paleta de 16.8 milions.",
+        "cpu": "Motorola 68EC020 a 14.18 MHz",
+        "resolution": "Fins a 1280x512",
+        "colors": "Fins a 256 colors de 16.8 milions (AGA)"
+    },
+    "amiga500": {
+        "fullName": "Commodore Amiga 500",
+        "manufacturer": "Commodore",
+        "releaseYear": 1987,
+        "generation": 4,
+        "description": "El model més popular de la família Amiga. Va revolucionar el mercat domèstic amb les seves impressionants capacitats de so i gràfics per a l'època, convertint-se en l'estàndard per a jocs de finals dels 80.",
+        "cpu": "Motorola 68000 a 7.16 MHz",
+        "resolution": "Fins a 640x512",
+        "colors": "4,096 colors disponibles (HAM)"
+    },
+    "amigacd32": {
+        "fullName": "Commodore Amiga CD32",
+        "manufacturer": "Commodore",
+        "releaseYear": 1993,
+        "generation": 5,
+        "description": "La primera consola de videojocs de 32 bits basada en CD llançada a Europa. Basada en l'arquitectura de l'Amiga 1200, va intentar posicionar Commodore al mercat de les consoles de saló.",
+        "cpu": "Motorola 68EC020 a 14.18 MHz",
+        "resolution": "Fins a 1280x512",
+        "colors": "256 colors de 16.8 milions"
+    },
+    "amigacdtv": {
+        "fullName": "Commodore Amiga CDTV",
+        "manufacturer": "Commodore",
+        "releaseYear": 1991,
+        "generation": 4,
+        "description": "Un híbrid entre ordinador Amiga 500 i reproductor de CD-ROM. Dissenyat per ser un centre multimèdia de saló abans que el concepte fos popular. Precursor de les consoles basades en CD.",
+        "cpu": "Motorola 68000 a 7.16 MHz",
+        "resolution": "Fins a 640x512",
+        "colors": "4,096 colors disponibles"
+    },
+    "c64": {
+        "fullName": "Commodore 64",
+        "manufacturer": "Commodore",
+        "releaseYear": 1982,
+        "generation": null,
+        "description": "L'ordinador personal més venut de tots els temps. Massiva biblioteca de jocs i programari. Icònic xip de so SID. Clàssics com Impossible Mission i The Last Ninja.",
+        "cpu": "MOS 6510 a 1.023 MHz",
+        "resolution": "320x200",
+        "colors": "16 colors disponibles"
+    },
+    "msx": {
+        "fullName": "MSX",
+        "manufacturer": "Microsoft / ASCII",
+        "releaseYear": 1983,
+        "generation": null,
+        "description": "Estàndard d'ordinadors domèstics molt popular al Japó i Europa. Llar de les primeres entregues de Metal Gear. Biblioteca extensa de jocs, molts de Konami.",
+        "cpu": "Zilog Z80A a 3.58 MHz",
+        "resolution": "256x192",
+        "colors": "16 colors disponibles"
+    },
+    "zxspectrum": {
+        "fullName": "ZX Spectrum",
+        "manufacturer": "Sinclair Research",
+        "releaseYear": 1982,
+        "generation": null,
+        "description": "Ordinador britànic icònic que va popularitzar el gaming al Regne Unit. Biblioteca massiva de jocs de tots els gèneres. Va definir una generació de programadors i jugadors.",
+        "cpu": "Zilog Z80A a 3.5 MHz",
+        "resolution": "256x192",
+        "colors": "8 colors + 8 brillants"
+    },
+    "amstradcpc": {
+        "fullName": "Amstrad CPC",
+        "manufacturer": "Amstrad",
+        "releaseYear": 1984,
+        "generation": null,
+        "description": "Sèrie d'ordinadors de 8 bits popular a Europa. Monitor integrat i gravadora de casset. Excel·lent biblioteca de jocs incloent ports d'arcade i títols exclusius.",
+        "cpu": "Zilog Z80 a 4 MHz",
+        "resolution": "160x200 a 640x200",
+        "colors": "27 colors disponibles"
+    },
+    "dos": {
+        "fullName": "MS-DOS / PC",
+        "manufacturer": "Microsoft / IBM",
+        "releaseYear": 1981,
+        "generation": null,
+        "description": "Plataforma de PC que es va convertir en líder de gaming. Massiva biblioteca amb clàssics com Doom, Wolfenstein 3D, Dune II i tota l'era daurada d'adventure games de LucasArts i Sierra.",
+        "cpu": "Variable (Intel x86)",
+        "resolution": "Variable",
+        "colors": "Variable segons maquinari"
+    },
+    "scummvm": {
+        "fullName": "ScummVM",
+        "manufacturer": "ScummVM Team",
+        "releaseYear": 2001,
+        "generation": null,
+        "description": "Motor d'interpretació per a jocs point-and-click clàssics. Permet jugar aventures gràfiques de LucasArts, Sierra, Revolution Software i molts més en sistemes moderns.",
+        "cpu": "N/A (Programari)",
+        "resolution": "Variable",
+        "colors": "Segons joc original"
+    },
+    "arcade": {
+        "fullName": "Arcade",
+        "manufacturer": "Varis",
+        "releaseYear": 1971,
+        "generation": null,
+        "description": "Màquines recreatives que van definir l'era daurada dels videojocs. Des de Pong i Pac-Man fins a Street Fighter II i Metal Slug. Maquinari especialitzat per a experiències òptimes.",
+        "cpu": "Variable segons màquina",
+        "resolution": "Variable segons màquina",
+        "colors": "Variable segons maquinari"
+    }
+}

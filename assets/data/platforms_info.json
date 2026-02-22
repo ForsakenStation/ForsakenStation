@@ -119,6 +119,16 @@
     "resolution": "400x240 (pantalla superior), 320x240 (inferior)",
     "colors": "16.8 millones de colores"
   },
+  "vb": {
+    "fullName": "Nintendo Virtual Boy",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1995,
+    "generation": 5,
+    "description": "Famosa consola de Nintendo que prometía sumergir al jugador en realidad virtual mediante gráficos estereoscópicos monocromáticos (rojo y negro). Fue un fracaso comercial debido a su incomodidad.",
+    "cpu": "NEC V810 a 20 MHz",
+    "resolution": "384x224",
+    "colors": "4 tonos de rojo"
+  },
   "genesis": {
     "fullName": "Sega Genesis / Mega Drive",
     "manufacturer": "Sega",
@@ -178,6 +188,26 @@
     "cpu": "Zilog Z80 a 3.58 MHz",
     "resolution": "160x144",
     "colors": "4,096 colores disponibles"
+  },
+  "ms": {
+    "fullName": "Sega Master System",
+    "manufacturer": "Sega",
+    "releaseYear": 1985,
+    "generation": 3,
+    "description": "Consola de 8 bits de Sega que compitió directamente con la NES. Aunque tuvo menos éxito global, fue inmensamente popular en Europa y Brasil, destacando por juegos como Alex Kidd y Sonic.",
+    "cpu": "Zilog Z80 a 3.58 MHz",
+    "resolution": "256x192",
+    "colors": "64 colores disponibles (32 en pantalla)"
+  },
+  "sg1000": {
+    "fullName": "Sega SG-1000",
+    "manufacturer": "Sega",
+    "releaseYear": 1983,
+    "generation": 2,
+    "description": "La primera videoconsola de sobremesa de Sega. Lanzada el mismo día que la Famicom de Nintendo en Japón, sentó las bases para lo que más tarde se convertiría en la Master System.",
+    "cpu": "Zilog Z80 a 3.58 MHz",
+    "resolution": "256x192",
+    "colors": "16 colores disponibles"
   },
   "psx": {
     "fullName": "Sony PlayStation",
@@ -299,6 +329,16 @@
     "resolution": "160x192",
     "colors": "128 colores disponibles"
   },
+  "vectrex": {
+    "fullName": "Vectrex",
+    "manufacturer": "General Consumer Electronics",
+    "releaseYear": 1982,
+    "generation": 2,
+    "description": "Consola única que incluía su propio monitor de vectores. A diferencia de otras consolas que usaban píxeles, la Vectrex dibujaba líneas suaves, ofreciendo una estética arcade única en casa.",
+    "cpu": "Motorola 68A09 a 1.5 MHz",
+    "resolution": "Vectorial (9x11 pulgadas)",
+    "colors": "Monocromático (usaba láminas de color)"
+  },
   "atari5200": {
     "fullName": "Atari 5200",
     "manufacturer": "Atari",
@@ -348,6 +388,16 @@
     "cpu": "Zilog Z80A a 3.58 MHz",
     "resolution": "256x192",
     "colors": "16 colores disponibles"
+  },
+  "o2": {
+    "fullName": "Magnavox Odyssey 2 / Philips Videopac",
+    "manufacturer": "Magnavox / Philips",
+    "releaseYear": 1978,
+    "generation": 2,
+    "description": "Sucesora de la primera consola de la historia. Incluía un teclado completo en la unidad principal y destacó por su síntesis de voz y juegos de estrategia.",
+    "cpu": "Intel 8048 a 1.79 MHz",
+    "resolution": "160x200",
+    "colors": "16 colores seleccionables"
   },
   "intellivision": {
     "fullName": "Intellivision",
@@ -419,6 +469,36 @@
     "resolution": "224x144",
     "colors": "241 colores de 4,096"
   },
+  "pokemini": {
+    "fullName": "Nintendo Pokémon Mini",
+    "manufacturer": "Nintendo",
+    "releaseYear": 2001,
+    "generation": 6,
+    "description": "La consola con cartuchos intercambiables más pequeña del mundo. Incluía sensores de movimiento y vibración, enfocándose exclusivamente en la franquicia Pokémon.",
+    "cpu": "Epson S1C88 a 4 MHz",
+    "resolution": "96x64",
+    "colors": "Monocromático (blanco y negro)"
+  },
+  "playdia": {
+    "fullName": "Bandai Playdia",
+    "manufacturer": "Bandai",
+    "releaseYear": 1994,
+    "generation": 5,
+    "description": "Consola de 8 bits basada en CD que utilizaba un control infrarrojo. Estaba dirigida a un público joven y se centraba en software interactivo y anime, como Dragon Ball Z y Sailor Moon.",
+    "cpu": "Toshiba TMP87C800F a 8 MHz",
+    "resolution": "Hasta 640x480",
+    "colors": "16.8 millones de colores"
+  },
+  "pippin": {
+    "fullName": "Apple Pippin",
+    "manufacturer": "Apple / Bandai",
+    "releaseYear": 1996,
+    "generation": 5,
+    "description": "Plataforma multimedia diseñada por Apple y fabricada principalmente por Bandai. Basada en la arquitectura Macintosh, intentó ser una mezcla entre computadora y consola, pero su alto precio limitó su éxito.",
+    "cpu": "PowerPC 603 a 66 MHz",
+    "resolution": "Hasta 640x480",
+    "colors": "16.7 millones de colores"
+  },
   "pcengine": {
     "fullName": "PC Engine / TurboGrafx-16",
     "manufacturer": "NEC / Hudson Soft",
@@ -439,6 +519,16 @@
     "resolution": "256x224",
     "colors": "512 colores disponibles"
   },
+  "supervision": {
+    "fullName": "Watara Supervision",
+    "manufacturer": "Watara",
+    "releaseYear": 1992,
+    "generation": 4,
+    "description": "Consola portátil monocromática lanzada como una alternativa económica a la Game Boy. Tenía una pantalla más grande pero una biblioteca de juegos más limitada y de menor calidad.",
+    "cpu": "65C02 a 4 MHz",
+    "resolution": "160x160",
+    "colors": "4 tonos de gris"
+  },
   "pcfx": {
     "fullName": "PC-FX",
     "manufacturer": "NEC",
@@ -448,6 +538,16 @@
     "cpu": "NEC V810 a 21.5 MHz",
     "resolution": "Hasta 640x480",
     "colors": "16.8 millones de colores"
+  },
+  "x68000": {
+    "fullName": "Sharp X68000",
+    "manufacturer": "Sharp",
+    "releaseYear": 1987,
+    "generation": null,
+    "description": "Potente estación de trabajo japonesa famosa por sus 'perfect ports' de juegos arcade de Capcom y Konami. Hardware extremadamente avanzado para su época.",
+    "cpu": "Motorola 68000 a 10 MHz",
+    "resolution": "Hasta 768x512",
+    "colors": "65,536 colores disponibles"
   },
   "3do": {
     "fullName": "3DO Interactive Multiplayer",
@@ -459,42 +559,52 @@
     "resolution": "Hasta 640x480",
     "colors": "16.8 millones de colores"
   },
-  "amiga1200": {
-    "fullName": "Commodore Amiga",
-    "manufacturer": "Commodore",
+  "cdi": {
+    "fullName": "Philips CD-i",
+    "manufacturer": "Philips",
     "releaseYear": 1991,
-    "generation": null,
-    "description": "Revolucionaria computadora personal con capacidades multimedia avanzadas. Popular para gaming en Europa con títulos legendarios como Lemmings, Monkey Island y Sensible Soccer.",
-    "cpu": "Motorola 68000 a 7.16 MHz",
-    "resolution": "Hasta 640x512",
-    "colors": "4,096 colores disponibles"
+    "generation": 4,
+    "description": "Sistema multimedia interactivo recordado principalmente por sus infames entregas de Zelda y Mario producidas bajo licencia. Estaba enfocado más en la educación y multimedia que en el juego puro.",
+    "cpu": "Philips SCC68070 a 15.5 MHz",
+    "resolution": "Hasta 768x560",
+    "colors": "16.7 millones de colores"
   },
-  "amiga500": {
-    "fullName": "Commodore Amiga",
-    "manufacturer": "Commodore",
-    "releaseYear": 1990,
-    "generation": null,
-    "description": "Revolucionaria computadora personal con capacidades multimedia avanzadas. Popular para gaming en Europa con títulos legendarios como Lemmings, Monkey Island y Sensible Soccer.",
-    "cpu": "Motorola 68000 a 7.16 MHz",
-    "resolution": "Hasta 640x512",
-    "colors": "4,096 colores disponibles"
-  },
-  "amigacd32": {
-    "fullName": "Commodore Amiga CD-32",
+  "amiga1200": {
+    "fullName": "Commodore Amiga 1200",
     "manufacturer": "Commodore",
     "releaseYear": 1992,
-    "generation": null,
-    "description": "",
+    "generation": 4,
+    "description": "El modelo más avanzado de la línea Amiga para el mercado doméstico. Con el chipset AGA, permitió una potencia gráfica muy superior, siendo capaz de mostrar hasta 256 colores simultáneos de una paleta de 16.8 millones.",
+    "cpu": "Motorola 68EC020 a 14.18 MHz",
+    "resolution": "Hasta 1280x512",
+    "colors": "Hasta 256 colores de 16.8 millones (AGA)"
+  },
+  "amiga500": {
+    "fullName": "Commodore Amiga 500",
+    "manufacturer": "Commodore",
+    "releaseYear": 1987,
+    "generation": 4,
+    "description": "El modelo más popular de la familia Amiga. Revolucionó el mercado doméstico con sus impresionantes capacidades de sonido y gráficos para la época, convirtiéndose en el estándar para juegos de finales de los 80.",
     "cpu": "Motorola 68000 a 7.16 MHz",
     "resolution": "Hasta 640x512",
-    "colors": "4,096 colores disponibles"
+    "colors": "4,096 colores disponibles (HAM)"
+  },
+  "amigacd32": {
+    "fullName": "Commodore Amiga CD32",
+    "manufacturer": "Commodore",
+    "releaseYear": 1993,
+    "generation": 5,
+    "description": "La primera consola de videojuegos de 32 bits basada en CD lanzada en Europa. Basada en la arquitectura del Amiga 1200, intentó posicionar a Commodore en el mercado de las consolas de salón.",
+    "cpu": "Motorola 68EC020 a 14.18 MHz",
+    "resolution": "Hasta 1280x512",
+    "colors": "256 colores de 16.8 millones"
   },
   "amigacdtv": {
     "fullName": "Commodore Amiga CDTV",
     "manufacturer": "Commodore",
-    "releaseYear": 1990,
-    "generation": null,
-    "description": "Revolucionaria computadora personal con capacidades multimedia avanzadas. Popular para gaming en Europa con títulos legendarios como Lemmings, Monkey Island y Sensible Soccer.",
+    "releaseYear": 1991,
+    "generation": 4,
+    "description": "Un híbrido entre computadora Amiga 500 y reproductor de CD-ROM. Diseñado para ser un centro multimedia de salón antes de que el concepto fuera popular. Precursor de las consolas basadas en CD.",
     "cpu": "Motorola 68000 a 7.16 MHz",
     "resolution": "Hasta 640x512",
     "colors": "4,096 colores disponibles"

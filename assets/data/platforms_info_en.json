@@ -1,0 +1,682 @@
+{
+    "nes": {
+        "fullName": "Nintendo Entertainment System",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1983,
+        "generation": 3,
+        "description": "The NES revolutionized the video game industry after the 1983 crash, setting quality standards and introducing iconic franchises like Super Mario Bros., The Legend of Zelda, and Metroid.",
+        "cpu": "Ricoh 2A03 (MOS 6502) at 1.79 MHz",
+        "resolution": "256x240",
+        "colors": "54 available colors"
+    },
+    "snes": {
+        "fullName": "Super Nintendo Entertainment System",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1990,
+        "generation": 4,
+        "description": "The successor to the NES that introduced 16-bit graphics, the Mode 7 chip for pseudo-3D effects, and some of the best games in history like Super Mario World, A Link to the Past, and Super Metroid.",
+        "cpu": "Ricoh 5A22 (65C816) at 3.58 MHz",
+        "resolution": "256x224 to 512x448",
+        "colors": "32,768 available colors"
+    },
+    "n64": {
+        "fullName": "Nintendo 64",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1996,
+        "generation": 5,
+        "description": "Nintendo's first console to offer true 3D graphics. Famous for innovative titles like Super Mario 64, The Legend of Zelda: Ocarina of Time, and GoldenEye 007. It used cartridges instead of CDs.",
+        "cpu": "NEC VR4300 at 93.75 MHz",
+        "resolution": "Up to 640x480",
+        "colors": "16.8 million colors"
+    },
+    "gamecube": {
+        "fullName": "Nintendo GameCube",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "A compact console with a distinctive design and ergonomic controllers. It stood out for its powerful hardware and excellent first-party games like Super Smash Bros. Melee, Metroid Prime, and The Legend of Zelda: Wind Waker.",
+        "cpu": "IBM PowerPC Gekko at 486 MHz",
+        "resolution": "Up to 640x480",
+        "colors": "16.8 million colors"
+    },
+    "wii": {
+        "fullName": "Nintendo Wii",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2006,
+        "generation": 7,
+        "description": "Revolutionized gaming with motion controls, making it accessible to the whole family. Its library includes Wii Sports, Super Mario Galaxy, and The Legend of Zelda: Twilight Princess.",
+        "cpu": "IBM PowerPC Broadway at 729 MHz",
+        "resolution": "Up to 480p",
+        "colors": "16.8 million colors"
+    },
+    "wiiu": {
+        "fullName": "Nintendo Wii U",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2012,
+        "generation": 8,
+        "description": "Introduced the innovative GamePad with a touch screen, allowing for asymmetric and off-TV play. Home to exceptional titles like Super Mario 3D World, Splatoon, and The Legend of Zelda: Breath of the Wild.",
+        "cpu": "IBM PowerPC Espresso at 1.24 GHz",
+        "resolution": "Up to 1080p",
+        "colors": "16.8 million colors"
+    },
+    "switch": {
+        "fullName": "Nintendo Switch",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2017,
+        "generation": 8,
+        "description": "A hybrid console that functions as both a handheld and a home console. It has been a massive success with games like The Legend of Zelda: Tears of the Kingdom, Animal Crossing: New Horizons, and Super Mario Odyssey.",
+        "cpu": "NVIDIA Custom Tegra X1",
+        "resolution": "Up to 1080p (dock), 720p (handheld)",
+        "colors": "16.8 million colors"
+    },
+    "gb": {
+        "fullName": "Game Boy",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1989,
+        "generation": 4,
+        "description": "The handheld that defined mobile gaming. Its long battery life and library of classic games like Tetris, Pokémon, and Super Mario Land turned it into a cultural phenomenon.",
+        "cpu": "Sharp LR35902 at 4.19 MHz",
+        "resolution": "160x144",
+        "colors": "4 shades of gray"
+    },
+    "gbc": {
+        "fullName": "Game Boy Color",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1998,
+        "generation": 5,
+        "description": "An evolution of the Game Boy with a color screen. Compatible with original Game Boy games and featuring its own library including Pokémon Crystal and The Legend of Zelda: Oracle series.",
+        "cpu": "Sharp LR35902 at 8.38 MHz",
+        "resolution": "160x144",
+        "colors": "32,768 available colors"
+    },
+    "gba": {
+        "fullName": "Game Boy Advance",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "A 32-bit handheld with capabilities similar to the SNES. Its catalog includes masterpieces like Advance Wars, Metroid Fusion, and remakes of NES and SNES classics.",
+        "cpu": "ARM7TDMI at 16.78 MHz",
+        "resolution": "240x160",
+        "colors": "32,768 available colors"
+    },
+    "nds": {
+        "fullName": "Nintendo DS",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2004,
+        "generation": 7,
+        "description": "A revolutionary console with dual screens and touch capabilities. It introduced innovative ways to play with titles like Brain Age, Nintendogs, and New Super Mario Bros.",
+        "cpu": "ARM946E-S at 67 MHz + ARM7TDMI at 33 MHz",
+        "resolution": "256x192 (each screen)",
+        "colors": "262,144 colors"
+    },
+    "3ds": {
+        "fullName": "Nintendo 3DS",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2011,
+        "generation": 8,
+        "description": "The first handheld console with glasses-free stereoscopic 3D. Features a broad library with games like Pokémon X/Y, Super Mario 3D Land, and The Legend of Zelda: A Link Between Worlds.",
+        "cpu": "Dual-core ARM11 MPCore at 268 MHz",
+        "resolution": "400x240 (upper screen), 320x240 (lower screen)",
+        "colors": "16.8 million colors"
+    },
+    "vb": {
+        "fullName": "Nintendo Virtual Boy",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1995,
+        "generation": 5,
+        "description": "A famous Nintendo console that promised to immerse the player in virtual reality using monochromatic stereoscopic graphics (red and black). It was a commercial failure due to its discomfort.",
+        "cpu": "NEC V810 at 20 MHz",
+        "resolution": "384x224",
+        "colors": "4 shades of red"
+    },
+    "genesis": {
+        "fullName": "Sega Genesis / Mega Drive",
+        "manufacturer": "Sega",
+        "releaseYear": 1988,
+        "generation": 4,
+        "description": "The console that challenged Nintendo in the 90s with its 'cool' attitude and Sonic the Hedgehog. Home to classics like Streets of Rage, Golden Axe, and Phantasy Star.",
+        "cpu": "Motorola 68000 at 7.6 MHz",
+        "resolution": "320x224",
+        "colors": "512 available colors"
+    },
+    "segacd": {
+        "fullName": "Sega CD / Mega-CD",
+        "manufacturer": "Sega",
+        "releaseYear": 1991,
+        "generation": 4,
+        "description": "A CD-ROM expansion for the Mega Drive that allowed for enhanced graphics, CD-quality audio, and FMV animations. It stood out for games like Sonic CD and Snatcher.",
+        "cpu": "Motorola 68000 at 12.5 MHz",
+        "resolution": "320x224",
+        "colors": "512 available colors"
+    },
+    "sega32x": {
+        "fullName": "Sega 32X",
+        "manufacturer": "Sega",
+        "releaseYear": 1994,
+        "generation": 4,
+        "description": "A 32-bit expansion for the Genesis that significantly improved graphics. Despite its short lifespan, it offered notable ports like Doom and Virtua Fighter.",
+        "cpu": "Dual Hitachi SH-2 at 23 MHz",
+        "resolution": "320x224",
+        "colors": "32,768 available colors"
+    },
+    "saturn": {
+        "fullName": "Sega Saturn",
+        "manufacturer": "Sega",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "A 32-bit console known for its excellent library of 2D games and arcade ports. Standout titles include Panzer Dragoon Saga, Nights into Dreams, and Virtua Fighter 2.",
+        "cpu": "Dual Hitachi SH-2 at 28.6 MHz",
+        "resolution": "Up to 704x480",
+        "colors": "16.8 million colors"
+    },
+    "dreamcast": {
+        "fullName": "Sega Dreamcast",
+        "manufacturer": "Sega",
+        "releaseYear": 1998,
+        "generation": 6,
+        "description": "Sega's last console and the first with a built-in modem. Ahead of its time with innovative games like Shenmue, Jet Set Radio, and Phantasy Star Online.",
+        "cpu": "Hitachi SH-4 at 200 MHz",
+        "resolution": "Up to 640x480",
+        "colors": "16.8 million colors"
+    },
+    "gamegear": {
+        "fullName": "Sega Game Gear",
+        "manufacturer": "Sega",
+        "releaseYear": 1990,
+        "generation": 4,
+        "description": "A color handheld that competed with the Game Boy. It featured a backlit screen and a quality game library but with shorter battery life. Notable for Sonic and Shinobi.",
+        "cpu": "Zilog Z80 at 3.58 MHz",
+        "resolution": "160x144",
+        "colors": "4,096 available colors"
+    },
+    "ms": {
+        "fullName": "Sega Master System",
+        "manufacturer": "Sega",
+        "releaseYear": 1985,
+        "generation": 3,
+        "description": "Sega's 8-bit console that directly competed with the NES. Although it had less global success, it was immensely popular in Europe and Brazil, standing out for games like Alex Kidd and Sonic.",
+        "cpu": "Zilog Z80 at 3.58 MHz",
+        "resolution": "256x192",
+        "colors": "64 available colors (32 on screen)"
+    },
+    "sg1000": {
+        "fullName": "Sega SG-1000",
+        "manufacturer": "Sega",
+        "releaseYear": 1983,
+        "generation": 2,
+        "description": "Sega's first home video game console. Released on the same day as Nintendo's Famicom in Japan, it laid the groundwork for what would later become the Master System.",
+        "cpu": "Zilog Z80 at 3.58 MHz",
+        "resolution": "256x192",
+        "colors": "16 available colors"
+    },
+    "psx": {
+        "fullName": "Sony PlayStation",
+        "manufacturer": "Sony",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "The console that brought Sony into the video game market and popularized CD-ROMs. Massive library with classics like Final Fantasy VII, Metal Gear Solid, and Crash Bandicoot.",
+        "cpu": "MIPS R3000A at 33.87 MHz",
+        "resolution": "Up to 640x480",
+        "colors": "16.8 million colors"
+    },
+    "ps2": {
+        "fullName": "Sony PlayStation 2",
+        "manufacturer": "Sony",
+        "releaseYear": 2000,
+        "generation": 6,
+        "description": "The best-selling console in history. Built-in DVD player and an incomparable library with titles like God of War, Shadow of the Colossus, and Grand Theft Auto: San Andreas.",
+        "cpu": "Emotion Engine at 294.91 MHz",
+        "resolution": "Up to 1280x720",
+        "colors": "16.8 million colors"
+    },
+    "ps3": {
+        "fullName": "Sony PlayStation 3",
+        "manufacturer": "Sony",
+        "releaseYear": 2006,
+        "generation": 7,
+        "description": "A powerful console with the Cell Processor and Blu-ray. It introduced the PlayStation Network and trophies. Standouts include The Last of Us, Uncharted series, and God of War III.",
+        "cpu": "Cell Broadband Engine at 3.2 GHz",
+        "resolution": "Up to 1080p",
+        "colors": "16.8 million colors"
+    },
+    "ps4": {
+        "fullName": "Sony PlayStation 4",
+        "manufacturer": "Sony",
+        "releaseYear": 2013,
+        "generation": 8,
+        "description": "A gaming-focused console with x86 architecture. Great success with exclusives like Bloodborne, Spider-Man, Horizon Zero Dawn, and God of War (2018).",
+        "cpu": "AMD Jaguar 8-core at 1.6 GHz",
+        "resolution": "Up to 1080p (4K on PS4 Pro)",
+        "colors": "16.8 million colors"
+    },
+    "ps5": {
+        "fullName": "Sony PlayStation 5",
+        "manufacturer": "Sony",
+        "releaseYear": 2020,
+        "generation": 9,
+        "description": "New generation console with ultra-fast SSD, ray tracing, and the innovative DualSense with haptic feedback. Standout games include Demon's Souls Remake and Returnal.",
+        "cpu": "AMD Zen 2 8-core at 3.5 GHz",
+        "resolution": "Up to 4K (8K supported)",
+        "colors": "16.8 million colors with HDR"
+    },
+    "psp": {
+        "fullName": "PlayStation Portable",
+        "manufacturer": "Sony",
+        "releaseYear": 2004,
+        "generation": 7,
+        "description": "A multimedia handheld with a wide screen and advanced multimedia capabilities. Quality library including God of War: Chains of Olympus, Monster Hunter, and Lumines.",
+        "cpu": "MIPS R4000 at 333 MHz",
+        "resolution": "480x272",
+        "colors": "16.8 million colors"
+    },
+    "psvita": {
+        "fullName": "PlayStation Vita",
+        "manufacturer": "Sony",
+        "releaseYear": 2011,
+        "generation": 8,
+        "description": "Successor to the PSP with a touch OLED screen and a rear touchpad. Despite its shorter commercial life, it cultivated a dedicated fan base with titles like Persona 4 Golden and Uncharted: Golden Abyss.",
+        "cpu": "ARM Cortex-A9 MPCore quad-core",
+        "resolution": "960x544",
+        "colors": "16.8 million colors"
+    },
+    "xbox": {
+        "fullName": "Microsoft Xbox",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "Microsoft's first foray into consoles with powerful hardware based on PC technology. It introduced Xbox Live and Halo: Combat Evolved, which revolutionized console FPS games.",
+        "cpu": "Intel Pentium III at 733 MHz",
+        "resolution": "Up to 1080i",
+        "colors": "16.8 million colors"
+    },
+    "xbox360": {
+        "fullName": "Microsoft Xbox 360",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2005,
+        "generation": 7,
+        "description": "Perfected online gaming with an improved Xbox Live and achievement system. Exceptional library with Halo 3, Gears of War, and Mass Effect.",
+        "cpu": "PowerPC Tri-Core Xenon at 3.2 GHz",
+        "resolution": "Up to 1080p",
+        "colors": "16.8 million colors"
+    },
+    "xboxone": {
+        "fullName": "Microsoft Xbox One",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2013,
+        "generation": 8,
+        "description": "An all-in-one multimedia console with an entertainment focus. It stood out for its backward compatibility and services like Xbox Game Pass. Key titles include Forza Horizon series and Halo 5.",
+        "cpu": "AMD Jaguar 8-core at 1.75 GHz",
+        "resolution": "Up to 1080p (4K on Xbox One X)",
+        "colors": "16.8 million colors with HDR"
+    },
+    "xboxseriesx": {
+        "fullName": "Microsoft Xbox Series X/S",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2020,
+        "generation": 9,
+        "description": "New generation consoles focused on performance and speed. Series X offers native 4K and ray tracing, while Series S is more compact and affordable. Both include Quick Resume and Game Pass.",
+        "cpu": "AMD Zen 2 8-core at 3.8 GHz",
+        "resolution": "Up to 4K (8K supported on Series X)",
+        "colors": "16.8 million colors with HDR"
+    },
+    "atari2600": {
+        "fullName": "Atari 2600",
+        "manufacturer": "Atari",
+        "releaseYear": 1977,
+        "generation": 2,
+        "description": "One of the first successful consoles with interchangeable cartridges. Popularized arcade classics at home like Space Invaders, Pac-Man, and Pitfall!",
+        "cpu": "MOS 6507 at 1.19 MHz",
+        "resolution": "160x192",
+        "colors": "128 available colors"
+    },
+    "vectrex": {
+        "fullName": "Vectrex",
+        "manufacturer": "General Consumer Electronics",
+        "releaseYear": 1982,
+        "generation": 2,
+        "description": "A unique console that included its own vector monitor. Unlike other consoles that used pixels, the Vectrex drew smooth lines, offering a unique arcade aesthetic at home.",
+        "cpu": "Motorola 68A09 at 1.5 MHz",
+        "resolution": "Vector (9x11 inches)",
+        "colors": "Monochrome (used color overlays)"
+    },
+    "atari5200": {
+        "fullName": "Atari 5200",
+        "manufacturer": "Atari",
+        "releaseYear": 1982,
+        "generation": 3,
+        "description": "Successor to the 2600 with better graphics and sound. Based on the Atari 8-bit computer hardware. Notable for its arcade ports and analog controllers.",
+        "cpu": "MOS 6502C at 1.79 MHz",
+        "resolution": "320x192",
+        "colors": "256 available colors"
+    },
+    "atari7800": {
+        "fullName": "Atari 7800",
+        "manufacturer": "Atari",
+        "releaseYear": 1986,
+        "generation": 3,
+        "description": "A console backward compatible with the Atari 2600, designed to compete with the NES. It significantly improved graphics and offered excellent versions of arcade games.",
+        "cpu": "Atari SALLY (6502) at 1.79 MHz",
+        "resolution": "320x240",
+        "colors": "256 available colors"
+    },
+    "atarilynx": {
+        "fullName": "Atari Lynx",
+        "manufacturer": "Atari",
+        "releaseYear": 1989,
+        "generation": 4,
+        "description": "The first color handheld console with a backlit screen. Technically superior to the Game Boy but with less commercial success. Notable for its multiplayer gaming capability.",
+        "cpu": "MOS 65SC02 at 4 MHz",
+        "resolution": "160x102",
+        "colors": "4,096 available colors"
+    },
+    "atarijaguar": {
+        "fullName": "Atari Jaguar",
+        "manufacturer": "Atari",
+        "releaseYear": 1993,
+        "generation": 5,
+        "description": "Self-proclaimed as the first 64-bit console. Atari's final console had a limited library but includes cult titles like Tempest 2000 and Alien vs Predator.",
+        "cpu": "Motorola 68000 at 13.3 MHz",
+        "resolution": "Up to 720x576",
+        "colors": "16.8 million colors"
+    },
+    "colecovision": {
+        "fullName": "ColecoVision",
+        "manufacturer": "Coleco",
+        "releaseYear": 1982,
+        "generation": 3,
+        "description": "A console that stood out for its excellent arcade game adaptations. Offered superior graphics compared to its competitors of the time like Donkey Kong and Zaxxon.",
+        "cpu": "Zilog Z80A at 3.58 MHz",
+        "resolution": "256x192",
+        "colors": "16 available colors"
+    },
+    "o2": {
+        "fullName": "Magnavox Odyssey 2 / Philips Videopac",
+        "manufacturer": "Magnavox / Philips",
+        "releaseYear": 1978,
+        "generation": 2,
+        "description": "Successor to the first console in history. It included a full keyboard on the main unit and stood out for its speech synthesis and strategy games.",
+        "cpu": "Intel 8048 at 1.79 MHz",
+        "resolution": "160x200",
+        "colors": "16 selectable colors"
+    },
+    "intellivision": {
+        "fullName": "Intellivision",
+        "manufacturer": "Mattel Electronics",
+        "releaseYear": 1979,
+        "generation": 2,
+        "description": "The first 16-bit console that rivaled the Atari 2600. Innovative controller with a numeric keypad and directional disc. Diverse library of sports and strategy games.",
+        "cpu": "General Instrument CP1610 at 0.89 MHz",
+        "resolution": "159x96",
+        "colors": "16 available colors"
+    },
+    "neogeo": {
+        "fullName": "SNK Neo Geo",
+        "manufacturer": "SNK",
+        "releaseYear": 1990,
+        "generation": 4,
+        "description": "Identical arcade and home arcade system hardware. Known for its high-quality fighting and run-and-gun games like Metal Slug, The King of Fighters, and Samurai Shodown.",
+        "cpu": "Motorola 68000 at 12 MHz",
+        "resolution": "320x224",
+        "colors": "65,536 available colors"
+    },
+    "neogeocd": {
+        "fullName": "SNK Neo Geo CD",
+        "manufacturer": "SNK",
+        "releaseYear": 1994,
+        "generation": 4,
+        "description": "A more affordable version of the Neo Geo that used CDs. Same games but with long load times. Popular for making expensive Neo Geo games accessible.",
+        "cpu": "Motorola 68000 at 12 MHz",
+        "resolution": "320x224",
+        "colors": "65,536 available colors"
+    },
+    "ngp": {
+        "fullName": "Neo Geo Pocket",
+        "manufacturer": "SNK",
+        "releaseYear": 1998,
+        "generation": 5,
+        "description": "SNK's handheld with a monochrome screen. Notable for its excellent analog stick and handheld versions of Neo Geo franchises.",
+        "cpu": "Toshiba TLCS-900H at 6.144 MHz",
+        "resolution": "160x152",
+        "colors": "8 shades of gray"
+    },
+    "ngpc": {
+        "fullName": "Neo Geo Pocket Color",
+        "manufacturer": "SNK",
+        "releaseYear": 1999,
+        "generation": 5,
+        "description": "Color version of the NGP with excellent fighting and puzzle games. Backward compatible with the NGP. Despite its quality, it couldn't compete with the Game Boy Color.",
+        "cpu": "Toshiba TLCS-900H at 6.144 MHz",
+        "resolution": "160x152",
+        "colors": "4,096 available colors"
+    },
+    "wonderswan": {
+        "fullName": "WonderSwan",
+        "manufacturer": "Bandai",
+        "releaseYear": 1999,
+        "generation": 5,
+        "description": "Japanese handheld designed by the creator of the Game Boy. Notable for its low battery consumption and library of JRPGs. Popular in Japan but never released internationally.",
+        "cpu": "NEC V30 MZ at 3.072 MHz",
+        "resolution": "224x144",
+        "colors": "8 shades of gray"
+    },
+    "wonderswancolor": {
+        "fullName": "WonderSwan Color",
+        "manufacturer": "Bandai",
+        "releaseYear": 2000,
+        "generation": 6,
+        "description": "Color version of the WonderSwan backward compatible with original games. Quality library including Final Fantasy and ports of classic games.",
+        "cpu": "NEC V30 MZ at 3.072 MHz",
+        "resolution": "224x144",
+        "colors": "241 colors out of 4,096"
+    },
+    "pokemini": {
+        "fullName": "Nintendo Pokémon Mini",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "The smallest console with interchangeable cartridges in the world. Included vibration and motion sensors, focusing exclusively on the Pokémon franchise.",
+        "cpu": "Epson S1C88 at 4 MHz",
+        "resolution": "96x64",
+        "colors": "Monochrome (black and white)"
+    },
+    "playdia": {
+        "fullName": "Bandai Playdia",
+        "manufacturer": "Bandai",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "A CD-based 8-bit console that used an infrared controller. It was aimed at a young audience and focused on interactive software and anime, such as Dragon Ball Z and Sailor Moon.",
+        "cpu": "Toshiba TMP87C800F at 8 MHz",
+        "resolution": "Up to 640x480",
+        "colors": "16.8 million colors"
+    },
+    "pippin": {
+        "fullName": "Apple Pippin",
+        "manufacturer": "Apple / Bandai",
+        "releaseYear": 1996,
+        "generation": 5,
+        "description": "Multimedia platform designed by Apple and manufactured primarily by Bandai. Based on Macintosh architecture, it tried to be a mix between a computer and a console, but its high price limited its success.",
+        "cpu": "PowerPC 603 at 66 MHz",
+        "resolution": "Up to 640x480",
+        "colors": "16.7 million colors"
+    },
+    "pcengine": {
+        "fullName": "PC Engine / TurboGrafx-16",
+        "manufacturer": "NEC / Hudson Soft",
+        "releaseYear": 1987,
+        "generation": 4,
+        "description": "An 8-bit console with a 16-bit graphics chip that rivaled the Mega Drive in Japan. Excellent library of shoot 'em ups and RPGs. Great success in Japan but limited in the West.",
+        "cpu": "HuC6280 at 7.16 MHz",
+        "resolution": "256x224",
+        "colors": "512 available colors"
+    },
+    "pcenginecd": {
+        "fullName": "PC Engine CD / TurboGrafx-CD",
+        "manufacturer": "NEC / Hudson Soft",
+        "releaseYear": 1988,
+        "generation": 4,
+        "description": "The first successful CD-ROM expansion for consoles. Allowed for CD-quality audio and improved graphics. Highlight library with Ys series and Castlevania: Rondo of Blood.",
+        "cpu": "HuC6280 at 7.16 MHz",
+        "resolution": "256x224",
+        "colors": "512 available colors"
+    },
+    "supervision": {
+        "fullName": "Watara Supervision",
+        "manufacturer": "Watara",
+        "releaseYear": 1992,
+        "generation": 4,
+        "description": "A monochrome handheld console released as a budget alternative to the Game Boy. It had a larger screen but a more limited and lower-quality game library.",
+        "cpu": "65C02 at 4 MHz",
+        "resolution": "160x160",
+        "colors": "4 shades of gray"
+    },
+    "pcfx": {
+        "fullName": "PC-FX",
+        "manufacturer": "NEC",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "Successor to the PC Engine focused on anime and FMV. Never released outside Japan. Small but cult library, mainly visual novels and anime games.",
+        "cpu": "NEC V810 at 21.5 MHz",
+        "resolution": "Up to 640x480",
+        "colors": "16.8 million colors"
+    },
+    "x68000": {
+        "fullName": "Sharp X68000",
+        "manufacturer": "Sharp",
+        "releaseYear": 1987,
+        "generation": null,
+        "description": "A powerful Japanese workstation famous for its 'perfect ports' of Capcom and Konami arcade games. Extremely advanced hardware for its time.",
+        "cpu": "Motorola 68000 at 10 MHz",
+        "resolution": "Up to 768x512",
+        "colors": "65,536 available colors"
+    },
+    "3do": {
+        "fullName": "3DO Interactive Multiplayer",
+        "manufacturer": "The 3DO Company",
+        "releaseYear": 1993,
+        "generation": 5,
+        "description": "Ambitious multimedia console with advanced technology but a prohibitive price. Standout for innovative games like Gex, Road Rash, and the original The Need for Speed.",
+        "cpu": "ARM60 at 12.5 MHz",
+        "resolution": "Up to 640x480",
+        "colors": "16.8 million colors"
+    },
+    "cdi": {
+        "fullName": "Philips CD-i",
+        "manufacturer": "Philips",
+        "releaseYear": 1991,
+        "generation": 4,
+        "description": "An interactive multimedia system remembered primarily for its infamous licensed Zelda and Mario games. Focused more on education and multimedia than pure gaming.",
+        "cpu": "Philips SCC68070 at 15.5 MHz",
+        "resolution": "Up to 768x560",
+        "colors": "16.7 million colors"
+    },
+    "amiga1200": {
+        "fullName": "Commodore Amiga 1200",
+        "manufacturer": "Commodore",
+        "releaseYear": 1992,
+        "generation": 4,
+        "description": "The most advanced home model in the Amiga line. With the AGA chipset, it allowed for much higher graphical power, capable of showing up to 256 simultaneous colors from a palette of 16.8 million.",
+        "cpu": "Motorola 68EC020 at 14.18 MHz",
+        "resolution": "Up to 1280x512",
+        "colors": "Up to 256 colors from 16.8 million (AGA)"
+    },
+    "amiga500": {
+        "fullName": "Commodore Amiga 500",
+        "manufacturer": "Commodore",
+        "releaseYear": 1987,
+        "generation": 4,
+        "description": "The most popular model in the Amiga family. It revolutionized the home market with its impressive sound and graphics capabilities for the time, becoming the standard for gaming in the late 80s.",
+        "cpu": "Motorola 68000 at 7.16 MHz",
+        "resolution": "Up to 640x512",
+        "colors": "4,096 available colors (HAM)"
+    },
+    "amigacd32": {
+        "fullName": "Commodore Amiga CD32",
+        "manufacturer": "Commodore",
+        "releaseYear": 1993,
+        "generation": 5,
+        "description": "The first 32-bit CD-based gaming console released in Europe. Based on the Amiga 1200 architecture, it attempted to position Commodore in the home console market.",
+        "cpu": "Motorola 68EC020 at 14.18 MHz",
+        "resolution": "Up to 1280x512",
+        "colors": "256 colors from 16.8 million"
+    },
+    "amigacdtv": {
+        "fullName": "Commodore Amiga CDTV",
+        "manufacturer": "Commodore",
+        "releaseYear": 1991,
+        "generation": 4,
+        "description": "A hybrid between an Amiga 500 computer and a CD-ROM player. Designed to be a living room multimedia center before the concept became popular. Precursor to CD-based consoles.",
+        "cpu": "Motorola 68000 at 7.16 MHz",
+        "resolution": "Up to 640x512",
+        "colors": "4,096 available colors"
+    },
+    "c64": {
+        "fullName": "Commodore 64",
+        "manufacturer": "Commodore",
+        "releaseYear": 1982,
+        "generation": null,
+        "description": "The best-selling personal computer of all time. Features a massive library of games and software. Iconic SID sound chip. Classics include Impossible Mission and The Last Ninja.",
+        "cpu": "MOS 6510 at 1.023 MHz",
+        "resolution": "320x200",
+        "colors": "16 available colors"
+    },
+    "msx": {
+        "fullName": "MSX",
+        "manufacturer": "Microsoft / ASCII",
+        "releaseYear": 1983,
+        "generation": null,
+        "description": "Home computer standard popular in Japan and Europe. Home to the first entries of Metal Gear. Extensive library of games, many by Konami.",
+        "cpu": "Zilog Z80A at 3.58 MHz",
+        "resolution": "256x192",
+        "colors": "16 available colors"
+    },
+    "zxspectrum": {
+        "fullName": "ZX Spectrum",
+        "manufacturer": "Sinclair Research",
+        "releaseYear": 1982,
+        "generation": null,
+        "description": "An iconic British computer that popularized gaming in the UK. Massive library of games of all genres. Defined a generation of programmers and players.",
+        "cpu": "Zilog Z80A at 3.5 MHz",
+        "resolution": "256x192",
+        "colors": "8 colors + 8 bright"
+    },
+    "amstradcpc": {
+        "fullName": "Amstrad CPC",
+        "manufacturer": "Amstrad",
+        "releaseYear": 1984,
+        "generation": null,
+        "description": "A series of 8-bit computers popular in Europe. Included an integrated monitor and cassette recorder. Excellent library of games including arcade ports and exclusive titles.",
+        "cpu": "Zilog Z80 at 4 MHz",
+        "resolution": "160x200 to 640x200",
+        "colors": "27 available colors"
+    },
+    "dos": {
+        "fullName": "MS-DOS / PC",
+        "manufacturer": "Microsoft / IBM",
+        "releaseYear": 1981,
+        "generation": null,
+        "description": "PC platform that became a gaming leader. Massive library with classics like Doom, Wolfenstein 3D, Dune II, and the entire golden age of adventure games from LucasArts and Sierra.",
+        "cpu": "Variable (Intel x86)",
+        "resolution": "Variable",
+        "colors": "Variable depending on hardware"
+    },
+    "scummvm": {
+        "fullName": "ScummVM",
+        "manufacturer": "ScummVM Team",
+        "releaseYear": 2001,
+        "generation": null,
+        "description": "Interpretation engine for classic point-and-click games. Allows you to play graphic adventures from LucasArts, Sierra, Revolution Software, and many others on modern systems.",
+        "cpu": "N/A (Software)",
+        "resolution": "Variable",
+        "colors": "Based on original game"
+    },
+    "arcade": {
+        "fullName": "Arcade",
+        "manufacturer": "Various",
+        "releaseYear": 1971,
+        "generation": null,
+        "description": "Arcade machines that defined the golden age of video games. From Pong and Pac-Man to Street Fighter II and Metal Slug. Specialized hardware for optimal experiences.",
+        "cpu": "Variable depending on machine",
+        "resolution": "Variable depending on machine",
+        "colors": "Variable depending on hardware"
+    }
+}

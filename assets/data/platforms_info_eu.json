@@ -1,0 +1,682 @@
+{
+    "nes": {
+        "fullName": "Nintendo Entertainment System",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1983,
+        "generation": 3,
+        "description": "NESek bideo-jokoen industria irauli zuen 1983ko krisiaren ondoren, kalitate-estandarrak ezarriz eta Super Mario Bros., The Legend of Zelda eta Metroid bezalako frankizia ikonikoak aurkeztuz.",
+        "cpu": "Ricoh 2A03 (MOS 6502) 1.79 MHz-etara",
+        "resolution": "256x240",
+        "colors": "54 kolore eskuragarri"
+    },
+    "snes": {
+        "fullName": "Super Nintendo Entertainment System",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1990,
+        "generation": 4,
+        "description": "NESen ondorengoa, 16 biteko grafikoak, efektu pseudo-3D-etarako Mode 7 txipa eta historiako joko onenetako batzuk aurkeztu zituena, hala nola Super Mario World, A Link to the Past eta Super Metroid.",
+        "cpu": "Ricoh 5A22 (65C816) 3.58 MHz-etara",
+        "resolution": "256x224-tik 512x448-ra",
+        "colors": "32.768 kolore eskuragarri"
+    },
+    "n64": {
+        "fullName": "Nintendo 64",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1996,
+        "generation": 5,
+        "description": "Benetako 3D grafikoak eskaini zituen Nintendoren lehen kontsola. Super Mario 64, The Legend of Zelda: Ocarina of Time eta GoldenEye 007 bezalako izenburu berritzaileengatik ezaguna. CDen ordez kartutxoak erabiltzen zituen.",
+        "cpu": "NEC VR4300 93.75 MHz-etara",
+        "resolution": "640x480 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "gamecube": {
+        "fullName": "Nintendo GameCube",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "Diseinu bereizgarria eta kontroladore ergonomikoak dituen kontsola trinkoa. Bere hardware indartsuagatik eta Super Smash Bros. Melee, Metroid Prime eta The Legend of Zelda: Wind Waker bezalako lehen mailako jokoengatik nabarmendu zen.",
+        "cpu": "IBM PowerPC Gekko 486 MHz-etara",
+        "resolution": "640x480 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "wii": {
+        "fullName": "Nintendo Wii",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2006,
+        "generation": 7,
+        "description": "Gamer-en mundua irauli zuen mugimendu-kontrolekin, familia osoarentzat eskuragarri bihurtuz. Bere liburutegiak Wii Sports, Super Mario Galaxy eta The Legend of Zelda: Twilight Princess ditu.",
+        "cpu": "IBM PowerPC Broadway 729 MHz-etara",
+        "resolution": "480p arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "wiiu": {
+        "fullName": "Nintendo Wii U",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2012,
+        "generation": 8,
+        "description": "GamePad berritzailea aurkeztu zuen ukipen-pantailarekin, joko asimetrikoa eta off-TV jolastea ahalbidetuz. Super Mario 3D World, Splatoon eta The Legend of Zelda: Breath of the Wild bezalako izenburu bikainen egoitza.",
+        "cpu": "IBM PowerPC Espresso 1.24 GHz-etara",
+        "resolution": "1080p arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "switch": {
+        "fullName": "Nintendo Switch",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2017,
+        "generation": 8,
+        "description": "Kontsola hibridoa, eramangarri zein mahai gaineko kontsola gisa funtzionatzen duena. Arrakasta itzela izan du The Legend of Zelda: Tears of the Kingdom, Animal Crossing: New Horizons eta Super Mario Odyssey bezalako jokoekin.",
+        "cpu": "NVIDIA Custom Tegra X1",
+        "resolution": "1080p arte (dock), 720p (eramangarria)",
+        "colors": "16.8 milioi kolore"
+    },
+    "gb": {
+        "fullName": "Game Boy",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1989,
+        "generation": 4,
+        "description": "Gaming mugikorra definitu zuen eramangarria. Bere bateriaren iraupen luzeak eta Tetris, Pokémon eta Super Mario Land bezalako joko klasikoen liburutegiak fenomeno kultural bihurtu zuten.",
+        "cpu": "Sharp LR35902 4.19 MHz-etara",
+        "resolution": "160x144",
+        "colors": "4 gris-tonu"
+    },
+    "gbc": {
+        "fullName": "Game Boy Color",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1998,
+        "generation": 5,
+        "description": "Game Boy-aren bilakaera kolorezko pantailarekin. Jatorrizko Game Boy jokoekin bateragarria eta Pokémon Crystal eta The Legend of Zelda: Oracle series bezalako liburutegi propioarekin.",
+        "cpu": "Sharp LR35902 8.38 MHz-etara",
+        "resolution": "160x144",
+        "colors": "32.768 kolore eskuragarri"
+    },
+    "gba": {
+        "fullName": "Game Boy Advance",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "SNESen antzeko gaitasunak dituen 32 biteko eramangarria. Bere katalogoak Advance Wars, Metroid Fusion eta NES eta SNES klasikoen bertsio berriak ditu.",
+        "cpu": "ARM7TDMI 16.78 MHz-etara",
+        "resolution": "240x160",
+        "colors": "32.768 kolore eskuragarri"
+    },
+    "nds": {
+        "fullName": "Nintendo DS",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2004,
+        "generation": 7,
+        "description": "Pantaila bikoitzeko eta ukipen-funtzioak dituen kontsola iraultzailea. Jolasteko modu berritzaileak aurkeztu zituen Brain Age, Nintendogs eta New Super Mario Bros. bezalako izenburuekin.",
+        "cpu": "ARM946E-S 67 MHz-etara + ARM7TDMI 33 MHz-etara",
+        "resolution": "256x192 (pantaila bakoitzeko)",
+        "colors": "262.144 kolore"
+    },
+    "3ds": {
+        "fullName": "Nintendo 3DS",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2011,
+        "generation": 8,
+        "description": "Gaurik gabeko 3D estereoskopikoa duen lehen kontsola eramangarria. Liburutegi zabala Pokémon X/Y, Super Mario 3D Land eta The Legend of Zelda: A Link Between Worlds bezalako jokoekin.",
+        "cpu": "Dual-core ARM11 MPCore 268 MHz-etara",
+        "resolution": "400x240 (goiko pantaila), 320x240 (behekoa)",
+        "colors": "16.8 milioi kolore"
+    },
+    "vb": {
+        "fullName": "Nintendo Virtual Boy",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1995,
+        "generation": 5,
+        "description": "Jokalaria errealitate birtualean murgiltzea agintzen zuen Nintendoren kontsola ospetsua, grafiko estereoskopiko monokromatikoen bidez (gorria eta beltza). Porrot komertziala izan zen erraztasun ezagatik.",
+        "cpu": "NEC V810 20 MHz-etara",
+        "resolution": "384x224",
+        "colors": "4 gorri-tonu"
+    },
+    "genesis": {
+        "fullName": "Sega Genesis / Mega Drive",
+        "manufacturer": "Sega",
+        "releaseYear": 1988,
+        "generation": 4,
+        "description": "90eko hamarkadan Nintendori aurre egin zion kontsola, bere 'cool' jarrerarekin eta Sonic the Hedgehog-ekin. Streets of Rage, Golden Axe eta Phantasy Star bezalako klasikoen egoitza.",
+        "cpu": "Motorola 68000 7.6 MHz-etara",
+        "resolution": "320x224",
+        "colors": "512 kolore eskuragarri"
+    },
+    "segacd": {
+        "fullName": "Sega CD / Mega-CD",
+        "manufacturer": "Sega",
+        "releaseYear": 1991,
+        "generation": 4,
+        "description": "Mega Driverako CD-ROM hedapena, grafiko hobetuak, CD kalitateko audioa eta FMV animazioak ahalbidetzen zituena. Sonic CD eta Snatcher bezalako jokoengatik nabarmendu zen.",
+        "cpu": "Motorola 68000 12.5 MHz-etara",
+        "resolution": "320x224",
+        "colors": "512 kolore eskuragarri"
+    },
+    "sega32x": {
+        "fullName": "Sega 32X",
+        "manufacturer": "Sega",
+        "releaseYear": 1994,
+        "generation": 4,
+        "description": "Genesis-erako 32 biteko hedapena, grafikoak nabarmen hobetu zituena. Bere bizitza laburra izan arren, Doom eta Virtua Fighter bezalako port garrantzitsuak eskaini zituen.",
+        "cpu": "Dual Hitachi SH-2 23 MHz-etara",
+        "resolution": "320x224",
+        "colors": "32.768 kolore eskuragarri"
+    },
+    "saturn": {
+        "fullName": "Sega Saturn",
+        "manufacturer": "Sega",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "2D jokoen eta arcade portu bikainen liburutegiagatik ezaguna den 32 biteko kontsola. Panzer Dragoon Saga, Nights into Dreams eta Virtua Fighter 2 bezalako izenburuak nabarmentzen dira.",
+        "cpu": "Dual Hitachi SH-2 28.6 MHz-etara",
+        "resolution": "704x480 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "dreamcast": {
+        "fullName": "Sega Dreamcast",
+        "manufacturer": "Sega",
+        "releaseYear": 1998,
+        "generation": 6,
+        "description": "Segaren azken kontsola eta modem integratua izan zuen lehena. Bere garairako aurreratua Shenmue, Jet Set Radio eta Phantasy Star Online bezalako joko berritzaileekin.",
+        "cpu": "Hitachi SH-4 200 MHz-etara",
+        "resolution": "640x480 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "gamegear": {
+        "fullName": "Sega Game Gear",
+        "manufacturer": "Sega",
+        "releaseYear": 1990,
+        "generation": 4,
+        "description": "Game Boy-rekin lehiatzen zen kolorezko eramangarria. Atzealdeko argiztapena eta kalitatezko joko liburutegia, baina bateriaren iraupen txikiagoa. Sonic eta Shinobi jokoengatik nabarmendu zen.",
+        "cpu": "Zilog Z80 3.58 MHz-etara",
+        "resolution": "160x144",
+        "colors": "4.096 kolore eskuragarri"
+    },
+    "ms": {
+        "fullName": "Sega Master System",
+        "manufacturer": "Sega",
+        "releaseYear": 1985,
+        "generation": 3,
+        "description": "Segaren 8 biteko kontsola, NES-ekin zuzenean lehiatu zena. Arrakasta global txikiagoa izan bazuen ere, oso ezaguna izan zen Europan eta Brasilen, Alex Kidd eta Sonic bezalako jokoengatik nabarmenduz.",
+        "cpu": "Zilog Z80 3.58 MHz-etara",
+        "resolution": "256x192",
+        "colors": "64 kolore eskuragarri (32 pantailan)"
+    },
+    "sg1000": {
+        "fullName": "Sega SG-1000",
+        "manufacturer": "Sega",
+        "releaseYear": 1983,
+        "generation": 2,
+        "description": "Segaren lehen mahai gaineko bideo-kontsola. Nintendoren Famicomekin egun berean kaleratua Japonian, geroago Master System bihurtuko zenaren oinarriak ezarri zituen.",
+        "cpu": "Zilog Z80 3.58 MHz-etara",
+        "resolution": "256x192",
+        "colors": "16 kolore eskuragarri"
+    },
+    "psx": {
+        "fullName": "Sony PlayStation",
+        "manufacturer": "Sony",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "Sony bideo-jokoen merkatura eraman eta CD-ROMak ezagun egin zituen kontsola. Liburutegi handia Final Fantasy VII, Metal Gear Solid eta Crash Bandicoot bezalako klasikoekin.",
+        "cpu": "MIPS R3000A 33.87 MHz-etara",
+        "resolution": "640x480 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "ps2": {
+        "fullName": "Sony PlayStation 2",
+        "manufacturer": "Sony",
+        "releaseYear": 2000,
+        "generation": 6,
+        "description": "Historiako kontsolarik salduena. DVD erreproduzitzailea integratua eta konparaziorik gabeko liburutegia God of War, Shadow of the Colossus eta Grand Theft Auto: San Andreas izenburuekin.",
+        "cpu": "Emotion Engine 294.91 MHz-etara",
+        "resolution": "1280x720 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "ps3": {
+        "fullName": "Sony PlayStation 3",
+        "manufacturer": "Sony",
+        "releaseYear": 2006,
+        "generation": 7,
+        "description": "Cell Processor eta Blu-ray dituen kontsola indartsua. PlayStation Network eta trofeoak aurkeztu zituen. The Last of Us, Uncharted seriea eta God of War IIIrekin nabarmendu zen.",
+        "cpu": "Cell Broadband Engine 3.2 GHz-etara",
+        "resolution": "1080p arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "ps4": {
+        "fullName": "Sony PlayStation 4",
+        "manufacturer": "Sony",
+        "releaseYear": 2013,
+        "generation": 8,
+        "description": "x86 arkitektura duen gaming-era bideratutako kontsola. Arrakasta handia Bloodborne, Spider-Man, Horizon Zero Dawn eta God of War (2018) bezalako esklusibotasunekin.",
+        "cpu": "AMD Jaguar 8-core 1.6 GHz-etara",
+        "resolution": "1080p arte (4K PS4 Pro-n)",
+        "colors": "16.8 milioi kolore"
+    },
+    "ps5": {
+        "fullName": "Sony PlayStation 5",
+        "manufacturer": "Sony",
+        "releaseYear": 2020,
+        "generation": 9,
+        "description": "Belaunaldi berriko kontsola SSD ultra azkarrarekin, ray tracing-arekin eta haptiko feedback-a duen DualSense berritzailearekin. Demon's Souls Remake eta Returnal bezalako jokoak nabarmentzen dira.",
+        "cpu": "AMD Zen 2 8-core 3.5 GHz-etara",
+        "resolution": "4K arte (8K onartua)",
+        "colors": "16.8 milioi kolore HDRrekin"
+    },
+    "psp": {
+        "fullName": "PlayStation Portable",
+        "manufacturer": "Sony",
+        "releaseYear": 2004,
+        "generation": 7,
+        "description": "Multimedia eramangarria pantaila zabalarekin eta multimedia gaitasun aurreratuekin. Kalitatezko liburutegia God of War: Chains of Olympus, Monster Hunter eta Lumines jokoekin.",
+        "cpu": "MIPS R4000 333 MHz-etara",
+        "resolution": "480x272",
+        "colors": "16.8 milioi kolore"
+    },
+    "psvita": {
+        "fullName": "PlayStation Vita",
+        "manufacturer": "Sony",
+        "releaseYear": 2011,
+        "generation": 8,
+        "description": "PSPren ondorengoa OLED ukipen-pantailekin eta atzeko touchpad-arekin. Bere bizitza laburra izan arren, Persona 4 Golden eta Uncharted: Golden Abyss bezalako jokoekin zale leialak lortu zituen.",
+        "cpu": "ARM Cortex-A9 MPCore quad-core",
+        "resolution": "960x544",
+        "colors": "16.8 milioi kolore"
+    },
+    "xbox": {
+        "fullName": "Microsoft Xbox",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "Microsoftek bideo-kontsolen munduan egin zuen lehen sarrera, PCan oinarritutako hardware indartsuarekin. Xbox Live eta Halo: Combat Evolved aurkeztu zituen.",
+        "cpu": "Intel Pentium III 733 MHz-etara",
+        "resolution": "1080i arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "xbox360": {
+        "fullName": "Microsoft Xbox 360",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2005,
+        "generation": 7,
+        "description": "Online gaming-a hobetu zuen Xbox Live eta lorpen sistemarekin. Liburutegi bikaina Halo 3, Gears of War eta Mass Effect bezalako jokoekin.",
+        "cpu": "PowerPC Tri-Core Xenon 3.2 GHz-etara",
+        "resolution": "1080p arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "xboxone": {
+        "fullName": "Microsoft Xbox One",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2013,
+        "generation": 8,
+        "description": "Aisialdiari bideratutako multimedia kontsola 'all-in-one'. Atzeranzko bateragarritasunagatik eta Xbox Game Pass bezalako zerbitzuengatik nabarmendu zen. Forza Horizon seriea eta Halo 5 dira gaur egungo izenburuak.",
+        "cpu": "AMD Jaguar 8-core 1.75 GHz-etara",
+        "resolution": "1080p arte (4K Xbox One X-n)",
+        "colors": "16.8 milioi kolore HDRrekin"
+    },
+    "xboxseriesx": {
+        "fullName": "Microsoft Xbox Series X/S",
+        "manufacturer": "Microsoft",
+        "releaseYear": 2020,
+        "generation": 9,
+        "description": "Errendimendu eta abiadurari bideratutako belaunaldi berriko kontsolak. Series X-k 4K natiboa eta ray tracing-a eskaintzen ditu, Series S trinkoagoa eta ekonomikoagoa den bitartean.",
+        "cpu": "AMD Zen 2 8-core 3.8 GHz-etara",
+        "resolution": "4K arte (8K onartua Series X-n)",
+        "colors": "16.8 milioi kolore HDRrekin"
+    },
+    "atari2600": {
+        "fullName": "Atari 2600",
+        "manufacturer": "Atari",
+        "releaseYear": 1977,
+        "generation": 2,
+        "description": "Kartutxo trukagarriak izan zituen lehen kontsola arrakastatsuetako bat. Etxean arcade klasikoak ezagun egin zituen, hala nola Space Invaders, Pac-Man eta Pitfall!",
+        "cpu": "MOS 6507 1.19 MHz-etara",
+        "resolution": "160x192",
+        "colors": "128 kolore eskuragarri"
+    },
+    "vectrex": {
+        "fullName": "Vectrex",
+        "manufacturer": "General Consumer Electronics",
+        "releaseYear": 1982,
+        "generation": 2,
+        "description": "Bektoreen pantaila propioa zuen kontsola bakarra. Pixelak erabiltzen zituzten beste kontsola batzuk ez bezala, Vectrex-ek lerro leunak marrazten zituen, etxean arcade estetika berritzailea eskainiz.",
+        "cpu": "Motorola 68A09 1.5 MHz-etara",
+        "resolution": "Bektoriala (9x11 hazbete)",
+        "colors": "Monokromatikoa (kolore-xaflak erabiltzen zituen)"
+    },
+    "atari5200": {
+        "fullName": "Atari 5200",
+        "manufacturer": "Atari",
+        "releaseYear": 1982,
+        "generation": 3,
+        "description": "2600aren ondorengoa, grafiko eta soinu hobeekin. Atari 8-bit ordenagailuen hardwarean oinarritua. Arcade portuengatik eta kontroladore analogoengatik nabarmendu zen.",
+        "cpu": "MOS 6502C 1.79 MHz-etara",
+        "resolution": "320x192",
+        "colors": "256 kolore eskuragarri"
+    },
+    "atari7800": {
+        "fullName": "Atari 7800",
+        "manufacturer": "Atari",
+        "releaseYear": 1986,
+        "generation": 3,
+        "description": "Atari 2600arekin bateragarria den kontsola, NESarekin lehiatzeko diseinatua. Grafikoak nabarmen hobetu zituen eta arcade jokoen bertsio bikainak eskaini zituen.",
+        "cpu": "Atari SALLY (6502) 1.79 MHz-etara",
+        "resolution": "320x240",
+        "colors": "256 kolore eskuragarri"
+    },
+    "atarilynx": {
+        "fullName": "Atari Lynx",
+        "manufacturer": "Atari",
+        "releaseYear": 1989,
+        "generation": 4,
+        "description": "Atzealdeko argiztapena zuen kolorezko lehen kontsola eramangarria. Teknikoki Game Boy baino hobea, baina arrakasta komertzial txikiagoarekin. Jokalari anitzeko gaitasunagatik nabarmendu zen.",
+        "cpu": "MOS 65SC02 4 MHz-etara",
+        "resolution": "160x102",
+        "colors": "4.096 kolore eskuragarri"
+    },
+    "atarijaguar": {
+        "fullName": "Atari Jaguar",
+        "manufacturer": "Atari",
+        "releaseYear": 1993,
+        "generation": 5,
+        "description": "Bere burua 64 biteko lehen kontsola gisa aurkeztu zuen. Atariren azken kontsolak liburutegi mugatua izan zuen, baina Tempest 2000 eta Alien vs Predator bezalako kultuzko izenburuak ditu.",
+        "cpu": "Motorola 68000 13.3 MHz-etara",
+        "resolution": "720x576 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "colecovision": {
+        "fullName": "ColecoVision",
+        "manufacturer": "Coleco",
+        "releaseYear": 1982,
+        "generation": 3,
+        "description": "Arcade jokoen adaptazio bikainengatik nabarmendu zen kontsola. Bere garaiko lehiakideek baino grafiko hobeak eskaintzen zituen, hala nola Donkey Kong eta Zaxxon jokoekin.",
+        "cpu": "Zilog Z80A 3.58 MHz-etara",
+        "resolution": "256x192",
+        "colors": "16 kolore eskuragarri"
+    },
+    "o2": {
+        "fullName": "Magnavox Odyssey 2 / Philips Videopac",
+        "manufacturer": "Magnavox / Philips",
+        "releaseYear": 1978,
+        "generation": 2,
+        "description": "Historiako lehen kontsolaren ondorengoa. Unitate nagusian teklatu osoa zuen eta ahots-sintesia zein estrategia jokoengatik nabarmendu zen.",
+        "cpu": "Intel 8048 1.79 MHz-etara",
+        "resolution": "160x200",
+        "colors": "16 kolore hautagarri"
+    },
+    "intellivision": {
+        "fullName": "Intellivision",
+        "manufacturer": "Mattel Electronics",
+        "releaseYear": 1979,
+        "generation": 2,
+        "description": "Atari 2600ekin lehiatu zen 16 biteko lehen kontsola. Kontroladore berritzailea teklatu numerikoarekin eta disko direkzionalarekin. Kirol eta estrategia jokoen liburutegi zabala.",
+        "cpu": "General Instrument CP1610 0.89 MHz-etara",
+        "resolution": "159x96",
+        "colors": "16 kolore eskuragarri"
+    },
+    "neogeo": {
+        "fullName": "SNK Neo Geo",
+        "manufacturer": "SNK",
+        "releaseYear": 1990,
+        "generation": 4,
+        "description": "Hardware berdina duten arcade eta etxeko sistema. Metal Slug, The King of Fighters eta Samurai Shodown bezalako kalitate handiko borroka jokoengatik ezaguna.",
+        "cpu": "Motorola 68000 12 MHz-etara",
+        "resolution": "320x224",
+        "colors": "65.536 kolore eskuragarri"
+    },
+    "neogeocd": {
+        "fullName": "SNK Neo Geo CD",
+        "manufacturer": "SNK",
+        "releaseYear": 1994,
+        "generation": 4,
+        "description": "Neo Georen bertsio ekonomikoagoa, CDak erabiltzen zituena. Joko berdinak baina karga-denbora luzeekin. Neo Geoko joko garestiak eskuragarri egiteagatik ezaguna.",
+        "cpu": "Motorola 68000 12 MHz-etara",
+        "resolution": "320x224",
+        "colors": "65.536 kolore eskuragarri"
+    },
+    "ngp": {
+        "fullName": "Neo Geo Pocket",
+        "manufacturer": "SNK",
+        "releaseYear": 1998,
+        "generation": 5,
+        "description": "SNKren eramangarria pantaila monokromatikoarekin. Bere analog stick bikainagatik eta Neo Geo frankizien bertsio eramangarriengatik nabarmendu zen.",
+        "cpu": "Toshiba TLCS-900H 6.144 MHz-etara",
+        "resolution": "160x152",
+        "colors": "8 gris-tonu"
+    },
+    "ngpc": {
+        "fullName": "Neo Geo Pocket Color",
+        "manufacturer": "SNK",
+        "releaseYear": 1999,
+        "generation": 5,
+        "description": "NGPren kolorezko bertsioa borroka eta puzzle joko bikainekin. NGP-rekin bateragarria. Bere kalitatea izan arren, ezin izan zuen Game Boy Color-ekin lehiatu.",
+        "cpu": "Toshiba TLCS-900H 6.144 MHz-etara",
+        "resolution": "160x152",
+        "colors": "4.096 kolore eskuragarri"
+    },
+    "wonderswan": {
+        "fullName": "WonderSwan",
+        "manufacturer": "Bandai",
+        "releaseYear": 1999,
+        "generation": 5,
+        "description": "Game Boy-raren sortzaileak diseinatutako eramangarri japoniarra. Bateriaren kontsumo baxuagatik eta JRPG liburutegiagatik nabarmendu zen. Japonian ezaguna baina ez zen nazioartean kaleratu.",
+        "cpu": "NEC V30 MZ 3.072 MHz-etara",
+        "resolution": "224x144",
+        "colors": "8 gris-tonu"
+    },
+    "wonderswancolor": {
+        "fullName": "WonderSwan Color",
+        "manufacturer": "Bandai",
+        "releaseYear": 2000,
+        "generation": 6,
+        "description": "WonderSwan-en kolorezko bertsioa jatorrizko jokoekin bateragarria. Kalitatezko liburutegia Final Fantasy eta joko klasikoen portuekin.",
+        "cpu": "NEC V30 MZ 3.072 MHz-etara",
+        "resolution": "224x144",
+        "colors": "241 kolore 4.096-tik"
+    },
+    "pokemini": {
+        "fullName": "Nintendo Pokémon Mini",
+        "manufacturer": "Nintendo",
+        "releaseYear": 2001,
+        "generation": 6,
+        "description": "Kartutxo trukagarriak dituen munduko kontsolarik txikiena. Mugimendu eta bibrazio sentsoreak zituen, Pokémon frankizian esklusiboki zentratuz.",
+        "cpu": "Epson S1C88 4 MHz-etara",
+        "resolution": "96x64",
+        "colors": "Monokromatikoa (zuria eta beltza)"
+    },
+    "playdia": {
+        "fullName": "Bandai Playdia",
+        "manufacturer": "Bandai",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "Infragorrien bidezko kontrola erabiltzen zuen CDan oinarritutako 8 biteko kontsola. Gazteei bideratua, anime eta software interaktiboan zentratzen zen, hala nola Dragon Ball Z eta Sailor Moon.",
+        "cpu": "Toshiba TMP87C800F 8 MHz-etara",
+        "resolution": "640x480 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "pippin": {
+        "fullName": "Apple Pippin",
+        "manufacturer": "Apple / Bandai",
+        "releaseYear": 1996,
+        "generation": 5,
+        "description": "Applek diseinatutako eta Badaik fabrikatutako multimedia plataforma. Macintosh arkitekturan oinarritua, ordenagailu eta kontsola arteko nahasketa izaten saiatu zen, baina bere prezio altuak arrakasta mugatu zuen.",
+        "cpu": "PowerPC 603 66 MHz-etara",
+        "resolution": "640x480 arte",
+        "colors": "16.7 milioi kolore"
+    },
+    "pcengine": {
+        "fullName": "PC Engine / TurboGrafx-16",
+        "manufacturer": "NEC / Hudson Soft",
+        "releaseYear": 1987,
+        "generation": 4,
+        "description": "16 biteko grafiko txipa duen 8 biteko kontsola, Japonian Mega Driverekin lehiatu zena. Shoot 'em ups eta RPG liburutegi bikaina. Arrakasta handia Japonian baina mugatua Mendebaldean.",
+        "cpu": "HuC6280 7.16 MHz-etara",
+        "resolution": "256x224",
+        "colors": "512 kolore eskuragarri"
+    },
+    "pcenginecd": {
+        "fullName": "PC Engine CD / TurboGrafx-CD",
+        "manufacturer": "NEC / Hudson Soft",
+        "releaseYear": 1988,
+        "generation": 4,
+        "description": "Kontsoletarako kaleratu zen CD-ROM hedapen arrakastatsua. CD kalitateko audioa eta grafiko hobetuak ahalbidetu zituen. Ys seriea eta Castlevania: Rondo of Blood nabarmentzen dira.",
+        "cpu": "HuC6280 7.16 MHz-etara",
+        "resolution": "256x224",
+        "colors": "512 kolore eskuragarri"
+    },
+    "supervision": {
+        "fullName": "Watara Supervision",
+        "manufacturer": "Watara",
+        "releaseYear": 1992,
+        "generation": 4,
+        "description": "Game Boy-aren alternatiba ekonomiko gisa kaleratutako kontsola eramangarri monokromatikoa. Pantaila handiagoa zuen baina joko liburutegi mugatuagoa eta kalitate txikiagokoa.",
+        "cpu": "65C02 4 MHz-etara",
+        "resolution": "160x160",
+        "colors": "4 gris-tonu"
+    },
+    "pcfx": {
+        "fullName": "PC-FX",
+        "manufacturer": "NEC",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "PC Engineren ondorengoa, anime eta FMV-an zentratua. Inoiz ez zen Japoniatik kanpo kaleratu. Liburutegi txikia baina kultuzkoa, batez ere visual novels eta anime jokoak.",
+        "cpu": "NEC V810 21.5 MHz-etara",
+        "resolution": "640x480 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "x68000": {
+        "fullName": "Sharp X68000",
+        "manufacturer": "Sharp",
+        "releaseYear": 1987,
+        "generation": null,
+        "description": "Lan-estazio japoniar indartsua, Capcom eta Konami arcade jokoen 'perfect port'-engatik ospetsua. Bere garairako hardware oso aurreratua.",
+        "cpu": "Motorola 68000 10 MHz-etara",
+        "resolution": "768x512 arte",
+        "colors": "65.536 kolore eskuragarri"
+    },
+    "3do": {
+        "fullName": "3DO Interactive Multiplayer",
+        "manufacturer": "The 3DO Company",
+        "releaseYear": 1993,
+        "generation": 5,
+        "description": "Multimedia kontsola handinahia teknologia aurreratua baina prezio debekatua zuena. Gex, Road Rash eta jatorrizko The Need for Speed bezalako joko berritzaileengatik nabarmendu zen.",
+        "cpu": "ARM60 12.5 MHz-etara",
+        "resolution": "640x480 arte",
+        "colors": "16.8 milioi kolore"
+    },
+    "cdi": {
+        "fullName": "Philips CD-i",
+        "manufacturer": "Philips",
+        "releaseYear": 1991,
+        "generation": 4,
+        "description": "Multimedia-sistema interaktiboa, lizentziapean egindako Zelda eta Mario jokoengatik gogoratua batez ere. Hezkuntzan eta multimedian zentratuta zegoen gaming puruan baino gehiago.",
+        "cpu": "Philips SCC68070 15.5 MHz-etara",
+        "resolution": "768x560 arte",
+        "colors": "16.7 milioi kolore"
+    },
+    "amiga1200": {
+        "fullName": "Commodore Amiga 1200",
+        "manufacturer": "Commodore",
+        "releaseYear": 1992,
+        "generation": 4,
+        "description": "Amiga lineako etxeko merkaturako mudelorik aurreratuena. AGA txip-setarekin, grafiko indar handia ahalbidetu zuen, 16.8 milioi koloreko paleta batetik 256 kolore aldi berean erakusteko gaitasuna izanda.",
+        "cpu": "Motorola 68EC020 14.18 MHz-etara",
+        "resolution": "1280x512 arte",
+        "colors": "256 kolore arte 16.8 milioitik (AGA)"
+    },
+    "amiga500": {
+        "fullName": "Commodore Amiga 500",
+        "manufacturer": "Commodore",
+        "releaseYear": 1987,
+        "generation": 4,
+        "description": "Amiga familiako mudelorik ezagunena. Etxeko merkatua irauli zuen bere soinu eta grafiko gaitasun bikainekin, 80ko hamarkadaren amaierako jokoetarako estandar bihurtuz.",
+        "cpu": "Motorola 68000 7.16 MHz-etara",
+        "resolution": "640x512 arte",
+        "colors": "4.096 kolore eskuragarri (HAM)"
+    },
+    "amigacd32": {
+        "fullName": "Commodore Amiga CD32",
+        "manufacturer": "Commodore",
+        "releaseYear": 1993,
+        "generation": 5,
+        "description": "Europan kaleratutako CD-an oinarritutako 32 biteko lehen bideo-kontsola. Amiga 1200 arkitekturan oinarritua, Commodore egongelako kontsolen merkatuan kokatzen saiatu zen.",
+        "cpu": "Motorola 68EC020 14.18 MHz-etara",
+        "resolution": "1280x512 arte",
+        "colors": "256 kolore 16.8 milioitik"
+    },
+    "amigacdtv": {
+        "fullName": "Commodore Amiga CDTV",
+        "manufacturer": "Commodore",
+        "releaseYear": 1991,
+        "generation": 4,
+        "description": "Amiga 500 ordenagailuaren eta CD-ROM erreproduzitzailearen arteko hibridoa. Egongelako multimedia zentro izateko diseinatua kontzeptua ezaguna izan aurretik. CD-an oinarritutako kontsolen aitzindaria.",
+        "cpu": "Motorola 68000 7.16 MHz-etara",
+        "resolution": "640x512 arte",
+        "colors": "4.096 kolore eskuragarri"
+    },
+    "c64": {
+        "fullName": "Commodore 64",
+        "manufacturer": "Commodore",
+        "releaseYear": 1982,
+        "generation": null,
+        "description": "Garai guztietako ordenagailu pertsonalik salduena. Joko eta software liburutegi zabala. SID soinu txipa ikonikoa. Impossible Mission eta The Last Ninja bezalako klasikoak ditu.",
+        "cpu": "MOS 6510 1.023 MHz-etara",
+        "resolution": "320x200",
+        "colors": "16 kolore eskuragarri"
+    },
+    "msx": {
+        "fullName": "MSX",
+        "manufacturer": "Microsoft / ASCII",
+        "releaseYear": 1983,
+        "generation": null,
+        "description": "Japonian eta Europan oso ezaguna izan zen etxeko ordenagailuen estandarra. Metal Gear-en lehen jokoen egoitza. Joko liburutegi zabala, Konamiren asko barne.",
+        "cpu": "Zilog Z80A 3.58 MHz-etara",
+        "resolution": "256x192",
+        "colors": "16 kolore eskuragarri"
+    },
+    "zxspectrum": {
+        "fullName": "ZX Spectrum",
+        "manufacturer": "Sinclair Research",
+        "releaseYear": 1982,
+        "generation": null,
+        "description": "Erresuma Batuan gaming-a ezagun egin zuen ordenagailu britainiar ikonikoa. Mota guztietako jokoen liburutegi handia. Programatzaile eta jokalari belaunaldi bat definitu zuen.",
+        "cpu": "Zilog Z80A 3.5 MHz-etara",
+        "resolution": "256x192",
+        "colors": "8 kolore + 8 argitsu"
+    },
+    "amstradcpc": {
+        "fullName": "Amstrad CPC",
+        "manufacturer": "Amstrad",
+        "releaseYear": 1984,
+        "generation": null,
+        "description": "Europan ezaguna izan zen 8 biteko ordenagailu seriea. Monitore integratua eta kasete-grabagailua. Kalitatezko joko liburutegia, arcade portuak eta izenburu esklusiboak barne.",
+        "cpu": "Zilog Z80 4 MHz-etara",
+        "resolution": "160x200-tik 640x200-ra",
+        "colors": "27 kolore eskuragarri"
+    },
+    "dos": {
+        "fullName": "MS-DOS / PC",
+        "manufacturer": "Microsoft / IBM",
+        "releaseYear": 1981,
+        "generation": null,
+        "description": "Gaming-ean lider bihurtu zen PC plataforma. Doom, Wolfenstein 3D, Dune II eta LucasArts eta Sierraren abentura grafikoen urrezko garaiko liburutegi handia.",
+        "cpu": "Aldakorra (Intel x86)",
+        "resolution": "Aldakorra",
+        "colors": "Hardwarearen arabera aldatzen da"
+    },
+    "scummvm": {
+        "fullName": "ScummVM",
+        "manufacturer": "ScummVM Team",
+        "releaseYear": 2001,
+        "generation": null,
+        "description": "Point-and-click joko klasikoetarako interpretazio motorra. LucasArts, Sierra, Revolution Software eta beste askoren abentura grafikoak sistema modernoetan jolastea ahalbidetzen du.",
+        "cpu": "N/A (Softwarea)",
+        "resolution": "Aldakorra",
+        "colors": "Jatorrizko jokoaren arabera"
+    },
+    "arcade": {
+        "fullName": "Arcade",
+        "manufacturer": "Hainbat",
+        "releaseYear": 1971,
+        "generation": null,
+        "description": "Bideo-jokoen urrezko garaia definitu zuten makina jolastokiak. Pong eta Pac-Man-etik Street Fighter II eta Metal Slugeraino. Hardware espezializatua esperientzia ezin hobeak eskaintzeko.",
+        "cpu": "Makinaren arabera aldatzen da",
+        "resolution": "Makinaren arabera aldatzen da",
+        "colors": "Hardwarearen arabera aldatzen da"
+    }
+}
