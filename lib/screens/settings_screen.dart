@@ -19,6 +19,7 @@ import 'package:forsaken/services/gamepad_service.dart';
 // Web-specific import (conditional for web platform)
 import 'package:forsaken/platforms/web/web_emulator_service.dart'
     if (dart.library.io) 'package:forsaken/services/empty_stub.dart';
+import 'package:forsaken/constants/legal.dart';
 import 'package:forsaken/widgets/common/dialog_button_bar.dart';
 import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
@@ -488,6 +489,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 'A modern multi-platform emulator frontend built with Flutter.',
               ),
               const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+              Theme(
+                data: Theme.of(
+                  context,
+                ).copyWith(dividerColor: Colors.transparent),
+                child: const ExpansionTile(
+                  tilePadding: EdgeInsets.zero,
+                  title: Text(
+                    'Legal Disclaimer',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        kLegalDisclaimer,
+                        style: TextStyle(fontSize: 12, height: 1.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
               const Divider(),
               const SizedBox(height: 16),
               const Text(
