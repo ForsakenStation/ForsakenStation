@@ -75,7 +75,6 @@ Options:
 - **migrate_media.py** - Main migration script (Python, recommended)
 - **migrate_all_platforms.sh** - Batch process all platforms
 - **migrate_media.sh** - Alternative bash version (slower, legacy)
-- **MEDIA_MIGRATION.md** - Complete documentation with examples
 
 ## Testing Results
 
@@ -83,6 +82,24 @@ Options:
 - 354 files in root
 - 119 files in "- Alternates -" subfolder
 - No files lost or corrupted
+
+## JSONL Format
+
+The script reads JSONL ROM lists from `~/.local/share/com.forsaken.emulator/romlists/`:
+
+```json
+{"type": "dir", "p": "- Alternates -", "n": "- Alternates -", "parent": ""}
+{"type": "file", "p": "- Alternates -/Game (Alt).zip", "n": "Game (Alt)", "parent": "- Alternates -", "ext": ".zip", "urls": [...]}
+{"type": "file", "p": "Game.zip", "n": "Game", "parent": "", "ext": ".zip", "urls": [...]}
+```
+
+Key fields:
+- `n`: ROM name (without extension) - used to match media files
+- `parent`: Parent folder name (empty string = root level)
+
+## Media Types Supported
+
+covers, screenshots, titlescreens, videos, fanart, marquees, 3dboxes, backcovers, miximages
 
 ## Common Issues
 
@@ -97,6 +114,5 @@ Options:
 
 ## See Also
 
-- [Complete Documentation](./MEDIA_MIGRATION.md)
 - [Main Scripts README](../README.md)
 - [Media Scraper](../media-scraper/)

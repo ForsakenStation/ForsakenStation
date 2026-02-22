@@ -157,7 +157,7 @@ class _EmulatorAppState extends State<EmulatorApp> {
   Widget build(BuildContext context) {
     if (_isInitializing) {
       return MaterialApp(
-        title: 'Forsaken Roms',
+        title: 'Forsaken Emulator',
         theme: AppTheme.lightTheme(),
         darkTheme: AppTheme.darkTheme(),
         themeMode: ThemeMode.system,
@@ -167,7 +167,7 @@ class _EmulatorAppState extends State<EmulatorApp> {
 
     if (_errorMessage != null) {
       return MaterialApp(
-        title: 'Forsaken Roms',
+        title: 'Forsaken Emulator',
         theme: AppTheme.lightTheme(),
         darkTheme: AppTheme.darkTheme(),
         themeMode: ThemeMode.system,
@@ -181,7 +181,7 @@ class _EmulatorAppState extends State<EmulatorApp> {
         builder: (context, themeProvider, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Forsaken Roms',
+            title: 'Forsaken Emulator',
             theme: AppTheme.lightTheme(),
             darkTheme: AppTheme.darkTheme(),
             themeMode: themeProvider.themeMode,

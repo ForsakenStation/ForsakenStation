@@ -423,10 +423,8 @@ dart format --set-exit-if-changed .
 
 ### UI & Theming
 - **google_fonts** - Custom fonts
-- **cupertino_icons** - iOS-style icons
 
 ### Utilities
-- **flutter_dotenv** - Environment variable management
 - **http** - HTTP requests for downloads
 - **xml** - GameList XML parsing
 - **archive** - Archive extraction (ZIP, 7Z)

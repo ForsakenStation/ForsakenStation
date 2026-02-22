@@ -1,5 +1,5 @@
 name: forsaken
-description: "A frontend Emulator"
+description: "A modern multi-platform emulator frontend"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
   flutter_svg: ^2.2.3
   http: ^1.6.0
   path: ^1.9.1
@@ -28,7 +27,6 @@ dependencies:
   pdfrx: ^2.2.24
   crypto: ^3.0.7
   # Web-specific dependencies
-  js: 0.6.7
   web: ^1.1.1
 
 dev_dependencies:

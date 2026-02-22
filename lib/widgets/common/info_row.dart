@@ -23,11 +23,7 @@ class InfoRow extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           value,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-            height: 1.5,
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.grey[600], height: 1.5),
         ),
       ],
     );

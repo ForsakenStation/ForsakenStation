@@ -167,7 +167,6 @@ See `PLATFORM_IDS` in `scrape_media.py` for full list.
 - **scrape_with_env.sh** - Helper to run with .env file
 - **requirements-scraper.txt** - Python dependencies list
 - **.env.example** - Template for credentials
-- **MEDIA_SCRAPER.md** - Complete documentation
 
 ## Common Issues
 
@@ -232,7 +231,6 @@ Gamelists are saved to:
 
 ## See Also
 
-- [Complete Documentation](./MEDIA_SCRAPER.md)
 - [Main Scripts README](../README.md)
 - [Media Migration](../media-migration/)
 - [ScreenScraper API Docs](https://www.screenscraper.fr/api/)
