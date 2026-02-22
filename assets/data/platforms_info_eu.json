@@ -9,6 +9,16 @@
         "resolution": "256x240",
         "colors": "54 kolore eskuragarri"
     },
+    "fds": {
+        "fullName": "Famicom Disk System",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1986,
+        "generation": 3,
+        "description": "Famicom-erako (Japoniako NES) periferikoa, disko nagusiak erabiltzen zituena, joko handiagoak, partidak gordetzea eta soinu-kanal gehigarri hobetua ahalbidetuz.",
+        "cpu": "Ricoh 2A03 1.79 MHz-etara",
+        "resolution": "256x240",
+        "colors": "54 kolore eskuragarri"
+    },
     "snes": {
         "fullName": "Super Nintendo Entertainment System",
         "manufacturer": "Nintendo",
@@ -17,6 +27,36 @@
         "description": "NESen ondorengoa, 16 biteko grafikoak, efektu pseudo-3D-etarako Mode 7 txipa eta historiako joko onenetako batzuk aurkeztu zituena, hala nola Super Mario World, A Link to the Past eta Super Metroid.",
         "cpu": "Ricoh 5A22 (65C816) 3.58 MHz-etara",
         "resolution": "256x224-tik 512x448-ra",
+        "colors": "32.768 kolore eskuragarri"
+    },
+    "snes-msu1": {
+        "fullName": "Super Nintendo (MSU-1)",
+        "manufacturer": "Nintendo / Komunitatea",
+        "releaseYear": 2010,
+        "generation": 4,
+        "description": "SNESerako txip birtuala, CD kalitateko audioa eta FMV bideoa ahalbidetzen dituena. Hack-etan eta joko berrietan erabiltzen da kontsolaren multimedia-esperientzia nabarmen hobetzeko.",
+        "cpu": "N/A (Koprozesadore birtuala)",
+        "resolution": "512x448 arte",
+        "colors": "32.768 kolore eskuragarri"
+    },
+    "satellaview": {
+        "fullName": "Satellaview (BS-X)",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1995,
+        "generation": 4,
+        "description": "SNESerako satelite bidezko modema, Japonian kaleratua. Jokoak eta edukiak satelite bidezko irrati-transmision bidez deskargatzea ahalbidetzen zuen, Zelda eta Mario izenburu esklusiboak barne.",
+        "cpu": "Ricoh 5A22 3.58 MHz-etara",
+        "resolution": "256x224",
+        "colors": "32.768 kolore eskuragarri"
+    },
+    "sufami": {
+        "fullName": "Sufami Turbo",
+        "manufacturer": "Bandai",
+        "releaseYear": 1996,
+        "generation": 4,
+        "description": "Bandaik fabrikatutako SNESerako moldagailua, mini-kartutxoak erabiltzen zituena. Bi kartutxo aldi berean erabiltzea ahalbidetzen zuen, joko bateragarrien artean datuak trukatzeko.",
+        "cpu": "Ricoh 5A22 3.58 MHz-etara",
+        "resolution": "256x224",
         "colors": "32.768 kolore eskuragarri"
     },
     "n64": {
@@ -119,7 +159,7 @@
         "resolution": "400x240 (goiko pantaila), 320x240 (behekoa)",
         "colors": "16.8 milioi kolore"
     },
-    "vb": {
+    "virtualboy": {
         "fullName": "Nintendo Virtual Boy",
         "manufacturer": "Nintendo",
         "releaseYear": 1995,
@@ -136,6 +176,26 @@
         "generation": 4,
         "description": "90eko hamarkadan Nintendori aurre egin zion kontsola, bere 'cool' jarrerarekin eta Sonic the Hedgehog-ekin. Streets of Rage, Golden Axe eta Phantasy Star bezalako klasikoen egoitza.",
         "cpu": "Motorola 68000 7.6 MHz-etara",
+        "resolution": "320x224",
+        "colors": "512 kolore eskuragarri"
+    },
+    "megadrive": {
+        "fullName": "Sega Mega Drive",
+        "manufacturer": "Sega",
+        "releaseYear": 1988,
+        "generation": 4,
+        "description": "Segaren 16 biteko kontsolaren jatorrizko izena Japonian eta Europan. Amerikako Genesiaren berdina, Super Nintendorekin lehiatzeko gaitasuna izan zuen arrakasta itzela izan zen.",
+        "cpu": "Motorola 68000 7.6 MHz-etara",
+        "resolution": "320x224",
+        "colors": "512 kolore eskuragarri"
+    },
+    "megadrive-msu": {
+        "fullName": "Sega Mega Drive (MSU-MD)",
+        "manufacturer": "Sega / Komunitatea",
+        "releaseYear": 2012,
+        "generation": 4,
+        "description": "Mega Driverako hedapen birtuala, jokoetan fideltasun handiko soinu-bandak eta FMV bideoa gehitzeko aukera ematen duena, SNESeko MSU-1-en antzekoa.",
+        "cpu": "N/A (Birtuala)",
         "resolution": "320x224",
         "colors": "512 kolore eskuragarri"
     },
@@ -169,6 +229,16 @@
         "resolution": "704x480 arte",
         "colors": "16.8 milioi kolore"
     },
+    "segastv": {
+        "fullName": "Sega Titan Video",
+        "manufacturer": "Sega",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "Sega Saturn kontsolaren arkitekturan oinarritutako arcade plaka, egongelako kontsolaren eta arcade aretoen arteko bihurketa perfektuak ahalbidetuz.",
+        "cpu": "Dual Hitachi SH-2 28.6 MHz-etara",
+        "resolution": "704x480 arte",
+        "colors": "16.8 milioi kolore"
+    },
     "dreamcast": {
         "fullName": "Sega Dreamcast",
         "manufacturer": "Sega",
@@ -189,7 +259,7 @@
         "resolution": "160x144",
         "colors": "4.096 kolore eskuragarri"
     },
-    "ms": {
+    "mastersystem": {
         "fullName": "Sega Master System",
         "manufacturer": "Sega",
         "releaseYear": 1985,
@@ -360,6 +430,16 @@
         "colors": "256 kolore eskuragarri"
     },
     "atarilynx": {
+        "fullName": "Atari Lynx",
+        "manufacturer": "Atari",
+        "releaseYear": 1989,
+        "generation": 4,
+        "description": "Atzealdeko argiztapena zuen kolorezko lehen kontsola eramangarria. Teknikoki Game Boy baino hobea, baina arrakasta komertzial txikiagoarekin. Jokalari anitzeko gaitasunagatik nabarmendu zen.",
+        "cpu": "MOS 65SC02 4 MHz-etara",
+        "resolution": "160x102",
+        "colors": "4.096 kolore eskuragarri"
+    },
+    "lynx": {
         "fullName": "Atari Lynx",
         "manufacturer": "Atari",
         "releaseYear": 1989,
@@ -619,6 +699,46 @@
         "resolution": "320x200",
         "colors": "16 kolore eskuragarri"
     },
+    "c128": {
+        "fullName": "Commodore 128",
+        "manufacturer": "Commodore",
+        "releaseYear": 1985,
+        "generation": null,
+        "description": "C64-ren ondorengo indartsuagoa, memoria bikoitzarekin eta hiru funtzionamendu-modurekin, C64-rekin bateragarritasun osoa eta CP/M modu aurreratua barne.",
+        "cpu": "MOS 8502 2 MHz-etara",
+        "resolution": "640x200 arte",
+        "colors": "16 kolore eskuragarri"
+    },
+    "pet": {
+        "fullName": "Commodore PET",
+        "manufacturer": "Commodore",
+        "releaseYear": 1977,
+        "generation": null,
+        "description": "Commodoreren lehen ordenagailu 'dena batean'. Pantaila, teklatua eta grabagailua integratuta dituena, informatika pertsonalaren aitzindarietako bat izan zen.",
+        "cpu": "MOS 6502 1 MHz-etara",
+        "resolution": "40x25 karaktere",
+        "colors": "Monokromatikoa"
+    },
+    "cplus4": {
+        "fullName": "Commodore Plus/4",
+        "manufacturer": "Commodore",
+        "releaseYear": 1984,
+        "generation": null,
+        "description": "Produktibitatera bideratutako ordenagailua, softwarea ROMean integratua duena. C64-k baino grafiko eta kolore-paleta hobeak zituen, baina joko liburutegi txikiagoa.",
+        "cpu": "MOS 7501/8501 1.76 MHz-etara",
+        "resolution": "320x200",
+        "colors": "121 kolore"
+    },
+    "c20": {
+        "fullName": "Commodore VIC-20",
+        "manufacturer": "Commodore",
+        "releaseYear": 1980,
+        "generation": null,
+        "description": "Commodore 64-ren aurrekoa eta milioi bat unitate baino gehiago saldu zituen lehen ordenagailu pertsonala. Oso ezaguna merkea eta eskuragarria izateagatik.",
+        "cpu": "MOS 6502 1.02 MHz-etara",
+        "resolution": "176x184",
+        "colors": "16 kolore"
+    },
     "msx": {
         "fullName": "MSX",
         "manufacturer": "Microsoft / ASCII",
@@ -639,6 +759,16 @@
         "resolution": "256x192",
         "colors": "8 kolore + 8 argitsu"
     },
+    "zx81": {
+        "fullName": "Sinclair ZX81",
+        "manufacturer": "Sinclair Research",
+        "releaseYear": 1981,
+        "generation": null,
+        "description": "Ordenagailu minimalista eta oso merkea. Soinurik gabe eta oinarrizko grafikoekin, 80ko hamarkadan milaka lagunentzat programaziorako sarrera izan zen.",
+        "cpu": "Zilog Z80A 3.25 MHz-etara",
+        "resolution": "64x48 pixel (grafikoak), 32x24 karaktere",
+        "colors": "Monokromatikoa"
+    },
     "amstradcpc": {
         "fullName": "Amstrad CPC",
         "manufacturer": "Amstrad",
@@ -648,6 +778,16 @@
         "cpu": "Zilog Z80 4 MHz-etara",
         "resolution": "160x200-tik 640x200-ra",
         "colors": "27 kolore eskuragarri"
+    },
+    "gx4000": {
+        "fullName": "Amstrad GX4000",
+        "manufacturer": "Amstrad",
+        "releaseYear": 1990,
+        "generation": 3,
+        "description": "Amstraden ahalegina etxeko kontsolen merkatuan sartzeko. CPC Plus hardwarean oinarritua, bizitza laburra izan zuen 16 biteko lehia handiaren ondorioz.",
+        "cpu": "Zilog Z80 4 MHz-etara",
+        "resolution": "160x200-tik 640x200-ra",
+        "colors": "32 kolore 4096-ko paleta batetik"
     },
     "dos": {
         "fullName": "MS-DOS / PC",
@@ -659,6 +799,16 @@
         "resolution": "Aldakorra",
         "colors": "Hardwarearen arabera aldatzen da"
     },
+    "doom": {
+        "fullName": "Doom Engine",
+        "manufacturer": "id Software",
+        "releaseYear": 1993,
+        "generation": null,
+        "description": "FPS modernoak definitu zituen motor iraultzailea. Doom, Doom II, Heretic eta Hexen bezalako klasikoak hartzen ditu barne, jokalari anitzeko eta 3D jokoen oinarriak ezarri zituztenak.",
+        "cpu": "N/A (Softwarea)",
+        "resolution": "320x200 (jatorrizkoa)",
+        "colors": "256 kolore"
+    },
     "scummvm": {
         "fullName": "ScummVM",
         "manufacturer": "ScummVM Team",
@@ -668,6 +818,76 @@
         "cpu": "N/A (Softwarea)",
         "resolution": "Aldakorra",
         "colors": "Jatorrizko jokoaren arabera"
+    },
+    "mame": {
+        "fullName": "MAME (Arcade)",
+        "manufacturer": "MAME Team",
+        "releaseYear": 1997,
+        "generation": null,
+        "description": "Historiako emulatzailerik osatuena eta asmo handiena. Bere helburua milaka arcade sistema eta ordenagailu zahar babestea da, ia edozein arcade jokotan jolastea ahalbidetuz.",
+        "cpu": "Makinaren arabera aldatzen da",
+        "resolution": "Makinaren arabera aldatzen da",
+        "colors": "Hardwarearen arabera aldatzen da"
+    },
+    "fbneo": {
+        "fullName": "FinalBurn Neo",
+        "manufacturer": "FBNeo Team",
+        "releaseYear": 2018,
+        "generation": null,
+        "description": "FinalBurn Alpha-ren bilakaera, emulatzaile hau Capcom, SNK eta Segaren arcade sistema klasikoetan espezializatzen da, errendimendu eta zehaztasun handia eskainiz.",
+        "cpu": "Makinaren arabera aldatzen da",
+        "resolution": "Makinaren arabera aldatzen da",
+        "colors": "Hardwarearen arabera aldatzen da"
+    },
+    "atomiswave": {
+        "fullName": "Sammy Atomiswave",
+        "manufacturer": "Sammy / Sega",
+        "releaseYear": 2003,
+        "generation": 6,
+        "description": "Dreamcast hardwarean oinarritutako arcade plaka. Neo Geo amaitu ondoren, SNK eta Arc System Works-en borroka joko handien egoitza izan zen.",
+        "cpu": "Hitachi SH-4 200 MHz-etara",
+        "resolution": "640x480",
+        "colors": "16.8 milioi kolore"
+    },
+    "cps": {
+        "fullName": "Capcom Play System",
+        "manufacturer": "Capcom",
+        "releaseYear": 1988,
+        "generation": null,
+        "description": "Capcomek garatutako arcade plaken familia. Hamarkada bat baino gehiagoz aretoak menderatu zituzten Street Fighter II eta Final Fight bezalako izenburu mitikoekin.",
+        "cpu": "Motorola 68000 + Zilog Z80",
+        "resolution": "384x224",
+        "colors": "4096 kolore arte"
+    },
+    "cps1": {
+        "fullName": "Capcom Play System 1",
+        "manufacturer": "Capcom",
+        "releaseYear": 1988,
+        "generation": null,
+        "description": "Capcom-en CPS saileko lehen plaka. Beat 'em up-ak ezagun egin zituen eta konpainia aretoetako lider ukaezin gisa ezarri zuen.",
+        "cpu": "Motorola 68000 10 MHz-etara",
+        "resolution": "384x224",
+        "colors": "4.096 kolore"
+    },
+    "cps2": {
+        "fullName": "Capcom Play System 2",
+        "manufacturer": "Capcom",
+        "releaseYear": 1993,
+        "generation": null,
+        "description": "QSound soinu txip ospetsua duen arcade hardwarea. Street Fighter Alpha saileko eta Marvel vs. Capcom crossover ikonikoen egoitza.",
+        "cpu": "Motorola 68000 16 MHz-etara",
+        "resolution": "384x224",
+        "colors": "32.768 kolore"
+    },
+    "cps3": {
+        "fullName": "Capcom Play System 3",
+        "manufacturer": "Capcom",
+        "releaseYear": 1996,
+        "generation": null,
+        "description": "Capcom-en 2D animazioaren gailurra. Sprite masiboak kudeatzeko diseinatutako hardware oso indartsua, Street Fighter III-n maisuki erabilia.",
+        "cpu": "Hitachi SH-2 25 MHz-etara",
+        "resolution": "384x224",
+        "colors": "16.8 milioi kolore"
     },
     "arcade": {
         "fullName": "Arcade",

@@ -9,6 +9,16 @@
         "resolution": "256x240",
         "colors": "54 colors disponibles"
     },
+    "fds": {
+        "fullName": "Famicom Disk System",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1986,
+        "generation": 3,
+        "description": "Perifèric per a la Famicom (NES japonesa) que utilitzava disquets propietaris, permetent jocs més grans, guardat de partides i un canal de so addicional millorat.",
+        "cpu": "Ricoh 2A03 a 1.79 MHz",
+        "resolution": "256x240",
+        "colors": "54 colors disponibles"
+    },
     "snes": {
         "fullName": "Super Nintendo Entertainment System",
         "manufacturer": "Nintendo",
@@ -17,6 +27,36 @@
         "description": "El successor de la NES que va introduir gràfics de 16 bits, el xip Mode 7 per a efectes pseudo-3D i alguns dels millors jocs de la història com Super Mario World, A Link to the Past i Super Metroid.",
         "cpu": "Ricoh 5A22 (65C816) a 3.58 MHz",
         "resolution": "256x224 a 512x448",
+        "colors": "32,768 colors disponibles"
+    },
+    "snes-msu1": {
+        "fullName": "Super Nintendo (MSU-1)",
+        "manufacturer": "Nintendo / Comunitat",
+        "releaseYear": 2010,
+        "generation": 4,
+        "description": "Xip virtual per a SNES que permet àudio de qualitat CD i vídeo FMV. Utilitzat en hacks i nous jocs per millorar dràsticament l'experiència multimèdia de la consola.",
+        "cpu": "N/A (Coprocessador virtual)",
+        "resolution": "Fins a 512x448",
+        "colors": "32,768 colors disponibles"
+    },
+    "satellaview": {
+        "fullName": "Satellaview (BS-X)",
+        "manufacturer": "Nintendo",
+        "releaseYear": 1995,
+        "generation": 4,
+        "description": "Mòdem satel·litari per a SNES llançat al Japó. Permetia descarregar jocs i contingut a través de transmissions de ràdio satel·litari, incloent títols exclusius de Zelda i Mario.",
+        "cpu": "Ricoh 5A22 a 3.58 MHz",
+        "resolution": "256x224",
+        "colors": "32,768 colors disponibles"
+    },
+    "sufami": {
+        "fullName": "Sufami Turbo",
+        "manufacturer": "Bandai",
+        "releaseYear": 1996,
+        "generation": 4,
+        "description": "Adaptador per a SNES fabricat per Bandai que utilitzava mini-cartutxos. Permetia l'ús de dos cartutxos simultàniament per intercanviar dades entre jocs compatibles.",
+        "cpu": "Ricoh 5A22 a 3.58 MHz",
+        "resolution": "256x224",
         "colors": "32,768 colors disponibles"
     },
     "n64": {
@@ -119,7 +159,7 @@
         "resolution": "400x240 (pantalla superior), 320x240 (inferior)",
         "colors": "16.8 milions de colors"
     },
-    "vb": {
+    "virtualboy": {
         "fullName": "Nintendo Virtual Boy",
         "manufacturer": "Nintendo",
         "releaseYear": 1995,
@@ -136,6 +176,26 @@
         "generation": 4,
         "description": "La consola que va desafiar Nintendo als 90 amb la seva actitud 'cool' i Sonic the Hedgehog. Llar de clàssics com Streets of Rage, Golden Axe i Phantasy Star.",
         "cpu": "Motorola 68000 a 7.6 MHz",
+        "resolution": "320x224",
+        "colors": "512 colors disponibles"
+    },
+    "megadrive": {
+        "fullName": "Sega Mega Drive",
+        "manufacturer": "Sega",
+        "releaseYear": 1988,
+        "generation": 4,
+        "description": "Nom original al Japó i Europa de la consola de 16 bits de Sega. Idèntica a la Genesis americana, va ser un èxit massiu capaç de rivalitzar amb la Super Nintendo.",
+        "cpu": "Motorola 68000 a 7.6 MHz",
+        "resolution": "320x224",
+        "colors": "512 colors disponibles"
+    },
+    "megadrive-msu": {
+        "fullName": "Sega Mega Drive (MSU-MD)",
+        "manufacturer": "Sega / Comunitat",
+        "releaseYear": 2012,
+        "generation": 4,
+        "description": "Extensió virtual per a Mega Drive que permet afegir bandes sonores d'alta fidelitat i vídeo FMV als jocs, similar a l'MSU-1 de Super Nintendo.",
+        "cpu": "N/A (Virtual)",
         "resolution": "320x224",
         "colors": "512 colors disponibles"
     },
@@ -169,6 +229,16 @@
         "resolution": "Fins a 704x480",
         "colors": "16.8 milions de colors"
     },
+    "segastv": {
+        "fullName": "Sega Titan Video",
+        "manufacturer": "Sega",
+        "releaseYear": 1994,
+        "generation": 5,
+        "description": "Placa arcade basada íntegrament en l'arquitectura de la Sega Saturn, permetent conversions perfectes entre els salons recreatius i la consola domèstica.",
+        "cpu": "Dual Hitachi SH-2 a 28.6 MHz",
+        "resolution": "Fins a 704x480",
+        "colors": "16.8 milions de colors"
+    },
     "dreamcast": {
         "fullName": "Sega Dreamcast",
         "manufacturer": "Sega",
@@ -189,7 +259,7 @@
         "resolution": "160x144",
         "colors": "4,096 colors disponibles"
     },
-    "ms": {
+    "mastersystem": {
         "fullName": "Sega Master System",
         "manufacturer": "Sega",
         "releaseYear": 1985,
@@ -619,6 +689,46 @@
         "resolution": "320x200",
         "colors": "16 colors disponibles"
     },
+    "c128": {
+        "fullName": "Commodore 128",
+        "manufacturer": "Commodore",
+        "releaseYear": 1985,
+        "generation": null,
+        "description": "Successor més potent del C64 amb el doble de memòria i tres modes de funcionament, incloent compatibilitat total amb C64 i un mode CP/M avançat.",
+        "cpu": "MOS 8502 a 2 MHz",
+        "resolution": "Fins a 640x200",
+        "colors": "16 colors disponibles"
+    },
+    "pet": {
+        "fullName": "Commodore PET",
+        "manufacturer": "Commodore",
+        "releaseYear": 1977,
+        "generation": null,
+        "description": "El primer ordinador 'tot en un' de Commodore. Amb monitor, teclat i gravadora integrats, va ser un dels pioners de la informàtica personal.",
+        "cpu": "MOS 6502 a 1 MHz",
+        "resolution": "40x25 caràcters",
+        "colors": "Monocromàtic"
+    },
+    "cplus4": {
+        "fullName": "Commodore Plus/4",
+        "manufacturer": "Commodore",
+        "releaseYear": 1984,
+        "generation": null,
+        "description": "Ordinador enfocat a la productivitat amb programari integrat en ROM. Tenia millors gràfics i paleta de colors que el C64, però una biblioteca de jocs més reduïda.",
+        "cpu": "MOS 7501/8501 a 1.76 MHz",
+        "resolution": "320x200",
+        "colors": "121 colors"
+    },
+    "c20": {
+        "fullName": "Commodore VIC-20",
+        "manufacturer": "Commodore",
+        "releaseYear": 1980,
+        "generation": null,
+        "description": "El predecessor del Commodore 64 i el primer ordinador personal en vendre un milió d'unitats. Molt popular per ser econòmic i accessible.",
+        "cpu": "MOS 6502 a 1.02 MHz",
+        "resolution": "176x184",
+        "colors": "16 colors"
+    },
     "msx": {
         "fullName": "MSX",
         "manufacturer": "Microsoft / ASCII",
@@ -639,6 +749,16 @@
         "resolution": "256x192",
         "colors": "8 colors + 8 brillants"
     },
+    "zx81": {
+        "fullName": "Sinclair ZX81",
+        "manufacturer": "Sinclair Research",
+        "releaseYear": 1981,
+        "generation": null,
+        "description": "Ordinador minimalista i extremadament econòmic. Sense so i amb gràfics bàsics, va ser la porta d'entrada a la programació per a milers de persones als 80.",
+        "cpu": "Zilog Z80A a 3.25 MHz",
+        "resolution": "64x48 píxels (gràfics), 32x24 caràcters",
+        "colors": "Monocromàtic"
+    },
     "amstradcpc": {
         "fullName": "Amstrad CPC",
         "manufacturer": "Amstrad",
@@ -648,6 +768,16 @@
         "cpu": "Zilog Z80 a 4 MHz",
         "resolution": "160x200 a 640x200",
         "colors": "27 colors disponibles"
+    },
+    "gx4000": {
+        "fullName": "Amstrad GX4000",
+        "manufacturer": "Amstrad",
+        "releaseYear": 1990,
+        "generation": 3,
+        "description": "L'intent d'Amstrad d'entrar en el mercat de consoles domèstiques. Basat en el maquinari del CPC Plus, va tenir una vida curta a causa de la forta competència de 16 bits.",
+        "cpu": "Zilog Z80 a 4 MHz",
+        "resolution": "160x200 a 640x200",
+        "colors": "32 colors d'una paleta de 4096"
     },
     "dos": {
         "fullName": "MS-DOS / PC",
@@ -659,6 +789,16 @@
         "resolution": "Variable",
         "colors": "Variable segons maquinari"
     },
+    "doom": {
+        "fullName": "Doom Engine",
+        "manufacturer": "id Software",
+        "releaseYear": 1993,
+        "generation": null,
+        "description": "Motor revolucionari que va definir els FPS moderns. Engloba clàssics com Doom, Doom II, Heretic i Hexen, que van establir les bases del joc multijugador i en 3D.",
+        "cpu": "N/A (Programari)",
+        "resolution": "320x200 (original)",
+        "colors": "256 colors"
+    },
     "scummvm": {
         "fullName": "ScummVM",
         "manufacturer": "ScummVM Team",
@@ -668,6 +808,76 @@
         "cpu": "N/A (Programari)",
         "resolution": "Variable",
         "colors": "Segons joc original"
+    },
+    "mame": {
+        "fullName": "MAME (Arcade)",
+        "manufacturer": "MAME Team",
+        "releaseYear": 1997,
+        "generation": null,
+        "description": "L'emulador més complet i ambiciós de la història. El seu objectiu és preservar milers de sistemes arcade i ordinadors antics, permetent jugar a gairebé qualsevol joc de recreativa.",
+        "cpu": "Variable segons màquina",
+        "resolution": "Variable segons màquina",
+        "colors": "Variable segons maquinari"
+    },
+    "fbneo": {
+        "fullName": "FinalBurn Neo",
+        "manufacturer": "FBNeo Team",
+        "releaseYear": 2018,
+        "generation": null,
+        "description": "Evolució de FinalBurn Alpha, aquest emulador s'especialitza en sistemes arcade clàssics de Capcom, SNK i Sega, oferint un alt rendiment i precisió.",
+        "cpu": "Variable segons màquina",
+        "resolution": "Variable segons màquina",
+        "colors": "Variable segons maquinari"
+    },
+    "atomiswave": {
+        "fullName": "Sammy Atomiswave",
+        "manufacturer": "Sammy / Sega",
+        "releaseYear": 2003,
+        "generation": 6,
+        "description": "Placa d'arcade basada en el maquinari de la Dreamcast. Va ser la llar de grans títols de loita de SNK i Arc System Works després del final de la Neo Geo.",
+        "cpu": "Hitachi SH-4 a 200 MHz",
+        "resolution": "640x480",
+        "colors": "16.8 milions de colors"
+    },
+    "cps": {
+        "fullName": "Capcom Play System",
+        "manufacturer": "Capcom",
+        "releaseYear": 1988,
+        "generation": null,
+        "description": "Família de plaques arcade desenvolupades per Capcom. Van dominar els salons durant més d'una dècada amb títols llegendaris com Street Fighter II i Final Fight.",
+        "cpu": "Motorola 68000 + Zilog Z80",
+        "resolution": "384x224",
+        "colors": "Fins a 4096 colors"
+    },
+    "cps1": {
+        "fullName": "Capcom Play System 1",
+        "manufacturer": "Capcom",
+        "releaseYear": 1988,
+        "generation": null,
+        "description": "La primera placa de la sèrie CPS de Capcom. Va popularitzar els beat 'em ups i va establir la companyia com a líders indiscutibles en els salons recreatius.",
+        "cpu": "Motorola 68000 a 10 MHz",
+        "resolution": "384x224",
+        "colors": "4,096 colors"
+    },
+    "cps2": {
+        "fullName": "Capcom Play System 2",
+        "manufacturer": "Capcom",
+        "releaseYear": 1993,
+        "generation": null,
+        "description": "Maquinari arcade amb el famós xip de so QSound. Llar de la sèrie Street Fighter Alpha i els icònics crossovers de Marvel vs. Capcom.",
+        "cpu": "Motorola 68000 a 16 MHz",
+        "resolution": "384x224",
+        "colors": "32,768 colors"
+    },
+    "cps3": {
+        "fullName": "Capcom Play System 3",
+        "manufacturer": "Capcom",
+        "releaseYear": 1996,
+        "generation": null,
+        "description": "El pinacle de l'animació 2D de Capcom. Maquinari extremadament potent dissenyat per gestionar sprites massius, utilitzat magistralment a Street Fighter III.",
+        "cpu": "Hitachi SH-2 a 25 MHz",
+        "resolution": "384x224",
+        "colors": "16.8 milions de colors"
     },
     "arcade": {
         "fullName": "Arcade",

@@ -9,6 +9,16 @@
     "resolution": "256x240",
     "colors": "54 colores disponibles"
   },
+  "fds": {
+    "fullName": "Famicom Disk System",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1986,
+    "generation": 3,
+    "description": "Periférico para el Famicom (NES japonesa) que utilizaba disquetes propietarios, permitiendo juegos más grandes, guardado de partidas y un canal de sonido adicional mejorado.",
+    "cpu": "Ricoh 2A03 a 1.79 MHz",
+    "resolution": "256x240",
+    "colors": "54 colores disponibles"
+  },
   "snes": {
     "fullName": "Super Nintendo Entertainment System",
     "manufacturer": "Nintendo",
@@ -17,6 +27,36 @@
     "description": "El sucesor de la NES que introdujo gráficos de 16 bits, el chip Mode 7 para efectos pseudo-3D y algunos de los mejores juegos de la historia como Super Mario World, A Link to the Past y Super Metroid.",
     "cpu": "Ricoh 5A22 (65C816) a 3.58 MHz",
     "resolution": "256x224 a 512x448",
+    "colors": "32,768 colores disponibles"
+  },
+  "snes-msu1": {
+    "fullName": "Super Nintendo (MSU-1)",
+    "manufacturer": "Nintendo / Community",
+    "releaseYear": 2010,
+    "generation": 4,
+    "description": "Chip virtual para SNES que permite audio de calidad CD y video FMV. Utilizado en hacks y nuevos juegos para mejorar drásticamente la experiencia multimedia de la consola.",
+    "cpu": "N/A (Coprocesador virtual)",
+    "resolution": "Hasta 512x448",
+    "colors": "32,768 colores disponibles"
+  },
+  "satellaview": {
+    "fullName": "Satellaview (BS-X)",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1995,
+    "generation": 4,
+    "description": "Módem satelital para SNES lanzado en Japón. Permitía descargar juegos y contenido a través de transmisiones de radio satelital, incluyendo títulos exclusivos de Zelda y Mario.",
+    "cpu": "Ricoh 5A22 a 3.58 MHz",
+    "resolution": "256x224",
+    "colors": "32,768 colores disponibles"
+  },
+  "sufami": {
+    "fullName": "Sufami Turbo",
+    "manufacturer": "Bandai",
+    "releaseYear": 1996,
+    "generation": 4,
+    "description": "Adaptador para SNES fabricado por Bandai que utilizaba mini-cartuchos. Permitía el uso de dos cartuchos simultáneamente para intercambiar datos entre juegos compatibles.",
+    "cpu": "Ricoh 5A22 a 3.58 MHz",
+    "resolution": "256x224",
     "colors": "32,768 colores disponibles"
   },
   "n64": {
@@ -119,7 +159,7 @@
     "resolution": "400x240 (pantalla superior), 320x240 (inferior)",
     "colors": "16.8 millones de colores"
   },
-  "vb": {
+  "virtualboy": {
     "fullName": "Nintendo Virtual Boy",
     "manufacturer": "Nintendo",
     "releaseYear": 1995,
@@ -136,6 +176,26 @@
     "generation": 4,
     "description": "La consola que desafió a Nintendo en los 90s con su actitud 'cool' y Sonic the Hedgehog. Hogar de clásicos como Streets of Rage, Golden Axe y Phantasy Star.",
     "cpu": "Motorola 68000 a 7.6 MHz",
+    "resolution": "320x224",
+    "colors": "512 colores disponibles"
+  },
+  "megadrive": {
+    "fullName": "Sega Mega Drive",
+    "manufacturer": "Sega",
+    "releaseYear": 1988,
+    "generation": 4,
+    "description": "Nombre original en Japón y Europa de la consola de 16 bits de Sega. Idéntica a la Genesis americana, fue un éxito masivo capaz de rivalizar con la Super Nintendo.",
+    "cpu": "Motorola 68000 a 7.6 MHz",
+    "resolution": "320x224",
+    "colors": "512 colores disponibles"
+  },
+  "megadrive-msu": {
+    "fullName": "Sega Mega Drive (MSU-MD)",
+    "manufacturer": "Sega / Community",
+    "releaseYear": 2012,
+    "generation": 4,
+    "description": "Extensión virtual para Mega Drive que permite añadir bandas sonoras de alta fidelidad y video FMV a los juegos, similar al MSU-1 de Super Nintendo.",
+    "cpu": "N/A (Virtual)",
     "resolution": "320x224",
     "colors": "512 colores disponibles"
   },
@@ -169,6 +229,16 @@
     "resolution": "Hasta 704x480",
     "colors": "16.8 millones de colores"
   },
+  "segastv": {
+    "fullName": "Sega Titan Video",
+    "manufacturer": "Sega",
+    "releaseYear": 1994,
+    "generation": 5,
+    "description": "Placa arcade basada íntegramente en la arquitectura de la Sega Saturn, permitiendo conversiones perfectas entre los salones recreativos y la consola doméstica.",
+    "cpu": "Dual Hitachi SH-2 a 28.6 MHz",
+    "resolution": "Hasta 704x480",
+    "colors": "16.8 millones de colores"
+  },
   "dreamcast": {
     "fullName": "Sega Dreamcast",
     "manufacturer": "Sega",
@@ -189,7 +259,7 @@
     "resolution": "160x144",
     "colors": "4,096 colores disponibles"
   },
-  "ms": {
+  "mastersystem": {
     "fullName": "Sega Master System",
     "manufacturer": "Sega",
     "releaseYear": 1985,
@@ -360,6 +430,16 @@
     "colors": "256 colores disponibles"
   },
   "atarilynx": {
+    "fullName": "Atari Lynx",
+    "manufacturer": "Atari",
+    "releaseYear": 1989,
+    "generation": 4,
+    "description": "Primera consola portátil a color con pantalla retroiluminada. Técnicamente superior a Game Boy pero con menor éxito comercial. Destacó por su capacidad de juego multijugador.",
+    "cpu": "MOS 65SC02 a 4 MHz",
+    "resolution": "160x102",
+    "colors": "4,096 colores disponibles"
+  },
+  "lynx": {
     "fullName": "Atari Lynx",
     "manufacturer": "Atari",
     "releaseYear": 1989,
@@ -619,6 +699,46 @@
     "resolution": "320x200",
     "colors": "16 colores disponibles"
   },
+  "c128": {
+    "fullName": "Commodore 128",
+    "manufacturer": "Commodore",
+    "releaseYear": 1985,
+    "generation": null,
+    "description": "Sucesora más potente de la C64 con el doble de memoria y tres modos de funcionamiento, incluyendo compatibilidad total con C64 y un modo CP/M avanzado.",
+    "cpu": "MOS 8502 a 2 MHz",
+    "resolution": "Hasta 640x200",
+    "colors": "16 colores disponibles"
+  },
+  "pet": {
+    "fullName": "Commodore PET",
+    "manufacturer": "Commodore",
+    "releaseYear": 1977,
+    "generation": null,
+    "description": "La primera computadora 'todo en uno' de Commodore. Con monitor, teclado y grabadora integrados, fue una de las pioneras de la informática personal.",
+    "cpu": "MOS 6502 a 1 MHz",
+    "resolution": "40x25 caracteres",
+    "colors": "Monocromática"
+  },
+  "cplus4": {
+    "fullName": "Commodore Plus/4",
+    "manufacturer": "Commodore",
+    "releaseYear": 1984,
+    "generation": null,
+    "description": "Computadora enfocada a la productividad con software integrado en ROM. Tenía mejores gráficos y paleta de colores que la C64, pero una biblioteca de juegos más reducida.",
+    "cpu": "MOS 7501/8501 a 1.76 MHz",
+    "resolution": "320x200",
+    "colors": "121 colores"
+  },
+  "c20": {
+    "fullName": "Commodore VIC-20",
+    "manufacturer": "Commodore",
+    "releaseYear": 1980,
+    "generation": null,
+    "description": "La predecesora de la Commodore 64 y la primera computadora personal en vender un millón de unidades. Muy popular por ser económica y accesible.",
+    "cpu": "MOS 6502 a 1.02 MHz",
+    "resolution": "176x184",
+    "colors": "16 colores"
+  },
   "msx": {
     "fullName": "MSX",
     "manufacturer": "Microsoft / ASCII",
@@ -639,6 +759,16 @@
     "resolution": "256x192",
     "colors": "8 colores + 8 brillantes"
   },
+  "zx81": {
+    "fullName": "Sinclair ZX81",
+    "manufacturer": "Sinclair Research",
+    "releaseYear": 1981,
+    "generation": null,
+    "description": "Computadora minimalista y extremadamente económica. Sin sonido y con gráficos básicos, fue la puerta de entrada a la programación para miles de personas en los 80.",
+    "cpu": "Zilog Z80A a 3.25 MHz",
+    "resolution": "64x48 píxeles (gráficos), 32x24 caracteres",
+    "colors": "Monocromática"
+  },
   "amstradcpc": {
     "fullName": "Amstrad CPC",
     "manufacturer": "Amstrad",
@@ -648,6 +778,16 @@
     "cpu": "Zilog Z80 a 4 MHz",
     "resolution": "160x200 a 640x200",
     "colors": "27 colores disponibles"
+  },
+  "gx4000": {
+    "fullName": "Amstrad GX4000",
+    "manufacturer": "Amstrad",
+    "releaseYear": 1990,
+    "generation": 3,
+    "description": "El intento de Amstrad de entrar en el mercado de consolas domésticas. Basada en el hardware del CPC Plus, tuvo una vida corta debido a la fuerte competencia de 16 bits.",
+    "cpu": "Zilog Z80 a 4 MHz",
+    "resolution": "160x200 a 640x200",
+    "colors": "32 colores de una paleta de 4096"
   },
   "dos": {
     "fullName": "MS-DOS / PC",
@@ -659,6 +799,16 @@
     "resolution": "Variable",
     "colors": "Variable según hardware"
   },
+  "doom": {
+    "fullName": "Doom Engine",
+    "manufacturer": "id Software",
+    "releaseYear": 1993,
+    "generation": null,
+    "description": "Motor revolucionario que definió los FPS modernos. Engloba clásicos como Doom, Doom II, Heretic y Hexen, que sentaron las bases del juego multijugador y en 3D.",
+    "cpu": "N/A (Software)",
+    "resolution": "320x200 (original)",
+    "colors": "256 colores"
+  },
   "scummvm": {
     "fullName": "ScummVM",
     "manufacturer": "ScummVM Team",
@@ -668,6 +818,76 @@
     "cpu": "N/A (Software)",
     "resolution": "Variable",
     "colors": "Según juego original"
+  },
+  "mame": {
+    "fullName": "MAME (Arcade)",
+    "manufacturer": "MAME Team",
+    "releaseYear": 1997,
+    "generation": null,
+    "description": "El emulador más completo y ambicioso de la historia. Su objetivo es preservar miles de sistemas arcade y computadoras antiguas, permitiendo jugar a casi cualquier juego de recreativa.",
+    "cpu": "Variable según máquina",
+    "resolution": "Variable según máquina",
+    "colors": "Variable según hardware"
+  },
+  "fbneo": {
+    "fullName": "FinalBurn Neo",
+    "manufacturer": "FBNeo Team",
+    "releaseYear": 2018,
+    "generation": null,
+    "description": "Evolución de FinalBurn Alpha, este emulador se especializa en sistemas arcade clásicos de Capcom, SNK y Sega, ofreciendo un alto rendimiento y precisión.",
+    "cpu": "Variable según máquina",
+    "resolution": "Variable según máquina",
+    "colors": "Variable según hardware"
+  },
+  "atomiswave": {
+    "fullName": "Sammy Atomiswave",
+    "manufacturer": "Sammy / Sega",
+    "releaseYear": 2003,
+    "generation": 6,
+    "description": "Placa de arcade basada en el hardware de la Dreamcast. Fue el hogar de grandes títulos de lucha de SNK y Arc System Works tras el final de la Neo Geo.",
+    "cpu": "Hitachi SH-4 a 200 MHz",
+    "resolution": "640x480",
+    "colors": "16.8 millones de colores"
+  },
+  "cps": {
+    "fullName": "Capcom Play System",
+    "manufacturer": "Capcom",
+    "releaseYear": 1988,
+    "generation": null,
+    "description": "Familia de placas arcade desarrolladas por Capcom. Dominaron los salones durante más de una década con títulos como Street Fighter II y Final Fight.",
+    "cpu": "Motorola 68000 + Zilog Z80",
+    "resolution": "384x224",
+    "colors": "Hasta 4096 colores"
+  },
+  "cps1": {
+    "fullName": "Capcom Play System 1",
+    "manufacturer": "Capcom",
+    "releaseYear": 1988,
+    "generation": null,
+    "description": "La primera placa de la serie CPS de Capcom. Popularizó los beat 'em ups y estableció a la compañía como líder indiscutible en los salones recreativos.",
+    "cpu": "Motorola 68000 a 10 MHz",
+    "resolution": "384x224",
+    "colors": "4,096 colores"
+  },
+  "cps2": {
+    "fullName": "Capcom Play System 2",
+    "manufacturer": "Capcom",
+    "releaseYear": 1993,
+    "generation": null,
+    "description": "Hardware arcade con el famoso chip de sonido QSound. Hogar de la serie Street Fighter Alpha y los icónicos crossovers de Marvel vs. Capcom.",
+    "cpu": "Motorola 68000 a 16 MHz",
+    "resolution": "384x224",
+    "colors": "32,768 colores"
+  },
+  "cps3": {
+    "fullName": "Capcom Play System 3",
+    "manufacturer": "Capcom",
+    "releaseYear": 1996,
+    "generation": null,
+    "description": "El pináculo de la animación 2D de Capcom. Hardware extremadamente potente diseñado para manejar sprites masivos, utilizado magistralmente en Street Fighter III.",
+    "cpu": "Hitachi SH-2 a 25 MHz",
+    "resolution": "384x224",
+    "colors": "16.8 millones de colores"
   },
   "arcade": {
     "fullName": "Arcade",
