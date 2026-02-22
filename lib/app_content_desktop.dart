@@ -1,6 +1,5 @@
 // Desktop/Mobile app content - uses dart:io based services
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'screens/platforms_screen.dart';
 import 'services/rom_service.dart';
@@ -57,7 +56,7 @@ Future<AppInitResult> initializeApp() async {
 
     // Get the JSONL path
     final jsonlPath = await romlistService.getJsonlPath();
-    final romsPath = dotenv.env['ROMS_PATH'] ?? '';
+    final romsPath = ConfigService.instance.romsPath;
 
     final romService = RomService(
       romsBasePath: romsPath,

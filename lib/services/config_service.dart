@@ -4,16 +4,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'debug_service.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 
-/// Service for managing application configuration from config.json and .env files.
+/// Service for managing application configuration.
 ///
 /// Handles:
 /// - Reading emulator configurations from assets/config.json (bundled)
 /// - Writing modified configurations to shared_preferences (user overrides)
-/// - Managing environment variables from .env file
+/// - Managing user-configurable paths via SharedPreferences
 /// - Providing convenient accessors for common config values
 ///
 /// The config uses a two-tier system:
@@ -24,8 +23,29 @@ class ConfigService {
   static const String _configKey = 'forsaken_emulator_config';
   static const String _corsProxyKey = 'forsaken_cors_proxy_url';
 
+  // SharedPreferences keys for path settings
+  static const String _mediaPathKey = 'forsaken_media_path';
+  static const String _emulatorsPathKey = 'forsaken_emulators_path';
+  static const String _emulatorsConfigPathKey =
+      'forsaken_emulators_config_path';
+  static const String _romTempPathKey = 'forsaken_rom_temp_path';
+  static const String _romForeverPathKey = 'forsaken_rom_forever_path';
+  static const String _debugEnabledKey = 'forsaken_debug_enabled';
+  static const String _debugMinLevelKey = 'forsaken_debug_min_level';
+  static const String _romsPathKey = 'forsaken_roms_path';
+
   Map<String, dynamic>? _config;
   bool _hasLocalOverrides = false;
+
+  // In-memory cache for path settings (loaded from SharedPreferences)
+  String _mediaPath = '';
+  String _emulatorsPath = '';
+  String _emulatorsConfigPath = '';
+  String _romsPath = '';
+  String? _romTempPath;
+  String? _romForeverPath;
+  bool _isDebugEnabled = false;
+  String _debugMinLevel = 'debug';
 
   ConfigService._();
 
@@ -37,15 +57,15 @@ class ConfigService {
 
   /// Initialize the config service
   ///
-  /// Loads the .env file and checks for user overrides in shared_preferences
+  /// Loads path settings from SharedPreferences and emulator config
   Future<void> initialize() async {
     try {
-      // Load .env file if not already loaded
-      if (!dotenv.isInitialized) {
-        await dotenv.load(fileName: '.env');
-      }
+      final prefs = await SharedPreferences.getInstance();
 
-      // Try to load config (will try shared_preferences first, then assets)
+      // Load path settings from SharedPreferences
+      await _loadPathSettings(prefs);
+
+      // Try to load emulator config (shared_preferences first, then assets)
       await loadConfig();
 
       DebugService.instance.info(
@@ -68,6 +88,40 @@ class ConfigService {
       // Don't throw - allow app to continue with empty config
       _config = {'emulators': []};
     }
+  }
+
+  /// Load all path settings from SharedPreferences into in-memory cache
+  Future<void> _loadPathSettings(SharedPreferences prefs) async {
+    // Compute platform-appropriate defaults
+    String defaultMediaPath = '';
+    String defaultEmulatorsPath = '';
+    String defaultEmulatorsConfigPath = '';
+
+    if (!kIsWeb) {
+      final appDir = await getApplicationSupportDirectory();
+      defaultMediaPath = path.join(appDir.path, 'media');
+      defaultEmulatorsPath = path.join(appDir.path, 'emulators');
+      defaultEmulatorsConfigPath = path.join(
+        appDir.path,
+        'emulators',
+        'config.json',
+      );
+    }
+
+    _mediaPath = prefs.getString(_mediaPathKey) ?? defaultMediaPath;
+    _emulatorsPath = prefs.getString(_emulatorsPathKey) ?? defaultEmulatorsPath;
+    _emulatorsConfigPath =
+        prefs.getString(_emulatorsConfigPathKey) ?? defaultEmulatorsConfigPath;
+    _romsPath = prefs.getString(_romsPathKey) ?? '';
+    _romTempPath = prefs.getString(_romTempPathKey);
+    _romForeverPath = prefs.getString(_romForeverPathKey);
+    _isDebugEnabled = prefs.getBool(_debugEnabledKey) ?? false;
+    _debugMinLevel = prefs.getString(_debugMinLevelKey) ?? 'debug';
+
+    DebugService.instance.debug(
+      'Path settings loaded from SharedPreferences',
+      tag: 'ConfigService',
+    );
   }
 
   /// Get the platform-specific config file name
@@ -294,17 +348,19 @@ class ConfigService {
     await saveConfig(config);
   }
 
-  // Environment variable getters
+  // Path setting getters (backed by SharedPreferences)
 
-  /// Get ROMs directory path from environment
-  String get romsPath => dotenv.maybeGet('ROMS_PATH') ?? '/path/to/roms';
+  /// Get ROMs directory path
+  String get romsPath => _romsPath;
 
-  /// Get media directory path from environment
-  String get mediaPath => dotenv.maybeGet('MEDIA_PATH') ?? '/path/to/media';
+  /// Get media directory path
+  String get mediaPath => _mediaPath;
 
-  /// Get emulators directory path from environment
-  String get emulatorsPath =>
-      dotenv.maybeGet('EMULATORS_PATH') ?? '/path/to/emulators';
+  /// Get emulators directory path
+  String get emulatorsPath => _emulatorsPath;
+
+  /// Get emulators config file path
+  String get emulatorsConfigPath => _emulatorsConfigPath;
 
   /// Get config file path/source description
   ///
@@ -333,75 +389,84 @@ class ConfigService {
     return path.join(appDir.path, 'gamelists');
   }
 
-  /// Get temporary ROM storage path from environment
+  /// Get temporary ROM storage path
   ///
   /// Used for ROMs downloaded temporarily for single play sessions
-  String? get romTempPath => dotenv.maybeGet('ROM_TEMP_PATH');
+  String? get romTempPath => _romTempPath;
 
-  /// Get permanent ROM storage path from environment
+  /// Get permanent ROM storage path
   ///
   /// Used for ROMs saved permanently for offline play
-  String? get romForeverPath => dotenv.maybeGet('ROM_FOREVER_PATH');
+  String? get romForeverPath => _romForeverPath;
 
   /// Check if debug mode is enabled
-  bool get isDebugEnabled =>
-      dotenv.maybeGet('DEBUG_ENABLED')?.toLowerCase() == 'true';
+  bool get isDebugEnabled => _isDebugEnabled;
 
   /// Get minimum debug log level
-  String get debugMinLevel => dotenv.maybeGet('DEBUG_MIN_LEVEL') ?? 'debug';
+  String get debugMinLevel => _debugMinLevel;
 
-  /// Update a specific environment variable
+  /// Set a path setting and persist to SharedPreferences
+  Future<void> setPathSetting(String key, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    switch (key) {
+      case 'MEDIA_PATH':
+        _mediaPath = value;
+        await prefs.setString(_mediaPathKey, value);
+        break;
+      case 'EMULATORS_PATH':
+        _emulatorsPath = value;
+        await prefs.setString(_emulatorsPathKey, value);
+        break;
+      case 'EMULATORS_CONFIG_PATH':
+        _emulatorsConfigPath = value;
+        await prefs.setString(_emulatorsConfigPathKey, value);
+        break;
+      case 'ROM_TEMP_PATH':
+        _romTempPath = value;
+        await prefs.setString(_romTempPathKey, value);
+        break;
+      case 'ROM_FOREVER_PATH':
+        _romForeverPath = value;
+        await prefs.setString(_romForeverPathKey, value);
+        break;
+      case 'ROMS_PATH':
+        _romsPath = value;
+        await prefs.setString(_romsPathKey, value);
+        break;
+      case 'DEBUG_ENABLED':
+        _isDebugEnabled = value.toLowerCase() == 'true';
+        await prefs.setBool(_debugEnabledKey, _isDebugEnabled);
+        break;
+      case 'DEBUG_MIN_LEVEL':
+        _debugMinLevel = value;
+        await prefs.setString(_debugMinLevelKey, value);
+        break;
+      default:
+        DebugService.instance.warning(
+          'Unknown path setting key: $key',
+          tag: 'ConfigService',
+        );
+        return;
+    }
+
+    DebugService.instance.debug(
+      'Path setting updated: $key',
+      tag: 'ConfigService',
+    );
+  }
+
+  /// Save multiple path settings at once
   ///
-  /// Note: This updates the in-memory dotenv map but does NOT write to .env file
-  /// To persist changes, use [saveEnvFile]
-  void setEnvVariable(String key, String value) {
-    dotenv.env[key] = value;
-  }
-
-  /// Save current environment variables to .env file
-  Future<void> saveEnvFile() async {
-    try {
-      final envFile = File(path.join(Directory.current.path, '.env'));
-
-      final buffer = StringBuffer();
-      buffer.writeln('# Emulator Frontend Configuration');
-      buffer.writeln();
-
-      // Write each environment variable
-      dotenv.env.forEach((key, value) {
-        buffer.writeln('$key=$value');
-      });
-
-      await envFile.writeAsString(buffer.toString());
-
-      DebugService.instance.info(
-        'Environment variables saved to .env file',
-        tag: 'ConfigService',
-      );
-    } catch (e) {
-      DebugService.instance.error(
-        'Error saving .env file: $e',
-        tag: 'ConfigService',
-      );
-      rethrow;
+  /// Convenience method for the System Paths screen
+  Future<void> savePathSettings(Map<String, String> settings) async {
+    for (final entry in settings.entries) {
+      await setPathSetting(entry.key, entry.value);
     }
-  }
-
-  /// Reload environment variables from .env file
-  Future<void> reloadEnv() async {
-    try {
-      await dotenv.load(fileName: '.env');
-      DebugService.instance.info(
-        'Environment variables reloaded',
-        tag: 'ConfigService',
-      );
-    } catch (e) {
-      DebugService.instance.error(
-        'Error reloading .env: $e',
-        tag: 'ConfigService',
-      );
-      rethrow;
-    }
+    DebugService.instance.info(
+      'Path settings saved (${settings.length} values)',
+      tag: 'ConfigService',
+    );
   }
 
   /// Get CORS proxy URL from shared_preferences

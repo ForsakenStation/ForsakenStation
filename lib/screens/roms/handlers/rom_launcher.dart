@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../../models/rom_item.dart';
+import '../../../services/config_service.dart';
 import '../../../platforms/web/web_emulator_launcher.dart';
 import '../../../models/emulator_config.dart';
 import '../../../models/media.dart';
@@ -62,7 +62,7 @@ class RomLauncher {
       _showErrorDialog(
         'No emulator configured for $actualDisplayName.\n\n'
         'Please add configuration for "$actualPlatform" in:\n'
-        '${dotenv.env['EMULATORS_CONFIG_PATH']}',
+        '${ConfigService.instance.emulatorsConfigPath}',
       );
       return false;
     }

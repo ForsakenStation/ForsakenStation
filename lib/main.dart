@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:media_kit/media_kit.dart';
 
@@ -36,21 +35,11 @@ Future<void> main() async {
     await initializePlatform();
   }
 
-  // Load environment variables
-  try {
-    await dotenv.load(fileName: ".env");
-  } catch (e) {
-    DebugService.instance.error('Error loading .env file: $e', tag: 'Main');
-    DebugService.instance.warning(
-      'Please create a .env file with ROMS_PATH and MEDIA_PATH',
-      tag: 'Main',
-    );
-  }
-
-  _initializeDebugService();
-
-  // Initialize ConfigService
+  // Initialize ConfigService (loads path settings from SharedPreferences)
   await ConfigService.instance.initialize();
+
+  // Initialize DebugService from config settings
+  _initializeDebugService();
 
   // Platform-specific initialization
   await app_content.initializePlatformServices();
@@ -80,12 +69,11 @@ Future<void> main() async {
   runApp(const EmulatorApp());
 }
 
-/// Initialize the DebugService based on environment variables
+/// Initialize the DebugService based on config settings
 void _initializeDebugService() {
-  // Get debug settings from environment
-  final debugEnabled = dotenv.env['DEBUG_ENABLED']?.toLowerCase() == 'true';
-  final debugMinLevelStr =
-      dotenv.env['DEBUG_MIN_LEVEL']?.toLowerCase() ?? 'debug';
+  final configService = ConfigService.instance;
+  final debugEnabled = configService.isDebugEnabled;
+  final debugMinLevelStr = configService.debugMinLevel.toLowerCase();
 
   // Parse log level
   LogLevel minLevel;

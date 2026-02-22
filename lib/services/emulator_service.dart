@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
 import '../models/emulator_config.dart';
@@ -33,7 +32,7 @@ class EmulatorService {
   /// Get the singleton instance
   static EmulatorService get instance {
     if (_instance == null) {
-      final emulatorsPath = dotenv.env['EMULATORS_PATH'] ?? '';
+      final emulatorsPath = ConfigService.instance.emulatorsPath;
 
       _instance = EmulatorService._(
         emulatorsBasePath: emulatorsPath,

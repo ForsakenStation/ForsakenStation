@@ -50,7 +50,7 @@ const PLATFORM_TO_SYSTEM = {
     'snes': 'snes',
     'n64': 'n64',
     'gb': 'gb',
-    'gbc': 'gb',           // EmulatorJS handles GB/GBC with same system
+    'gbc': 'gb',           // EmulatorJS handles GB/GBC with the same system
     'gba': 'gba',
     'nds': 'nds',
     'vb': 'vb',
@@ -127,7 +127,7 @@ const PLATFORM_TO_SYSTEM = {
     'amiga1200': 'amiga',
     'cdtv': 'amiga',
 
-    // CD-i (core name used as system)
+    // CD-i (core name used as a system)
     'cdi': 'same_cdi',
 
     // DOS

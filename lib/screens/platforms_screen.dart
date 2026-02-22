@@ -3,10 +3,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/platform.dart';
 import '../services/rom_service.dart';
+import '../services/config_service.dart';
 import '../services/media_service.dart';
 import '../services/keyboard_service.dart';
 import '../services/gamepad_service.dart';
@@ -63,7 +63,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   @override
   void initState() {
     super.initState();
-    final mediaPath = dotenv.env['MEDIA_PATH'] ?? '';
+    final mediaPath = ConfigService.instance.mediaPath;
     _mediaService = MediaService(mediaBasePath: mediaPath);
     _keyboardService = KeyboardService.instance;
     _gamepadService = GamepadService.instance;

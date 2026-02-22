@@ -10,7 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  flutter_dotenv: ^6.0.0
   flutter_svg: ^2.2.3
   http: ^1.6.0
   path: ^1.9.1
@@ -43,7 +42,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - .env
     - assets/config.json
     - assets/platform_info.json
     - assets/configs/

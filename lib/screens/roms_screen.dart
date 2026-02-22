@@ -11,7 +11,6 @@ import 'package:forsaken/screens/roms/handlers/rom_launcher.dart';
 import 'package:forsaken/screens/roms/handlers/rom_save_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path/path.dart' as path;
 import 'package:forsaken/models/platform.dart';
 import 'package:forsaken/models/rom.dart';
@@ -113,7 +112,7 @@ class _RomsScreenState extends State<RomsScreen> {
     });
 
     // Initialize services synchronously
-    final mediaPath = dotenv.env['MEDIA_PATH'] ?? '';
+    final mediaPath = ConfigService.instance.mediaPath;
     _mediaService = MediaService(mediaBasePath: mediaPath);
     _emulatorService = EmulatorService.instance;
     _keyboardService = KeyboardService.instance;

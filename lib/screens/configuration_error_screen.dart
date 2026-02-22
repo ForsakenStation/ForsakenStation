@@ -21,7 +21,8 @@ class ConfigurationErrorScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Please create a .env file in the project root with at least one ROM source:',
+                'The application could not find the required configuration.\n'
+                'Please configure your paths in Settings > System Paths.',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -32,13 +33,17 @@ class ConfigurationErrorScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text(
-                  'Option 1 - JSONL ROMs:\nJSONL_ROMS_PATH=/path/to/jsonl\nMEDIA_PATH=/path/to/media\n\nOption 2 - File-based ROMs:\nROMS_PATH=/path/to/roms\nMEDIA_PATH=/path/to/media',
+                  'Required:\n'
+                  '- Media Path: directory containing media assets\n'
+                  '- Emulators Path: directory containing emulator binaries\n\n'
+                  'Optional:\n'
+                  '- ROM storage paths for temporary/permanent downloads',
                   style: TextStyle(fontFamily: 'monospace'),
                 ),
               ),
               const SizedBox(height: 24),
               const Text(
-                'See .env.example for more details',
+                'Go to Settings > System Paths to configure',
                 style: TextStyle(color: Colors.grey),
               ),
             ],

@@ -156,12 +156,31 @@ try {
   final rom = await downloadRom(url);
   return rom;
 } on IOException catch (e) {
-  debugPrint('Failed to download ROM: $e');
+  DebugService.instance.error('Failed to download ROM: $e', tag: 'RomService');
   rethrow;
 } catch (e) {
-  debugPrint('Unexpected error: $e');
+  DebugService.instance.error('Unexpected error: $e', tag: 'RomService');
   rethrow;
 }
+```
+
+### Logging
+- **ALWAYS** use `DebugService` for ALL logging. NEVER use `print()`, `debugPrint()`, or `dart:developer log()` directly.
+- `DebugService` is a singleton accessed via `DebugService.instance`.
+- Use the appropriate log level:
+  - `.error(msg, tag: 'Tag')` — errors and caught exceptions
+  - `.warning(msg, tag: 'Tag')` — warnings
+  - `.info(msg, tag: 'Tag')` — status and progress messages
+  - `.debug(msg, tag: 'Tag')` — verbose/trace output
+- Always provide a meaningful `tag:` parameter (typically the class or service name).
+- For JavaScript (`forsaken_bridge.js`), use the `_log()`, `_warn()`, `_error()` helpers gated by `window.FORSAKEN_DEBUG`.
+
+```dart
+import '../services/debug_service.dart';
+
+final debug = DebugService.instance;
+debug.info('Loading platforms...', tag: 'PlatformsScreen');
+debug.error('Failed to load ROM: $e', tag: 'RomService');
 ```
 
 ### Async/Await
@@ -235,10 +254,12 @@ lib/
 
 ## Project-Specific Guidelines
 
-### Environment Variables
-- Use `flutter_dotenv` or similar for environment configuration
-- Store ROM_PATH and MEDIA_PATH in .env file
-- Never commit .env files to version control
+### Configuration
+- All user-configurable paths are stored in SharedPreferences via `ConfigService`
+- Available settings: `MEDIA_PATH`, `EMULATORS_PATH`, `EMULATORS_CONFIG_PATH`, `ROM_TEMP_PATH`, `ROM_FOREVER_PATH`, `DEBUG_ENABLED`, `DEBUG_MIN_LEVEL`
+- Use `ConfigService.instance.setPathSetting(key, value)` to update settings
+- Settings are editable from Settings > System Paths screen
+- No `.env` file is used; all config is in SharedPreferences
 
 ### File Structure Assumptions
 ```

@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/rom.dart';
+import 'config_service.dart';
 import 'debug_service.dart';
 import 'download_resolver_service.dart';
 import 'rom_storage_service.dart';
@@ -22,7 +22,7 @@ class DownloadService {
   /// Get the singleton instance
   static DownloadService get instance {
     if (_instance == null) {
-      final romsPath = dotenv.env['ROMS_PATH'] ?? '';
+      final romsPath = ConfigService.instance.romsPath;
       _instance = DownloadService._(romsBasePath: romsPath);
     }
     return _instance!;

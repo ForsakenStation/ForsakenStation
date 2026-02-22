@@ -27,7 +27,7 @@ ROMS_PATH/
 
 ## Configuration File Format
 
-All platform configurations are stored in a **single JSON file** specified by the `EMULATORS_CONFIG_PATH` environment variable.
+All platform configurations are stored in a **single JSON file** at the path configured in **Settings > System Paths** (Emulators Config Path).
 
 The app supports **two configuration formats**:
 
@@ -147,15 +147,18 @@ When launching: User clicks "Launch" → Dialog shows → User selects emulator 
 
 ## Setup Steps
 
-### 1. Configure Environment Variables
+### 1. Configure Paths
 
-Edit your `.env` file:
+Go to **Settings > System Paths** in the app to configure:
+- **Emulators Path**: directory containing emulator binaries
+- **Emulators Config Path**: path to your `config.json` file
+- **Media Path**: directory containing media assets
 
-```env
-ROMS_PATH=/path/to/roms
-MEDIA_PATH=/path/to/media
-EMULATORS_PATH=/path/to/emulators
-EMULATORS_CONFIG_PATH=/path/to/config.json
+Alternatively, paths can be set programmatically via `ConfigService`:
+```dart
+await ConfigService.instance.setPathSetting('EMULATORS_PATH', '/path/to/emulators');
+await ConfigService.instance.setPathSetting('EMULATORS_CONFIG_PATH', '/path/to/config.json');
+await ConfigService.instance.setPathSetting('MEDIA_PATH', '/path/to/media');
 ```
 
 ### 2. Install Emulators
@@ -405,11 +408,12 @@ Use absolute paths for platform-specific resources:
 }
 ```
 
-## Environment Variable Reference
+## Settings Reference
 
-| Variable | Purpose | Example |
-|----------|---------|---------|
-| `ROMS_PATH` | Base directory for ROMs | `/home/user/roms` |
+All paths are configured via **Settings > System Paths** or `ConfigService.setPathSetting()`:
+
+| Setting | Purpose | Example |
+|---------|---------|---------|
 | `MEDIA_PATH` | Directory for media assets | `/home/user/media` |
 | `EMULATORS_PATH` | Directory containing emulator binaries | `/home/user/emulators` |
 | `EMULATORS_CONFIG_PATH` | Path to config.json file | `/home/user/emulators/config.json` |

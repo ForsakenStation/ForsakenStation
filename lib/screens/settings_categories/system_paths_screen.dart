@@ -296,17 +296,20 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
         }
       }
 
-      // Update environment variables
-      _configService.setEnvVariable('MEDIA_PATH', _mediaPathController.text);
-      _configService.setEnvVariable(
+      // Save path settings to SharedPreferences
+      await _configService.setPathSetting(
+        'MEDIA_PATH',
+        _mediaPathController.text,
+      );
+      await _configService.setPathSetting(
         'EMULATORS_PATH',
         _emulatorsPathController.text,
       );
-      // Note: GAMELIST_PATH is now managed automatically, not from .env
+      // Note: GAMELIST_PATH is now managed automatically, not configurable
 
       // Update ROM storage paths
       if (_romTempPathController.text.trim().isNotEmpty) {
-        _configService.setEnvVariable(
+        await _configService.setPathSetting(
           'ROM_TEMP_PATH',
           _romTempPathController.text.trim(),
         );
@@ -314,7 +317,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
       }
 
       if (_romForeverPathController.text.trim().isNotEmpty) {
-        _configService.setEnvVariable(
+        await _configService.setPathSetting(
           'ROM_FOREVER_PATH',
           _romForeverPathController.text.trim(),
         );
@@ -322,9 +325,6 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
           _romForeverPathController.text.trim(),
         );
       }
-
-      // Save to .env file
-      await _configService.saveEnvFile();
 
       // Reload storage info
       await _loadStorageInfo();

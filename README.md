@@ -63,20 +63,15 @@ Forsaken is a modern, cross-platform retro gaming frontend built with Flutter. I
    fvm flutter pub get
    ```
 
-3. **Set up environment variables**
+3. **Configure paths (first launch)**
    
-   Copy the example environment file and configure your paths:
-   ```bash
-   cp .env.example .env
-   ```
+   On first launch, go to **Settings > System Paths** to configure:
+   - **Media Path**: directory containing media assets (images, videos)
+   - **Emulators Path**: directory containing emulator binaries
+   - **Emulators Config Path**: path to your emulator config JSON
+   - **ROM Storage**: optional temporary/permanent ROM download paths
 
-   Edit `.env` with your settings:
-   ```env
-   ROMS_PATH=/path/to/your/roms
-   MEDIA_PATH=/path/to/your/media
-   GAMELIST_PATH=/path/to/gamelists
-   EMULATOR_CONFIG_PATH=/path/to/emulator/configs
-   ```
+   Paths are stored in SharedPreferences and persist across sessions.
 
 4. **Set up directory structure**
    
