@@ -1,0 +1,1547 @@
+[
+  {
+    "platform": "psx",
+    "displayName": "PlayStation 1 (Beetle PSX)",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "scph5500.bin",
+        "region": "JAP",
+        "description": "SCPH-5500 (Japan)"
+      },
+      {
+        "filename": "scph5501.bin",
+        "region": "USA",
+        "description": "SCPH-5501 (USA)"
+      },
+      {
+        "filename": "scph5502.bin",
+        "region": "EUR",
+        "description": "SCPH-5502 (Europe)"
+      }
+    ],
+    "notes": "At least one region BIOS required. For Beetle PSX core. DuckStation also checks ~/.local/share/duckstation/bios/"
+  },
+  {
+    "platform": "psx_pcsx",
+    "displayName": "PlayStation 1 (PCSX ReARMed)",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "PSXONPSP660.BIN",
+        "description": "PSX on PSP BIOS (extracted from PSP)"
+      },
+      {
+        "filename": "scph101.bin",
+        "region": "USA",
+        "description": "SCPH-101 BIOS v4.4 03/24/00 A"
+      },
+      {
+        "filename": "scph7001.bin",
+        "region": "USA",
+        "description": "SCPH-7001 BIOS v4.1 12/16/97 A"
+      },
+      {
+        "filename": "scph1001.bin",
+        "region": "USA",
+        "description": "SCPH-1001 BIOS v2.0 05/07/95 A"
+      },
+      {
+        "filename": "scph5501.bin",
+        "region": "USA",
+        "description": "SCPH-5501 (USA)"
+      }
+    ],
+    "notes": "At least one BIOS required for PCSX ReARMed core. Multiple versions supported."
+  },
+  {
+    "platform": "arcade",
+    "displayName": "Arcade (MAME/FinalBurn Neo)",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "neogeo.zip",
+        "description": "Neo Geo BIOS"
+      },
+      {
+        "filename": "pgm.zip",
+        "description": "PGM System BIOS"
+      },
+      {
+        "filename": "naomi.zip",
+        "description": "Naomi System BIOS"
+      },
+      {
+        "filename": "awbios.zip",
+        "description": "Atomiswave BIOS"
+      },
+      {
+        "filename": "f355bios.zip",
+        "description": "Ferrari F355 Challenge BIOS"
+      },
+      {
+        "filename": "hod2bios.zip",
+        "description": "House of the Dead 2 BIOS"
+      },
+      {
+        "filename": "airlbios.zip",
+        "description": "Airline Pilots BIOS"
+      },
+      {
+        "filename": "skns.zip",
+        "description": "Super Kaneko Nova System BIOS"
+      }
+    ],
+    "notes": "BIOS files for various arcade systems. Required for specific arcade games in MAME and FinalBurn Neo cores. ✅ Available for automatic download."
+  },
+  {
+    "platform": "ps2",
+    "displayName": "PlayStation 2",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/",
+      "~/.config/PCSX2/bios/"
+    ],
+    "files": [
+      {
+        "filename": "SCPH-70012.bin",
+        "region": "USA",
+        "description": "PS2 BIOS USA v2.30"
+      },
+      {
+        "filename": "SCPH-90001.bin",
+        "region": "USA",
+        "description": "PS2 BIOS USA (slim)"
+      },
+      {
+        "filename": "ps2-0230a-20080220.bin",
+        "description": "Alternative BIOS"
+      }
+    ],
+    "notes": "Various BIOS versions work. Place in RetroArch system dir or PCSX2 bios dir. Several PS2 BIOS files are now available through the automatic download system, including SCPH-39001.bin (USA) and SCPH-70004.BIN (EUR)."
+  },
+  {
+    "platform": "saturn",
+    "displayName": "Sega Saturn",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "sega_101.bin",
+        "region": "USA",
+        "description": "Saturn BIOS USA"
+      },
+      {
+        "filename": "mpr-17933.bin",
+        "region": "JAP",
+        "description": "Saturn BIOS Japan"
+      },
+      {
+        "filename": "mpr-18811-mx.ic1",
+        "region": "EUR",
+        "description": "King of Fighters 95 ROM Cartridge"
+      },
+      {
+        "filename": "mpr-19367-mx.ic1",
+        "region": "JAP",
+        "description": "Ultraman ROM Cartridge"
+      }
+    ],
+    "notes": "At least one region BIOS required. ROM cartridges needed for specific games."
+  },
+  {
+    "platform": "dreamcast",
+    "displayName": "Sega Dreamcast",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/dc/"
+    ],
+    "files": [
+      {
+        "filename": "dc_boot.bin",
+        "description": "Dreamcast boot ROM"
+      },
+      {
+        "filename": "dc_flash.bin",
+        "description": "Dreamcast flash ROM"
+      }
+    ],
+    "notes": "Both files required. Place in dc/ subdirectory."
+  },
+  {
+    "platform": "mastersystem",
+    "displayName": "Sega Master System",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "bios_U.sms",
+        "region": "USA",
+        "description": "Master System BIOS USA"
+      },
+      {
+        "filename": "bios_E.sms",
+        "region": "EUR",
+        "description": "Master System BIOS Europe"
+      },
+      {
+        "filename": "bios_J.sms",
+        "region": "JAP",
+        "description": "Master System BIOS Japan (Mark III)"
+      },
+      {
+        "filename": "bios.sms",
+        "description": "Master System BIOS (generic)"
+      }
+    ],
+    "notes": "Optional but required for some games and enables proper region behavior."
+  },
+  {
+    "platform": "segacd",
+    "displayName": "Sega CD",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "bios_CD_U.bin",
+        "region": "USA",
+        "description": "Sega CD BIOS USA"
+      },
+      {
+        "filename": "bios_CD_E.bin",
+        "region": "EUR",
+        "description": "Sega CD BIOS Europe"
+      },
+      {
+        "filename": "bios_CD_J.bin",
+        "region": "JAP",
+        "description": "Mega CD BIOS Japan"
+      }
+    ],
+    "notes": "At least one region BIOS required."
+  },
+  {
+    "platform": "genesis",
+    "displayName": "Sega Genesis / Mega Drive",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "bios_MD.bin",
+        "description": "Genesis/Mega Drive BIOS"
+      },
+      {
+        "filename": "areplay.bin",
+        "description": "Action Replay cartridge ROM"
+      },
+      {
+        "filename": "ggenie.bin",
+        "description": "Game Genie cartridge ROM"
+      },
+      {
+        "filename": "sk.bin",
+        "description": "Sonic & Knuckles lock-on cartridge ROM"
+      },
+      {
+        "filename": "sk2chip.bin",
+        "description": "Sonic & Knuckles 2 chip ROM"
+      }
+    ],
+    "notes": "Optional but improves compatibility. BIOS enhances accuracy, S&K ROMs enable lock-on functionality, cheat device ROMs enable respective features."
+  },
+  {
+    "platform": "pcenginecd",
+    "displayName": "PC Engine CD",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "syscard3.pce",
+        "description": "PC Engine CD System Card v3"
+      },
+      {
+        "filename": "syscard2.pce",
+        "description": "PC Engine CD System Card v2"
+      },
+      {
+        "filename": "syscard1.pce",
+        "description": "PC Engine CD System Card v1"
+      }
+    ],
+    "notes": "syscard3.pce recommended for best compatibility."
+  },
+  {
+    "platform": "nds",
+    "displayName": "Nintendo DS",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "bios7.bin",
+        "description": "ARM7 BIOS"
+      },
+      {
+        "filename": "bios9.bin",
+        "description": "ARM9 BIOS"
+      },
+      {
+        "filename": "firmware.bin",
+        "description": "DS Firmware"
+      }
+    ],
+    "notes": "All three files required for proper emulation."
+  },
+  {
+    "platform": "fds",
+    "displayName": "Famicom Disk System",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "disksys.rom",
+        "description": "FDS BIOS"
+      }
+    ],
+    "notes": "Required for Famicom Disk System games."
+  },
+  {
+    "platform": "gamegear",
+    "displayName": "Sega Game Gear",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "bios.gg",
+        "description": "Game Gear BIOS"
+      }
+    ],
+    "notes": "Optional but improves compatibility with some games."
+  },
+  {
+    "platform": "pokemini",
+    "displayName": "Nintendo Pokemon Mini",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "bios.min",
+        "description": "Pokemon Mini BIOS"
+      }
+    ],
+    "notes": "Required for Pokemon Mini emulation."
+  },
+  {
+    "platform": "channelf",
+    "displayName": "Fairchild Channel F",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "sl31253.bin",
+        "description": "Channel F System ROM (SL31253)"
+      },
+      {
+        "filename": "sl31254.bin",
+        "description": "Channel F System ROM (SL31254)"
+      },
+      {
+        "filename": "sl90025.bin",
+        "description": "Channel F System ROM (SL90025)"
+      }
+    ],
+    "notes": "At least one system ROM required. Different ROMs for different Channel F variants."
+  },
+  {
+    "platform": "atari800",
+    "displayName": "Atari 400/800/XL/XE",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "ATARIXL.ROM",
+        "description": "Atari XL/XE OS ROM"
+      },
+      {
+        "filename": "ATARIBAS.ROM",
+        "description": "Atari BASIC ROM"
+      },
+      {
+        "filename": "ATARIOSA.ROM",
+        "description": "Atari 400/800 OS-A ROM"
+      },
+      {
+        "filename": "ATARIOSB.ROM",
+        "description": "Atari 400/800 OS-B ROM"
+      }
+    ],
+    "notes": "OS ROM required. BASIC ROM optional but recommended for BASIC programs."
+  },
+  {
+    "platform": "videopac",
+    "displayName": "Philips Videopac+ / Odyssey²",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "g7400.bin",
+        "description": "Philips G7400 BIOS (Videopac+ G7400)"
+      },
+      {
+        "filename": "c52.bin",
+        "description": "Philips C52 BIOS"
+      },
+      {
+        "filename": "jopac.bin",
+        "description": "Jopac BIOS (French variant)"
+      }
+    ],
+    "notes": "Compatible with Odyssey² - use appropriate BIOS for region."
+  },
+  {
+    "platform": "x1",
+    "displayName": "Sharp X1",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "iplrom.x1",
+        "description": "Sharp X1 IPL ROM"
+      },
+      {
+        "filename": "iplrom.x1t",
+        "description": "Sharp X1 Turbo IPL ROM"
+      }
+    ],
+    "notes": "IPL ROM required for X1 emulation. Use appropriate ROM for model variant."
+  },
+  {
+    "platform": "atarist",
+    "displayName": "Atari ST",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "tos.img",
+        "description": "Atari ST TOS ROM Image"
+      }
+    ],
+    "notes": "Required for Atari ST emulation."
+  },
+  {
+    "platform": "x68000",
+    "displayName": "Sharp X68000",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "iplrom.dat",
+        "description": "X68000 IPL ROM"
+      },
+      {
+        "filename": "cgrom.dat",
+        "description": "X68000 Character Generator ROM"
+      },
+      {
+        "filename": "iplrom30.dat",
+        "description": "X68000 IPL ROM v3.0"
+      },
+      {
+        "filename": "iplromco.dat",
+        "description": "X68000 IPL ROM (Compact)"
+      },
+      {
+        "filename": "iplromxv.dat",
+        "description": "X68000 IPL ROM (XVI)"
+      }
+    ],
+    "notes": "IPL ROM and CG ROM required. Different IPL ROM versions for different X68000 models."
+  },
+  {
+    "platform": "atari5200",
+    "displayName": "Atari 5200",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "5200.rom",
+        "description": "Atari 5200 BIOS"
+      },
+      {
+        "filename": "ATARIXL.ROM",
+        "description": "Alternative BIOS"
+      }
+    ],
+    "notes": "At least one BIOS file required."
+  },
+  {
+    "platform": "gba",
+    "displayName": "Game Boy Advance",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "gba_bios.bin",
+        "description": "GBA BIOS"
+      }
+    ],
+    "notes": "Optional but improves compatibility and accuracy."
+  },
+  {
+    "platform": "msx",
+    "displayName": "MSX",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/Machines/"
+    ],
+    "files": [
+      {
+        "filename": "MSX.ROM",
+        "description": "MSX BIOS"
+      },
+      {
+        "filename": "MSX2.ROM",
+        "description": "MSX2 BIOS"
+      },
+      {
+        "filename": "MSX2EXT.ROM",
+        "description": "MSX2 Extended BIOS"
+      },
+      {
+        "filename": "MSX2P.ROM",
+        "description": "MSX2+ BIOS"
+      }
+    ],
+    "notes": "Place in Machines/ subdirectory. Different MSX versions require different BIOS files."
+  },
+  {
+    "platform": "msx_sony",
+    "displayName": "Sony MSX",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/Machines/Sony/"
+    ],
+    "files": [
+      {
+        "filename": "hb10.rom",
+        "description": "Sony HB-10 BIOS"
+      },
+      {
+        "filename": "hb20p.rom",
+        "description": "Sony HB-20P BIOS"
+      },
+      {
+        "filename": "hb55.rom",
+        "description": "Sony HB-55 BIOS"
+      },
+      {
+        "filename": "hb75.rom",
+        "description": "Sony HB-75 BIOS"
+      },
+      {
+        "filename": "hb101.rom",
+        "description": "Sony HB-101 BIOS"
+      },
+      {
+        "filename": "hb201.rom",
+        "description": "Sony HB-201 BIOS"
+      },
+      {
+        "filename": "hbf1.rom",
+        "description": "Sony HB-F1 BIOS (MSX2)"
+      },
+      {
+        "filename": "hbf500.rom",
+        "description": "Sony HB-F500 BIOS (MSX2)"
+      },
+      {
+        "filename": "hbf900.rom",
+        "description": "Sony HB-F900 BIOS (MSX2)"
+      },
+      {
+        "filename": "hbf1xv.rom",
+        "description": "Sony HB-F1XV BIOS (MSX2+)"
+      }
+    ],
+    "notes": "Sony MSX computer BIOS files for specific machine emulation. ✅ Available for automatic download."
+  },
+  {
+    "platform": "msx_panasonic",
+    "displayName": "Panasonic MSX",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/Machines/Panasonic/"
+    ],
+    "files": [
+      {
+        "filename": "cf2000.rom",
+        "description": "Panasonic CF-2000 BIOS"
+      },
+      {
+        "filename": "fs4500.rom",
+        "description": "Panasonic FS-4500 BIOS (MSX2)"
+      },
+      {
+        "filename": "fsa1.rom",
+        "description": "Panasonic FS-A1 BIOS (MSX2)"
+      },
+      {
+        "filename": "fsa1fx.rom",
+        "description": "Panasonic FS-A1FX BIOS (MSX2+)"
+      },
+      {
+        "filename": "fsa1wsx.rom",
+        "description": "Panasonic FS-A1WSX BIOS (MSX2+)"
+      },
+      {
+        "filename": "fsa1st.rom",
+        "description": "Panasonic FS-A1ST BIOS (TurboR)"
+      },
+      {
+        "filename": "fsa1gt.rom",
+        "description": "Panasonic FS-A1GT BIOS (TurboR)"
+      }
+    ],
+    "notes": "Panasonic MSX computer BIOS files including TurboR models. ✅ Available for automatic download."
+  },
+  {
+    "platform": "msx_philips",
+    "displayName": "Philips MSX",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/Machines/Philips/"
+    ],
+    "files": [
+      {
+        "filename": "vg8000.rom",
+        "description": "Philips VG-8000 BIOS"
+      },
+      {
+        "filename": "vg8020.rom",
+        "description": "Philips VG-8020 BIOS"
+      },
+      {
+        "filename": "vg8230.rom",
+        "description": "Philips VG-8230 BIOS (MSX2)"
+      },
+      {
+        "filename": "nms8220.rom",
+        "description": "Philips NMS-8220 BIOS (MSX2)"
+      },
+      {
+        "filename": "nms8250.rom",
+        "description": "Philips NMS-8250 BIOS (MSX2)"
+      },
+      {
+        "filename": "nms8280.rom",
+        "description": "Philips NMS-8280 BIOS (MSX2)"
+      }
+    ],
+    "notes": "Philips MSX computer BIOS files for European models. ✅ Available for automatic download."
+  },
+  {
+    "platform": "msx_toshiba",
+    "displayName": "Toshiba MSX",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/Machines/Toshiba/"
+    ],
+    "files": [
+      {
+        "filename": "hx10.rom",
+        "description": "Toshiba HX-10 BIOS"
+      },
+      {
+        "filename": "hx20.rom",
+        "description": "Toshiba HX-20 BIOS"
+      },
+      {
+        "filename": "hx32.rom",
+        "description": "Toshiba HX-32 BIOS"
+      },
+      {
+        "filename": "hx23.rom",
+        "description": "Toshiba HX-23 BIOS (MSX2)"
+      },
+      {
+        "filename": "hx33.rom",
+        "description": "Toshiba HX-33 BIOS (MSX2)"
+      },
+      {
+        "filename": "hx34.rom",
+        "description": "Toshiba HX-34 BIOS (MSX2)"
+      }
+    ],
+    "notes": "Toshiba Pasopia IQ series MSX computer BIOS files. ✅ Available for automatic download."
+  },
+  {
+    "platform": "msx_yamaha",
+    "displayName": "Yamaha MSX",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/Machines/Yamaha/"
+    ],
+    "files": [
+      {
+        "filename": "cx5m.rom",
+        "description": "Yamaha CX5M BIOS (Music Computer)"
+      },
+      {
+        "filename": "yjs503.rom",
+        "description": "Yamaha YJS-503 BIOS"
+      },
+      {
+        "filename": "ax150.rom",
+        "description": "Yamaha AX-150 BIOS"
+      },
+      {
+        "filename": "ax350.rom",
+        "description": "Yamaha AX-350 BIOS (MSX2)"
+      },
+      {
+        "filename": "ax500.rom",
+        "description": "Yamaha AX-500 BIOS (MSX2)"
+      },
+      {
+        "filename": "yis805r2.rom",
+        "description": "Yamaha YIS-805/128R2 BIOS (MSX2)"
+      }
+    ],
+    "notes": "Yamaha MSX computer BIOS files including music computers. ✅ Available for automatic download."
+  },
+  {
+    "platform": "msx_european",
+    "displayName": "European MSX",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/Machines/European/"
+    ],
+    "files": [
+      {
+        "filename": "canonv20.rom",
+        "description": "Canon V-20 BIOS"
+      },
+      {
+        "filename": "canonv30.rom",
+        "description": "Canon V-30 BIOS (MSX2)"
+      },
+      {
+        "filename": "svi728.rom",
+        "description": "Spectravideo SVI-728 BIOS"
+      },
+      {
+        "filename": "svi738.rom",
+        "description": "Spectravideo SVI-738 BIOS"
+      },
+      {
+        "filename": "svi838.rom",
+        "description": "Spectravideo SVI-838 BIOS (MSX2)"
+      },
+      {
+        "filename": "dragonmsx.rom",
+        "description": "Dragon MSX BIOS"
+      }
+    ],
+    "notes": "European MSX computer BIOS files from various manufacturers. ✅ Available for automatic download."
+  },
+  {
+    "platform": "msx_korean",
+    "displayName": "Korean MSX",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/Machines/Korean/"
+    ],
+    "files": [
+      {
+        "filename": "cpc300.rom",
+        "description": "Daewoo CPC-300 BIOS"
+      },
+      {
+        "filename": "dpc200.rom",
+        "description": "Daewoo DPC-200 BIOS"
+      },
+      {
+        "filename": "zemmix.rom",
+        "description": "Zemmix BIOS"
+      },
+      {
+        "filename": "zemmixsv.rom",
+        "description": "Zemmix Super V BIOS (MSX2)"
+      },
+      {
+        "filename": "spc800.rom",
+        "description": "Samsung SPC-800 BIOS"
+      },
+      {
+        "filename": "fc80.rom",
+        "description": "GoldStar FC-80 BIOS"
+      }
+    ],
+    "notes": "Korean MSX computer BIOS files including Daewoo and Samsung models. ✅ Available for automatic download."
+  },
+  {
+    "platform": "msx_arabic",
+    "displayName": "Arabic MSX",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/Machines/Arabic/"
+    ],
+    "files": [
+      {
+        "filename": "sakhrax100.rom",
+        "description": "Al Alamia Sakhr AX-100 BIOS"
+      },
+      {
+        "filename": "sakhrax170.rom",
+        "description": "Al Alamia Sakhr AX-170 BIOS"
+      }
+    ],
+    "notes": "Arabic MSX computer BIOS files from Al Alamia Sakhr. ✅ Available for automatic download."
+  },
+  {
+    "platform": "msx_brazilian",
+    "displayName": "Brazilian MSX",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/Machines/Brazilian/"
+    ],
+    "files": [
+      {
+        "filename": "expert.rom",
+        "description": "Gradiente Expert BIOS"
+      },
+      {
+        "filename": "expertplus.rom",
+        "description": "Gradiente Expert Plus BIOS"
+      },
+      {
+        "filename": "hotbit11.rom",
+        "description": "Sharp Hotbit 1.1 BIOS"
+      },
+      {
+        "filename": "hotbit12.rom",
+        "description": "Sharp Hotbit 1.2 BIOS"
+      }
+    ],
+    "notes": "Brazilian MSX computer BIOS files from Gradiente and Sharp. ✅ Available for automatic download."
+  },
+  {
+    "platform": "amiga",
+    "displayName": "Amiga",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "kick34005.A500",
+        "description": "Kickstart 1.3 (A500)"
+      },
+      {
+        "filename": "kick40063.A600",
+        "description": "Kickstart 3.1 (A600)"
+      },
+      {
+        "filename": "kick40068.A1200",
+        "description": "Kickstart 3.1 (A1200)"
+      },
+      {
+        "filename": "Capsimg_for_Retroarch.zip",
+        "description": "Capsimg library for IPF files (auto-extracts platform files)"
+      }
+    ],
+    "notes": "Different Kickstart ROMs for different Amiga models. At least one required. Capsimg library enables support for copy-protected IPF disk images and auto-extracts the correct files for your platform."
+  },
+  {
+    "platform": "macii",
+    "displayName": "Apple Macintosh II",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "MacII.ROM",
+        "description": "Macintosh II System ROM"
+      }
+    ],
+    "notes": "Required for Macintosh II emulation."
+  },
+  {
+    "platform": "cdi",
+    "displayName": "Philips CD-i",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "cdi200.rom",
+        "description": "CD-i 200 BIOS"
+      },
+      {
+        "filename": "cdi220.rom",
+        "description": "CD-i 220 BIOS"
+      },
+      {
+        "filename": "cdi220b.rom",
+        "description": "CD-i 220 BIOS (alt)"
+      },
+      {
+        "filename": "cdi200a.rom",
+        "description": "CD-i 200A BIOS (alt)"
+      },
+      {
+        "filename": "vmpega.rom",
+        "description": "Video MPEG decoder ROM"
+      },
+      {
+        "filename": "xmpegx.rom",
+        "description": "Digital Video Cartridge ROM"
+      }
+    ],
+    "notes": "At least one main CD-i BIOS required (200, 220, or 220b). Additional files provide enhanced compatibility."
+  },
+  {
+    "platform": "pc98",
+    "displayName": "NEC PC-98",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/",
+      "~/.config/retroarch/system/np2kai/"
+    ],
+    "files": [
+      {
+        "filename": "bios.rom",
+        "description": "PC-98 BIOS ROM"
+      },
+      {
+        "filename": "itf.rom",
+        "description": "PC-98 ITF ROM"
+      },
+      {
+        "filename": "sound.rom",
+        "description": "PC-98 Sound ROM"
+      },
+      {
+        "filename": "font.rom",
+        "description": "PC-98 Font ROM"
+      },
+      {
+        "filename": "font.bmp",
+        "description": "PC-98 Font Bitmap"
+      }
+    ],
+    "notes": "BIOS ROM required. Other files enhance compatibility and enable proper font rendering and sound."
+  },
+  {
+    "platform": "odyssey2",
+    "displayName": "Magnavox Odyssey²",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "o2rom.bin",
+        "description": "Odyssey² BIOS ROM"
+      }
+    ],
+    "notes": "Required for Magnavox Odyssey² and Philips Videopac+ emulation."
+  },
+  {
+    "platform": "neogeo",
+    "displayName": "Neo Geo",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "neogeo.zip",
+        "description": "Neo Geo Arcade BIOS"
+      },
+      {
+        "filename": "ng-lo.rom",
+        "description": "Neo Geo CD Low ROM"
+      },
+      {
+        "filename": "neocd.bin",
+        "description": "Neo Geo CD BIOS"
+      },
+      {
+        "filename": "front-sp1.bin",
+        "description": "Neo Geo CD Front SP1"
+      },
+      {
+        "filename": "top-sp1.bin",
+        "description": "Neo Geo CD Top SP1"
+      }
+    ],
+    "notes": "Required for FBNeo and MAME cores. ng-lo.rom and neocd.bin are essential for Neo Geo CD. Other files enhance compatibility."
+  },
+  {
+    "platform": "gb",
+    "displayName": "Game Boy",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "dmg_boot.bin",
+        "description": "Game Boy Boot ROM (DMG)"
+      },
+      {
+        "filename": "gb_bios.bin",
+        "description": "Game Boy BIOS"
+      }
+    ],
+    "notes": "Optional but improves accuracy and enables boot animation."
+  },
+  {
+    "platform": "gbc",
+    "displayName": "Game Boy Color",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "gbc_bios.bin",
+        "description": "GBC BIOS"
+      }
+    ],
+    "notes": "Optional but improves accuracy in some cores."
+  },
+  {
+    "platform": "nes",
+    "displayName": "Nintendo Entertainment System",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "NstDatabase.xml",
+        "description": "Nestopia game database"
+      }
+    ],
+    "notes": "Game database for enhanced compatibility in Nestopia core. ✅ Available for automatic download."
+  },
+  {
+    "platform": "n64dd",
+    "displayName": "Nintendo 64DD",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "64DD_IPL.bin",
+        "description": "64DD IPL ROM"
+      }
+    ],
+    "notes": "Required for 64DD disk games in Mupen64Plus core. ✅ Available for automatic download."
+  },
+  {
+    "platform": "psp",
+    "displayName": "PlayStation Portable",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/PPSSPP/",
+      "~/.config/ppsspp/PSP/SYSTEM/"
+    ],
+    "files": [
+      {
+        "filename": "ppge_atlas.zim",
+        "description": "PPSSPP font atlas"
+      }
+    ],
+    "notes": "Most games work without BIOS, but some require PSP firmware files. The ppge_atlas.zim font atlas is now available through the automatic download system."
+  },
+  {
+    "platform": "scummvm",
+    "displayName": "ScummVM",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "scummvm.zip",
+        "description": "ScummVM game engine files and data"
+      }
+    ],
+    "notes": "Optional. Contains additional game engine files and data for enhanced compatibility."
+  },
+  {
+    "platform": "3ds",
+    "displayName": "Nintendo 3DS",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/citra/",
+      "~/.local/share/citra-emu/sysdata/"
+    ],
+    "files": [
+      {
+        "filename": "aes_keys.txt",
+        "description": "AES encryption keys"
+      },
+      {
+        "filename": "seeddb.bin",
+        "description": "Seed database"
+      },
+      {
+        "filename": "boot9.bin",
+        "description": "Boot9 bootloader"
+      },
+      {
+        "filename": "boot11.bin",
+        "description": "Boot11 bootloader"
+      },
+      {
+        "filename": "dspfirm.cdc",
+        "description": "DSP firmware"
+      },
+      {
+        "filename": "shared_font.bin",
+        "description": "3DS system font"
+      }
+    ],
+    "notes": "Required for encrypted games and full system compatibility. Files will be automatically extracted to the correct subdirectories."
+  },
+  {
+    "platform": "atari7800",
+    "displayName": "Atari 7800",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "7800 BIOS (U).rom",
+        "description": "Atari 7800 BIOS"
+      }
+    ],
+    "notes": "Optional but improves compatibility with some games."
+  },
+  {
+    "platform": "intellivision",
+    "displayName": "Intellivision",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "exec.bin",
+        "description": "Executive ROM"
+      },
+      {
+        "filename": "grom.bin",
+        "description": "Graphics ROM"
+      }
+    ],
+    "notes": "Both files required for FreeIntv core."
+  },
+  {
+    "platform": "colecovision",
+    "displayName": "ColecoVision",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "colecovision.rom",
+        "description": "ColecoVision BIOS"
+      }
+    ],
+    "notes": "Required for BlueMSX and other cores. ✅ Available for automatic download."
+  },
+  {
+    "platform": "vectrex",
+    "displayName": "Vectrex",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "vectrex.rom",
+        "description": "Vectrex BIOS"
+      }
+    ],
+    "notes": "Optional for vecx core, improves accuracy."
+  },
+  {
+    "platform": "lynx",
+    "displayName": "Atari Lynx",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "lynxboot.img",
+        "description": "Lynx Boot ROM"
+      }
+    ],
+    "notes": "Required for Handy and Beetle Lynx cores."
+  },
+  {
+    "platform": "wonderswan",
+    "displayName": "WonderSwan",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "boot.rom",
+        "description": "WonderSwan boot ROM"
+      }
+    ],
+    "notes": "Optional for Beetle Cygne core."
+  },
+  {
+    "platform": "pcfx",
+    "displayName": "PC-FX",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "pcfx.rom",
+        "description": "PC-FX BIOS v1.00"
+      }
+    ],
+    "notes": "Required for Beetle PC-FX core."
+  },
+  {
+    "platform": "pcengine",
+    "displayName": "PC Engine / TurboGrafx-16",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "syscard1.pce",
+        "description": "System Card 1.0"
+      },
+      {
+        "filename": "syscard2.pce",
+        "description": "System Card 2.0 JAP"
+      },
+      {
+        "filename": "syscard2u.pce",
+        "description": "System Card 2.0 USA"
+      },
+      {
+        "filename": "syscard3.pce",
+        "description": "System Card 3.0 JAP"
+      },
+      {
+        "filename": "syscard3u.pce",
+        "description": "System Card 3.0 USA"
+      },
+      {
+        "filename": "gecard.pce",
+        "description": "Games Express Card"
+      },
+      {
+        "filename": "gexpress.pce",
+        "description": "Games Express BIOS"
+      }
+    ],
+    "notes": "System cards for PC Engine CD games. Required for proper CD-ROM support. ✅ Available for automatic download."
+  },
+  {
+    "platform": "supergrafx",
+    "displayName": "SuperGrafx",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "syscard3.pce",
+        "description": "SuperGrafx System Card"
+      }
+    ],
+    "notes": "Optional, shares BIOS with PC Engine CD."
+  },
+  {
+    "platform": "atarijaguar",
+    "displayName": "Atari Jaguar",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "virtualjaguar_bios.rom",
+        "description": "Jaguar BIOS"
+      }
+    ],
+    "notes": "Optional for Virtual Jaguar core."
+  },
+  {
+    "platform": "3do",
+    "displayName": "3DO Interactive",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "panafz10.bin",
+        "description": "Panasonic FZ-10 BIOS"
+      },
+      {
+        "filename": "panafz1.bin",
+        "description": "Panasonic FZ-1 BIOS"
+      },
+      {
+        "filename": "goldstar.bin",
+        "description": "Goldstar BIOS"
+      }
+    ],
+    "notes": "At least one 3DO BIOS required for Opera core."
+  },
+  {
+    "platform": "gamecube",
+    "displayName": "Nintendo GameCube / Wii",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/",
+      "~/dolphin-emu/User/GC/USA/",
+      "~/dolphin-emu/User/GC/EUR/",
+      "~/dolphin-emu/User/GC/JAP/"
+    ],
+    "files": [
+      {
+        "filename": "IPL.bin",
+        "region": "USA",
+        "description": "GameCube BIOS (USA)"
+      },
+      {
+        "filename": "IPL.bin",
+        "region": "EUR",
+        "description": "GameCube BIOS (EUR)"
+      },
+      {
+        "filename": "IPL.bin",
+        "region": "JAP",
+        "description": "GameCube BIOS (JAP)"
+      }
+    ],
+    "notes": "Optional for most games, but enables BIOS animation and required for specific titles like Star Fox Assault. Downloaded files must be renamed to IPL.bin and placed in respective region subdirectory (USA/, EUR/, JAP/)."
+  },
+  {
+    "platform": "snes",
+    "displayName": "Nintendo Super Nintendo Entertainment System",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "cx4.data.rom",
+        "description": "CX4 chip data ROM (required for Mega Man X2/X3)"
+      },
+      {
+        "filename": "dsp1.data.rom",
+        "description": "DSP1 chip data ROM (required for Pilotwings, Super Mario Kart)"
+      },
+      {
+        "filename": "dsp1.program.rom",
+        "description": "DSP1 chip program ROM"
+      },
+      {
+        "filename": "dsp1b.data.rom",
+        "description": "DSP1B chip data ROM (required for Ballz 3D)"
+      },
+      {
+        "filename": "dsp1b.program.rom",
+        "description": "DSP1B chip program ROM"
+      },
+      {
+        "filename": "dsp2.data.rom",
+        "description": "DSP2 chip data ROM (required for Dungeon Master)"
+      },
+      {
+        "filename": "dsp2.program.rom",
+        "description": "DSP2 chip program ROM"
+      },
+      {
+        "filename": "dsp3.data.rom",
+        "description": "DSP3 chip data ROM (required for SD Gundam GX)"
+      },
+      {
+        "filename": "dsp3.program.rom",
+        "description": "DSP3 chip program ROM"
+      },
+      {
+        "filename": "dsp4.data.rom",
+        "description": "DSP4 chip data ROM (required for Top Gear 3000)"
+      },
+      {
+        "filename": "dsp4.program.rom",
+        "description": "DSP4 chip program ROM"
+      },
+      {
+        "filename": "st010.data.rom",
+        "description": "ST010 chip data ROM (required for F1 ROC II)"
+      },
+      {
+        "filename": "st010.program.rom",
+        "description": "ST010 chip program ROM"
+      },
+      {
+        "filename": "st011.data.rom",
+        "description": "ST011 chip data ROM (required for Hayazashi Nidan Morita Shogi)"
+      },
+      {
+        "filename": "st011.program.rom",
+        "description": "ST011 chip program ROM"
+      },
+      {
+        "filename": "st018.data.rom",
+        "description": "ST018 chip data ROM (required for Hayazashi Nidan Morita Shogi 2)"
+      },
+      {
+        "filename": "st018.program.rom",
+        "description": "ST018 chip program ROM"
+      }
+    ],
+    "notes": "Optional but required for specific games that use special chips. DSP chips for enhanced audio/processing, CX4 for Capcom games, ST chips for special applications."
+  },
+  {
+    "platform": "zxspectrum",
+    "displayName": "Sinclair ZX Spectrum",
+    "required": true,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "48.rom",
+        "description": "ZX Spectrum 48K ROM"
+      },
+      {
+        "filename": "128-0.rom",
+        "description": "ZX Spectrum 128K ROM 0"
+      },
+      {
+        "filename": "128-1.rom",
+        "description": "ZX Spectrum 128K ROM 1"
+      },
+      {
+        "filename": "plus2-0.rom",
+        "description": "ZX Spectrum +2 ROM 0"
+      },
+      {
+        "filename": "plus2-1.rom",
+        "description": "ZX Spectrum +2 ROM 1"
+      },
+      {
+        "filename": "plus3-0.rom",
+        "description": "ZX Spectrum +3 ROM 0"
+      },
+      {
+        "filename": "plus3-1.rom",
+        "description": "ZX Spectrum +3 ROM 1"
+      },
+      {
+        "filename": "plus3-2.rom",
+        "description": "ZX Spectrum +3 ROM 2"
+      },
+      {
+        "filename": "plus3-3.rom",
+        "description": "ZX Spectrum +3 ROM 3"
+      },
+      {
+        "filename": "128-spanish-0.rom",
+        "description": "ZX Spectrum 128K Spanish ROM 0"
+      },
+      {
+        "filename": "128-spanish-1.rom",
+        "description": "ZX Spectrum 128K Spanish ROM 1"
+      }
+    ],
+    "notes": "Different ROM sets for different ZX Spectrum models. 48K ROM for original, 128K ROMs for 128K model, Plus ROMs for +2/+3 models."
+  },
+  {
+    "platform": "sgb",
+    "displayName": "Nintendo Super Game Boy",
+    "required": false,
+    "locations": [
+      "~/.config/retroarch/system/"
+    ],
+    "files": [
+      {
+        "filename": "SGB1.sfc",
+        "description": "Super Game Boy ROM v1 (required for SGB emulation)"
+      },
+      {
+        "filename": "SGB2.sfc",
+        "description": "Super Game Boy 2 ROM (improved version)"
+      },
+      {
+        "filename": "sgb_bios.bin",
+        "description": "Super Game Boy BIOS"
+      },
+      {
+        "filename": "sgb2_boot.bin",
+        "description": "Super Game Boy 2 Boot ROM"
+      }
+    ],
+    "notes": "Required for Super Game Boy functionality in SNES emulators. SGB1.sfc is essential, SGB2.sfc provides enhanced features."
+  }
+]

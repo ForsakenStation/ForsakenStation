@@ -36,7 +36,7 @@ class BiosCheckService {
 
   /// Scans all BIOS requirements and updates found status
   Future<List<BiosRequirement>> scanAllBios() async {
-    final requirements = BiosRequirement.getDefaultRequirements();
+    final requirements = await BiosRequirement.getDefaultRequirements();
     final scannedRequirements = <BiosRequirement>[];
 
     for (final requirement in requirements) {

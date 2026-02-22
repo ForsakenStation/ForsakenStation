@@ -47,8 +47,11 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
       int downloadableFiles = 0;
 
       // Check each platform
-      for (final requirement in BiosRequirement.getDefaultRequirements()) {
-        final mapping = BiosDownloadMapping.getMapping(requirement.platform);
+      final requirements = await BiosRequirement.getDefaultRequirements();
+      for (final requirement in requirements) {
+        final mapping = await BiosDownloadMapping.getMapping(
+          requirement.platform,
+        );
         final platformPath = Directory(
           '${widget.biosPath}/${requirement.platform}',
         );

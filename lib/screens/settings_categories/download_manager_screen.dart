@@ -298,21 +298,21 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       // Get emulators for category
       final List<EmulatorDownloadInfo> emulators;
       if (category == 'all') {
-        emulators = EmulatorCatalog.getAvailableForCurrentPlatform();
+        emulators = await EmulatorCatalog.getAvailableForCurrentPlatform();
       } else {
-        emulators = EmulatorCatalog.getByCategory(
-          category,
-        ).where((e) => e.isAvailableForCurrentPlatform()).toList();
+        final allInCategory = await EmulatorCatalog.getByCategory(category);
+        emulators = allInCategory
+            .where((e) => e.isAvailableForCurrentPlatform())
+            .toList();
       }
 
       if (emulators.isEmpty) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('No emulators available for this category'),
-            ),
-          );
-        }
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No emulators available for this category'),
+          ),
+        );
         return;
       }
 
@@ -320,6 +320,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       final totalSizeMB = _downloadService.getTotalDownloadSize(emulators);
 
       // Ask for confirmation
+      if (!mounted) return;
       final confirm = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(

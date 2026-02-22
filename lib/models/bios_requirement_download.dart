@@ -5,13 +5,13 @@ import 'package:forsaken/models/bios_download_mapping.dart';
 extension BiosRequirementDownload on BiosRequirement {
   /// Returns true if this platform has downloadable BIOS files available
   bool get canDownload {
-    final mapping = BiosDownloadMapping.getMapping(platform);
+    final mapping = BiosDownloadMapping.getMappingSync(platform);
     return mapping != null && mapping.available;
   }
 
   /// Gets the download mapping for this platform
   BiosDownloadMapping? get downloadMapping {
-    return BiosDownloadMapping.getMapping(platform);
+    return BiosDownloadMapping.getMappingSync(platform);
   }
 
   /// Returns list of missing files that can be downloaded (non-optional only)

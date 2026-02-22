@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import '../models/rom.dart';
 import 'debug_service.dart';
@@ -193,89 +194,23 @@ class JsonlRomLoader {
             .where((p) => p.isNotEmpty)
             .toList();
       } else {
-        // Fallback: hardcoded list of common platforms
+        // Fallback: load list from local assets
         _debug.warning(
-          'Could not fetch platforms index, using fallback list',
+          'Could not fetch platforms index, using fallback from assets',
           tag: 'JsonlRomLoader',
         );
-        platforms = [
-          // Nintendo
-          'nes',
-          'fds',
-          'snes',
-          'snes-msu1',
-          'satellaview',
-          'sufami',
-          'n64',
-          'gb',
-          'gbc',
-          'gba',
-          'nds',
-          // Sega
-          'sega32x',
-          'segacd',
-          'genesis',
-          'megadrive',
-          'megadrive-msu',
-          'gamegear',
-          'mastersystem',
-          'saturn',
-          'segastv',
-          // Sony
-          'psx',
-          'psp',
-          // Arcade
-          'arcade',
-          'mame',
-          'neogeo',
-          'neogeocd',
-          'fbneo',
-          'atomiswave',
-          'cps',
-          'cps1',
-          'cps2',
-          'cps3',
-          // Atari
-          'atari2600',
-          'atari5200',
-          'atari7800',
-          'atarijaguar',
-          'atarilynx',
-          'lynx',
-          // NEC
-          'pcengine',
-          'pcenginecd',
-          'pcfx',
-          // SNK
-          'ngp',
-          'ngpc',
-          // Bandai
-          'wonderswan',
-          'wonderswancolor',
-          // Other consoles
-          '3do',
-          'colecovision',
-          'virtualboy',
-          'cdi',
-          // Commodore
-          'c64',
-          'c128',
-          'pet',
-          'cplus4',
-          'c20',
-          // Amiga
-          'amiga500',
-          'amiga1200',
-          'amigacd32',
-          'amigacdtv',
-          // Classic computers
-          'amstradcpc',
-          'gx4000',
-          'zxspectrum',
-          'zx81',
-          'dos',
-          'doom',
-        ];
+        try {
+          final jsonStr = await rootBundle.loadString(
+            'assets/data/platforms.json',
+          );
+          platforms = List<String>.from(jsonDecode(jsonStr));
+        } catch (e) {
+          _debug.error(
+            'Failed to load fallback platforms: $e',
+            tag: 'JsonlRomLoader',
+          );
+          platforms = [];
+        }
       }
 
       // Count ROMs for each platform by fetching the JSONL

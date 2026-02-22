@@ -1,0 +1,620 @@
+[
+  {
+    "name": "retroarch",
+    "displayName": "RetroArch",
+    "description": "Multi-platform emulator frontend (cores included)",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "RetroArch.7z",
+        "sha256": null,
+        "estimatedSizeMB": 50
+      },
+      "windows": {
+        "url": null,
+        "fileName": "RetroArch.7z",
+        "sha256": null,
+        "estimatedSizeMB": 50
+      },
+      "macos": {
+        "url": null,
+        "fileName": "RetroArch.dmg",
+        "sha256": null,
+        "estimatedSizeMB": 50
+      }
+    },
+    "requiresExtraction": true,
+    "extractedFileName": null,
+    "finalFileName": "retroarch.AppImage",
+    "postDownloadCommands": {
+      "linux": [
+        "mv RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage ./retroarch.AppImage",
+        "cp -r RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/* ~/.config/retroarch/",
+        "rm -rf RetroArch-Linux-x86_64",
+        "chmod +x retroarch.AppImage"
+      ],
+      "windows": [
+        "move RetroArch-Windows-x86_64\\\\retroarch.exe .\\\\retroarch.exe",
+        "xcopy /E /I RetroArch-Windows-x86_64\\\\* .",
+        "rmdir /S /Q RetroArch-Windows-x86_64"
+      ],
+      "macos": [
+        "hdiutil attach RetroArch.dmg",
+        "cp -R /Volumes/RetroArch/RetroArch.app .",
+        "hdiutil detach /Volumes/RetroArch"
+      ]
+    },
+    "isRetroArchCore": false
+  },
+  {
+    "name": "retroarch_cores",
+    "displayName": "RetroArch Cores",
+    "description": "All RetroArch emulator cores",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "RetroArch_cores.7z",
+        "sha256": null,
+        "estimatedSizeMB": 200
+      },
+      "windows": {
+        "url": null,
+        "fileName": "RetroArch_cores.7z",
+        "sha256": null,
+        "estimatedSizeMB": 200
+      },
+      "macos": {
+        "url": null,
+        "fileName": "RetroArch_cores.zip",
+        "sha256": null,
+        "estimatedSizeMB": 200
+      }
+    },
+    "requiresExtraction": true,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {
+      "linux": [
+        "mkdir -p ~/.config/retroarch/cores",
+        "cp -r cores/* ~/.config/retroarch/cores/",
+        "rm -rf cores"
+      ],
+      "windows": [
+        "if not exist ",
+        " mkdir ",
+        "",
+        "xcopy /E /I cores\\\\* ",
+        "",
+        "rmdir /S /Q cores"
+      ],
+      "macos": [
+        "mkdir -p ~/Library/Application\\\\ Support/RetroArch/cores",
+        "cp -r cores/* ~/Library/Application\\\\ Support/RetroArch/cores/",
+        "rm -rf cores"
+      ]
+    },
+    "isRetroArchCore": true
+  },
+  {
+    "name": "duckstation",
+    "displayName": "DuckStation",
+    "description": "PlayStation 1 emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "duckstation.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 25
+      },
+      "windows": {
+        "url": null,
+        "fileName": "duckstation-windows.zip",
+        "sha256": null,
+        "estimatedSizeMB": 30
+      },
+      "macos": {
+        "url": null,
+        "fileName": "duckstation-mac.zip",
+        "sha256": null,
+        "estimatedSizeMB": 35
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {
+      "linux": [
+        "chmod +x duckstation.AppImage"
+      ],
+      "windows": [
+        "move duckstation-windows-x64-release.exe duckstation.exe"
+      ],
+      "macos": [
+        "mv duckstation-mac-release.dmg duckstation.dmg"
+      ]
+    },
+    "isRetroArchCore": false
+  },
+  {
+    "name": "pcsx2",
+    "displayName": "PCSX2",
+    "description": "PlayStation 2 emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "pcsx2.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 40
+      },
+      "windows": {
+        "url": null,
+        "fileName": "pcsx2.7z",
+        "sha256": null,
+        "estimatedSizeMB": 45
+      },
+      "macos": {
+        "url": null,
+        "fileName": "pcsx2.tar.xz",
+        "sha256": null,
+        "estimatedSizeMB": 50
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "rpcs3",
+    "displayName": "RPCS3",
+    "description": "PlayStation 3 emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "rpcs3.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 90
+      },
+      "windows": {
+        "url": null,
+        "fileName": "rpcs3.7z",
+        "sha256": null,
+        "estimatedSizeMB": 34
+      },
+      "macos": {
+        "url": null,
+        "fileName": "rpcs3.7z",
+        "sha256": null,
+        "estimatedSizeMB": 43
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {
+      "linux": [
+        "chmod +x rpcs3.AppImage"
+      ],
+      "windows": [
+        "7z x rpcs3.7z -o./ && rm rpcs3.7z",
+        "move rpcs3-v0.0.39-18705-0f85e912_win64_msvc.exe rpcs3.exe"
+      ],
+      "macos": [
+        "7z x rpcs3.7z -o./ && rm rpcs3.7z",
+        "mv RPCS3.app App"
+      ]
+    },
+    "isRetroArchCore": false
+  },
+  {
+    "name": "shadps4",
+    "displayName": "shadPS4",
+    "description": "PlayStation 4 emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "shadps4.zip",
+        "sha256": null,
+        "estimatedSizeMB": 15
+      },
+      "windows": {
+        "url": null,
+        "fileName": "shadps4-win.zip",
+        "sha256": null,
+        "estimatedSizeMB": 18
+      }
+    },
+    "requiresExtraction": true,
+    "extractedFileName": null,
+    "finalFileName": "shadps4.AppImage",
+    "postDownloadCommands": {
+      "linux": [
+        "mv Shadps4*.AppImage ./shadps4.AppImage",
+        "chmod +x shadps4.AppImage"
+      ],
+      "windows": [
+        "move shadps4-win64-qt.exe shadps4.exe"
+      ]
+    },
+    "isRetroArchCore": false
+  },
+  {
+    "name": "dolphin",
+    "displayName": "Dolphin",
+    "description": "GameCube and Wii emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "dolphin.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 30
+      },
+      "windows": {
+        "url": "https://dl.dolphin-emu.org/builds/dolphin-master-x64-latest.7z",
+        "fileName": "dolphin.7z",
+        "sha256": null,
+        "estimatedSizeMB": 35
+      },
+      "macos": {
+        "url": null,
+        "fileName": "dolphin.dmg",
+        "sha256": null,
+        "estimatedSizeMB": 40
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "cemu",
+    "displayName": "Cemu",
+    "description": "Wii U emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "cemu.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 25
+      },
+      "windows": {
+        "url": null,
+        "fileName": "cemu-windows.zip",
+        "sha256": null,
+        "estimatedSizeMB": 30
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "ryujinx",
+    "displayName": "Ryujinx",
+    "description": "Nintendo Switch emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "ryujinx.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 45
+      },
+      "windows": {
+        "url": null,
+        "fileName": "ryujinx-win.zip",
+        "sha256": null,
+        "estimatedSizeMB": 50
+      },
+      "macos": {
+        "url": null,
+        "fileName": "ryujinx.dmg",
+        "sha256": null,
+        "estimatedSizeMB": 55
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "citron",
+    "displayName": "Citron",
+    "description": "Nintendo Switch emulator (alternative)",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "citron.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 40
+      },
+      "windows": {
+        "url": null,
+        "fileName": "citron.zip",
+        "sha256": null,
+        "estimatedSizeMB": 45
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "xemu",
+    "displayName": "xemu",
+    "description": "Original Xbox emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "xemu.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 35
+      },
+      "windows": {
+        "url": null,
+        "fileName": "xemu.zip",
+        "sha256": null,
+        "estimatedSizeMB": 40
+      },
+      "macos": {
+        "url": null,
+        "fileName": "xemu-mac.zip",
+        "sha256": null,
+        "estimatedSizeMB": 45
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "xenia",
+    "displayName": "Xenia",
+    "description": "Xbox 360 emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "xenia.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 30
+      },
+      "windows": {
+        "url": null,
+        "fileName": "xenia.zip",
+        "sha256": null,
+        "estimatedSizeMB": 35
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "vita3k",
+    "displayName": "Vita3K",
+    "description": "PlayStation Vita emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "vita3k.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 25
+      },
+      "windows": {
+        "url": null,
+        "fileName": "vita3k.zip",
+        "sha256": null,
+        "estimatedSizeMB": 30
+      },
+      "macos": {
+        "url": null,
+        "fileName": "vita3k.dmg",
+        "sha256": null,
+        "estimatedSizeMB": 35
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "eka2l1",
+    "displayName": "EKA2L1",
+    "description": "Nokia N-Gage/Symbian emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "eka2l1.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 20
+      },
+      "windows": {
+        "url": null,
+        "fileName": "eka2l1.7z",
+        "sha256": null,
+        "estimatedSizeMB": 25
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "ruffle",
+    "displayName": "Ruffle",
+    "description": "Adobe Flash emulator",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "ruffle.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 10
+      },
+      "windows": {
+        "url": null,
+        "fileName": "ruffle.zip",
+        "sha256": null,
+        "estimatedSizeMB": 12
+      },
+      "macos": {
+        "url": null,
+        "fileName": "ruffle.tar.gz",
+        "sha256": null,
+        "estimatedSizeMB": 15
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "openbor",
+    "displayName": "OpenBOR",
+    "description": "Beat em up game engine",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "openbor.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 5
+      },
+      "windows": {
+        "url": null,
+        "fileName": "openbor.rar",
+        "sha256": null,
+        "estimatedSizeMB": 6
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {
+      "linux": [
+        "chmod +x openbor.AppImage"
+      ],
+      "windows": [
+        "unrar openbor.rar -o./ && rm openbor.rar",
+        "move OpenBOR.exe openbor.exe"
+      ]
+    },
+    "isRetroArchCore": false
+  },
+  {
+    "name": "mugen",
+    "displayName": "M.U.G.E.N",
+    "description": "Beat em up game engine",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "Ikemen_GO-v0.99.0-linux.zip",
+        "sha256": null,
+        "estimatedSizeMB": 5
+      },
+      "windows": {
+        "url": null,
+        "fileName": "Ikemen_GO-v0.99.0-windows.zip",
+        "sha256": null,
+        "estimatedSizeMB": 5
+      },
+      "macos": {
+        "url": null,
+        "fileName": "Ikemen_GO-v0.99.0-macos.zip",
+        "sha256": null,
+        "estimatedSizeMB": 5
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {
+      "linux": [
+        "7z x Ikemen_GO-v0.99.0-linux.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-linux.zip"
+      ],
+      "windows": [
+        "7z x Ikemen_GO-v0.99.0-windows.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-windows.zip"
+      ],
+      "macos": [
+        "7z x Ikemen_GO-v0.99.0-macos.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-macos.zip"
+      ]
+    },
+    "isRetroArchCore": false
+  },
+  {
+    "name": "vlc",
+    "displayName": "VLC Media Player",
+    "description": "Video player for movies",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "vlc.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 30
+      },
+      "windows": {
+        "url": "https://get.videolan.org/vlc/last/win64/vlc-3.0.21-win64.exe",
+        "fileName": "vlc-installer.exe",
+        "sha256": null,
+        "estimatedSizeMB": 40
+      },
+      "macos": {
+        "url": null,
+        "fileName": "vlc.dmg",
+        "sha256": null,
+        "estimatedSizeMB": 50
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  },
+  {
+    "name": "qbittorrent",
+    "displayName": "qBittorrent Enhanced",
+    "description": "BitTorrent client for downloading ROMs",
+    "downloads": {
+      "linux": {
+        "url": null,
+        "fileName": "qbittorrent.AppImage",
+        "sha256": null,
+        "estimatedSizeMB": 20
+      },
+      "windows": {
+        "url": null,
+        "fileName": "qbittorrent-setup.exe",
+        "sha256": null,
+        "estimatedSizeMB": 25
+      },
+      "macos": {
+        "url": null,
+        "fileName": "qbittorrent.dmg",
+        "sha256": null,
+        "estimatedSizeMB": 30
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {},
+    "isRetroArchCore": false
+  }
+]

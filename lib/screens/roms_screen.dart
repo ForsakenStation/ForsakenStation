@@ -459,8 +459,10 @@ class _RomsScreenState extends State<RomsScreen> {
 
   /// Navigate to previous platform
   void _navigateToPreviousEmulatorPlatform() {
-    if (_allEmulatorPlatforms == null || _currentEmulatorPlatformIndex == null)
+    if (_allEmulatorPlatforms == null ||
+        _currentEmulatorPlatformIndex == null) {
       return;
+    }
     if (_currentEmulatorPlatformIndex! <= 0) return;
 
     final previousEmulatorPlatform =
@@ -470,10 +472,13 @@ class _RomsScreenState extends State<RomsScreen> {
 
   /// Navigate to next platform
   void _navigateToNextEmulatorPlatform() {
-    if (_allEmulatorPlatforms == null || _currentEmulatorPlatformIndex == null)
+    if (_allEmulatorPlatforms == null ||
+        _currentEmulatorPlatformIndex == null) {
       return;
-    if (_currentEmulatorPlatformIndex! >= _allEmulatorPlatforms!.length - 1)
+    }
+    if (_currentEmulatorPlatformIndex! >= _allEmulatorPlatforms!.length - 1) {
       return;
+    }
 
     final nextEmulatorPlatform =
         _allEmulatorPlatforms![_currentEmulatorPlatformIndex! + 1];

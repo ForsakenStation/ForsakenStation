@@ -318,7 +318,7 @@ class BiosDownloadService {
     void Function(DownloadProgress)? onProgress,
     String? cancellationToken,
   }) async {
-    final mapping = BiosDownloadMapping.getMapping(platformId);
+    final mapping = await BiosDownloadMapping.getMapping(platformId);
     if (mapping == null || !mapping.available) {
       BiosDownloadLogger.logError(
         'No download mapping available for platform: $platformId',
@@ -395,7 +395,7 @@ class BiosDownloadService {
 
       if (destinationPath == null) continue;
 
-      final mapping = BiosDownloadMapping.getMapping(platformId);
+      final mapping = await BiosDownloadMapping.getMapping(platformId);
       if (mapping == null || !mapping.available) continue;
 
       for (final filename in missingFiles) {
@@ -911,7 +911,8 @@ class BiosDownloadService {
     int missingChecksums = 0;
     int failedVerifications = 0;
 
-    for (final mapping in BiosDownloadMapping.allMappings) {
+    final allMappings = await BiosDownloadMapping.loadAll();
+    for (final mapping in allMappings) {
       // Apply platform filter if specified
       if (platformFilter != null &&
           !platformFilter.contains(mapping.platformId)) {
@@ -1038,7 +1039,7 @@ class BiosDownloadService {
     int maxConcurrency =
         3, // Limit concurrent downloads to avoid overwhelming servers
   }) async {
-    final mapping = BiosDownloadMapping.getMapping(platformId);
+    final mapping = await BiosDownloadMapping.getMapping(platformId);
     if (mapping == null || !mapping.available) {
       BiosDownloadLogger.logError(
         'No download mapping available for platform: $platformId',

@@ -4,9 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:forsaken/services/debug_service.dart';
 import 'package:forsaken/utils/format_utils.dart';
 
-import 'package:forsaken/services/debug_service.dart';
-import 'package:forsaken/utils/format_utils.dart';
-
 /// Enhanced logging utility for BIOS download operations
 class BiosDownloadLogger {
   static const String _tag = 'BiosDownload';
