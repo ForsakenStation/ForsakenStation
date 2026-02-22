@@ -66,10 +66,10 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
     );
     _gamelistPathController = TextEditingController(); // No longer editable
     _romTempPathController = TextEditingController(
-      text: _configService.romTempPath ?? '',
+      text: _configService.romTempPath,
     );
     _romForeverPathController = TextEditingController(
-      text: _configService.romForeverPath ?? '',
+      text: _configService.romForeverPath,
     );
 
     _loadGamelistPath();
@@ -246,7 +246,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
       final newForeverPath = _romForeverPathController.text.trim();
 
       if (newForeverPath.isNotEmpty &&
-          oldForeverPath != null &&
+          oldForeverPath.isNotEmpty &&
           oldForeverPath != newForeverPath) {
         // Confirm migration
         final confirm = await showDialog<bool>(

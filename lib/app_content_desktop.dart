@@ -28,12 +28,12 @@ Future<AppInitResult> initializeApp() async {
     // Initialize ROM storage directories
     await RomStorageService.instance.initializeStorageDirectories();
 
-    // Load custom storage paths from environment (if set)
+    // Load custom storage paths from config (if set)
     final configService = ConfigService.instance;
-    if (configService.romTempPath != null) {
+    if (configService.romTempPath.isNotEmpty) {
       RomStorageService.instance.setCustomTempPath(configService.romTempPath);
     }
-    if (configService.romForeverPath != null) {
+    if (configService.romForeverPath.isNotEmpty) {
       RomStorageService.instance.setCustomForeverPath(
         configService.romForeverPath,
       );

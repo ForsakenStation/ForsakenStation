@@ -11,6 +11,7 @@ import 'settings_categories/system_check_screen.dart';
 import 'settings_categories/gamepad_test_screen.dart';
 import 'settings_categories/bios_help_screen.dart';
 import 'settings_categories/web_settings_screen.dart';
+import 'setup_wizard_screen.dart';
 import 'package:forsaken/services/debug_service.dart';
 import 'package:forsaken/services/config_service.dart';
 import 'package:forsaken/services/keyboard_service.dart';
@@ -38,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _scrollController = ScrollController();
   Timer? _gamepadPollTimer;
   int _selectedIndex = 0;
-  final int _categoryCount = kIsWeb ? 10 : 9;
+  final int _categoryCount = kIsWeb ? 11 : 10;
   bool _isGamepadNavigating = false;
 
   // Height of each card + spacing (approximate)
@@ -125,10 +126,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _stopGamepadPolling();
 
     // "About & Debug" is the last item (index depends on platform)
-    final aboutIndex = kIsWeb ? 9 : 8;
+    final aboutIndex = kIsWeb ? 10 : 9;
     if (index == aboutIndex) {
       _showAboutDialog(context);
       if (mounted) _startGamepadPolling();
+      return;
+    }
+
+    // "Setup Wizard" is the second-to-last item
+    final wizardIndex = kIsWeb ? 9 : 8;
+    if (index == wizardIndex) {
+      _rerunSetupWizard();
       return;
     }
 
@@ -159,7 +167,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         screen = const BiosHelpScreen();
         break;
       case 8:
-        // Web Settings (only reachable on web since _categoryCount is 10)
+        // Web Settings (only reachable on web since wizardIndex is 9 on web)
         screen = const WebSettingsScreen();
         break;
       default:
@@ -192,6 +200,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
         tag: 'Settings',
       );
     }
+  }
+
+  /// Re-run the setup wizard
+  void _rerunSetupWizard() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SetupWizardScreen(
+          onComplete: () {
+            // Pop back to settings after wizard finishes
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    ).then((_) {
+      if (mounted) _startGamepadPolling();
+    });
   }
 
   KeyEventResult _handleKeyEvent(KeyEvent event) {
@@ -383,6 +408,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildCategoryCard(
               context,
               index: kIsWeb ? 9 : 8,
+              icon: Icons.auto_fix_high,
+              title: 'Setup Wizard',
+              description: 'Re-run the initial setup wizard',
+              onTap: () => _navigateToCategory(kIsWeb ? 9 : 8),
+            ),
+            const SizedBox(height: 12),
+
+            _buildCategoryCard(
+              context,
+              index: kIsWeb ? 10 : 9,
               icon: Icons.info_outline,
               title: 'About & Debug',
               description: 'App information and debug settings',

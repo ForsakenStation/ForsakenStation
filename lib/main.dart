@@ -5,6 +5,7 @@ import 'package:media_kit/media_kit.dart';
 
 import 'screens/initializing_screen.dart';
 import 'screens/error_screen.dart';
+import 'screens/setup_wizard_screen.dart';
 import 'services/debug_service.dart';
 import 'services/config_service.dart';
 import 'providers/theme_provider.dart';
@@ -115,6 +116,7 @@ class EmulatorApp extends StatefulWidget {
 
 class _EmulatorAppState extends State<EmulatorApp> {
   bool _isInitializing = true;
+  bool _showWizard = false;
   String? _errorMessage;
   Widget? _homeScreen;
 
@@ -129,9 +131,14 @@ class _EmulatorAppState extends State<EmulatorApp> {
       // Use platform-specific initialization
       final result = await app_content.initializeApp();
 
+      final needsWizard =
+          result.errorMessage == null &&
+          !ConfigService.instance.isSetupCompleted;
+
       setState(() {
         _homeScreen = result.homeScreen;
         _errorMessage = result.errorMessage;
+        _showWizard = needsWizard;
         _isInitializing = false;
       });
     } catch (e) {
@@ -140,6 +147,10 @@ class _EmulatorAppState extends State<EmulatorApp> {
         _isInitializing = false;
       });
     }
+  }
+
+  void _onWizardComplete() {
+    setState(() => _showWizard = false);
   }
 
   @override
@@ -174,7 +185,9 @@ class _EmulatorAppState extends State<EmulatorApp> {
             theme: AppTheme.lightTheme(),
             darkTheme: AppTheme.darkTheme(),
             themeMode: themeProvider.themeMode,
-            home: _homeScreen,
+            home: _showWizard
+                ? SetupWizardScreen(onComplete: _onWizardComplete)
+                : _homeScreen,
           );
         },
       ),

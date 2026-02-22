@@ -33,6 +33,7 @@ class ConfigService {
   static const String _debugEnabledKey = 'forsaken_debug_enabled';
   static const String _debugMinLevelKey = 'forsaken_debug_min_level';
   static const String _romsPathKey = 'forsaken_roms_path';
+  static const String _setupCompletedKey = 'forsaken_setup_completed';
 
   Map<String, dynamic>? _config;
   bool _hasLocalOverrides = false;
@@ -42,10 +43,11 @@ class ConfigService {
   String _emulatorsPath = '';
   String _emulatorsConfigPath = '';
   String _romsPath = '';
-  String? _romTempPath;
-  String? _romForeverPath;
+  String _romTempPath = '';
+  String _romForeverPath = '';
   bool _isDebugEnabled = false;
   String _debugMinLevel = 'debug';
+  bool _setupCompleted = false;
 
   ConfigService._();
 
@@ -96,9 +98,12 @@ class ConfigService {
     String defaultMediaPath = '';
     String defaultEmulatorsPath = '';
     String defaultEmulatorsConfigPath = '';
+    String defaultRomTempPath = '';
+    String defaultRomForeverPath = '';
 
     if (!kIsWeb) {
       final appDir = await getApplicationSupportDirectory();
+      final tempDir = await getTemporaryDirectory();
       defaultMediaPath = path.join(appDir.path, 'media');
       defaultEmulatorsPath = path.join(appDir.path, 'emulators');
       defaultEmulatorsConfigPath = path.join(
@@ -106,6 +111,8 @@ class ConfigService {
         'emulators',
         'config.json',
       );
+      defaultRomTempPath = path.join(tempDir.path, 'forsaken_roms');
+      defaultRomForeverPath = path.join(appDir.path, 'roms');
     }
 
     _mediaPath = prefs.getString(_mediaPathKey) ?? defaultMediaPath;
@@ -113,10 +120,12 @@ class ConfigService {
     _emulatorsConfigPath =
         prefs.getString(_emulatorsConfigPathKey) ?? defaultEmulatorsConfigPath;
     _romsPath = prefs.getString(_romsPathKey) ?? '';
-    _romTempPath = prefs.getString(_romTempPathKey);
-    _romForeverPath = prefs.getString(_romForeverPathKey);
+    _romTempPath = prefs.getString(_romTempPathKey) ?? defaultRomTempPath;
+    _romForeverPath =
+        prefs.getString(_romForeverPathKey) ?? defaultRomForeverPath;
     _isDebugEnabled = prefs.getBool(_debugEnabledKey) ?? false;
     _debugMinLevel = prefs.getString(_debugMinLevelKey) ?? 'debug';
+    _setupCompleted = prefs.getBool(_setupCompletedKey) ?? false;
 
     DebugService.instance.debug(
       'Path settings loaded from SharedPreferences',
@@ -392,18 +401,28 @@ class ConfigService {
   /// Get temporary ROM storage path
   ///
   /// Used for ROMs downloaded temporarily for single play sessions
-  String? get romTempPath => _romTempPath;
+  String get romTempPath => _romTempPath;
 
   /// Get permanent ROM storage path
   ///
   /// Used for ROMs saved permanently for offline play
-  String? get romForeverPath => _romForeverPath;
+  String get romForeverPath => _romForeverPath;
 
   /// Check if debug mode is enabled
   bool get isDebugEnabled => _isDebugEnabled;
 
   /// Get minimum debug log level
   String get debugMinLevel => _debugMinLevel;
+
+  /// Check if the setup wizard has been completed
+  bool get isSetupCompleted => _setupCompleted;
+
+  /// Mark the setup wizard as completed or not
+  Future<void> setSetupCompleted(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    _setupCompleted = value;
+    await prefs.setBool(_setupCompletedKey, value);
+  }
 
   /// Set a path setting and persist to SharedPreferences
   Future<void> setPathSetting(String key, String value) async {
