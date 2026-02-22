@@ -479,6 +479,26 @@
     "resolution": "Hasta 640x512",
     "colors": "4,096 colores disponibles"
   },
+  "amigacd32": {
+    "fullName": "Commodore Amiga CD-32",
+    "manufacturer": "Commodore",
+    "releaseYear": 1992,
+    "generation": null,
+    "description": "",
+    "cpu": "Motorola 68000 a 7.16 MHz",
+    "resolution": "Hasta 640x512",
+    "colors": "4,096 colores disponibles"
+  },
+  "amigacdtv": {
+    "fullName": "Commodore Amiga CDTV",
+    "manufacturer": "Commodore",
+    "releaseYear": 1990,
+    "generation": null,
+    "description": "Revolucionaria computadora personal con capacidades multimedia avanzadas. Popular para gaming en Europa con títulos legendarios como Lemmings, Monkey Island y Sensible Soccer.",
+    "cpu": "Motorola 68000 a 7.16 MHz",
+    "resolution": "Hasta 640x512",
+    "colors": "4,096 colores disponibles"
+  },
   "c64": {
     "fullName": "Commodore 64",
     "manufacturer": "Commodore",

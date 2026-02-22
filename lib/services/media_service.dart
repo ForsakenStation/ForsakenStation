@@ -518,23 +518,15 @@ class MediaService {
   /// Get system background image from assets
   /// Returns asset path to background or default.jpg if platform background not found
   Future<String> getSystemBackground(String platformName) async {
-    final backgroundPath = 'assets/theme/images/backgrounds/$platformName.jpg';
-
-    // Check if asset exists using rootBundle (works on all platforms including Android)
+    final backgroundPath = 'assets/theme/images/backgrounds/$platformName.webp';
     try {
       await rootBundle.load(backgroundPath);
-      _debug.debug('Found background: $backgroundPath', tag: 'MediaService');
       return backgroundPath;
     } catch (e) {
       // Asset doesn't exist, use default
     }
 
-    // Fallback to default background
-    final defaultPath = 'assets/theme/images/backgrounds/default.jpg';
-    _debug.debug(
-      'Using default background for $platformName',
-      tag: 'MediaService',
-    );
+    final defaultPath = 'assets/theme/images/backgrounds/default.webp';
     return defaultPath;
   }
 }

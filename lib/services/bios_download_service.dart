@@ -1,349 +1,25 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:collection';
 
 import 'package:archive/archive.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+
 import 'package:flutter/foundation.dart';
 
 import 'package:forsaken/models/bios_download_mapping.dart';
 import 'package:forsaken/services/bios_size_correction_service.dart';
 import 'package:forsaken/services/bios_checksum_service.dart';
-import 'package:forsaken/services/debug_service.dart';
+import 'package:forsaken/utils/semaphore.dart';
 import 'package:forsaken/utils/format_utils.dart';
 
-/// Report for individual BIOS file checksum verification
-class BiosFileChecksumReport {
-  final String filename;
-  final bool exists;
-  final bool hasChecksum;
-  final String? expectedMd5;
-  final String? actualMd5;
-  final String? expectedSha1;
-  final String? actualSha1;
-  final bool? md5Match;
-  final bool? sha1Match;
-  final bool? verificationPassed;
-  final int? fileSize;
-  final int? expectedSize;
-  final String? error;
+import 'bios_download/bios_checksum_reports.dart';
+import 'bios_download/download_progress.dart';
+import 'bios_download/bios_download_logger.dart';
 
-  const BiosFileChecksumReport({
-    required this.filename,
-    required this.exists,
-    required this.hasChecksum,
-    this.expectedMd5,
-    this.actualMd5,
-    this.expectedSha1,
-    this.actualSha1,
-    this.md5Match,
-    this.sha1Match,
-    this.verificationPassed,
-    this.fileSize,
-    this.expectedSize,
-    this.error,
-  });
-}
-
-/// Report for platform checksum verification
-class PlatformChecksumReport {
-  final String platformId;
-  final List<BiosFileChecksumReport> files;
-
-  const PlatformChecksumReport({required this.platformId, required this.files});
-
-  int get totalFiles => files.length;
-  int get verifiedFiles =>
-      files.where((f) => f.verificationPassed == true).length;
-  int get failedFiles =>
-      files.where((f) => f.verificationPassed == false).length;
-  int get missingFiles => files.where((f) => !f.exists).length;
-}
-
-/// Comprehensive BIOS checksum verification report
-class BiosChecksumReport {
-  final int totalFiles;
-  final int verifiedFiles;
-  final int missingChecksums;
-  final int failedVerifications;
-  final Map<String, PlatformChecksumReport> platformReports;
-  final DateTime generatedAt;
-
-  const BiosChecksumReport({
-    required this.totalFiles,
-    required this.verifiedFiles,
-    required this.missingChecksums,
-    required this.failedVerifications,
-    required this.platformReports,
-    required this.generatedAt,
-  });
-
-  double get verificationCoverage {
-    if (totalFiles == 0) return 0.0;
-    return (totalFiles - missingChecksums) / totalFiles;
-  }
-
-  double get verificationSuccessRate {
-    final filesWithChecksums = totalFiles - missingChecksums;
-    if (filesWithChecksums == 0) return 0.0;
-    return verifiedFiles / filesWithChecksums;
-  }
-}
-
-/// Enhanced logging utility for BIOS download operations
-class BiosDownloadLogger {
-  static const String _tag = 'BiosDownload';
-
-  static void logInfo(String message) {
-    DebugService.instance.info(message, tag: _tag);
-  }
-
-  static void logWarning(String message) {
-    DebugService.instance.warning(message, tag: _tag);
-  }
-
-  static void logError(
-    String message, {
-    Object? error,
-    StackTrace? stackTrace,
-  }) {
-    DebugService.instance.error(message, tag: _tag);
-    if (error != null) {
-      DebugService.instance.error('Details: $error', tag: _tag);
-    }
-    if (stackTrace != null && kDebugMode) {
-      DebugService.instance.error('Stack trace: $stackTrace', tag: _tag);
-    }
-  }
-
-  static void logDownloadStart(
-    String filename,
-    String url,
-    String destination,
-  ) {
-    logInfo('Starting download of "$filename"');
-    logInfo('  Source URL: $url');
-    logInfo('  Destination: $destination');
-  }
-
-  static void logDownloadSuccess(
-    String filename,
-    int bytes,
-    int? totalBytes,
-    Duration elapsed,
-  ) {
-    final sizeInfo = totalBytes != null
-        ? '${_formatBytes(bytes)}/${_formatBytes(totalBytes)}'
-        : _formatBytes(bytes);
-    logInfo(
-      'Successfully downloaded "$filename" ($sizeInfo) in ${elapsed.inMilliseconds}ms',
-    );
-  }
-
-  static void logDownloadError(
-    String filename,
-    String url,
-    int attempt,
-    int maxRetries,
-    Object error,
-  ) {
-    logError(
-      'Download failed for "$filename" (attempt $attempt/$maxRetries)',
-      error: error,
-    );
-    logError('  Failed URL: $url');
-    if (error is SocketException) {
-      logError('  Network error: ${error.message} (${error.osError})');
-    } else if (error is HttpException) {
-      logError('  HTTP error: ${error.message}');
-    } else if (error is TimeoutException) {
-      logError('  Timeout error after ${error.duration}');
-    }
-  }
-
-  static void logBatchStart(String platformId, int fileCount) {
-    logInfo(
-      'Starting batch download for platform "$platformId" ($fileCount files)',
-    );
-  }
-
-  static void logBatchComplete(
-    String platformId,
-    int successful,
-    int total,
-    Duration elapsed,
-  ) {
-    logInfo(
-      'Completed batch download for "$platformId": $successful/$total files in ${elapsed.inSeconds}s',
-    );
-    if (successful < total) {
-      logWarning('Some files failed to download for platform "$platformId"');
-    }
-  }
-
-  static String _formatBytes(int bytes) => formatBytes(bytes, compact: true);
-}
-
-/// Represents the download progress for a single file
-class DownloadProgress {
-  final String filename;
-  final int bytesDownloaded;
-  final int? totalBytes;
-  final DownloadStatus status;
-  final String? errorMessage;
-  final DateTime? startTime;
-  final Duration? elapsedTime;
-
-  DownloadProgress({
-    required this.filename,
-    required this.bytesDownloaded,
-    this.totalBytes,
-    required this.status,
-    this.errorMessage,
-    this.startTime,
-    this.elapsedTime,
-  });
-
-  double get progress {
-    if (totalBytes == null || totalBytes == 0) return 0.0;
-    return bytesDownloaded / totalBytes!;
-  }
-
-  String get progressText {
-    if (totalBytes == null) return _formatBytes(bytesDownloaded);
-    return '${_formatBytes(bytesDownloaded)} / ${_formatBytes(totalBytes!)}';
-  }
-
-  /// Calculate download speed in bytes per second
-  double? get downloadSpeed {
-    if (elapsedTime == null || elapsedTime!.inMilliseconds == 0) return null;
-    return bytesDownloaded / (elapsedTime!.inMilliseconds / 1000.0);
-  }
-
-  /// Get formatted download speed text
-  String? get speedText {
-    final speed = downloadSpeed;
-    if (speed == null) return null;
-    return '${_formatBytes(speed.round())}/s';
-  }
-
-  /// Calculate estimated time to completion
-  Duration? get estimatedTimeRemaining {
-    if (totalBytes == null || downloadSpeed == null || downloadSpeed! <= 0) {
-      return null;
-    }
-    final remainingBytes = totalBytes! - bytesDownloaded;
-    if (remainingBytes <= 0) return const Duration(seconds: 0);
-    return Duration(seconds: (remainingBytes / downloadSpeed!).round());
-  }
-
-  /// Get formatted ETA text
-  String? get etaText {
-    final eta = estimatedTimeRemaining;
-    if (eta == null) return null;
-
-    if (eta.inHours > 0) {
-      return '${eta.inHours}h ${eta.inMinutes % 60}m remaining';
-    } else if (eta.inMinutes > 0) {
-      return '${eta.inMinutes}m ${eta.inSeconds % 60}s remaining';
-    } else {
-      return '${eta.inSeconds}s remaining';
-    }
-  }
-
-  /// Get comprehensive progress text with speed and ETA
-  String get detailedProgressText {
-    final buffer = StringBuffer(progressText);
-
-    if (speedText != null) {
-      buffer.write(' (${speedText!}');
-
-      if (etaText != null) {
-        buffer.write(', $etaText');
-      }
-
-      buffer.write(')');
-    }
-
-    return buffer.toString();
-  }
-
-  static String _formatBytes(int bytes) => formatBytes(bytes, compact: true);
-
-  DownloadProgress copyWith({
-    int? bytesDownloaded,
-    int? totalBytes,
-    DownloadStatus? status,
-    String? errorMessage,
-    DateTime? startTime,
-    Duration? elapsedTime,
-  }) {
-    return DownloadProgress(
-      filename: filename,
-      bytesDownloaded: bytesDownloaded ?? this.bytesDownloaded,
-      totalBytes: totalBytes ?? this.totalBytes,
-      status: status ?? this.status,
-      errorMessage: errorMessage,
-      startTime: startTime ?? this.startTime,
-      elapsedTime: elapsedTime ?? this.elapsedTime,
-    );
-  }
-}
-
-enum DownloadStatus {
-  pending,
-  downloading,
-  verifying,
-  completed,
-  failed,
-  cancelled,
-}
-
-/// Represents the overall batch download progress
-class BatchDownloadProgress {
-  final int currentFileIndex;
-  final int totalFiles;
-  final List<DownloadProgress> fileProgresses;
-  final BatchDownloadStatus status;
-  final String? errorMessage;
-
-  BatchDownloadProgress({
-    required this.currentFileIndex,
-    required this.totalFiles,
-    required this.fileProgresses,
-    required this.status,
-    this.errorMessage,
-  });
-
-  double get overallProgress {
-    if (totalFiles == 0) return 0.0;
-
-    double totalProgress = 0.0;
-    for (final progress in fileProgresses) {
-      switch (progress.status) {
-        case DownloadStatus.completed:
-          totalProgress += 1.0;
-          break;
-        case DownloadStatus.downloading:
-        case DownloadStatus.verifying:
-          totalProgress += progress.progress;
-          break;
-        default:
-          // pending, failed, cancelled don't contribute to progress
-          break;
-      }
-    }
-    return totalProgress / totalFiles;
-  }
-
-  int get completedFiles =>
-      fileProgresses.where((p) => p.status == DownloadStatus.completed).length;
-  int get failedFiles =>
-      fileProgresses.where((p) => p.status == DownloadStatus.failed).length;
-}
-
-enum BatchDownloadStatus { pending, downloading, completed, failed, cancelled }
+export 'bios_download/bios_checksum_reports.dart';
+export 'bios_download/download_progress.dart';
+export 'bios_download/bios_download_logger.dart';
 
 /// Service for downloading BIOS files from retroarch_system repository
 class BiosDownloadService {
@@ -594,7 +270,7 @@ class BiosDownloadService {
         } else if (e is TimeoutException) {
           detailedError = 'Request timed out after ${e.duration}';
         } else if (e.toString().contains('Size mismatch')) {
-          detailedError = 'Downloaded file size doesn\'t match expected size';
+          detailedError = "Downloaded file size doesn't match expected size";
         } else if (e.toString().contains('MD5 mismatch')) {
           detailedError = 'Downloaded file checksum verification failed';
         }
@@ -897,7 +573,7 @@ class BiosDownloadService {
     final contentLength = response.contentLength;
     if (contentLength != null) {
       BiosDownloadLogger.logInfo(
-        'Content-Length: ${BiosDownloadLogger._formatBytes(contentLength)}',
+        'Content-Length: ${formatBytes(contentLength, compact: true)}',
       );
     }
 
@@ -957,20 +633,20 @@ class BiosDownloadService {
           String errorMessage;
           if (suggestedSize != null) {
             errorMessage =
-                'Size mismatch: expected ${BiosDownloadLogger._formatBytes(expectedSize)}, got ${BiosDownloadLogger._formatBytes(actualSize)}. '
+                'Size mismatch: expected ${formatBytes(expectedSize, compact: true)}, got ${formatBytes(actualSize, compact: true)}. '
                 'This appears to be a known size difference for this repository. '
-                'The downloaded file size (${BiosDownloadLogger._formatBytes(actualSize)}) may be correct for this source.';
+                'The downloaded file size (${formatBytes(actualSize, compact: true)}) may be correct for this source.';
           } else if (areCompatible) {
             errorMessage =
-                'Size mismatch: expected ${BiosDownloadLogger._formatBytes(expectedSize)}, got ${BiosDownloadLogger._formatBytes(actualSize)}. '
+                'Size mismatch: expected ${formatBytes(expectedSize, compact: true)}, got ${formatBytes(actualSize, compact: true)}. '
                 'Sizes are close but outside tolerance. This may indicate a different version of the same file.';
           } else {
             if (sizeTolerance > 0.0) {
               errorMessage =
-                  'Size mismatch: expected ${BiosDownloadLogger._formatBytes(expectedSize)} ±${(sizeTolerance * 100).round()}%, got ${BiosDownloadLogger._formatBytes(actualSize)}';
+                  'Size mismatch: expected ${formatBytes(expectedSize, compact: true)} ±${(sizeTolerance * 100).round()}%, got ${formatBytes(actualSize, compact: true)}';
             } else {
               errorMessage =
-                  'Size mismatch: expected ${BiosDownloadLogger._formatBytes(expectedSize)}, got ${BiosDownloadLogger._formatBytes(actualSize)}';
+                  'Size mismatch: expected ${formatBytes(expectedSize, compact: true)}, got ${formatBytes(actualSize, compact: true)}';
             }
           }
 
@@ -978,7 +654,7 @@ class BiosDownloadService {
         }
 
         BiosDownloadLogger.logInfo(
-          'File size verification passed: ${BiosDownloadLogger._formatBytes(actualSize)}',
+          'File size verification passed: ${formatBytes(actualSize, compact: true)}',
         );
       }
 
@@ -1447,35 +1123,6 @@ class BiosDownloadService {
     );
 
     return allSuccessful;
-  }
-}
-
-/// Simple semaphore implementation for controlling concurrent downloads
-class Semaphore {
-  final int maxCount;
-  int _currentCount;
-  final Queue<Completer<void>> _waitQueue = Queue<Completer<void>>();
-
-  Semaphore(this.maxCount) : _currentCount = maxCount;
-
-  Future<void> acquire() async {
-    if (_currentCount > 0) {
-      _currentCount--;
-      return;
-    }
-
-    final completer = Completer<void>();
-    _waitQueue.add(completer);
-    return completer.future;
-  }
-
-  void release() {
-    if (_waitQueue.isNotEmpty) {
-      final completer = _waitQueue.removeFirst();
-      completer.complete();
-    } else {
-      _currentCount++;
-    }
   }
 }
 

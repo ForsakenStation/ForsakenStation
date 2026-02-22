@@ -454,20 +454,9 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     if (_systemBackgroundsCache.containsKey(platformName)) {
       return;
     }
-
-    // Load system background (always returns a path, default if not found)
-    DebugService.instance.debug(
-      'Loading system background for: $platformName',
-      tag: 'PlatformsScreen',
-    );
     final backgroundPath = await _mediaService.getSystemBackground(
       platformName,
     );
-    DebugService.instance.debug(
-      'System background result for $platformName: $backgroundPath',
-      tag: 'PlatformsScreen',
-    );
-
     if (mounted) {
       setState(() {
         _systemBackgroundsCache[platformName] = backgroundPath;
