@@ -5,19 +5,19 @@
     "description": "Multi-platform emulator frontend (cores included)",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch.7z",
         "fileName": "RetroArch.7z",
         "sha256": null,
         "estimatedSizeMB": 50
       },
       "windows": {
-        "url": null,
+        "url": "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch.7z",
         "fileName": "RetroArch.7z",
         "sha256": null,
         "estimatedSizeMB": 50
       },
       "macos": {
-        "url": null,
+        "url": "https://buildbot.libretro.com/nightly/apple/osx/x86_64/RetroArch.dmg",
         "fileName": "RetroArch.dmg",
         "sha256": null,
         "estimatedSizeMB": 50
@@ -52,19 +52,19 @@
     "description": "All RetroArch emulator cores",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://buildbot.libretro.com/stable/1.22.2/linux/x86_64/RetroArch_cores.7z",
         "fileName": "RetroArch_cores.7z",
         "sha256": null,
         "estimatedSizeMB": 200
       },
       "windows": {
-        "url": null,
+        "url": "https://buildbot.libretro.com/stable/1.22.2/windows/x86_64/RetroArch_cores.7z",
         "fileName": "RetroArch_cores.7z",
         "sha256": null,
         "estimatedSizeMB": 200
       },
       "macos": {
-        "url": null,
+        "url": "https://buildbot.libretro.com/stable/1.22.2/apple/osx/x86_64/RetroArch_cores.zip",
         "fileName": "RetroArch_cores.zip",
         "sha256": null,
         "estimatedSizeMB": 200
@@ -80,12 +80,7 @@
         "rm -rf cores"
       ],
       "windows": [
-        "if not exist ",
-        " mkdir ",
-        "",
-        "xcopy /E /I cores\\\\* ",
-        "",
-        "rmdir /S /Q cores"
+        ""
       ],
       "macos": [
         "mkdir -p ~/Library/Application\\\\ Support/RetroArch/cores",
@@ -101,19 +96,19 @@
     "description": "PlayStation 1 emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/stenzek/duckstation/releases/download/latest/DuckStation-x64.AppImage",
         "fileName": "duckstation.AppImage",
         "sha256": null,
         "estimatedSizeMB": 25
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/stenzek/duckstation/releases/download/latest/duckstation-windows-x64-release.zip",
         "fileName": "duckstation-windows.zip",
         "sha256": null,
         "estimatedSizeMB": 30
       },
       "macos": {
-        "url": null,
+        "url": "https://github.com/stenzek/duckstation/releases/download/latest/duckstation-mac-release.zip",
         "fileName": "duckstation-mac.zip",
         "sha256": null,
         "estimatedSizeMB": 35
@@ -141,19 +136,19 @@
     "description": "PlayStation 2 emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/PCSX2/pcsx2/releases/download/v2.6.2/pcsx2-v2.6.2-linux-appimage-x64-Qt.AppImage",
         "fileName": "pcsx2.AppImage",
         "sha256": null,
         "estimatedSizeMB": 40
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/PCSX2/pcsx2/releases/download/v2.6.2/pcsx2-v2.6.2-windows-x64-Qt.7z",
         "fileName": "pcsx2.7z",
         "sha256": null,
         "estimatedSizeMB": 45
       },
       "macos": {
-        "url": null,
+        "url": "https://github.com/PCSX2/pcsx2/releases/download/v2.6.2/pcsx2-v2.6.2-macos-Qt.tar.xz",
         "fileName": "pcsx2.tar.xz",
         "sha256": null,
         "estimatedSizeMB": 50
@@ -171,19 +166,19 @@
     "description": "PlayStation 3 emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/RPCS3/rpcs3-binaries-linux/releases/download/build-0f85e9123e781b6ec7fa78fa1c54b1de40179a23/rpcs3-v0.0.39-18705-0f85e912_linux64.AppImage",
         "fileName": "rpcs3.AppImage",
         "sha256": null,
         "estimatedSizeMB": 90
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/RPCS3/rpcs3-binaries-win/releases/download/build-0f85e9123e781b6ec7fa78fa1c54b1de40179a23/rpcs3-v0.0.39-18705-0f85e912_win64_msvc.7z",
         "fileName": "rpcs3.7z",
         "sha256": null,
         "estimatedSizeMB": 34
       },
       "macos": {
-        "url": null,
+        "url": "https://github.com/RPCS3/rpcs3-binaries-mac-arm64/releases/download/build-0f85e9123e781b6ec7fa78fa1c54b1de40179a23/rpcs3-v0.0.39-18705-0f85e912_macos.7z",
         "fileName": "rpcs3.7z",
         "sha256": null,
         "estimatedSizeMB": 43
@@ -213,13 +208,13 @@
     "description": "PlayStation 4 emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/shadps4-emu/shadPS4/releases/download/v.0.13.0/shadps4-linux-sdl-0.13.0.zip",
         "fileName": "shadps4.zip",
         "sha256": null,
         "estimatedSizeMB": 15
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/shadps4-emu/shadPS4/releases/download/v.0.13.0/shadps4-win64-sdl-0.13.0.zip",
         "fileName": "shadps4-win.zip",
         "sha256": null,
         "estimatedSizeMB": 18
@@ -245,7 +240,7 @@
     "description": "GameCube and Wii emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/pkgforge-dev/Dolphin-emu-AppImage/releases/download/2509%402025-12-15_1765785200/Dolphin_Emulator-2509-anylinux.squashfs-x86_64.AppImage",
         "fileName": "dolphin.AppImage",
         "sha256": null,
         "estimatedSizeMB": 30
@@ -257,7 +252,7 @@
         "estimatedSizeMB": 35
       },
       "macos": {
-        "url": null,
+        "url": "https://dl.dolphin-emu.org/builds/dolphin-master-universal-latest.dmg",
         "fileName": "dolphin.dmg",
         "sha256": null,
         "estimatedSizeMB": 40
@@ -275,13 +270,13 @@
     "description": "Wii U emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/cemu-project/Cemu/releases/download/v2.6/Cemu-2.6-x86_64.AppImage",
         "fileName": "cemu.AppImage",
         "sha256": null,
         "estimatedSizeMB": 25
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/cemu-project/Cemu/releases/download/v2.6/cemu-2.6-windows-x64.zip",
         "fileName": "cemu-windows.zip",
         "sha256": null,
         "estimatedSizeMB": 30
@@ -299,19 +294,19 @@
     "description": "Nintendo Switch emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://git.ryujinx.app/api/v4/projects/1/packages/generic/Ryubing/1.3.3/ryujinx-1.3.3-x64.AppImage",
         "fileName": "ryujinx.AppImage",
         "sha256": null,
         "estimatedSizeMB": 45
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/Ryujinx/release-channel-master/releases/download/1.3.3/ryujinx-1.3.3-win_x64.zip",
         "fileName": "ryujinx-win.zip",
         "sha256": null,
         "estimatedSizeMB": 50
       },
       "macos": {
-        "url": null,
+        "url": "https://github.com/Ryujinx/release-channel-master/releases/download/1.3.3/ryujinx-1.3.3-macos_universal.dmg",
         "fileName": "ryujinx.dmg",
         "sha256": null,
         "estimatedSizeMB": 55
@@ -329,13 +324,13 @@
     "description": "Nintendo Switch emulator (alternative)",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://git.citron-emu.org/Citron/Emulator/releases/download/0.11.0/Citron_stable_0.11.0_linux.AppImage",
         "fileName": "citron.AppImage",
         "sha256": null,
         "estimatedSizeMB": 40
       },
       "windows": {
-        "url": null,
+        "url": "https://git.citron-emu.org/Citron/Emulator/releases/download/0.11.0/Citron_stable_0.11.0_windows.zip",
         "fileName": "citron.zip",
         "sha256": null,
         "estimatedSizeMB": 45
@@ -353,19 +348,19 @@
     "description": "Original Xbox emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/xemu-project/xemu/releases/download/v0.8.121/xemu-v0.8.121-x86_64.AppImage",
         "fileName": "xemu.AppImage",
         "sha256": null,
         "estimatedSizeMB": 35
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/xemu-project/xemu/releases/download/v0.8.121/xemu-win-release.zip",
         "fileName": "xemu.zip",
         "sha256": null,
         "estimatedSizeMB": 40
       },
       "macos": {
-        "url": null,
+        "url": "https://github.com/xemu-project/xemu/releases/download/v0.8.121/xemu-macos-universal-release.zip",
         "fileName": "xemu-mac.zip",
         "sha256": null,
         "estimatedSizeMB": 45
@@ -383,13 +378,13 @@
     "description": "Xbox 360 emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/pkgforge-dev/xenia-canary-AppImage/releases/download/4cbcae5%402025-12-15_1765783676/Xenia_Canary-4cbcae5-anylinux-x86_64.AppImage",
         "fileName": "xenia.AppImage",
         "sha256": null,
         "estimatedSizeMB": 30
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/xenia-canary/xenia-canary/releases/download/latest/xenia_canary.zip",
         "fileName": "xenia.zip",
         "sha256": null,
         "estimatedSizeMB": 35
@@ -407,19 +402,19 @@
     "description": "PlayStation Vita emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/Vita3K/Vita3K/releases/download/continuous/Vita3K-x86_64.AppImage",
         "fileName": "vita3k.AppImage",
         "sha256": null,
         "estimatedSizeMB": 25
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/Vita3K/Vita3K/releases/download/continuous/Vita3K-windows-latest.zip",
         "fileName": "vita3k.zip",
         "sha256": null,
         "estimatedSizeMB": 30
       },
       "macos": {
-        "url": null,
+        "url": "https://github.com/Vita3K/Vita3K/releases/download/continuous/Vita3K-macOS-latest.dmg",
         "fileName": "vita3k.dmg",
         "sha256": null,
         "estimatedSizeMB": 35
@@ -437,13 +432,13 @@
     "description": "Nokia N-Gage/Symbian emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/EKA2L1/EKA2L1/releases/download/continous/EKA2L1-Linux-x86_64.AppImage",
         "fileName": "eka2l1.AppImage",
         "sha256": null,
         "estimatedSizeMB": 20
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/EKA2L1/EKA2L1/releases/download/continous/EKA2L1-Windows-x86_64.7z",
         "fileName": "eka2l1.7z",
         "sha256": null,
         "estimatedSizeMB": 25
@@ -461,19 +456,19 @@
     "description": "Adobe Flash emulator",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/Portable-Linux-Apps/ruffle-AppImage/releases/download/nightly-2025-12-22%402025-12-22_1766420590/Ruffle-nightly-2025-12-22-x86_64.AppImage",
         "fileName": "ruffle.AppImage",
         "sha256": null,
         "estimatedSizeMB": 10
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/ruffle-rs/ruffle/releases/download/nightly-2025-12-22/ruffle-nightly-2025-12-22-windows-x86_64.zip",
         "fileName": "ruffle.zip",
         "sha256": null,
         "estimatedSizeMB": 12
       },
       "macos": {
-        "url": null,
+        "url": "https://github.com/ruffle-rs/ruffle/releases/download/nightly-2025-12-22/ruffle-nightly-2025-12-22-macos-universal.tar.gz",
         "fileName": "ruffle.tar.gz",
         "sha256": null,
         "estimatedSizeMB": 15
@@ -491,13 +486,13 @@
     "description": "Beat em up game engine",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/DCurrent/openbor/releases/download/v7533/OpenBOR-Linux-x64-v4.0.Build.7533.AppImage",
         "fileName": "openbor.AppImage",
         "sha256": null,
         "estimatedSizeMB": 5
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/DCurrent/openbor/releases/download/v7533/OpenBOR.v4.0.Build.7533.rar",
         "fileName": "openbor.rar",
         "sha256": null,
         "estimatedSizeMB": 6
@@ -523,19 +518,19 @@
     "description": "Beat em up game engine",
     "downloads": {
       "linux": {
-        "url": null,
+        "url": "https://github.com/ikemen-engine/Ikemen-GO/releases/download/v0.99.0/Ikemen_GO-v0.99.0-linux.zip",
         "fileName": "Ikemen_GO-v0.99.0-linux.zip",
         "sha256": null,
         "estimatedSizeMB": 5
       },
       "windows": {
-        "url": null,
+        "url": "https://github.com/ikemen-engine/Ikemen-GO/releases/download/v0.99.0/Ikemen_GO-v0.99.0-windows.zip",
         "fileName": "Ikemen_GO-v0.99.0-windows.zip",
         "sha256": null,
         "estimatedSizeMB": 5
       },
       "macos": {
-        "url": null,
+        "url": "https://github.com/ikemen-engine/Ikemen-GO/releases/download/v0.99.0/Ikemen_GO-v0.99.0-macos.zip",
         "fileName": "Ikemen_GO-v0.99.0-macos.zip",
         "sha256": null,
         "estimatedSizeMB": 5
@@ -555,66 +550,6 @@
         "7z x Ikemen_GO-v0.99.0-macos.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-macos.zip"
       ]
     },
-    "isRetroArchCore": false
-  },
-  {
-    "name": "vlc",
-    "displayName": "VLC Media Player",
-    "description": "Video player for movies",
-    "downloads": {
-      "linux": {
-        "url": null,
-        "fileName": "vlc.AppImage",
-        "sha256": null,
-        "estimatedSizeMB": 30
-      },
-      "windows": {
-        "url": "https://get.videolan.org/vlc/last/win64/vlc-3.0.21-win64.exe",
-        "fileName": "vlc-installer.exe",
-        "sha256": null,
-        "estimatedSizeMB": 40
-      },
-      "macos": {
-        "url": null,
-        "fileName": "vlc.dmg",
-        "sha256": null,
-        "estimatedSizeMB": 50
-      }
-    },
-    "requiresExtraction": false,
-    "extractedFileName": null,
-    "finalFileName": null,
-    "postDownloadCommands": {},
-    "isRetroArchCore": false
-  },
-  {
-    "name": "qbittorrent",
-    "displayName": "qBittorrent Enhanced",
-    "description": "BitTorrent client for downloading ROMs",
-    "downloads": {
-      "linux": {
-        "url": null,
-        "fileName": "qbittorrent.AppImage",
-        "sha256": null,
-        "estimatedSizeMB": 20
-      },
-      "windows": {
-        "url": null,
-        "fileName": "qbittorrent-setup.exe",
-        "sha256": null,
-        "estimatedSizeMB": 25
-      },
-      "macos": {
-        "url": null,
-        "fileName": "qbittorrent.dmg",
-        "sha256": null,
-        "estimatedSizeMB": 30
-      }
-    },
-    "requiresExtraction": false,
-    "extractedFileName": null,
-    "finalFileName": null,
-    "postDownloadCommands": {},
     "isRetroArchCore": false
   }
 ]
