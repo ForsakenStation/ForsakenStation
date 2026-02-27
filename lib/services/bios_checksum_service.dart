@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart';
 import 'debug_service.dart';
 
 /// Service for generating and verifying BIOS file checksums
@@ -15,32 +14,37 @@ class BiosChecksumService {
     return _instance!;
   }
 
-  /// Calculate MD5 checksum of a file
+  /// Calculate MD5 checksum of a file using streams for better performance and memory usage
   Future<String> calculateMd5(File file) async {
-    final bytes = await file.readAsBytes();
-    final digest = md5.convert(bytes);
-    return digest.toString();
+    final stream = file.openRead();
+    final hash = await md5.bind(stream).first;
+    return hash.toString();
   }
 
-  /// Calculate SHA1 checksum of a file
+  /// Calculate SHA1 checksum of a file using streams
   Future<String> calculateSha1(File file) async {
-    final bytes = await file.readAsBytes();
-    final digest = sha1.convert(bytes);
-    return digest.toString();
+    final stream = file.openRead();
+    final hash = await sha1.bind(stream).first;
+    return hash.toString();
   }
 
-  /// Calculate SHA256 checksum of a file
+  /// Calculate SHA256 checksum of a file using streams
   Future<String> calculateSha256(File file) async {
-    final bytes = await file.readAsBytes();
-    final digest = sha256.convert(bytes);
-    return digest.toString();
+    final stream = file.openRead();
+    final hash = await sha256.bind(stream).first;
+    return hash.toString();
   }
 
-  /// Calculate CRC32 checksum of a file
+  /// Calculate CRC32 checksum of a file using streams
   Future<String> calculateCrc32(File file) async {
-    final bytes = await file.readAsBytes();
-    final crc32 = _calculateCrc32(bytes);
-    return crc32.toRadixString(16).padLeft(8, '0').toUpperCase();
+    int crc = 0xFFFFFFFF;
+    await for (final chunk in file.openRead()) {
+      for (int byte in chunk) {
+        crc = _crc32Table[(crc ^ byte) & 0xFF] ^ (crc >> 8);
+      }
+    }
+    final finalCrc = crc ^ 0xFFFFFFFF;
+    return finalCrc.toRadixString(16).padLeft(8, '0').toUpperCase();
   }
 
   /// Pre-computed CRC32 lookup table (computed once)
@@ -63,17 +67,6 @@ class BiosChecksumService {
     return table;
   }
 
-  /// Internal CRC32 calculation using standard CRC32 algorithm
-  int _calculateCrc32(Uint8List bytes) {
-    // Calculate CRC32
-    int crc = 0xFFFFFFFF;
-    for (int byte in bytes) {
-      crc = _crc32Table[(crc ^ byte) & 0xFF] ^ (crc >> 8);
-    }
-
-    return crc ^ 0xFFFFFFFF;
-  }
-
   /// Generate comprehensive checksum information for a file
   Future<Map<String, dynamic>> generateFileInfo(File file) async {
     if (!await file.exists()) {
@@ -81,19 +74,24 @@ class BiosChecksumService {
     }
 
     final stat = await file.stat();
-    final bytes = await file.readAsBytes();
+
+    // Calculate all hashes in parallel using streams
+    final results = await Future.wait([
+      calculateMd5(file),
+      calculateSha1(file),
+      calculateSha256(file),
+      calculateCrc32(file),
+    ]);
 
     return {
       'filename': file.path.split('/').last,
       'path': file.path,
       'size': stat.size,
       'modified': stat.modified.toIso8601String(),
-      'md5': md5.convert(bytes).toString(),
-      'sha1': sha1.convert(bytes).toString(),
-      'sha256': sha256.convert(bytes).toString(),
-      'crc32': _calculateCrc32(
-        bytes,
-      ).toRadixString(16).padLeft(8, '0').toUpperCase(),
+      'md5': results[0],
+      'sha1': results[1],
+      'sha256': results[2],
+      'crc32': results[3],
     };
   }
 

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 
-import 'package:forsaken/constants/legal.dart';
-import 'package:forsaken/services/config_service.dart';
-import 'package:forsaken/services/debug_service.dart';
-import 'package:forsaken/services/keyboard_service.dart';
-import 'package:forsaken/services/gamepad_service.dart';
-import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
-import 'package:forsaken/mixins/gamepad_polling_mixin.dart';
-import 'package:forsaken/mixins/screen_navigation_mixin.dart';
+import '../constants/legal.dart';
+import '../services/config_service.dart';
+import '../services/debug_service.dart';
+import '../services/keyboard_service.dart';
+import '../services/gamepad_service.dart';
+import '../widgets/common/controls_bottom_bar.dart';
+import '../mixins/gamepad_polling_mixin.dart';
+import '../mixins/screen_navigation_mixin.dart';
 
 /// First-run setup wizard that guides users through initial configuration.
 ///

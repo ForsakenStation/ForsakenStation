@@ -1,5 +1,5 @@
-import 'package:forsaken/models/emulator_download_info.dart';
-import 'package:forsaken/services/debug_service.dart';
+import '../models/emulator_download_info.dart';
+import 'debug_service.dart';
 
 /// Web stub for EmulatorDownloadService
 class EmulatorDownloadService {

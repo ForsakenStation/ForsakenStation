@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
 import '../../services/gamepad_service.dart';
 
-/// Botones disponibles del gamepad Xbox
+/// Available Xbox-style gamepad buttons
 ///
-/// Cada botón tiene su etiqueta Unicode y color estándar:
-/// - A (verde): Acción principal, confirmar
-/// - B (rojo): Cancelar, volver
-/// - X (azul): Acción secundaria, búsqueda
-/// - Y (amarillo): Ayuda, información
+/// Each button has a Unicode label and standard color:
+/// - A (green): Main action, confirm
+/// - B (red): Cancel, back
+/// - X (blue): Secondary action, search
+/// - Y (yellow): Help, info
 enum GamepadButton {
   a('Ⓐ', Colors.green),
   b('Ⓑ', Colors.red),
   x('Ⓧ', Colors.blue),
-  y('Ⓨ', Color(0xFFFFD700)); // Amarillo dorado
+  y('Ⓨ', Color(0xFFFFD700)); // Golden yellow
 
   const GamepadButton(this.label, this.color);
 
-  /// Etiqueta Unicode del botón (ej: "Ⓐ")
+  /// Unicode label for the button (e.g. "Ⓐ")
   final String label;
 
-  /// Color estándar del botón
+  /// Standard button color
   final Color color;
 }
 
-/// Widget que muestra indicador visual de botón de gamepad
+/// Widget that displays a visual indicator of a gamepad button
 ///
-/// Se usa junto a botones o acciones para mostrar al usuario
-/// qué botón del gamepad puede usar. Solo se muestra cuando
-/// hay un gamepad conectado (por defecto).
+/// Used alongside buttons or actions to show the user
+/// which gamepad button can be used. By default, only shows
+/// when a gamepad is connected.
 ///
-/// Uso básico:
+/// Basic usage:
 /// ```dart
 /// ElevatedButton(
 ///   onPressed: _handleSave,
@@ -42,33 +42,33 @@ enum GamepadButton {
 /// )
 /// ```
 ///
-/// Uso con personalización:
+/// Customized usage:
 /// ```dart
 /// GamepadButtonIndicator(
 ///   button: GamepadButton.a,
 ///   size: 14,
 ///   padding: EdgeInsets.all(6),
 ///   customColor: Colors.purple,
-///   showOnlyWhenConnected: false, // Mostrar siempre
+///   showOnlyWhenConnected: false, // Always show
 /// )
 /// ```
 class GamepadButtonIndicator extends StatelessWidget {
-  /// Botón del gamepad a mostrar
+  /// Gamepad button to display
   final GamepadButton button;
 
-  /// Etiqueta custom (sobrescribe la del enum)
+  /// Custom label (overrides enum label)
   final String? customLabel;
 
-  /// Color custom (sobrescribe el del enum)
+  /// Custom color (overrides enum color)
   final Color? customColor;
 
-  /// Tamaño del texto en píxeles
+  /// Text size in pixels
   final double size;
 
-  /// Padding interno del contenedor circular
+  /// Internal padding of the circular container
   final EdgeInsets padding;
 
-  /// Si es true, solo muestra cuando gamepad está conectado
+  /// If true, only shows when a gamepad is connected
   final bool showOnlyWhenConnected;
 
   const GamepadButtonIndicator({
@@ -83,7 +83,7 @@ class GamepadButtonIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Ocultar si no hay gamepad y está configurado para ocultarse
+    // Hide if no gamepad and configured to hide
     if (showOnlyWhenConnected && !GamepadService.instance.isGamepadConnected) {
       return const SizedBox.shrink();
     }
@@ -102,7 +102,7 @@ class GamepadButtonIndicator extends StatelessWidget {
             color: Colors.white,
             fontSize: size,
             fontWeight: FontWeight.bold,
-            height: 1.0, // Centrado vertical
+            height: 1.0, // Vertical centering
           ),
         ),
       ),
@@ -110,12 +110,12 @@ class GamepadButtonIndicator extends StatelessWidget {
   }
 }
 
-/// Widget helper para agregar indicador a texto existente
+/// Helper widget to add an indicator to existing text
 ///
-/// Facilita crear Row con texto + indicador sin escribir
-/// tanto código boilerplate.
+/// Makes it easy to create a Row with text + indicator without
+/// much boilerplate code.
 ///
-/// Uso:
+/// Usage:
 /// ```dart
 /// TextButton(
 ///   onPressed: _handleCancel,
@@ -126,7 +126,7 @@ class GamepadButtonIndicator extends StatelessWidget {
 /// )
 /// ```
 ///
-/// Uso con estilo custom:
+/// Custom style usage:
 /// ```dart
 /// TextWithGamepadButton(
 ///   text: 'Advanced',
@@ -136,22 +136,22 @@ class GamepadButtonIndicator extends StatelessWidget {
 /// )
 /// ```
 class TextWithGamepadButton extends StatelessWidget {
-  /// Texto a mostrar
+  /// Text to display
   final String text;
 
-  /// Botón del gamepad a mostrar
+  /// Gamepad button to display
   final GamepadButton button;
 
-  /// Estilo del texto (opcional)
+  /// Text style (optional)
   final TextStyle? textStyle;
 
-  /// Tamaño del indicador en píxeles
+  /// Indicator size in pixels
   final double indicatorSize;
 
-  /// Padding del indicador
+  /// Indicator padding
   final EdgeInsets indicatorPadding;
 
-  /// Si es true, solo muestra indicador cuando gamepad está conectado
+  /// If true, only shows indicator when a gamepad is connected
   final bool showOnlyWhenConnected;
 
   const TextWithGamepadButton({
@@ -181,11 +181,11 @@ class TextWithGamepadButton extends StatelessWidget {
   }
 }
 
-/// Widget para mostrar múltiples controles en una fila
+/// Widget to display multiple controls in a row
 ///
-/// Útil para mostrar leyendas de controles (ej: en ayuda, tutoriales)
+/// Useful for displaying control legends (e.g. in help, tutorials)
 ///
-/// Uso:
+/// Usage:
 /// ```dart
 /// GamepadControlsRow(
 ///   controls: [
@@ -196,13 +196,13 @@ class TextWithGamepadButton extends StatelessWidget {
 /// )
 /// ```
 class GamepadControlsRow extends StatelessWidget {
-  /// Lista de (botón, descripción) a mostrar
+  /// List of (button, description) to display
   final List<(GamepadButton, String)> controls;
 
-  /// Espaciado entre controles
+  /// Spacing between controls
   final double spacing;
 
-  /// Tamaño de los indicadores
+  /// Indicator size
   final double indicatorSize;
 
   const GamepadControlsRow({
@@ -214,7 +214,7 @@ class GamepadControlsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // No mostrar si no hay gamepad
+    // Don't show if no gamepad
     if (!GamepadService.instance.isGamepadConnected) {
       return const SizedBox.shrink();
     }
@@ -230,7 +230,7 @@ class GamepadControlsRow extends StatelessWidget {
             GamepadButtonIndicator(
               button: button,
               size: indicatorSize,
-              showOnlyWhenConnected: false, // Ya verificamos arriba
+              showOnlyWhenConnected: false, // Already checked above
             ),
             const SizedBox(width: 4),
             Text(description, style: Theme.of(context).textTheme.bodySmall),

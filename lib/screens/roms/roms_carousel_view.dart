@@ -1,4 +1,4 @@
-import 'package:forsaken/models/game_info.dart';
+import '../../models/game_info.dart';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
@@ -20,12 +20,13 @@ class RomsCarouselView extends StatelessWidget {
   final Map<String, RomMedia> mediaCache;
   final MediaService mediaService;
   final Function(RomItem) loadMediaForItem;
-  final Function(int) onCardTap;
+  final Function(int index, RomItem item) onItemTap;
   final bool showNavigationHint;
   final Future<void> Function(RomItem item) loadGameInfoForItem;
   final Map<String, GameInfo> gameInfoCache;
   final Future<bool> Function(RomItem)? isRomDownloaded;
   final bool isCollection; // Show platform info for collection views
+  final String platformName;
 
   const RomsCarouselView({
     super.key,
@@ -39,12 +40,13 @@ class RomsCarouselView extends StatelessWidget {
     required this.mediaCache,
     required this.mediaService,
     required this.loadMediaForItem,
-    required this.onCardTap,
+    required this.onItemTap,
     required this.showNavigationHint,
     required this.loadGameInfoForItem,
     required this.gameInfoCache,
     this.isRomDownloaded,
     this.isCollection = false,
+    required this.platformName,
   });
 
   @override
@@ -290,7 +292,7 @@ class RomsCarouselView extends StatelessWidget {
       child: RomGridCard(
         item: item,
         isSelected: index == selectedIndex,
-        onTap: () => onCardTap(index),
+        onTap: () => onItemTap(index, item),
         media: mediaCache[item.name],
         mediaService: mediaService,
         isRomDownloaded: isRomDownloaded,

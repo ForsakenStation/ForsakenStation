@@ -70,6 +70,7 @@ class _RomListCardState extends State<RomListCard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       elevation: widget.isSelected ? 8 : 1,
       shape: RoundedRectangleBorder(
@@ -105,7 +106,11 @@ class _RomListCardState extends State<RomListCard> {
                       const SizedBox(height: 2),
                       Text(
                         widget.item.platform!,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.textTheme.bodySmall?.color?.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
                       ),
                     ],
                   ],
@@ -117,7 +122,7 @@ class _RomListCardState extends State<RomListCard> {
               ],
               Icon(
                 widget.item.isFolder ? Icons.chevron_right : Icons.play_arrow,
-                color: Colors.grey[600],
+                color: theme.iconTheme.color?.withValues(alpha: 0.6),
               ),
             ],
           ),
@@ -127,13 +132,16 @@ class _RomListCardState extends State<RomListCard> {
   }
 
   Widget _buildThumbnail(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     // Show loading spinner
     if (widget.isLoading) {
       return Container(
         width: 60,
         height: 60,
         decoration: BoxDecoration(
-          color: Colors.grey[300],
+          color: isDark ? Colors.grey[850] : Colors.grey[300],
           borderRadius: BorderRadius.circular(4),
         ),
         child: const Center(
@@ -165,12 +173,12 @@ class _RomListCardState extends State<RomListCard> {
               cacheHeight: 120,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
-                return _defaultThumbnail();
+                return _defaultThumbnail(context);
               },
             ),
           )
         else
-          _defaultThumbnail(),
+          _defaultThumbnail(context),
 
         // Download badge
         if (_downloadFuture != null)
@@ -183,15 +191,22 @@ class _RomListCardState extends State<RomListCard> {
     );
   }
 
-  Widget _defaultThumbnail() {
+  Widget _defaultThumbnail(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: 60,
       height: 60,
       decoration: BoxDecoration(
-        color: Colors.grey[300],
+        color: isDark ? Colors.grey[850] : Colors.grey[300],
         borderRadius: BorderRadius.circular(4),
       ),
-      child: const Icon(Icons.games, size: 30, color: Colors.grey),
+      child: Icon(
+        Icons.games,
+        size: 30,
+        color: isDark ? Colors.grey[700] : Colors.grey,
+      ),
     );
   }
 
@@ -232,6 +247,15 @@ class _RomListCardState extends State<RomListCard> {
           const Padding(
             padding: EdgeInsets.only(left: 4),
             child: Icon(Icons.videocam, size: 16, color: Colors.orange),
+          ),
+        if (widget.media!.manual?.exists ?? false)
+          Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: Icon(
+              Icons.picture_as_pdf,
+              size: 16,
+              color: Colors.red.shade400,
+            ),
           ),
       ],
     );

@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:forsaken/mixins/dialog_controls_mixin.dart';
-import 'package:forsaken/models/rom_item.dart';
-import 'package:forsaken/models/emulator_config.dart';
-import 'package:forsaken/services/gamepad_service.dart';
-import 'package:forsaken/widgets/common/placeholder_image.dart';
-import 'package:forsaken/utils/format_utils.dart';
-import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
+import '../../mixins/dialog_controls_mixin.dart';
+import '../../models/rom_item.dart';
+import '../../models/emulator_config.dart';
+import '../../services/gamepad_service.dart';
+import '../common/placeholder_image.dart';
+import '../../utils/format_utils.dart';
+import '../common/gamepad_button_indicator.dart';
 
 /// Dialog shown while downloading and launching a ROM
 class LaunchProgressDialog extends StatefulWidget {

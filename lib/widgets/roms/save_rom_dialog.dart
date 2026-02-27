@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:forsaken/mixins/dialog_controls_mixin.dart';
-import 'package:forsaken/models/rom_item.dart';
-import 'package:forsaken/widgets/common/placeholder_image.dart';
-import 'package:forsaken/widgets/common/dialog_button_bar.dart';
-import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
+import '../../mixins/dialog_controls_mixin.dart';
+import '../../models/rom_item.dart';
+import '../common/placeholder_image.dart';
+import '../common/dialog_button_bar.dart';
+import '../common/gamepad_button_indicator.dart';
 
 /// Dialog asking if user wants to save the ROM permanently
 class SaveRomDialog extends StatefulWidget {

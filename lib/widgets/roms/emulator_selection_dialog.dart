@@ -1,10 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forsaken/models/emulator_config.dart';
-import 'package:forsaken/mixins/dialog_controls_mixin.dart';
-import 'package:forsaken/services/gamepad_service.dart';
-import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
+import '../../models/emulator_config.dart';
+import '../../mixins/dialog_controls_mixin.dart';
+import '../../services/gamepad_service.dart';
+import '../common/gamepad_button_indicator.dart';
 
 /// Dialog for selecting an emulator when multiple commands are available
 class EmulatorSelectionDialog extends StatefulWidget {

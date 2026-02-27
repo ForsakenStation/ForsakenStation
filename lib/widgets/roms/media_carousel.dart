@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:forsaken/models/media.dart';
-import 'package:forsaken/services/debug_service.dart';
+import '../../models/media.dart';
+import '../../services/debug_service.dart';
+import '../../screens/pdf_viewer_screen.dart';
 import 'fullscreen_image_viewer.dart';
 
 /// Carousel widget for displaying media (images and videos) with navigation
@@ -206,9 +207,112 @@ class _MediaCarouselState extends State<MediaCarousel> {
   Widget _buildMediaItem(Media media) {
     if (media.type == MediaType.video) {
       return _buildVideoPreview(media);
+    } else if (media.type == MediaType.manual) {
+      return _buildManualPreview(media);
     } else {
       return _buildImagePreview(media);
     }
+  }
+
+  Widget _buildManualPreview(Media media) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 60),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.picture_as_pdf,
+                    size: 80,
+                    color: Colors.red.shade400,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Game Manual',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'PDF Document',
+                    style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Center(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => _openManual(media),
+                borderRadius: BorderRadius.circular(50),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Theme.of(
+                      context,
+                    ).primaryColor.withValues(alpha: 0.8),
+                  ),
+                  child: const Icon(
+                    Icons.menu_book,
+                    size: 48,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 8,
+            left: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Text(
+                'Manual',
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openManual(Media media) {
+    // Stop gamepad polling if mixin is available (passed via callbacks)
+    widget.onBeforeNavigation?.call();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PdfViewerScreen(
+          pdfPath: media.path,
+          title: '${widget.media.romName} - Manual',
+        ),
+      ),
+    ).then((_) {
+      widget.onAfterNavigation?.call();
+    });
   }
 
   Widget _buildImagePreview(Media media) {

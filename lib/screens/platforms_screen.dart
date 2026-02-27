@@ -152,7 +152,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('🎮 Mando conectado: $gamepadName'),
+        content: Text('🎮 Gamepad connected: $gamepadName'),
         duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.green.shade700,
@@ -582,7 +582,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'No hay información disponible para ${selectedEmulatorPlatform.displayName}',
+            'No information available for ${selectedEmulatorPlatform.displayName}',
           ),
         ),
       );

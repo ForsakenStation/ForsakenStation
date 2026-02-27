@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:forsaken/services/debug_service.dart';
-import 'package:forsaken/utils/format_utils.dart';
+import '../debug_service.dart';
+import '../../utils/format_utils.dart';
 
 /// Enhanced logging utility for BIOS download operations
 class BiosDownloadLogger {

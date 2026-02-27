@@ -7,11 +7,11 @@ import 'package:path/path.dart' as path;
 
 import 'package:flutter/foundation.dart';
 
-import 'package:forsaken/models/bios_download_mapping.dart';
-import 'package:forsaken/services/bios_size_correction_service.dart';
-import 'package:forsaken/services/bios_checksum_service.dart';
-import 'package:forsaken/utils/semaphore.dart';
-import 'package:forsaken/utils/format_utils.dart';
+import '../models/bios_download_mapping.dart';
+import 'bios_size_correction_service.dart';
+import 'bios_checksum_service.dart';
+import '../utils/semaphore.dart';
+import '../utils/format_utils.dart';
 
 import 'bios_download/bios_checksum_reports.dart';
 import 'bios_download/download_progress.dart';

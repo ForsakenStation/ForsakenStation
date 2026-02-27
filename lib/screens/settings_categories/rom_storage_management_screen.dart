@@ -1,16 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../services/rom_storage_service.dart';
-import '../../services/debug_service.dart';
-import '../../services/keyboard_service.dart';
-import '../../services/gamepad_service.dart';
-import '../../mixins/gamepad_polling_mixin.dart';
-import '../../mixins/screen_navigation_mixin.dart';
-import '../../widgets/common/gamepad_button_indicator.dart';
-import '../../widgets/common/controls_bottom_bar.dart';
-import '../../widgets/common/dialog_button_bar.dart';
-import '../../utils/format_utils.dart';
+import '../../../services/keyboard_service.dart';
+import '../../../services/gamepad_service.dart';
+import '../../../mixins/gamepad_polling_mixin.dart';
+import '../../../mixins/screen_navigation_mixin.dart';
+import '../../../widgets/common/gamepad_button_indicator.dart';
+import '../../../widgets/common/controls_bottom_bar.dart';
+import '../../../widgets/common/dialog_button_bar.dart';
+
+import 'rom_storage/rom_storage_controller.dart';
+import 'rom_storage/widgets/storage_statistics_card.dart';
+import 'rom_storage/widgets/platform_storage_tile.dart';
+import 'rom_storage/widgets/rom_storage_tile.dart';
 
 /// Type of navigable item
 enum _NavigableItemType { appBarButton, platformCard, romItem }
@@ -18,29 +20,18 @@ enum _NavigableItemType { appBarButton, platformCard, romItem }
 /// Represents a navigable item in the screen
 class _NavigableItem {
   final _NavigableItemType type;
-  final String? id; // Unique identifier
-  final VoidCallback? onActivate;
-  final GlobalKey? key;
-
-  // Platform-specific data
-  final String? platformName;
-  final bool? isForever;
-
-  // ROM-specific data
-  final File? romFile;
+  final String id;
+  final VoidCallback onActivate;
+  final GlobalKey key = GlobalKey();
 
   _NavigableItem({
     required this.type,
-    this.id,
-    this.onActivate,
-    this.key,
-    this.platformName,
-    this.isForever,
-    this.romFile,
+    required this.id,
+    required this.onActivate,
   });
 }
 
-/// Screen for managing downloaded ROMs (temporary and permanent storage)
+/// Screen for managing downloaded ROMs
 class RomStorageManagementScreen extends StatefulWidget {
   const RomStorageManagementScreen({super.key});
 
@@ -53,52 +44,54 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     with
         GamepadPollingMixin<RomStorageManagementScreen>,
         ScreenNavigationMixin {
-  final _storageService = RomStorageService.instance;
-  final _debug = DebugService.instance;
+  late RomStorageController _controller;
   final _keyboardService = KeyboardService.instance;
   final _focusNode = FocusNode();
   final _scrollController = ScrollController();
-
-  Map<String, dynamic> _storageStats = {};
-  Map<String, List<FileSystemEntity>> _tempRoms = {};
-  Map<String, List<FileSystemEntity>> _foreverRoms = {};
-  bool _isLoading = true;
 
   // Navigation state
   int _selectedIndex = 0;
   final List<_NavigableItem> _navigableItems = [];
   bool _isGamepadConnected = false;
-
-  // Track expanded platforms
   final Set<String> _expandedPlatforms = {};
 
   @override
+  void initState() {
+    super.initState();
+    _controller = RomStorageController();
+    _controller.addListener(_onControllerUpdate);
+    _controller.loadData();
+
+    startGamepadPolling(_handleGamepadInput);
+    _checkGamepadConnection();
+  }
+
+  void _onControllerUpdate() {
+    if (mounted) {
+      _rebuildNavigableItems();
+      setState(() {});
+    }
+  }
+
+  void _checkGamepadConnection() {
+    setState(() {
+      _isGamepadConnected = GamepadService.instance.isGamepadConnected;
+    });
+  }
+
+  @override
   void dispose() {
+    _controller.removeListener(_onControllerUpdate);
+    _controller.dispose();
     _focusNode.dispose();
     _scrollController.dispose();
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    startGamepadPolling(_handleGamepadInput);
-    _loadStorageData();
-    _checkGamepadConnection();
-  }
-
-  void _checkGamepadConnection() {
-    final gamepad = GamepadService.instance;
-    setState(() {
-      _isGamepadConnected = gamepad.isGamepadConnected;
-    });
-  }
-
   void _handleGamepadInput() {
     final gamepad = GamepadService.instance;
-
-    // Update gamepad connection status
     final connected = gamepad.isGamepadConnected;
+
     if (connected != _isGamepadConnected) {
       setState(() => _isGamepadConnected = connected);
     }
@@ -108,21 +101,15 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
       return;
     }
 
-    // Navigation
     final direction = gamepad.getNavigationDirection();
     if (direction != null) {
-      setState(() {
-        if (direction == 'up') {
-          _selectedIndex = (_selectedIndex - 1);
-          if (_selectedIndex < 0) _selectedIndex = _navigableItems.length - 1;
-        } else if (direction == 'down') {
-          _selectedIndex = (_selectedIndex + 1) % _navigableItems.length;
-        }
-      });
-      _scrollToSelected();
+      if (direction == 'up') {
+        _moveSelection(-1);
+      } else if (direction == 'down') {
+        _moveSelection(1);
+      }
     }
 
-    // Actions
     if (gamepad.isSelectPressed()) {
       _activateSelectedItem();
     } else if (gamepad.isBackPressed()) {
@@ -132,11 +119,20 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     gamepad.updatePreviousButtonStates();
   }
 
-  void _activateSelectedItem() {
-    if (_selectedIndex < 0 || _selectedIndex >= _navigableItems.length) return;
+  void _moveSelection(int delta) {
+    if (_navigableItems.isEmpty) return;
+    setState(() {
+      _selectedIndex = (_selectedIndex + delta);
+      if (_selectedIndex < 0) _selectedIndex = _navigableItems.length - 1;
+      if (_selectedIndex >= _navigableItems.length) _selectedIndex = 0;
+    });
+    _scrollToSelected();
+  }
 
-    final item = _navigableItems[_selectedIndex];
-    item.onActivate?.call();
+  void _activateSelectedItem() {
+    if (_selectedIndex >= 0 && _selectedIndex < _navigableItems.length) {
+      _navigableItems[_selectedIndex].onActivate();
+    }
   }
 
   KeyEventResult _handleKeyEvent(KeyEvent event) {
@@ -144,30 +140,17 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
 
     final key = event.logicalKey;
 
-    // Handle navigation (arrow keys)
     if (key == LogicalKeyboardKey.arrowDown) {
-      setState(() {
-        _selectedIndex = (_selectedIndex + 1) % _navigableItems.length;
-      });
-      _scrollToSelected();
+      _moveSelection(1);
       return KeyEventResult.handled;
     } else if (key == LogicalKeyboardKey.arrowUp) {
-      setState(() {
-        _selectedIndex = (_selectedIndex - 1);
-        if (_selectedIndex < 0) _selectedIndex = _navigableItems.length - 1;
-      });
-      _scrollToSelected();
+      _moveSelection(-1);
       return KeyEventResult.handled;
-    }
-
-    // Handle activation (Enter/Space)
-    if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.space) {
+    } else if (key == LogicalKeyboardKey.enter ||
+        key == LogicalKeyboardKey.space) {
       _activateSelectedItem();
       return KeyEventResult.handled;
-    }
-
-    // Handle back key (ESC or Backspace)
-    if (_keyboardService.isBackKey(key)) {
+    } else if (_keyboardService.isBackKey(key)) {
       safePop();
       return KeyEventResult.handled;
     }
@@ -177,11 +160,10 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
 
   void _scrollToSelected() {
     if (_selectedIndex < 0 || _selectedIndex >= _navigableItems.length) return;
-
     final item = _navigableItems[_selectedIndex];
-    if (item.key?.currentContext != null) {
+    if (item.key.currentContext != null) {
       Scrollable.ensureVisible(
-        item.key!.currentContext!,
+        item.key.currentContext!,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         alignment: 0.5,
@@ -189,54 +171,11 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     }
   }
 
-  Future<void> _loadStorageData() async {
-    setState(() => _isLoading = true);
-
-    try {
-      // Get storage statistics
-      final stats = await _storageService.getStorageStats();
-
-      // List ROMs in temp storage
-      final tempDir = await _storageService.getTempStorageDirectory();
-      final tempRoms = await _listRomsByPlatform(tempDir);
-
-      // List ROMs in forever storage
-      final foreverDir = await _storageService.getForeverStorageDirectory();
-      final foreverRoms = await _listRomsByPlatform(foreverDir);
-
-      setState(() {
-        _storageStats = stats;
-        _tempRoms = tempRoms;
-        _foreverRoms = foreverRoms;
-        _isLoading = false;
-
-        // Rebuild navigable items
-        _rebuildNavigableItems();
-
-        // Reset selection if out of bounds
-        if (_selectedIndex >= _navigableItems.length) {
-          _selectedIndex = _navigableItems.length - 1;
-        }
-        if (_selectedIndex < 0) _selectedIndex = 0;
-      });
-    } catch (e) {
-      _debug.error(
-        'Error loading storage data',
-        tag: 'RomStorageMgmt',
-        error: e,
-      );
-      setState(() => _isLoading = false);
-    }
-  }
-
-  /// Rebuild the list of navigable items based on current state
   void _rebuildNavigableItems() {
     _navigableItems.clear();
 
-    // Add AppBar buttons
-    // Clear All button (if there are temp ROMs)
-    final hasTempRoms = (_storageStats['tempCount'] ?? 0) > 0;
-    if (hasTempRoms) {
+    // 1. App Bar buttons
+    if ((_controller.storageStats['tempCount'] ?? 0) > 0) {
       _navigableItems.add(
         _NavigableItem(
           type: _NavigableItemType.appBarButton,
@@ -246,169 +185,109 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
       );
     }
 
-    // Refresh button (always present)
     _navigableItems.add(
       _NavigableItem(
         type: _NavigableItemType.appBarButton,
         id: 'refresh',
-        onActivate: _loadStorageData,
+        onActivate: _controller.loadData,
       ),
     );
 
-    // Add platform cards (Forever ROMs first, then Temp ROMs)
-    // Forever ROMs
-    for (final entry in _foreverRoms.entries) {
-      final platformName = entry.key;
-      final roms = entry.value;
-      final key = GlobalKey();
+    // 2. Forever platforms
+    for (final entry in _controller.foreverRoms.entries) {
+      final platform = entry.key;
+      final id = 'forever_$platform';
 
       _navigableItems.add(
         _NavigableItem(
           type: _NavigableItemType.platformCard,
-          id: 'platform_forever_$platformName',
-          platformName: platformName,
-          isForever: true,
-          key: key,
-          onActivate: () {
-            setState(() {
-              if (_expandedPlatforms.contains('forever_$platformName')) {
-                _expandedPlatforms.remove('forever_$platformName');
-              } else {
-                _expandedPlatforms.add('forever_$platformName');
-              }
-              _rebuildNavigableItems();
-            });
-          },
+          id: id,
+          onActivate: () => _togglePlatform(id),
         ),
       );
 
-      // If expanded, add ROM items
-      if (_expandedPlatforms.contains('forever_$platformName')) {
-        for (final rom in roms) {
-          if (rom is File) {
-            final fileName = rom.path.split('/').last;
-            final romKey = GlobalKey();
-
-            _navigableItems.add(
-              _NavigableItem(
-                type: _NavigableItemType.romItem,
-                id: 'rom_forever_${platformName}_$fileName',
-                platformName: platformName,
-                isForever: true,
-                romFile: rom,
-                key: romKey,
-                onActivate: () => _deleteRom(platformName, fileName, true),
-              ),
-            );
-          }
+      if (_expandedPlatforms.contains(id)) {
+        for (final file in entry.value) {
+          final fileName = file.path.split('/').last;
+          _navigableItems.add(
+            _NavigableItem(
+              type: _NavigableItemType.romItem,
+              id: 'rom_forever_${platform}_$fileName',
+              onActivate: () => _confirmDelete(platform, fileName, true),
+            ),
+          );
         }
       }
     }
 
-    // Temp ROMs
-    for (final entry in _tempRoms.entries) {
-      final platformName = entry.key;
-      final roms = entry.value;
-      final key = GlobalKey();
+    // 3. Temp platforms
+    for (final entry in _controller.tempRoms.entries) {
+      final platform = entry.key;
+      final id = 'temp_$platform';
 
       _navigableItems.add(
         _NavigableItem(
           type: _NavigableItemType.platformCard,
-          id: 'platform_temp_$platformName',
-          platformName: platformName,
-          isForever: false,
-          key: key,
-          onActivate: () {
-            setState(() {
-              if (_expandedPlatforms.contains('temp_$platformName')) {
-                _expandedPlatforms.remove('temp_$platformName');
-              } else {
-                _expandedPlatforms.add('temp_$platformName');
-              }
-              _rebuildNavigableItems();
-            });
-          },
+          id: id,
+          onActivate: () => _togglePlatform(id),
         ),
       );
 
-      // If expanded, add ROM items
-      if (_expandedPlatforms.contains('temp_$platformName')) {
-        for (final rom in roms) {
-          if (rom is File) {
-            final fileName = rom.path.split('/').last;
-            final romKey = GlobalKey();
-
-            _navigableItems.add(
-              _NavigableItem(
-                type: _NavigableItemType.romItem,
-                id: 'rom_temp_${platformName}_$fileName',
-                platformName: platformName,
-                isForever: false,
-                romFile: rom,
-                key: romKey,
-                onActivate: () => _deleteRom(platformName, fileName, false),
-              ),
-            );
-          }
+      if (_expandedPlatforms.contains(id)) {
+        for (final file in entry.value) {
+          final fileName = file.path.split('/').last;
+          _navigableItems.add(
+            _NavigableItem(
+              type: _NavigableItemType.romItem,
+              id: 'rom_temp_${platform}_$fileName',
+              onActivate: () => _confirmDelete(platform, fileName, false),
+            ),
+          );
         }
       }
+    }
+
+    if (_selectedIndex >= _navigableItems.length) {
+      _selectedIndex = _navigableItems.isEmpty ? 0 : _navigableItems.length - 1;
     }
   }
 
-  /// Check if a navigable item is currently selected
+  void _togglePlatform(String id) {
+    setState(() {
+      if (_expandedPlatforms.contains(id)) {
+        _expandedPlatforms.remove(id);
+      } else {
+        _expandedPlatforms.add(id);
+      }
+      _rebuildNavigableItems();
+    });
+  }
+
   bool _isItemSelected(String id) {
-    if (_selectedIndex < 0 || _selectedIndex >= _navigableItems.length) {
-      return false;
+    if (_selectedIndex >= 0 && _selectedIndex < _navigableItems.length) {
+      return _navigableItems[_selectedIndex].id == id;
     }
-    return _navigableItems[_selectedIndex].id == id;
+    return false;
   }
 
-  /// List ROMs grouped by platform
-  Future<Map<String, List<FileSystemEntity>>> _listRomsByPlatform(
-    Directory baseDir,
-  ) async {
-    final romsByPlatform = <String, List<FileSystemEntity>>{};
-
-    if (!await baseDir.exists()) {
-      return romsByPlatform;
+  GlobalKey? _getItemKey(String id) {
+    try {
+      return _navigableItems.firstWhere((item) => item.id == id).key;
+    } catch (_) {
+      return null;
     }
-
-    // Iterate through platform directories
-    await for (var entity in baseDir.list()) {
-      if (entity is Directory) {
-        final platformName = entity.path.split('/').last;
-        final roms = <FileSystemEntity>[];
-
-        // List ROMs in this platform directory
-        await for (var romEntity in entity.list()) {
-          if (romEntity is File) {
-            roms.add(romEntity);
-          }
-        }
-
-        if (roms.isNotEmpty) {
-          romsByPlatform[platformName] = roms;
-        }
-      }
-    }
-
-    return romsByPlatform;
   }
 
-  String _formatBytes(int bytes) => formatBytes(bytes);
-
-  Future<void> _deleteRom(
+  Future<void> _confirmDelete(
     String platform,
     String fileName,
-    bool isFromForever,
+    bool isForever,
   ) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete ROM?'),
-        content: Text(
-          'Are you sure you want to delete:\n\n$fileName\n\nThis action cannot be undone.',
-        ),
+        content: Text('Delete $fileName?\nThis action cannot be undone.'),
         actions: [
           DialogButtonBar(
             buttons: [
@@ -430,86 +309,25 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     );
 
     if (confirm == true) {
-      setState(() => _isLoading = true);
-
-      final success = isFromForever
-          ? await _storageService.deleteFromForeverStorage(platform, fileName)
-          : await _storageService.deleteFromTempStorage(platform, fileName);
-
-      if (mounted) {
-        if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Deleted: $fileName'),
-              backgroundColor: Colors.green,
-            ),
-          );
-          await _loadStorageData();
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to delete ROM'),
-              backgroundColor: Colors.red,
-            ),
-          );
-          setState(() => _isLoading = false);
-        }
+      final success = await _controller.deleteRom(
+        platform,
+        fileName,
+        isForever,
+      );
+      if (mounted && success) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Deleted: $fileName')));
       }
     }
   }
 
-  Future<void> _moveToForever(String platform, String fileName) async {
-    // Show confirmation dialog
+  Future<void> _confirmSave(String platform, String fileName) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Save to Permanent Storage?'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('This will move the ROM to permanent storage:'),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.gamepad, size: 16, color: Colors.green),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          fileName,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.folder, size: 16, color: Colors.green),
-                      const SizedBox(width: 8),
-                      Text('Platform: ${platform.toUpperCase()}'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'The ROM will be kept permanently and won\'t be deleted automatically.',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-          ],
-        ),
+        title: const Text('Save Permanently?'),
+        content: Text('Move $fileName to permanent storage?'),
         actions: [
           DialogButtonBar(
             buttons: [
@@ -530,33 +348,12 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
       ),
     );
 
-    if (confirm != true || !mounted) return;
-
-    setState(() => _isLoading = true);
-
-    // Move from temp to forever storage
-    final newPath = await _storageService.moveToForeverStorage(
-      platform,
-      fileName,
-    );
-
-    if (mounted) {
-      if (newPath != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Saved to permanent storage: $fileName'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        await _loadStorageData();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to move ROM to permanent storage'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        setState(() => _isLoading = false);
+    if (confirm == true) {
+      final newPath = await _controller.moveToForever(platform, fileName);
+      if (mounted && newPath != null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Saved: $fileName')));
       }
     }
   }
@@ -565,10 +362,8 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear All Temporary ROMs?'),
-        content: Text(
-          'This will delete all ${_storageStats['tempCount']} temporary ROMs (${_formatBytes(_storageStats['tempSize'])}).\n\nThis action cannot be undone.',
-        ),
+        title: const Text('Clear All?'),
+        content: const Text('Delete all temporary ROMs?'),
         actions: [
           DialogButtonBar(
             buttons: [
@@ -578,7 +373,7 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
                 gamepadButton: GamepadButton.b,
               ),
               DialogButton(
-                label: 'Clear All',
+                label: 'Clear',
                 onPressed: () => Navigator.pop(context, true),
                 primary: true,
                 gamepadButton: GamepadButton.a,
@@ -590,17 +385,11 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     );
 
     if (confirm == true) {
-      setState(() => _isLoading = true);
-      await _storageService.cleanupAllTempRoms();
-
+      await _controller.clearAllTempRoms();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('All temporary ROMs deleted'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('All temporary ROMs cleared')),
         );
-        await _loadStorageData();
       }
     }
   }
@@ -614,246 +403,144 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
       child: Scaffold(
         appBar: AppBar(
           title: const Text('ROM Storage Management'),
-          actions: [
-            if ((_storageStats['tempCount'] ?? 0) > 0)
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    decoration: _isItemSelected('clear_all')
-                        ? BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primaryContainer
-                                .withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(8),
-                          )
-                        : null,
-                    child: IconButton(
-                      icon: const Icon(Icons.delete_sweep),
-                      onPressed: _clearAllTempRoms,
-                      tooltip: 'Clear all temporary ROMs',
-                    ),
-                  ),
-                  if (_isGamepadConnected && _isItemSelected('clear_all'))
-                    Positioned(
-                      bottom: 0,
-                      child: const GamepadButtonIndicator(
-                        button: GamepadButton.a,
-                        size: 16,
-                      ),
-                    ),
-                ],
-              ),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  decoration: _isItemSelected('refresh')
-                      ? BoxDecoration(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(8),
-                        )
-                      : null,
-                  child: IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: _loadStorageData,
-                    tooltip: 'Refresh',
-                  ),
-                ),
-                if (_isGamepadConnected && _isItemSelected('refresh'))
-                  Positioned(
-                    bottom: 0,
-                    child: const GamepadButtonIndicator(
-                      button: GamepadButton.a,
-                      size: 16,
-                    ),
-                  ),
-              ],
-            ),
-          ],
+          actions: _buildAppBarActions(),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView(
+        body: _controller.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  Expanded(
+                    child: ListView(
                       controller: _scrollController,
                       padding: const EdgeInsets.all(16),
                       children: [
-                        // Storage Statistics Card
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.storage,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        'Storage Overview',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ),
-                                    if ((_storageStats['tempCount'] ?? 0) > 0)
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.cleaning_services,
-                                        ),
-                                        onPressed: _clearAllTempRoms,
-                                        tooltip: 'Clear all temporary ROMs',
-                                        iconSize: 20,
-                                      ),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: _buildStatCard(
-                                        context,
-                                        'Temporary Storage',
-                                        Icons.access_time,
-                                        _storageStats['tempCount'] ?? 0,
-                                        _storageStats['tempSize'] ?? 0,
-                                        Colors.orange,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: _buildStatCard(
-                                        context,
-                                        'Permanent Storage',
-                                        Icons.cloud_done,
-                                        _storageStats['foreverCount'] ?? 0,
-                                        _storageStats['foreverSize'] ?? 0,
-                                        Colors.green,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Temp path: ${_storageStats['tempPath'] ?? 'Unknown'}',
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        fontFamily: 'monospace',
-                                        color: Colors.grey,
-                                      ),
-                                ),
-                                Text(
-                                  'Forever path: ${_storageStats['foreverPath'] ?? 'Unknown'}',
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        fontFamily: 'monospace',
-                                        color: Colors.grey,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        StorageStatisticsCard(
+                          stats: _controller.storageStats,
+                          onClearTemp: _clearAllTempRoms,
                         ),
-                        const SizedBox(height: 16),
-
-                        // Permanent ROMs Section
-                        if (_foreverRoms.isNotEmpty) ...[
-                          Text(
-                            'Permanent ROMs',
-                            style: Theme.of(context).textTheme.headlineSmall
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          ..._foreverRoms.entries.map(
-                            (entry) => _buildPlatformCard(
-                              entry.key,
-                              entry.value,
-                              true,
-                            ),
-                          ),
+                        const SizedBox(height: 24),
+                        if (_controller.foreverRoms.isNotEmpty) ...[
+                          _buildSectionHeader('Permanent Storage'),
+                          ..._buildPlatformList(_controller.foreverRoms, true),
                           const SizedBox(height: 16),
                         ],
-
-                        // Temporary ROMs Section
-                        if (_tempRoms.isNotEmpty) ...[
-                          Text(
-                            'Temporary ROMs',
-                            style: Theme.of(context).textTheme.headlineSmall
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          ..._tempRoms.entries.map(
-                            (entry) => _buildPlatformCard(
-                              entry.key,
-                              entry.value,
-                              false,
-                            ),
-                          ),
+                        if (_controller.tempRoms.isNotEmpty) ...[
+                          _buildSectionHeader('Temporary Storage'),
+                          ..._buildPlatformList(_controller.tempRoms, false),
                         ],
-
-                        // Empty state
-                        if (_foreverRoms.isEmpty && _tempRoms.isEmpty)
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(48),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.folder_open,
-                                    size: 64,
-                                    color: Colors.grey[400],
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'No downloaded ROMs',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge
-                                        ?.copyWith(color: Colors.grey[600]),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'ROMs you download will appear here',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(color: Colors.grey[500]),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                        if (_controller.foreverRoms.isEmpty &&
+                            _controller.tempRoms.isEmpty)
+                          _buildEmptyState(),
                       ],
                     ),
-            ),
-            ControlsBottomBar(
-              actions: const [
-                BottomBarAction(
-                  label: 'Back',
-                  keyboardKey: 'ESC',
-                  gamepadButton: 'B',
-                ),
-                BottomBarAction(
-                  label: 'Navigate',
-                  keyboardKey: '↑↓',
-                  gamepadButton: 'D-pad',
-                ),
-              ],
+                  ),
+                  _buildBottomBar(),
+                ],
+              ),
+      ),
+    );
+  }
+
+  List<Widget> _buildAppBarActions() {
+    return [
+      if ((_controller.storageStats['tempCount'] ?? 0) > 0)
+        _buildActionIconButton(
+          'clear_all',
+          Icons.delete_sweep,
+          _clearAllTempRoms,
+        ),
+      _buildActionIconButton('refresh', Icons.refresh, _controller.loadData),
+    ];
+  }
+
+  Widget _buildActionIconButton(
+    String id,
+    IconData icon,
+    VoidCallback onPressed,
+  ) {
+    final isSelected = _isItemSelected(id);
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: isSelected
+              ? BoxDecoration(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(8),
+                )
+              : null,
+          child: IconButton(icon: Icon(icon), onPressed: onPressed),
+        ),
+        if (_isGamepadConnected && isSelected)
+          const Positioned(
+            bottom: 0,
+            child: GamepadButtonIndicator(button: GamepadButton.a, size: 16),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(
+        title,
+        style: Theme.of(
+          context,
+        ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  List<Widget> _buildPlatformList(
+    Map<String, List<File>> data,
+    bool isForever,
+  ) {
+    return data.entries.map((entry) {
+      final platform = entry.key;
+      final id = '${isForever ? "forever" : "temp"}_$platform';
+
+      return PlatformStorageTile(
+        key: _getItemKey(id),
+        platform: platform,
+        roms: entry.value,
+        isForever: isForever,
+        isExpanded: _expandedPlatforms.contains(id),
+        isSelected: _isItemSelected(id),
+        isGamepadConnected: _isGamepadConnected,
+        onExpansionChanged: (_) => _togglePlatform(id),
+        romBuilder: (file) {
+          final fileName = file.path.split('/').last;
+          final romId =
+              'rom_${isForever ? "forever" : "temp"}_${platform}_$fileName';
+          return RomStorageTile(
+            key: _getItemKey(romId),
+            file: file,
+            isForever: isForever,
+            isSelected: _isItemSelected(romId),
+            isGamepadConnected: _isGamepadConnected,
+            onDelete: () => _confirmDelete(platform, fileName, isForever),
+            onSave: isForever ? null : () => _confirmSave(platform, fileName),
+          );
+        },
+      );
+    }).toList();
+  }
+
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(48),
+        child: Column(
+          children: [
+            Icon(Icons.folder_open, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'No downloaded ROMs',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
           ],
         ),
@@ -861,222 +548,16 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     );
   }
 
-  Widget _buildStatCard(
-    BuildContext context,
-    String title,
-    IconData icon,
-    int count,
-    int bytes,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: color, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: color,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '$count files',
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          Text(
-            _formatBytes(bytes),
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPlatformCard(
-    String platform,
-    List<FileSystemEntity> roms,
-    bool isForever,
-  ) {
-    // Calculate total size
-    int totalSize = 0;
-    for (var rom in roms) {
-      if (rom is File) {
-        totalSize += rom.lengthSync();
-      }
-    }
-
-    final platformId = '${isForever ? "forever" : "temp"}_$platform';
-    final isExpanded = _expandedPlatforms.contains(platformId);
-    final isSelected = _isItemSelected(
-      'platform_${isForever ? "forever" : "temp"}_$platform',
-    );
-
-    // Get the GlobalKey for this platform from navigable items
-    final item = _navigableItems.firstWhere(
-      (item) =>
-          item.id == 'platform_${isForever ? "forever" : "temp"}_$platform',
-      orElse: () => _NavigableItem(type: _NavigableItemType.platformCard),
-    );
-
-    return Container(
-      key: item.key,
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: isSelected
-          ? BoxDecoration(
-              border: Border.all(
-                color: Theme.of(context).colorScheme.primary,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            )
-          : null,
-      child: Card(
-        margin: EdgeInsets.zero,
-        child: ExpansionTile(
-          key: Key(platformId),
-          initiallyExpanded: isExpanded,
-          onExpansionChanged: (expanded) {
-            setState(() {
-              if (expanded) {
-                _expandedPlatforms.add(platformId);
-              } else {
-                _expandedPlatforms.remove(platformId);
-              }
-              _rebuildNavigableItems();
-            });
-          },
-          leading: Stack(
-            alignment: Alignment.center,
-            children: [
-              Icon(
-                isForever ? Icons.cloud_done : Icons.access_time,
-                color: isForever ? Colors.green : Colors.orange,
-              ),
-              if (_isGamepadConnected && isSelected)
-                Positioned(
-                  bottom: -4,
-                  child: const GamepadButtonIndicator(
-                    button: GamepadButton.a,
-                    size: 12,
-                  ),
-                ),
-            ],
-          ),
-          title: Text(
-            platform.toUpperCase(),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: isSelected ? Theme.of(context).colorScheme.primary : null,
-            ),
-          ),
-          subtitle: Text('${roms.length} ROMs • ${_formatBytes(totalSize)}'),
-          children: roms.map((rom) {
-            if (rom is File) {
-              final fileName = rom.path.split('/').last;
-              final fileSize = rom.lengthSync();
-              final romId =
-                  'rom_${isForever ? "forever" : "temp"}_${platform}_$fileName';
-              final isRomSelected = _isItemSelected(romId);
-
-              // Get the GlobalKey for this ROM from navigable items
-              final romItem = _navigableItems.firstWhere(
-                (item) => item.id == romId,
-                orElse: () => _NavigableItem(type: _NavigableItemType.romItem),
-              );
-
-              return Container(
-                key: romItem.key,
-                decoration: isRomSelected
-                    ? BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                        border: Border(
-                          left: BorderSide(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 3,
-                          ),
-                        ),
-                      )
-                    : null,
-                child: ListTile(
-                  dense: true,
-                  leading: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      const Icon(Icons.insert_drive_file, size: 20),
-                      if (_isGamepadConnected && isRomSelected)
-                        Positioned(
-                          bottom: -2,
-                          child: const GamepadButtonIndicator(
-                            button: GamepadButton.a,
-                            size: 10,
-                          ),
-                        ),
-                    ],
-                  ),
-                  title: Text(
-                    fileName,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: isRomSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : null,
-                      fontWeight: isRomSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
-                  ),
-                  subtitle: Text(
-                    _formatBytes(fileSize),
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Show "Save to Forever" button only for temp ROMs
-                      if (!isForever)
-                        IconButton(
-                          icon: const Icon(Icons.save, size: 20),
-                          onPressed: () => _moveToForever(platform, fileName),
-                          tooltip: 'Save to permanent storage',
-                        ),
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline, size: 20),
-                        onPressed: () =>
-                            _deleteRom(platform, fileName, isForever),
-                        tooltip: 'Delete',
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          }).toList(),
+  Widget _buildBottomBar() {
+    return ControlsBottomBar(
+      actions: const [
+        BottomBarAction(label: 'Back', keyboardKey: 'ESC', gamepadButton: 'B'),
+        BottomBarAction(
+          label: 'Navigate',
+          keyboardKey: '↑↓',
+          gamepadButton: 'D-pad',
         ),
-      ),
+      ],
     );
   }
 }

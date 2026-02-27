@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:forsaken/services/debug_service.dart';
-import 'package:forsaken/services/gamepad_service.dart';
+import '../services/debug_service.dart';
+import '../services/gamepad_service.dart';
 
-/// Mixin para manejar gamepad polling de forma consistente
+/// Mixin to handle gamepad polling consistently across screens
 ///
-/// Proporciona gestión automática del timer de polling, métodos para
-/// pausar/reanudar durante navegación, y dispose automático.
+/// Provides automatic management of the polling timer, methods to
+/// pause/resume during navigation, and automatic dispose.
 ///
-/// Uso básico:
+/// Basic usage:
 /// ```dart
 /// class MyScreenState extends State<MyScreen>
 ///     with GamepadPollingMixin<MyScreen> {
@@ -22,32 +22,32 @@ import 'package:forsaken/services/gamepad_service.dart';
 ///   void _handleGamepadInput() {
 ///     final gamepad = GamepadService.instance;
 ///
-///     // Manejar botón de volver
+///     // Handle back button
 ///     if (gamepad.isBackPressed()) {
 ///       Navigator.pop(context);
 ///     }
 ///
-///     // Manejar navegación direccional
+///     // Handle directional navigation
 ///     final direction = gamepad.getNavigationDirection();
 ///     if (direction != null) {
-///       // Procesar dirección (up/down/left/right)
+///       // Process direction (up/down/left/right)
 ///     }
 ///
-///     // Manejar botones de acción
+///     // Handle action buttons
 ///     if (gamepad.isSelectPressed()) {
-///       // Acción principal (A button)
+///       // Main action (A button)
 ///     }
 ///
-///     // IMPORTANTE: siempre llamar al final del handler
+///     // IMPORTANT: always call at the end of the handler
 ///     gamepad.updatePreviousButtonStates();
 ///   }
 /// }
 /// ```
 ///
-/// Uso avanzado con navegación:
+/// Advanced usage with navigation:
 /// ```dart
 /// Future<void> _navigateToDetail() async {
-///   pauseGamepadPolling();  // Pausar antes de navegar
+///   pauseGamepadPolling();  // Pause before navigating
 ///
 ///   await Navigator.push(
 ///     context,
@@ -55,7 +55,7 @@ import 'package:forsaken/services/gamepad_service.dart';
 ///   );
 ///
 ///   if (mounted) {
-///     resumeGamepadPolling(_handleGamepadInput);  // Reanudar al volver
+///     resumeGamepadPolling(_handleGamepadInput);  // Resume when returning
 ///   }
 /// }
 /// ```
@@ -65,33 +65,32 @@ mixin GamepadPollingMixin<T extends StatefulWidget> on State<T> {
   void Function()? _currentHandler;
   bool _isGamepadConnected = false;
 
-  /// Inicia el polling de gamepad con el handler proporcionado
+  /// Starts gamepad polling with the provided handler
   ///
-  /// El handler se ejecutará periódicamente según el intervalo especificado.
-  /// Si ya existe un timer activo, se cancelará antes de crear uno nuevo.
+  /// The handler will execute periodically according to the specified interval.
+  /// If an active timer already exists, it will be cancelled before creating a new one.
   ///
-  /// [handler]: Función que se ejecuta cada intervalo para manejar input.
-  ///            Debe llamar a `gamepad.updatePreviousButtonStates()` al final.
-  /// [interval]: Intervalo de polling (default: 50ms = 20 veces por segundo).
-  ///            Para la mayoría de casos, 50ms es suficiente.
-  ///            PDF viewer usa 100ms para reducir procesamiento.
+  /// [handler]: Function that executes each interval to handle input.
+  ///            Must call `gamepad.updatePreviousButtonStates()` at the end.
+  /// [interval]: Polling interval (default: 50ms = 20 times per second).
+  ///            For most cases, 50ms is sufficient.
   void startGamepadPolling(
     void Function() handler, {
     Duration interval = const Duration(milliseconds: 50),
   }) {
-    // Cancelar timer previo si existe (evita memory leaks)
+    // Cancel previous timer if exists (avoids memory leaks)
     _gamepadPollTimer?.cancel();
 
-    // Guardar configuración para resume
+    // Save configuration for resume
     _currentHandler = handler;
     _currentInterval = interval;
 
-    // Iniciar nuevo timer
+    // Start new timer
     _gamepadPollTimer = Timer.periodic(interval, (_) {
-      // Verificar que el widget aún existe antes de procesar
+      // Check that the widget still exists before processing
       if (!mounted) return;
 
-      // Verificar estado de conexión del gamepad
+      // Check gamepad connection status
       final gamepad = GamepadService.instance;
       final connected = gamepad.isGamepadConnected;
       if (connected != _isGamepadConnected) {
@@ -100,14 +99,14 @@ mixin GamepadPollingMixin<T extends StatefulWidget> on State<T> {
         });
       }
 
-      // Ejecutar handler
+      // Execute handler
       handler();
     });
   }
 
-  /// Detiene completamente el polling de gamepad
+  /// Stops gamepad polling completely
   ///
-  /// Útil al hacer dispose o cuando ya no se necesita procesar input.
+  /// Useful when disposing or when input processing is no longer needed.
   void stopGamepadPolling() {
     _gamepadPollTimer?.cancel();
     _gamepadPollTimer = null;
@@ -115,12 +114,12 @@ mixin GamepadPollingMixin<T extends StatefulWidget> on State<T> {
     _currentInterval = null;
   }
 
-  /// Pausa temporalmente el polling (útil para navegación)
+  /// Temporarily pauses polling (useful for navigation)
   ///
-  /// Cuando navegas a otra pantalla, debes pausar el polling para evitar
-  /// que la pantalla de fondo procese input del gamepad.
+  /// When navigating to another screen, you should pause polling to avoid
+  /// the background screen processing gamepad input.
   ///
-  /// Ejemplo:
+  /// Example:
   /// ```dart
   /// void _openDialog() {
   ///   pauseGamepadPolling();
@@ -133,16 +132,16 @@ mixin GamepadPollingMixin<T extends StatefulWidget> on State<T> {
   void pauseGamepadPolling() {
     _gamepadPollTimer?.cancel();
     _gamepadPollTimer = null;
-    // Mantener handler e interval guardados para resume
+    // Keep handler and interval saved for resume
   }
 
-  /// Reanuda el polling después de una pausa
+  /// Resumes polling after a pause
   ///
-  /// Si no se proporciona handler, usa el último que fue configurado.
-  /// Si no se proporciona interval, usa el último que fue configurado.
+  /// If no handler is provided, uses the last one configured.
+  /// If no interval is provided, uses the last one configured.
   ///
-  /// [handler]: Handler opcional (default: usa el último configurado)
-  /// [interval]: Intervalo opcional (default: usa el último configurado)
+  /// [handler]: Optional handler (default: uses last configured)
+  /// [interval]: Optional interval (default: uses last configured)
   void resumeGamepadPolling([void Function()? handler, Duration? interval]) {
     final handlerToUse = handler ?? _currentHandler;
     final intervalToUse =
@@ -159,27 +158,27 @@ mixin GamepadPollingMixin<T extends StatefulWidget> on State<T> {
     startGamepadPolling(handlerToUse, interval: intervalToUse);
   }
 
-  /// Verifica si el polling está actualmente activo
+  /// Checks if polling is currently active
   bool get isPolling =>
       _gamepadPollTimer != null && _gamepadPollTimer!.isActive;
 
-  /// Verifica si hay un gamepad conectado
+  /// Checks if a gamepad is connected
   ///
-  /// NOTA: Este estado se actualiza automáticamente durante el polling.
-  /// Si necesitas verificar el estado antes de iniciar polling, usa:
+  /// NOTE: This state updates automatically during polling.
+  /// If you need to check the status before starting polling, use:
   /// `GamepadService.instance.isGamepadConnected`
   bool get isGamepadConnected => _isGamepadConnected;
 
-  /// Verifica manualmente el estado de conexión del gamepad
+  /// Manually checks the gamepad connection status
   ///
-  /// Útil cuando necesitas verificar el estado antes de iniciar polling
-  /// o para mostrar UI condicional.
+  /// Useful when you need to check the status before starting polling
+  /// or for showing conditional UI.
   ///
-  /// Retorna true si hay un gamepad conectado.
+  /// Returns true if a gamepad is connected.
   bool checkGamepadConnection() {
     final connected = GamepadService.instance.isGamepadConnected;
     if (connected != _isGamepadConnected) {
-      // Solo actualizar state si cambió y el widget está montado
+      // Only update state if changed and widget is mounted
       if (mounted) {
         setState(() {
           _isGamepadConnected = connected;

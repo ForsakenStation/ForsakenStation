@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:archive/archive.dart';
-import 'package:forsaken/models/emulator_download_info.dart';
-import 'package:forsaken/services/config_service.dart';
-import 'package:forsaken/services/debug_service.dart';
+import '../models/emulator_download_info.dart';
+import 'config_service.dart';
+import 'debug_service.dart';
 
 /// Service for downloading and installing emulators
 class EmulatorDownloadService {

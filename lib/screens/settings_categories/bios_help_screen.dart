@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:forsaken/services/debug_service.dart';
+import '../../services/debug_service.dart';
 import 'package:flutter/services.dart';
-import 'package:forsaken/models/bios_requirement.dart';
-import 'package:forsaken/models/bios_requirement_download.dart';
-import 'package:forsaken/services/bios_check_service.dart';
-import 'package:forsaken/services/bios_download_service.dart';
-import 'package:forsaken/services/keyboard_service.dart';
-import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
-import 'package:forsaken/widgets/bios/bios_download_dialog.dart';
+import '../../models/bios_requirement.dart';
+import '../../models/bios_requirement_download.dart';
+import '../../services/bios_check_service.dart';
+import '../../services/bios_download_service.dart';
+import '../../services/keyboard_service.dart';
+import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/bios/bios_download_dialog.dart';
 
 class BiosHelpScreen extends StatefulWidget {
   const BiosHelpScreen({super.key});

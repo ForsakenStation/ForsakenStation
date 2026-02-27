@@ -1,4 +1,4 @@
-import 'package:forsaken/models/game_info.dart';
+import '../../models/game_info.dart';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
@@ -12,7 +12,7 @@ class RomsListView extends StatelessWidget {
   final int selectedIndex;
   final ScrollController scrollController;
   final FocusNode focusNode;
-  final Function(int index) onItemTap;
+  final Function(int index, RomItem) onItemTap;
   final Function(KeyEvent) onKeyEvent;
   final Map<String, RomMedia> mediaCache;
   final MediaService mediaService;
@@ -24,6 +24,8 @@ class RomsListView extends StatelessWidget {
   final Map<String, GameInfo> gameInfoCache;
   final Future<bool> Function(RomItem)? isRomDownloaded;
   final bool isCollection; // Show platform info for collection views
+  final String platformName;
+  final bool showNavigationHint;
 
   const RomsListView({
     super.key,
@@ -43,6 +45,8 @@ class RomsListView extends StatelessWidget {
     required this.gameInfoCache,
     this.isRomDownloaded,
     this.isCollection = false,
+    required this.platformName,
+    this.showNavigationHint = false,
   });
 
   @override
@@ -124,7 +128,7 @@ class RomsListView extends StatelessWidget {
           ),
           trailing: Icon(Icons.chevron_right, color: Colors.grey[600]),
           onTap: () =>
-              isWideScreen ? onItemTap(index) : showRomDetailDialog(item),
+              isWideScreen ? onItemTap(index, item) : showRomDetailDialog(item),
         ),
       );
     }
@@ -136,7 +140,7 @@ class RomsListView extends StatelessWidget {
         item: item,
         isSelected: isSelected,
         onTap: () =>
-            isWideScreen ? onItemTap(index) : showRomDetailDialog(item),
+            isWideScreen ? onItemTap(index, item) : showRomDetailDialog(item),
         media: mediaCache[item.name],
         mediaService: mediaService,
         isRomDownloaded: isRomDownloaded,

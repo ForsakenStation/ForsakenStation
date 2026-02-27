@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
-import 'package:forsaken/mixins/dialog_controls_mixin.dart';
+import 'gamepad_button_indicator.dart';
+import '../../mixins/dialog_controls_mixin.dart';
 
 /// Data model for a dialog button
 ///

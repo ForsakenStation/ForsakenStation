@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Utilidades comunes para gestión de focus en la aplicación
+/// Common utilities for focus management in the application
 ///
-/// Proporciona helpers para:
-/// - Request focus después del build
-/// - Wrappers para manejo de ESC key
-/// - Helpers para focus trapping en diálogos
+/// Provides helpers for:
+/// - Requesting focus after build
+/// - Wrappers for ESC key handling
+/// - Helpers for focus trapping in dialogs
 class FocusUtils {
-  /// Request focus en un FocusNode después del próximo frame
+  /// Requests focus on a FocusNode after the next frame
   ///
-  /// Útil cuando necesitas hacer focus en un widget inmediatamente después
-  /// de que se construya, como en initState() o didChangeDependencies().
+  /// Useful when you need to focus a widget immediately after
+  /// it is built, such as in initState() or didChangeDependencies().
   ///
-  /// Uso:
+  /// Usage:
   /// ```dart
   /// @override
   /// void initState() {
@@ -29,15 +29,15 @@ class FocusUtils {
     });
   }
 
-  /// Envuelve un widget con un Focus listener para manejar la tecla ESC
+  /// Wraps a widget with a Focus listener to handle the ESC key
   ///
-  /// Útil para diálogos, modals, y otras UIs que necesitan cerrarse con ESC.
+  /// Useful for dialogs, modals, and other UIs that need to close with ESC.
   ///
-  /// [child]: Widget a envolver
-  /// [onEscape]: Callback cuando se presiona ESC
-  /// [autofocus]: Si debe auto-enfocarse (default: true)
+  /// [child]: Widget to wrap
+  /// [onEscape]: Callback when ESC is pressed
+  /// [autofocus]: Whether it should auto-focus (default: true)
   ///
-  /// Uso:
+  /// Usage:
   /// ```dart
   /// @override
   /// Widget build(BuildContext context) {
@@ -66,15 +66,15 @@ class FocusUtils {
     );
   }
 
-  /// Envuelve un widget con un KeyboardListener para múltiples teclas
+  /// Wraps a widget with a KeyboardListener for multiple keys
   ///
-  /// Más flexible que withEscapeKey cuando necesitas manejar múltiples teclas.
+  /// More flexible than withEscapeKey when you need to handle multiple keys.
   ///
-  /// [child]: Widget a envolver
-  /// [onKeyEvent]: Handler de eventos de teclado
-  /// [autofocus]: Si debe auto-enfocarse (default: true)
+  /// [child]: Widget to wrap
+  /// [onKeyEvent]: Keyboard event handler
+  /// [autofocus]: Whether it should auto-focus (default: true)
   ///
-  /// Uso:
+  /// Usage:
   /// ```dart
   /// FocusUtils.withKeyboardHandler(
   ///   onKeyEvent: (event) {
@@ -104,54 +104,54 @@ class FocusUtils {
     );
   }
 
-  /// Crea un FocusNode simple
+  /// Creates a simple FocusNode
   ///
-  /// NOTA: El caller es responsable de llamar dispose() manualmente.
-  /// Preferir crear FocusNodes como campos de clase y hacer dispose en dispose().
+  /// NOTE: The caller is responsible for calling dispose() manually.
+  /// Prefer creating FocusNodes as class fields and disposing in dispose().
   static FocusNode createFocusNode() {
     return FocusNode();
   }
 
-  /// Verifica si un FocusNode puede recibir focus
+  /// Checks if a FocusNode can receive focus
   ///
-  /// Útil antes de llamar requestFocus() para evitar errores.
+  /// Useful before calling requestFocus() to avoid errors.
   static bool canRequestFocus(FocusNode node) {
     return node.context != null && node.canRequestFocus;
   }
 
-  /// Unfocus el FocusNode actual si está focused
+  /// Unfocuses the current FocusNode if it is focused
   ///
-  /// Útil para cerrar el teclado en móvil o remover focus de un campo.
+  /// Useful for closing the keyboard on mobile or removing focus from a field.
   static void unfocusIfFocused(FocusNode node) {
     if (node.hasFocus) {
       node.unfocus();
     }
   }
 
-  /// Mueve el focus al siguiente FocusNode en el árbol de focus
+  /// Moves focus to the next FocusNode in the focus tree
   ///
-  /// Equivalente a presionar Tab.
+  /// Equivalent to pressing Tab.
   static void focusNext(BuildContext context) {
     FocusScope.of(context).nextFocus();
   }
 
-  /// Mueve el focus al FocusNode anterior en el árbol de focus
+  /// Moves focus to the previous FocusNode in the focus tree
   ///
-  /// Equivalente a presionar Shift+Tab.
+  /// Equivalent to pressing Shift+Tab.
   static void focusPrevious(BuildContext context) {
     FocusScope.of(context).previousFocus();
   }
 
-  /// Unfocus todo en el scope actual
+  /// Unfocuses everything in the current scope
   ///
-  /// Útil para cerrar teclados o limpiar focus state.
+  /// Useful for closing keyboards or clearing focus state.
   static void unfocusAll(BuildContext context) {
     FocusScope.of(context).unfocus();
   }
 
-  /// Request focus en un widget específico por su BuildContext
+  /// Requests focus on a specific widget by its BuildContext
   ///
-  /// [context]: BuildContext del widget que debe recibir focus
+  /// [context]: BuildContext of the widget that should receive focus
   static void requestFocusInContext(BuildContext context) {
     FocusScope.of(context).requestFocus();
   }

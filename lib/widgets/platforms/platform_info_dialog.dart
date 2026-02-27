@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:forsaken/models/platform_info.dart';
-import 'package:forsaken/widgets/common/navigable_dialog.dart';
-import 'package:forsaken/widgets/common/dialog_button_bar.dart';
-import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
+import '../../models/platform_info.dart';
+import '../common/navigable_dialog.dart';
+import '../common/dialog_button_bar.dart';
+import '../common/gamepad_button_indicator.dart';
 
 /// Dialog that displays detailed information about a gaming platform
 class PlatformInfoDialog extends NavigableDialog {
@@ -38,7 +38,7 @@ class PlatformInfoDialog extends NavigableDialog {
 
   @override
   String? getTitle(BuildContext context) {
-    // No usamos el título aquí, lo construimos en el contenido
+    // Title is built in content
     return null;
   }
 
@@ -73,18 +73,18 @@ class PlatformInfoDialog extends NavigableDialog {
         const SizedBox(height: 24),
 
         // Basic Info
-        _buildInfoSection(context, 'Información General', [
-          _InfoItem('Fabricante', platformInfo.manufacturer),
-          _InfoItem('Año de Lanzamiento', platformInfo.releaseYear.toString()),
-          _InfoItem('Generación', platformInfo.generationString),
+        _buildInfoSection(context, 'General Information', [
+          _InfoItem('Manufacturer', platformInfo.manufacturer),
+          _InfoItem('Release Year', platformInfo.releaseYear.toString()),
+          _InfoItem('Generation', platformInfo.generationString),
         ]),
         const SizedBox(height: 16),
 
         // Technical Specs
-        _buildInfoSection(context, 'Especificaciones Técnicas', [
+        _buildInfoSection(context, 'Technical Specifications', [
           _InfoItem('CPU', platformInfo.cpu),
-          _InfoItem('Resolución', platformInfo.resolution),
-          _InfoItem('Colores', platformInfo.colors),
+          _InfoItem('Resolution', platformInfo.resolution),
+          _InfoItem('Colors', platformInfo.colors),
         ]),
       ],
     );
@@ -139,7 +139,7 @@ class PlatformInfoDialog extends NavigableDialog {
   List<DialogButton> buildButtons(BuildContext context) {
     return [
       DialogButton(
-        label: 'Cerrar',
+        label: 'Close',
         gamepadButton: GamepadButton.b,
         onPressed: () => Navigator.of(context).pop(),
       ),
@@ -147,7 +147,7 @@ class PlatformInfoDialog extends NavigableDialog {
   }
 
   @override
-  double getMaxWidth() => 600; // Más ancho para mostrar mejor la info
+  double getMaxWidth() => 600; // Wider to show info better
 }
 
 class _InfoItem {

@@ -1,5 +1,5 @@
-import 'package:forsaken/models/bios_requirement.dart';
-import 'package:forsaken/models/bios_download_mapping.dart';
+import 'bios_requirement.dart';
+import 'bios_download_mapping.dart';
 
 /// Extension to add download functionality to BiosRequirement without circular dependencies
 extension BiosRequirementDownload on BiosRequirement {

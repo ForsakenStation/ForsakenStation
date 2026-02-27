@@ -1,18 +1,18 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:forsaken/models/rom_item.dart';
-import 'package:forsaken/models/media.dart';
-import 'package:forsaken/models/game_info.dart';
-import 'package:forsaken/screens/pdf_viewer_screen.dart';
-import 'package:forsaken/services/debug_service.dart';
-import 'package:forsaken/mixins/dialog_controls_mixin.dart';
-import 'package:forsaken/widgets/roms/media_carousel.dart';
-import 'package:forsaken/widgets/common/placeholder_image.dart';
-import 'package:forsaken/widgets/common/dialog_button_bar.dart';
-import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
-import 'package:forsaken/widgets/roms/rom_info_section.dart';
-import 'package:forsaken/platforms/web/web_emulator_launcher.dart';
+import '../../models/rom_item.dart';
+import '../../models/media.dart';
+import '../../models/game_info.dart';
+import '../../screens/pdf_viewer_screen.dart';
+import '../../services/debug_service.dart';
+import '../../mixins/dialog_controls_mixin.dart';
+import 'media_carousel.dart';
+import '../common/placeholder_image.dart';
+import '../common/dialog_button_bar.dart';
+import '../common/gamepad_button_indicator.dart';
+import 'rom_info_section.dart';
+import '../../platforms/web/web_emulator_launcher.dart';
 
 /// Dialog showing detailed information about a ROM
 class RomDetailDialog extends StatefulWidget {
@@ -78,7 +78,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
     // Start dialog controls with navigation
     // Default to Play button (last button)
     startDialogControlsWithNavigation(
-      onCancel: _handleCancel,
+      onCancel: _handleDismiss,
       buttonCount: _buttons.length,
       defaultIndex: _buttons.length - 1, // Play button
       onButtonSelected: (index) {
@@ -93,7 +93,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
     final buttons = <DialogButton>[];
 
     // Cancel button
-    buttons.add(DialogButton(label: 'Cancel', onPressed: _handleCancel));
+    buttons.add(DialogButton(label: 'Cancel', onPressed: _handleDismiss));
 
     // View Manual button (if manual exists)
     if (_hasManual) {
@@ -131,7 +131,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
     return buttons;
   }
 
-  void _handleCancel() {
+  void _handleDismiss() {
     if (mounted) {
       Navigator.pop(context);
     }
@@ -146,7 +146,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
     // Helper to restart dialog controls (used by MediaCarousel)
     if (mounted) {
       startDialogControlsWithNavigation(
-        onCancel: _handleCancel,
+        onCancel: _handleDismiss,
         buttonCount: _buttons.length,
         defaultIndex: selectedButtonIndex, // Keep same selection
         onButtonSelected: (index) {
@@ -208,7 +208,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
       // Restart dialog controls when returning
       if (mounted) {
         startDialogControlsWithNavigation(
-          onCancel: _handleCancel,
+          onCancel: _handleDismiss,
           buttonCount: _buttons.length,
           defaultIndex: selectedButtonIndex, // Keep same selection
           onButtonSelected: (index) {
@@ -224,7 +224,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
   @override
   Widget build(BuildContext context) {
     return wrapWithKeyboardHandler(
-      onEscape: _handleCancel,
+      onEscape: _handleDismiss,
       child: Dialog(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700),
@@ -235,7 +235,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
                 title: Text(widget.gameInfo?.name ?? widget.item.displayName),
                 leading: IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: _handleCancel,
+                  onPressed: _handleDismiss,
                 ),
                 automaticallyImplyLeading: false,
               ),

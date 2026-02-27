@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forsaken/mixins/dialog_controls_mixin.dart';
-import 'package:forsaken/widgets/common/dialog_button_bar.dart';
-import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
+import '../../mixins/dialog_controls_mixin.dart';
+import 'dialog_button_bar.dart';
+import 'gamepad_button_indicator.dart';
 
 /// Exit confirmation dialog
 ///
@@ -49,7 +49,7 @@ class _ExitDialogState extends State<ExitDialog>
       DialogButton(
         label: 'Cancel',
         gamepadButton: GamepadButton.b,
-        onPressed: _handleCancel,
+        onPressed: _handleDismiss,
       ),
       DialogButton(
         label: 'Exit',
@@ -62,7 +62,7 @@ class _ExitDialogState extends State<ExitDialog>
     // Start dialog controls with navigation
     // Default to Exit button (last button)
     startDialogControlsWithNavigation(
-      onCancel: _handleCancel,
+      onCancel: _handleDismiss,
       buttonCount: _buttons.length,
       defaultIndex: 1, // Exit button
       onButtonSelected: (index) {
@@ -73,7 +73,7 @@ class _ExitDialogState extends State<ExitDialog>
     );
   }
 
-  void _handleCancel() {
+  void _handleDismiss() {
     if (mounted) {
       Navigator.pop(context, false);
     }
@@ -91,7 +91,7 @@ class _ExitDialogState extends State<ExitDialog>
   @override
   Widget build(BuildContext context) {
     return wrapWithKeyboardHandler(
-      onEscape: _handleCancel,
+      onEscape: _handleDismiss,
       child: Dialog(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),

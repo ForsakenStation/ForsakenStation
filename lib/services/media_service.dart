@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as path;
-import 'package:forsaken/models/media.dart';
-import 'package:forsaken/models/rom.dart';
-import 'package:forsaken/models/rom_item.dart';
-import 'package:forsaken/utils/file_utils.dart';
-import 'package:forsaken/services/config_service.dart';
+import '../models/media.dart';
+import '../models/rom.dart';
+import '../models/rom_item.dart';
+import '../utils/file_utils.dart';
+import 'config_service.dart';
 import 'debug_service.dart';
 
 class MediaService {

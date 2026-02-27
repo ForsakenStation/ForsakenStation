@@ -1,4 +1,4 @@
-import 'package:forsaken/utils/format_utils.dart';
+import '../../utils/format_utils.dart';
 
 enum DownloadStatus {
   pending,

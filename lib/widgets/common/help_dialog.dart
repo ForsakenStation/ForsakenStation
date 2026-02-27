@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:forsaken/mixins/dialog_controls_mixin.dart';
-import 'package:forsaken/services/gamepad_service.dart';
-import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
+import '../../mixins/dialog_controls_mixin.dart';
+import '../../services/gamepad_service.dart';
+import 'gamepad_button_indicator.dart';
 
 /// Help dialog that shows keyboard and gamepad controls for the application
 /// Can be configured for different screens (Platforms or ROMs)

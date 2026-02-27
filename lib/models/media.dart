@@ -115,9 +115,13 @@ class RomMedia {
     if (marquee?.exists ?? false) media.add(marquee!);
     if (titlescreen?.exists ?? false) media.add(titlescreen!);
     if (screenshot?.exists ?? false) media.add(screenshot!);
-    if (video?.exists ?? false) media.add(video!);
     if (backcover?.exists ?? false) media.add(backcover!);
     if (fanart?.exists ?? false) media.add(fanart!);
+
+    // Manual is penultimate, Video is last
+    if (manual?.exists ?? false) media.add(manual!);
+    if (video?.exists ?? false) media.add(video!);
+
     return media;
   }
 

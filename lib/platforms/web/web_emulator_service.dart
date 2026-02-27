@@ -222,44 +222,14 @@ class WebEmulatorService {
     }
   }
 
-  /// Domains known to send CORS headers — no proxy needed.
-  /// NOTE: archive.org does NOT send CORS headers for XHR/fetch from
-  /// arbitrary origins, so it must NOT be listed here.
-  static const _corsFriendlyDomains = <String>[];
-
-  /// Returns `true` when the [url] host is (or is a subdomain of) a
-  /// CORS-friendly domain, so the proxy can be skipped.
-  bool _isCorsFriendly(String url) {
-    try {
-      final host = Uri.parse(url).host.toLowerCase();
-      return _corsFriendlyDomains.any(
-        (domain) => host == domain || host.endsWith('.$domain'),
-      );
-    } catch (_) {
-      return false;
-    }
-  }
-
   /// Wrap a URL with the CORS proxy if configured.
   ///
-  /// Skips the proxy for domains that already serve CORS headers.
-  ///
   /// Produces: `{corsProxyUrl}?url={encodedTargetUrl}`
-  ///
-  /// The ROM is downloaded by the JS bridge via fetch (not by EmulatorJS
-  /// directly), so the proxy URL format doesn't need to encode the
-  /// filename — the bridge converts the response to a blob: URL.
   String _applyCorsProxy(String url) {
     if (corsProxyUrl == null || corsProxyUrl!.isEmpty) {
       return url;
     }
-    if (_isCorsFriendly(url)) {
-      _debug.info(
-        'Skipping CORS proxy for CORS-friendly URL: $url',
-        tag: 'WebEmulatorService',
-      );
-      return url;
-    }
+
     final base = corsProxyUrl!.endsWith('/') ? corsProxyUrl! : '$corsProxyUrl/';
     return '$base?url=${Uri.encodeComponent(url)}';
   }

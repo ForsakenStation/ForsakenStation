@@ -84,10 +84,9 @@ overlay0_alpha_mod = 1.0
 
   /// Get the base app directory for overlay storage
   /// Same pattern as RomStorageService to ensure compatibility
-  Future<Directory> _getBaseOverlayDirectory() async {
+  Future<Directory?> _getBaseOverlayDirectory() async {
     if (kIsWeb) {
-      // For web, use simulated directory path
-      return Directory('/web-storage/overlays');
+      return null;
     }
 
     final baseDir = await getApplicationSupportDirectory();
@@ -97,8 +96,11 @@ overlay0_alpha_mod = 1.0
   /// Initialize overlay directory (create if it doesn't exist)
   /// Same pattern as RomStorageService
   Future<void> _initializeOverlayDirectory() async {
+    if (kIsWeb) return;
+
     try {
       final overlayDir = await _getBaseOverlayDirectory();
+      if (overlayDir == null) return;
 
       if (!await overlayDir.exists()) {
         await overlayDir.create(recursive: true);
@@ -121,6 +123,8 @@ overlay0_alpha_mod = 1.0
     String platform, [
     String? variant,
   ]) async {
+    if (kIsWeb) return []; // Web doesn't support native RetroArch overlays
+
     final overlay = await getDefaultOverlay(platform);
     if (overlay == null) {
       _debug.debug('No overlay for $platform', tag: 'OverlayService');
@@ -131,6 +135,8 @@ overlay0_alpha_mod = 1.0
       // Initialize overlay directory first (like RomStorageService pattern)
       await _initializeOverlayDirectory();
       final overlayDir = await _getBaseOverlayDirectory();
+      if (overlayDir == null) return [];
+
       // Use fixed filenames - always overwrite the same files
       final configFile = File('${overlayDir.path}/current_overlay.cfg');
       final pngFile = File('${overlayDir.path}/current_overlay.png');

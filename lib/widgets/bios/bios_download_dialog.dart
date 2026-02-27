@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:forsaken/services/bios_download_service.dart';
-import 'package:forsaken/widgets/bios/enhanced_error_display.dart';
+import '../../services/bios_download_service.dart';
+import 'enhanced_error_display.dart';
 
 class BiosDownloadDialog extends StatefulWidget {
   final List<String> filesToDownload;

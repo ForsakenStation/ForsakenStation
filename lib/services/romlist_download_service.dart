@@ -85,12 +85,19 @@ class RomlistDownloadService {
     onStatus?.call('Completed');
   }
 
+  /// Unsupported - legacy method from older architecture
   Future<void> generateFakeRoms({
     Function(String)? onPlatform,
     Function(double)? onProgress,
     Function(String)? onStatus,
-  }) async {}
-  Future<void> copyGameListsToESDE({Function(String)? onStatus}) async {}
+  }) async {
+    _debug.warning('generateFakeRoms is no longer supported');
+  }
+
+  /// Unsupported - legacy method from older architecture
+  Future<void> copyGameListsToESDE({Function(String)? onStatus}) async {
+    _debug.warning('copyGameListsToESDE is no longer supported');
+  }
 }
 
 typedef RomListDownloadService = RomlistDownloadService;

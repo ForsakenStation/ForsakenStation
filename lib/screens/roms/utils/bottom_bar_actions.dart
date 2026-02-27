@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
+import '../../../widgets/common/controls_bottom_bar.dart';
 
 /// Helper class for generating bottom bar actions
 class RomsScreenBottomBarActions {

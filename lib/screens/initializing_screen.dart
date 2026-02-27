@@ -18,7 +18,7 @@ class _InitializingScreenState extends State<InitializingScreen>
   void initState() {
     super.initState();
 
-    // Configurar animaciones
+    // Configure animations
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
@@ -62,10 +62,10 @@ class _InitializingScreenState extends State<InitializingScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Spacer para empujar el contenido hacia arriba un poco
+                  // Spacer to push content up slightly
                   const Spacer(flex: 2),
 
-                  // Logo con animación de escala
+                  // Logo with scale animation
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: Container(
@@ -90,7 +90,7 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                   const SizedBox(height: 48),
 
-                  // Título de la app
+                  // App title
                   Text(
                     'FORSAKEN',
                     style: TextStyle(
@@ -109,7 +109,7 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                   const SizedBox(height: 8),
 
-                  // Subtítulo
+                  // Subtitle
                   Text(
                     'Retro Gaming Frontend',
                     style: TextStyle(
@@ -121,12 +121,12 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                   const Spacer(flex: 1),
 
-                  // Indicador de carga indeterminado
+                  // Indeterminate loading indicator
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 80),
                     child: Column(
                       children: [
-                        // Barra de progreso indeterminada
+                        // Indeterminate progress bar
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: LinearProgressIndicator(
@@ -140,7 +140,7 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                         const SizedBox(height: 24),
 
-                        // Texto de estado
+                        // Status text
                         Text(
                           'Loading...',
                           style: TextStyle(
@@ -154,7 +154,7 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                   const Spacer(flex: 2),
 
-                  // Versión en la parte inferior
+                  // Version at the bottom
                   Padding(
                     padding: const EdgeInsets.only(bottom: 32),
                     child: Text(

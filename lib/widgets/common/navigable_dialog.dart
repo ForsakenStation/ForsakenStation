@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:forsaken/mixins/dialog_controls_mixin.dart';
-import 'package:forsaken/widgets/common/dialog_button_bar.dart';
+import '../../mixins/dialog_controls_mixin.dart';
+import 'dialog_button_bar.dart';
 
-/// Clase base abstracta para diálogos simples con navegación automática
+/// Abstract base class for simple dialogs with automatic navigation
 ///
-/// Proporciona una base completa para crear diálogos con:
-/// - Navegación con gamepad/teclado automática
-/// - ESC/B button para cerrar
-/// - A button para confirmar
-/// - Blur background estándar
-/// - Focus management automático
+/// Provides a complete base to create dialogs with:
+/// - Automatic gamepad/keyboard navigation
+/// - ESC/B button to close
+/// - A button to confirm
+/// - Standard blur background
+/// - Automatic focus management
 ///
-/// Ideal para diálogos simples con 1-3 botones (confirmación, error, info, etc.)
+/// Ideal for simple dialogs with 1-3 buttons (confirmation, error, info, etc.)
 ///
-/// Para diálogos más complejos, usar DialogControlsMixin + DialogButtonBar directamente.
+/// For more complex dialogs, use DialogControlsMixin + DialogButtonBar directly.
 ///
-/// Uso:
+/// Usage:
 /// ```dart
 /// class ConfirmDialog extends NavigableDialog {
 ///   final String message;
@@ -47,7 +47,7 @@ import 'package:forsaken/widgets/common/dialog_button_bar.dart';
 ///   }
 /// }
 ///
-/// // Uso
+/// // Usage
 /// final confirmed = await showDialog<bool>(
 ///   context: context,
 ///   builder: (_) => ConfirmDialog(message: 'Delete this item?'),
@@ -56,48 +56,48 @@ import 'package:forsaken/widgets/common/dialog_button_bar.dart';
 abstract class NavigableDialog extends StatefulWidget {
   const NavigableDialog({super.key});
 
-  /// Título del diálogo
+  /// Dialog title
   ///
-  /// Retorna el texto que se muestra en el AppBar/header del diálogo.
-  /// Si retorna null, no se muestra título.
+  /// Returns the text shown in the AppBar/header of the dialog.
+  /// If null, no title is shown.
   String? getTitle(BuildContext context);
 
-  /// Construye el contenido del diálogo
+  /// Builds the dialog content
   ///
-  /// Este es el cuerpo principal del diálogo.
-  /// Puede ser cualquier widget (Text, Column, etc.)
+  /// This is the main body of the dialog.
+  /// Can be any widget (Text, Column, etc.)
   Widget buildContent(BuildContext context);
 
-  /// Construye la lista de botones del diálogo
+  /// Builds the list of dialog buttons
   ///
-  /// Retorna una lista de DialogButton que se renderizarán con DialogButtonBar.
-  /// El orden importa: el último botón suele ser el primario.
+  /// Returns a list of DialogButton to be rendered with DialogButtonBar.
+  /// Order matters: the last button is usually the primary one.
   List<DialogButton> buildButtons(BuildContext context);
 
-  /// Layout de los botones (horizontal o vertical)
+  /// Button layout (horizontal or vertical)
   ///
-  /// Por defecto es horizontal.
-  /// Override si necesitas cambiar el layout.
+  /// Defaults to horizontal.
+  /// Override if you need to change the layout.
   ButtonLayout getButtonLayout() => ButtonLayout.horizontal;
 
-  /// Índice del botón seleccionado por defecto
+  /// Index of the default selected button
   ///
-  /// Por defecto es el último botón (típicamente el primario).
-  /// Override para cambiar el botón inicial seleccionado.
+  /// Defaults to the last button (typically the primary one).
+  /// Override to change the initial selected button.
   int getDefaultButtonIndex(BuildContext context) {
     final buttons = buildButtons(context);
     return buttons.isEmpty ? 0 : buttons.length - 1;
   }
 
-  /// Ancho máximo del diálogo
+  /// Maximum width of the dialog
   ///
-  /// Por defecto es 400px.
-  /// Override para cambiar el tamaño.
+  /// Defaults to 400px.
+  /// Override to change the size.
   double getMaxWidth() => 400;
 
-  /// Si el diálogo se puede cerrar haciendo clic fuera
+  /// Whether the dialog can be closed by clicking outside
   ///
-  /// Por defecto es false.
+  /// Defaults to false.
   bool isDismissible() => false;
 
   @override
@@ -112,13 +112,13 @@ class _NavigableDialogState extends State<NavigableDialog>
   void initState() {
     super.initState();
 
-    // Construir botones
+    // Build buttons
     _buttons = widget.buildButtons(context);
 
-    // Configurar controles con navegación
+    // Configure controls with navigation
     if (_buttons.isNotEmpty) {
       startDialogControlsWithNavigation(
-        onCancel: _handleCancel,
+        onCancel: _handleDismiss,
         buttonCount: _buttons.length,
         defaultIndex: widget.getDefaultButtonIndex(context),
         onButtonSelected: (index) {
@@ -128,12 +128,12 @@ class _NavigableDialogState extends State<NavigableDialog>
         layout: widget.getButtonLayout(),
       );
     } else {
-      // Sin botones, solo cerrar con B/ESC
-      startDialogControls(onCancel: _handleCancel);
+      // No buttons, just close with B/ESC
+      startDialogControls(onCancel: _handleDismiss);
     }
   }
 
-  void _handleCancel() {
+  void _handleDismiss() {
     if (mounted) {
       Navigator.pop(context);
     }
@@ -141,7 +141,7 @@ class _NavigableDialogState extends State<NavigableDialog>
 
   void _handleConfirm() {
     if (_buttons.isEmpty) return;
-    // Ejecutar acción del botón seleccionado
+    // Execute action of selected button
     _buttons[selectedButtonIndex].onPressed();
   }
 
@@ -150,7 +150,7 @@ class _NavigableDialogState extends State<NavigableDialog>
     final title = widget.getTitle(context);
 
     return wrapWithKeyboardHandler(
-      onEscape: _handleCancel,
+      onEscape: _handleDismiss,
       child: Dialog(
         child: Container(
           constraints: BoxConstraints(maxWidth: widget.getMaxWidth()),
@@ -158,7 +158,7 @@ class _NavigableDialogState extends State<NavigableDialog>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Header con título (opcional)
+              // Header with title (optional)
               if (title != null)
                 Container(
                   padding: const EdgeInsets.all(24),
@@ -173,7 +173,7 @@ class _NavigableDialogState extends State<NavigableDialog>
                   ),
                 ),
 
-              // Contenido
+              // Content
               Flexible(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
@@ -181,7 +181,7 @@ class _NavigableDialogState extends State<NavigableDialog>
                 ),
               ),
 
-              // Botones
+              // Buttons
               if (_buttons.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -205,12 +205,12 @@ class _NavigableDialogState extends State<NavigableDialog>
   }
 }
 
-/// Helper para mostrar NavigableDialog con blur background estándar
+/// Helper to show NavigableDialog with standard blur background
 ///
-/// Simplifica el uso de NavigableDialog aplicando automáticamente
-/// el patrón estándar de la app (blur + barrier oscuro).
+/// Simplifies usage of NavigableDialog by automatically applying
+/// the app's standard pattern (blur + dark barrier).
 ///
-/// Uso:
+/// Usage:
 /// ```dart
 /// final result = await showNavigableDialog<bool>(
 ///   context: context,

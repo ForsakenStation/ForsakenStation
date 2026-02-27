@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:forsaken/mixins/gamepad_polling_mixin.dart';
+import 'gamepad_polling_mixin.dart';
 
-/// Mixin para gestión unificada de navegación entre screens
+/// Mixin for unified navigation management between screens
 ///
-/// Proporciona métodos helper que automáticamente pausan/resumen el polling
-/// de gamepad cuando se navega a otras pantallas o se muestran diálogos.
+/// Provides helper methods that automatically pause/resume gamepad polling
+/// when navigating to other screens or showing dialogs.
 ///
-/// IMPORTANTE: Este mixin REQUIERE que también uses GamepadPollingMixin.
+/// IMPORTANT: This mixin REQUIRES that you also use GamepadPollingMixin.
 ///
-/// Uso básico:
+/// Basic usage:
 /// ```dart
 /// class MyScreenState extends State<MyScreen>
 ///     with GamepadPollingMixin, ScreenNavigationMixin {
@@ -20,7 +20,7 @@ import 'package:forsaken/mixins/gamepad_polling_mixin.dart';
 ///   }
 ///
 ///   void _openSettings() async {
-///     // Automáticamente pausa polling, navega, y resume al volver
+///     // Automatically pauses polling, navigates, and resumes when returning
 ///     await navigateTo(SettingsScreen());
 ///   }
 ///
@@ -29,36 +29,36 @@ import 'package:forsaken/mixins/gamepad_polling_mixin.dart';
 ///       dialog: ConfirmDialog(),
 ///     );
 ///     if (result == true) {
-///       // Usuario confirmó
+///       // User confirmed
 ///     }
 ///   }
 /// }
 /// ```
 ///
-/// Beneficios:
-/// - Elimina código boilerplate repetitivo
-/// - Previene bugs de input overlap (pantalla de fondo procesando input)
-/// - API consistente en toda la app
-/// - Manejo automático de mounted check
+/// Benefits:
+/// - Eliminates repetitive boilerplate code
+/// - Prevents input overlap bugs (background screen processing input)
+/// - Consistent API across the app
+/// - Automatic mounted check handling
 mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
-  /// Navega a otra pantalla con pause/resume automático de gamepad polling
+  /// Navigates to another screen with automatic gamepad polling pause/resume
   ///
-  /// Pausa el polling antes de navegar y lo reanuda automáticamente cuando
-  /// la nueva pantalla se cierra.
+  /// Pauses polling before navigating and automatically resumes it when
+  /// the new screen is closed.
   ///
-  /// [screen]: Widget de la pantalla a mostrar
-  /// [pausePolling]: Si debe pausar el polling (default: true)
-  /// [fullscreenDialog]: Si debe mostrarse como diálogo fullscreen
+  /// [screen]: Screen widget to display
+  /// [pausePolling]: Whether to pause polling (default: true)
+  /// [fullscreenDialog]: Whether to show as a fullscreen dialog
   ///
-  /// Retorna el resultado de Navigator.push (tipo genérico R).
+  /// Returns the Navigator.push result (generic type R).
   ///
-  /// Ejemplo:
+  /// Example:
   /// ```dart
   /// final result = await navigateTo<bool>(
   ///   ConfirmationScreen(message: 'Are you sure?'),
   /// );
   /// if (result == true) {
-  ///   // Usuario confirmó
+  ///   // User confirmed
   /// }
   /// ```
   Future<R?> navigateTo<R>(
@@ -66,15 +66,15 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
     bool pausePolling = true,
     bool fullscreenDialog = false,
   }) async {
-    // Cast dinámico para verificar si tenemos GamepadPollingMixin
+    // Dynamic cast to check if we have GamepadPollingMixin
     final hasPolling = this is GamepadPollingMixin;
 
-    // Pausar polling si está habilitado y disponible
+    // Pause polling if enabled and available
     if (pausePolling && hasPolling) {
       (this as GamepadPollingMixin).pauseGamepadPolling();
     }
 
-    // Navegar a la nueva pantalla
+    // Navigate to the new screen
     final result = await Navigator.push<R>(
       context,
       MaterialPageRoute(
@@ -83,7 +83,7 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
       ),
     );
 
-    // Reanudar polling si está montado
+    // Resume polling if mounted
     if (mounted && pausePolling && hasPolling) {
       (this as GamepadPollingMixin).resumeGamepadPolling();
     }
@@ -91,18 +91,18 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
     return result;
   }
 
-  /// Muestra un diálogo con pause/resume automático de gamepad polling
+  /// Shows a dialog with automatic gamepad polling pause/resume
   ///
-  /// Pausa el polling antes de mostrar el diálogo y lo reanuda cuando
-  /// el diálogo se cierra.
+  /// Pauses polling before showing the dialog and resumes it when
+  /// the dialog is closed.
   ///
-  /// [dialog]: Widget del diálogo a mostrar
-  /// [barrierDismissible]: Si se puede cerrar tocando fuera (default: false)
-  /// [useRootNavigator]: Si debe usar el navigator raíz (default: true)
+  /// [dialog]: Dialog widget to display
+  /// [barrierDismissible]: Whether it can be closed by tapping outside (default: false)
+  /// [useRootNavigator]: Whether to use the root navigator (default: true)
   ///
-  /// Retorna el resultado del diálogo (tipo genérico R).
+  /// Returns the dialog result (generic type R).
   ///
-  /// Ejemplo:
+  /// Example:
   /// ```dart
   /// final confirmed = await showDialogWithPause<bool>(
   ///   dialog: ConfirmDialog(message: 'Delete this item?'),
@@ -118,12 +118,12 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
   }) async {
     final hasPolling = this is GamepadPollingMixin;
 
-    // Pausar polling
+    // Pause polling
     if (hasPolling) {
       (this as GamepadPollingMixin).pauseGamepadPolling();
     }
 
-    // Mostrar diálogo
+    // Show dialog
     final result = await showDialog<R>(
       context: context,
       barrierDismissible: barrierDismissible,
@@ -131,7 +131,7 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
       builder: (_) => dialog,
     );
 
-    // Reanudar polling
+    // Resume polling
     if (mounted && hasPolling) {
       (this as GamepadPollingMixin).resumeGamepadPolling();
     }
@@ -139,12 +139,12 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
     return result;
   }
 
-  /// Muestra un modal bottom sheet con pause/resume automático
+  /// Shows a modal bottom sheet with automatic pause/resume
   ///
-  /// [builder]: Builder del contenido del bottom sheet
-  /// [isScrollControlled]: Si el sheet puede usar toda la altura (default: false)
+  /// [builder]: Bottom sheet content builder
+  /// [isScrollControlled]: Whether the sheet can use full height (default: false)
   ///
-  /// Retorna el resultado del bottom sheet (tipo genérico R).
+  /// Returns the bottom sheet result (generic type R).
   Future<R?> showBottomSheetWithPause<R>({
     required WidgetBuilder builder,
     bool isScrollControlled = false,
@@ -168,14 +168,14 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
     return result;
   }
 
-  /// Push con reemplazo (replacement) con pause/resume automático
+  /// Push replacement with automatic pause/resume
   ///
-  /// Similar a navigateTo pero reemplaza la pantalla actual en lugar de
-  /// agregar una nueva al stack.
+  /// Similar to navigateTo but replaces the current screen instead of
+  /// adding a new one to the stack.
   ///
-  /// [screen]: Nueva pantalla a mostrar
+  /// [screen]: New screen to display
   ///
-  /// Retorna el resultado de Navigator.pushReplacement.
+  /// Returns the Navigator.pushReplacement result.
   Future<R?> navigateReplaceTo<R, TO>(Widget screen) async {
     final hasPolling = this is GamepadPollingMixin;
 
@@ -195,13 +195,13 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
     return result;
   }
 
-  /// Push y remover todas las pantallas anteriores
+  /// Push and remove all previous screens
   ///
-  /// Útil para navegación a home/login después de ciertas acciones.
+  /// Useful for navigating to home/login after certain actions.
   ///
-  /// [screen]: Nueva pantalla a mostrar
+  /// [screen]: New screen to display
   ///
-  /// Retorna el resultado de Navigator.pushAndRemoveUntil.
+  /// Returns the Navigator.pushAndRemoveUntil result.
   Future<R?> navigateAndRemoveAll<R>(Widget screen) async {
     final hasPolling = this is GamepadPollingMixin;
 
@@ -212,24 +212,24 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
     final result = await Navigator.pushAndRemoveUntil<R>(
       context,
       MaterialPageRoute(builder: (_) => screen),
-      (route) => false, // Remover todas las rutas
+      (route) => false, // Remove all routes
     );
 
     return result;
   }
 
-  /// Pop con verificación de mounted y opcional pausa temporal
+  /// Pop with mounted check and optional temporary pause
   ///
-  /// [result]: Resultado opcional a retornar
+  /// [result]: Optional result to return
   ///
-  /// Ejemplo:
+  /// Example:
   /// ```dart
   /// void _cancel() {
-  ///   safePop(); // Sin resultado
+  ///   safePop(); // No result
   /// }
   ///
   /// void _confirm() {
-  ///   safePop(result: true); // Con resultado
+  ///   safePop(result: true); // With result
   /// }
   /// ```
   void safePop<R>({R? result}) {
@@ -237,6 +237,6 @@ mixin ScreenNavigationMixin<T extends StatefulWidget> on State<T> {
     Navigator.pop(context, result);
   }
 
-  /// Verifica si se puede hacer pop (hay pantallas en el stack)
+  /// Checks if pop is possible (screens in stack)
   bool get canPop => Navigator.canPop(context);
 }

@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:forsaken/models/bios_download_mapping.dart';
-import 'package:forsaken/models/bios_requirement.dart';
-import 'package:forsaken/services/bios_checksum_service.dart';
-import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
+import '../../models/bios_download_mapping.dart';
+import '../../models/bios_requirement.dart';
+import '../../services/bios_checksum_service.dart';
+import '../common/controls_bottom_bar.dart';
 
 /// Comprehensive BIOS Status Dashboard
 ///

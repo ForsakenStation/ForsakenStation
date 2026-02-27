@@ -7,13 +7,6 @@ import '../common/download_badge.dart';
 import '../common/placeholder_image.dart';
 
 /// Reusable ROM card widget for grid and carousel views
-///
-/// Displays a ROM with vertical layout:
-/// - Cover image (top)
-/// - Title (bottom)
-/// - Download status badge (if applicable)
-/// - Selection state
-/// - Platform name (for collection views)
 class RomGridCard extends StatefulWidget {
   final RomItem item;
   final bool isSelected;
@@ -72,6 +65,7 @@ class _RomGridCardState extends State<RomGridCard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final imagePath = widget.media != null
         ? widget.mediaService.getBestImagePath(widget.media!)
         : null;
@@ -82,14 +76,13 @@ class _RomGridCardState extends State<RomGridCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: widget.isSelected
-            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
+            ? BorderSide(color: theme.colorScheme.primary, width: 3)
             : BorderSide.none,
       ),
       child: InkWell(
         onTap: widget.onTap,
         child: Stack(
           children: [
-            // Main content (image + title)
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -101,10 +94,10 @@ class _RomGridCardState extends State<RomGridCard> {
                           cacheWidth: 300,
                           cacheHeight: 400,
                           errorBuilder: (context, error, stackTrace) {
-                            return PlaceholderImage(size: null);
+                            return const PlaceholderImage(size: null);
                           },
                         )
-                      : PlaceholderImage(size: null),
+                      : const PlaceholderImage(size: null),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -131,9 +124,11 @@ class _RomGridCardState extends State<RomGridCard> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: theme.textTheme.bodySmall?.copyWith(
                             fontSize: 10,
-                            color: Colors.grey[400],
+                            color: theme.textTheme.bodySmall?.color?.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ),
                       ],
@@ -142,8 +137,6 @@ class _RomGridCardState extends State<RomGridCard> {
                 ),
               ],
             ),
-
-            // Download indicator badge
             if (_downloadFuture != null)
               Positioned(
                 top: 8,
@@ -155,7 +148,6 @@ class _RomGridCardState extends State<RomGridCard> {
       ),
     );
 
-    // Wrap with size constraints if provided
     if (widget.width != null || widget.height != null) {
       return SizedBox(
         width: widget.width,

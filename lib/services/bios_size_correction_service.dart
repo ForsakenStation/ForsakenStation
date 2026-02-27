@@ -40,25 +40,16 @@ class BiosSizeCorrectionService {
       // Check if we have known corrections for this repository
       final corrections = _knownSizeCorrections[repoKey];
       if (corrections != null && corrections.containsKey(filename)) {
-        final expectedSize = corrections[filename]!;
+        final knownSize = corrections[filename]!;
 
         // If the actual size matches our known correction, suggest it
-        if (actualSize == expectedSize) {
+        if (actualSize == knownSize) {
           _debug.debug(
             'Size correction suggested for $filename from $repoKey: $actualSize bytes',
             tag: 'BiosSizeCorrection',
           );
-          return actualSize;
+          return knownSize;
         }
-      }
-
-      // Check if this is a reasonable size for the file type
-      if (_isReasonableFileSize(filename, actualSize)) {
-        _debug.debug(
-          'Size appears reasonable for $filename: $actualSize bytes',
-          tag: 'BiosSizeCorrection',
-        );
-        return actualSize;
       }
 
       return null;

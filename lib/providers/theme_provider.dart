@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:forsaken/services/debug_service.dart';
+import '../services/debug_service.dart';
 
 class ThemeProvider extends ChangeNotifier {
   static const String _themeModeKey = 'theme_mode';

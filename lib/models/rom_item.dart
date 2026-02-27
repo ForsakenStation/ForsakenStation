@@ -57,6 +57,10 @@ class RomItem {
     return getCleanFilename();
   }
 
+  set displayName(String value) {
+    _cachedDisplayName = value;
+  }
+
   /// Gets display name from GameList if available, otherwise from clean filename
   /// This is async because it might need to load GameList data
   Future<String> getDisplayNameAsync(GamelistService? gamelistService) async {

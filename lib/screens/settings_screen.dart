@@ -12,17 +12,17 @@ import 'settings_categories/gamepad_test_screen.dart';
 import 'settings_categories/bios_help_screen.dart';
 import 'settings_categories/web_settings_screen.dart';
 import 'setup_wizard_screen.dart';
-import 'package:forsaken/services/debug_service.dart';
-import 'package:forsaken/services/config_service.dart';
-import 'package:forsaken/services/keyboard_service.dart';
-import 'package:forsaken/services/gamepad_service.dart';
+import '../services/debug_service.dart';
+import '../services/config_service.dart';
+import '../services/keyboard_service.dart';
+import '../services/gamepad_service.dart';
 
 // Web-specific import (conditional for web platform)
-import 'package:forsaken/platforms/web/web_emulator_service.dart'
+import '../platforms/web/web_emulator_service.dart'
     if (dart.library.io) 'package:forsaken/services/empty_stub.dart';
-import 'package:forsaken/constants/legal.dart';
-import 'package:forsaken/widgets/common/dialog_button_bar.dart';
-import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
+import '../constants/legal.dart';
+import '../widgets/common/dialog_button_bar.dart';
+import '../widgets/common/gamepad_button_indicator.dart';
 
 /// Main settings screen with categorized configuration options
 /// Replaces bash scripts with native Flutter UI
@@ -65,7 +65,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (!mounted) return;
       final gamepad = GamepadService.instance;
 
-      // Navegación
+      // Navigation
       final direction = gamepad.getNavigationDirection();
       if (direction != null) {
         setState(() {
@@ -80,7 +80,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         });
       }
 
-      // Botones
+      // Buttons
       if (gamepad.isSelectPressed()) {
         _navigateToCategory(_selectedIndex);
       } else if (gamepad.isBackPressed()) {

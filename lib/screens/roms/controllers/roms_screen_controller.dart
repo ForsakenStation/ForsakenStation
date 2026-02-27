@@ -1,16 +1,27 @@
 import 'dart:async';
-import 'package:forsaken/models/rom_item.dart';
-import 'package:forsaken/models/media.dart';
-import 'package:forsaken/models/game_info.dart';
-import 'package:forsaken/services/media_service.dart';
-import 'package:forsaken/services/gamelist_service.dart';
-import 'package:forsaken/services/debug_service.dart';
+import 'package:flutter/foundation.dart';
+import '../../../models/rom_item.dart';
+import '../../../models/media.dart';
+import '../../../models/game_info.dart';
+import '../../../models/emulator_platform.dart';
+import '../../../services/media_service.dart';
+import '../../../services/gamelist_service.dart';
+import '../../../services/rom_service.dart';
+import '../../../services/debug_service.dart';
 
 /// Controller for ROM screen state and business logic
-class RomsScreenController {
+class RomsScreenController extends ChangeNotifier {
   final MediaService _mediaService;
   final GamelistService _gamelistService;
+  final RomService _romService;
   final _debug = DebugService.instance;
+
+  // State
+  List<RomItem> _items = [];
+  List<RomItem> _filteredItems = [];
+  int _selectedIndex = 0;
+  bool _isLoading = true;
+  String _searchQuery = '';
 
   // Media loading control with debouncing
   Timer? _mediaLoadTimer;
@@ -25,22 +36,118 @@ class RomsScreenController {
   RomsScreenController({
     required MediaService mediaService,
     required GamelistService gamelistService,
+    required RomService romService,
   }) : _mediaService = mediaService,
-       _gamelistService = gamelistService;
+       _gamelistService = gamelistService,
+       _romService = romService;
 
-  /// Get media cache
+  // Getters
+  List<RomItem> get items => _items;
+  List<RomItem> get filteredItems => _filteredItems;
+  int get selectedIndex => _selectedIndex;
+  bool get isLoading => _isLoading;
+  String get searchQuery => _searchQuery;
   Map<String, RomMedia> get mediaCache => _mediaCache;
-
-  /// Get game info cache
   Map<String, GameInfo> get gameInfoCache => _gameInfoCache;
-
-  /// Check if currently navigating
   bool get isNavigating => _isNavigating;
 
+  set selectedIndex(int value) {
+    if (_selectedIndex != value) {
+      _selectedIndex = value;
+      notifyListeners();
+    }
+  }
+
   /// Dispose resources
+  @override
   void dispose() {
     _mediaLoadTimer?.cancel();
     _preloadTimer?.cancel();
+    super.dispose();
+  }
+
+  /// Load items for a platform and path
+  Future<void> loadItems({
+    required EmulatorPlatform platform,
+    required String currentPath,
+    String? currentSubdirectory,
+    bool isCollection = false,
+  }) async {
+    _isLoading = true;
+    _selectedIndex = 0;
+    _items = [];
+    _filteredItems = [];
+    clearCaches();
+    notifyListeners();
+
+    try {
+      if (isCollection) {
+        _items = platform.roms.map((rom) {
+          return RomItem(
+            name: rom.name,
+            path: rom.localPath ?? rom.urlFilePath,
+            type: RomItemType.rom,
+            downloadUrl: rom.downloadUrl,
+            platform: rom.platform,
+          );
+        }).toList();
+      } else if (platform.isJsonlPlatform) {
+        final roms = await _romService.loadRomsForJsonlPlatform(platform.name);
+        _items = await _romService.loadItemsFromRoms(
+          roms,
+          currentSubdirectory,
+          platform.name,
+        );
+      } else {
+        _items = await _romService.loadItemsInDirectory(
+          currentPath,
+          platform.name,
+        );
+      }
+
+      await _updateDisplayNames(platform.name);
+      _updateFilteredItems();
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _debug.error('Error loading ROM items: $e', tag: 'RomsScreenController');
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> _updateDisplayNames(String platformName) async {
+    for (var item in _items) {
+      if (item.isRom) {
+        final actualPlatform = item.platform ?? platformName;
+        final gameInfo = await _gamelistService.getGameInfo(
+          actualPlatform,
+          item.path,
+        );
+        if (gameInfo != null && gameInfo.name.isNotEmpty) {
+          item.displayName = gameInfo.name;
+        }
+      }
+    }
+  }
+
+  /// Update search query and filter items
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    _updateFilteredItems();
+    _selectedIndex = 0;
+    notifyListeners();
+  }
+
+  void _updateFilteredItems() {
+    if (_searchQuery.isEmpty) {
+      _filteredItems = List.from(_items);
+    } else {
+      final query = _searchQuery.toLowerCase();
+      _filteredItems = _items.where((item) {
+        return item.displayName.toLowerCase().contains(query);
+      }).toList();
+    }
   }
 
   /// Clear all caches
@@ -51,55 +158,34 @@ class RomsScreenController {
   }
 
   /// Load media for a specific ROM item
-  Future<void> loadMediaForItem(
-    RomItem item,
-    String platformName,
-    Function() onUpdate,
-    bool Function() isMounted,
-  ) async {
+  Future<void> loadMediaForItem(RomItem item, String platformName) async {
     if (_mediaCache.containsKey(item.name)) {
       return;
     }
 
-    // Use item's platform if available (for collections), otherwise use provided platformName
     final actualPlatform = item.platform ?? platformName;
     final media = await _mediaService.getMediaForRomItem(item, actualPlatform);
 
-    if (isMounted()) {
-      _mediaCache[item.name] = media;
-      onUpdate();
-    }
+    _mediaCache[item.name] = media;
+    notifyListeners();
   }
 
   /// Load game info for a specific ROM item
-  Future<void> loadGameInfoForItem(
-    RomItem item,
-    String platformName,
-    Function() onUpdate,
-    bool Function() isMounted,
-  ) async {
-    // Check if already loaded
+  Future<void> loadGameInfoForItem(RomItem item, String platformName) async {
     if (_gameInfoCache.containsKey(item.name)) {
       return;
     }
 
     try {
-      // Use item's platform if available (for collections), otherwise use provided platformName
       final actualPlatform = item.platform ?? platformName;
-
-      // Load game info from gamelist.xml
       final gameInfo = await _gamelistService.getGameInfo(
         actualPlatform,
         item.path,
       );
 
-      if (isMounted() && gameInfo != null) {
+      if (gameInfo != null) {
         _gameInfoCache[item.name] = gameInfo;
-        onUpdate();
-        _debug.info(
-          'Loaded game info for ${item.name}: ${gameInfo.name}',
-          tag: 'RomsScreenController',
-        );
+        notifyListeners();
       }
     } catch (e) {
       _debug.error(
@@ -109,135 +195,83 @@ class RomsScreenController {
     }
   }
 
-  /// Schedule media loading after debounce delay (500ms)
-  /// Loads full media for selected item and neighbors, thumbnails for wider range
+  /// Schedule media loading after debounce delay
   void scheduleMediaLoad({
-    required List<RomItem> filteredItems,
-    required int selectedIndex,
     required String platformName,
-    required Function() onUpdate,
     required bool Function() isMounted,
   }) {
-    // Cancel any pending load
     _mediaLoadTimer?.cancel();
-
-    // Mark as navigating
     _isNavigating = true;
-    onUpdate();
+    notifyListeners();
 
-    // Schedule load after 500ms debounce delay
     _mediaLoadTimer = Timer(const Duration(milliseconds: 500), () async {
       if (!isMounted()) return;
 
-      // Reset navigation flag
       _isNavigating = false;
-      onUpdate();
+      notifyListeners();
 
-      // Validate index
-      if (filteredItems.isEmpty || selectedIndex >= filteredItems.length) {
+      if (_filteredItems.isEmpty || _selectedIndex >= _filteredItems.length) {
         return;
       }
 
-      // Load media for selected item and immediate neighbors (±1)
-      await _loadMediaForSelectedAndNeighbors(
-        filteredItems: filteredItems,
-        selectedIndex: selectedIndex,
-        platformName: platformName,
-        onUpdate: onUpdate,
-        isMounted: isMounted,
-      );
-
-      // Schedule thumbnail preloading for wider range (±100)
-      _scheduleThumbnailPreload(
-        filteredItems: filteredItems,
-        selectedIndex: selectedIndex,
-        platformName: platformName,
-        onUpdate: onUpdate,
-        isMounted: isMounted,
-      );
+      await _loadMediaForSelectedAndNeighbors(platformName, isMounted);
+      _scheduleThumbnailPreload(platformName, isMounted);
     });
   }
 
-  /// Load full media for selected item and immediate neighbors (±1)
-  Future<void> _loadMediaForSelectedAndNeighbors({
-    required List<RomItem> filteredItems,
-    required int selectedIndex,
-    required String platformName,
-    required Function() onUpdate,
-    required bool Function() isMounted,
-  }) async {
-    if (filteredItems.isEmpty) return;
+  Future<void> _loadMediaForSelectedAndNeighbors(
+    String platformName,
+    bool Function() isMounted,
+  ) async {
+    if (_filteredItems.isEmpty) return;
 
-    // Selected item
-    final selectedItem = filteredItems[selectedIndex];
+    final selectedItem = _filteredItems[_selectedIndex];
     if (selectedItem.isRom) {
-      await loadMediaForItem(selectedItem, platformName, onUpdate, isMounted);
-      await loadGameInfoForItem(
-        selectedItem,
-        platformName,
-        onUpdate,
-        isMounted,
-      );
+      await loadMediaForItem(selectedItem, platformName);
+      await loadGameInfoForItem(selectedItem, platformName);
     }
 
-    // Previous item
-    if (selectedIndex > 0) {
-      final prevItem = filteredItems[selectedIndex - 1];
-      if (prevItem.isRom) {
-        await loadMediaForItem(prevItem, platformName, onUpdate, isMounted);
-      }
+    if (_selectedIndex > 0) {
+      final prevItem = _filteredItems[_selectedIndex - 1];
+      if (prevItem.isRom) await loadMediaForItem(prevItem, platformName);
     }
 
-    // Next item
-    if (selectedIndex < filteredItems.length - 1) {
-      final nextItem = filteredItems[selectedIndex + 1];
-      if (nextItem.isRom) {
-        await loadMediaForItem(nextItem, platformName, onUpdate, isMounted);
-      }
+    if (_selectedIndex < _filteredItems.length - 1) {
+      final nextItem = _filteredItems[_selectedIndex + 1];
+      if (nextItem.isRom) await loadMediaForItem(nextItem, platformName);
     }
   }
 
-  /// Preload thumbnails for items in range ±20/100 (background, low priority)
-  void _scheduleThumbnailPreload({
-    required List<RomItem> filteredItems,
-    required int selectedIndex,
-    required String platformName,
-    required Function() onUpdate,
-    required bool Function() isMounted,
-  }) {
-    // For very large lists (>5000 items), reduce preload range to avoid performance issues
-    final preloadRange = filteredItems.length > 5000 ? 20 : 100;
+  void _scheduleThumbnailPreload(
+    String platformName,
+    bool Function() isMounted,
+  ) {
+    final preloadRange = _filteredItems.length > 5000 ? 20 : 100;
 
-    // Wait additional 100ms before starting background preload
     _preloadTimer?.cancel();
     _preloadTimer = Timer(const Duration(milliseconds: 100), () async {
       if (!isMounted() || _isNavigating) return;
 
-      final startIndex = (selectedIndex - preloadRange).clamp(
+      final startIndex = (_selectedIndex - preloadRange).clamp(
         0,
-        filteredItems.length - 1,
+        _filteredItems.length - 1,
       );
-      final endIndex = (selectedIndex + preloadRange).clamp(
+      final endIndex = (_selectedIndex + preloadRange).clamp(
         0,
-        filteredItems.length - 1,
+        _filteredItems.length - 1,
       );
 
-      // Load thumbnails for items not already loaded
       for (int i = startIndex; i <= endIndex; i++) {
-        // Skip if navigating started again
         if (_isNavigating) break;
-
-        // Skip if already preloaded
         if (_preloadedThumbnailIndices.contains(i)) continue;
 
-        final item = filteredItems[i];
+        final item = _filteredItems[i];
         if (item.isRom && !_mediaCache.containsKey(item.name)) {
-          await loadMediaForItem(item, platformName, onUpdate, isMounted);
+          await loadMediaForItem(item, platformName);
           _preloadedThumbnailIndices.add(i);
-
-          // Larger delay for very large lists to avoid I/O saturation
-          final delayMs = filteredItems.length > 5000 ? 100 : 50;
-          await Future.delayed(Duration(milliseconds: delayMs));
+          await Future.delayed(
+            Duration(milliseconds: _filteredItems.length > 5000 ? 100 : 50),
+          );
         }
       }
     });

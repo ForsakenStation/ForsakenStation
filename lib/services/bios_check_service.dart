@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
-import 'package:forsaken/models/bios_requirement.dart';
+import '../models/bios_requirement.dart';
 
 class BiosCheckService {
   static BiosCheckService? _instance;
