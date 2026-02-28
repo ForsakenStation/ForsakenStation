@@ -315,9 +315,14 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
         isForever,
       );
       if (mounted && success) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Deleted: $fileName')));
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Deleted: $fileName'),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
     }
   }
@@ -351,9 +356,14 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     if (confirm == true) {
       final newPath = await _controller.moveToForever(platform, fileName);
       if (mounted && newPath != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Saved: $fileName')));
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Saved: $fileName'),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
     }
   }
@@ -387,8 +397,13 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     if (confirm == true) {
       await _controller.clearAllTempRoms();
       if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('All temporary ROMs cleared')),
+          const SnackBar(
+            content: Text('All temporary ROMs cleared'),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 5),
+          ),
         );
       }
     }

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:archive/archive.dart';
-import '../models/emulator_download_info.dart';
+import 'package:forsaken/models/emulator_download_info.dart';
 import 'config_service.dart';
 import 'debug_service.dart';
 
@@ -93,11 +93,6 @@ class EmulatorDownloadService {
         );
       }
 
-      // Make AppImages executable on Linux
-      if (!kIsWeb && Platform.isLinux) {
-        await _makeAppImagesExecutable(destDir.path);
-      }
-
       // Determine final file path
       String finalPath;
       if (emulator.finalFileName != null) {
@@ -134,11 +129,8 @@ class EmulatorDownloadService {
     final extension = path.extension(fileName).toLowerCase();
 
     try {
-      if (extension == '.7z') {
-        // Use 7z command line tool
+      if (extension == '.7z' || extension == '.zip') {
         await _extract7z(archiveFile.path, destPath, onStatus: onStatus);
-      } else if (extension == '.zip') {
-        await _extractZip(archiveFile, destPath, onStatus: onStatus);
       } else if (extension == '.gz' || extension == '.xz') {
         await _extractTarGz(archiveFile, destPath, onStatus: onStatus);
       } else {
@@ -170,32 +162,6 @@ class EmulatorDownloadService {
     }
 
     _debug.info('Extracted 7z archive successfully');
-  }
-
-  /// Extract ZIP archive
-  Future<void> _extractZip(
-    File archiveFile,
-    String destPath, {
-    Function(String)? onStatus,
-  }) async {
-    onStatus?.call('Extracting ZIP archive...');
-
-    final bytes = await archiveFile.readAsBytes();
-    final archive = ZipDecoder().decodeBytes(bytes);
-
-    for (final file in archive) {
-      final filename = path.join(destPath, file.name);
-
-      if (file.isFile) {
-        final outFile = File(filename);
-        await outFile.create(recursive: true);
-        await outFile.writeAsBytes(file.content as List<int>);
-      } else {
-        await Directory(filename).create(recursive: true);
-      }
-    }
-
-    _debug.info('Extracted ZIP archive successfully');
   }
 
   /// Extract tar.gz or tar.xz archive
@@ -257,20 +223,13 @@ class EmulatorDownloadService {
     for (final command in commands) {
       onStatus?.call('Running: $command');
       _debug.info('Running command: $command');
-
       try {
-        // Parse command (simple splitting by spaces, doesn't handle complex cases)
-        final parts = command.split(' ');
-        final executable = parts.first;
-        final args = parts.skip(1).toList();
-
         final result = await Process.run(
-          executable,
-          args,
+          'sh',
+          ['-c', command],
           workingDirectory: workingDir,
           runInShell: true,
         );
-
         if (result.exitCode != 0) {
           _debug.warning(
             'Command failed with exit code ${result.exitCode}: ${result.stderr}',
@@ -286,7 +245,7 @@ class EmulatorDownloadService {
   }
 
   /// Make all AppImage files executable
-  Future<void> _makeAppImagesExecutable(String directory) async {
+  Future<void> makeAppImagesExecutable(String directory) async {
     if (kIsWeb || !Platform.isLinux) return;
 
     final dir = Directory(directory);

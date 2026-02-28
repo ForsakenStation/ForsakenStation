@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import '../utils/platform_utils.dart' as platform_utils;
+import 'package:forsaken/utils/platform_utils.dart' as platform_utils;
 
 /// Platform-specific download information for an emulator
 class EmulatorDownloadInfo {
@@ -168,9 +168,7 @@ class EmulatorCatalog {
             .toList();
       case 'nintendo':
         return all
-            .where(
-              (e) => ['dolphin', 'cemu', 'ryujinx', 'citron'].contains(e.name),
-            )
+            .where((e) => ['dolphin', 'cemu', 'ryujinx'].contains(e.name))
             .toList();
       case 'microsoft':
         return all.where((e) => ['xemu', 'xenia'].contains(e.name)).toList();
@@ -184,7 +182,15 @@ class EmulatorCatalog {
             .toList();
       case 'other':
         return all
-            .where((e) => ['eka2l1', 'ruffle', 'openbor'].contains(e.name))
+            .where(
+              (e) => [
+                'eka2l1',
+                'ruffle',
+                'openbor',
+                'mugen',
+                'hypseus',
+              ].contains(e.name),
+            )
             .toList();
       default:
         return all;

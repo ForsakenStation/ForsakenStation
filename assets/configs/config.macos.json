@@ -1822,10 +1822,6 @@
                 {
                     "name": "ryujinx",
                     "command": "ryujinx.AppImage"
-                },
-                {
-                    "name": "citron",
-                    "command": "citron.AppImage"
                 }
             ],
             "useForeverMode": false,

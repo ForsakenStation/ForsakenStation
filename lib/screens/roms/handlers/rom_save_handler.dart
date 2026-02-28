@@ -109,11 +109,13 @@ class RomSaveHandler {
       );
 
       if (newPath != null && context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${item.displayName} saved permanently'),
             backgroundColor: Colors.green,
-            duration: const Duration(seconds: 2),
+            duration: const Duration(seconds: 5),
+            behavior: SnackBarBehavior.floating,
             action: SnackBarAction(
               label: 'Undo',
               textColor: Colors.white,
@@ -130,21 +132,25 @@ class RomSaveHandler {
         requestFocus();
         return true;
       } else if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Failed to save ROM permanently'),
             backgroundColor: Colors.orange,
-            duration: Duration(seconds: 2),
+            duration: Duration(seconds: 5),
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
     } catch (e) {
       if (context.mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error saving ROM: $e'),
             backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
+            duration: const Duration(seconds: 5),
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -157,11 +163,13 @@ class RomSaveHandler {
   /// Show message when user chooses not to save
   void _showNotSavedMessage(BuildContext context, RomItem item) {
     if (context.mounted) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${item.displayName} kept in temporary storage'),
           backgroundColor: Colors.grey[700],
-          duration: const Duration(seconds: 2),
+          duration: const Duration(seconds: 5),
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }

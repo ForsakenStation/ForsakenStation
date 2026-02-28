@@ -1822,10 +1822,6 @@
                 {
                     "name": "ryujinx",
                     "command": "ios://ryujinx"
-                },
-                {
-                    "name": "citron",
-                    "command": "ios://citron"
                 }
             ],
             "useForeverMode": false,

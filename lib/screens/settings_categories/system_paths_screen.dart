@@ -285,10 +285,13 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
           setState(() => _isMigrating = false);
 
           if (!success && mounted) {
+            ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Warning: ROM migration failed'),
                 backgroundColor: Colors.orange,
+                behavior: SnackBarBehavior.floating,
+                duration: Duration(seconds: 5),
               ),
             );
           }
@@ -329,15 +332,25 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
       await _loadStorageInfo();
 
       if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Paths saved successfully')),
+          const SnackBar(
+            content: Text('Paths saved successfully'),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 5),
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error saving paths: $e')));
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving paths: $e'),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
     } finally {
       setState(() => _isSaving = false);

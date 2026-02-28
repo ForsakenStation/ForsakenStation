@@ -167,11 +167,13 @@ class RomLauncher {
                 wasCancelled = true;
                 if (context.mounted) {
                   Navigator.pop(context);
+                  ScaffoldMessenger.of(context).clearSnackBars();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Download cancelled'),
                       backgroundColor: Colors.orange,
                       duration: Duration(seconds: 5),
+                      behavior: SnackBarBehavior.floating,
                     ),
                   );
                 }
@@ -211,11 +213,13 @@ class RomLauncher {
             ),
           );
         } else {
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Launched: ${item.displayName}'),
               backgroundColor: Colors.green,
-              duration: const Duration(seconds: 2),
+              duration: const Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
             ),
           );
         }

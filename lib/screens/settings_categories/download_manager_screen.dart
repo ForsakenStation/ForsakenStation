@@ -1,12 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../services/emulator_download_service.dart';
-import '../../services/romlist_download_service.dart';
-import '../../services/keyboard_service.dart';
-import '../../models/emulator_download_info.dart';
-import '../../widgets/common/controls_bottom_bar.dart';
-import '../../widgets/common/dialog_button_bar.dart';
-import '../../widgets/common/gamepad_button_indicator.dart';
+import 'package:forsaken/services/config_service.dart';
+import 'package:forsaken/services/emulator_download_service.dart';
+import 'package:forsaken/services/romlist_download_service.dart';
+import 'package:forsaken/services/keyboard_service.dart';
+import 'package:forsaken/models/emulator_download_info.dart';
+import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
+import 'package:forsaken/widgets/common/dialog_button_bar.dart';
+import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
 
 /// Screen for managing downloads
 ///
@@ -420,6 +423,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
           const SnackBar(content: Text('All downloads completed')),
         );
       }
+      _downloadService.makeAppImagesExecutable(Directory(ConfigService.instance.emulatorsPath).path);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -437,8 +441,6 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
     try {
       // Check if already downloaded
       final isDownloaded = await _romListService.isGameListsDownloaded();
-      final isGenerated = await _romListService.isRomsGenerated();
-
       if (!mounted) return;
 
       // Ask user what they want to do
@@ -450,10 +452,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'This will download ROM lists from GitHub and '
-                'generate fake ROM files with download URLs.',
-              ),
+              const Text('This will download ROM lists from GitHub.'),
               const SizedBox(height: 16),
               if (isDownloaded) ...[
                 const Text(
@@ -462,14 +461,6 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
                 ),
                 const SizedBox(height: 8),
               ],
-              if (isGenerated) ...[
-                const Text(
-                  '✓ ROMs already generated',
-                  style: TextStyle(color: Colors.green),
-                ),
-                const SizedBox(height: 8),
-              ],
-              const Text('What would you like to do?'),
             ],
           ),
           actions: [
@@ -480,25 +471,10 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
                   onPressed: () => Navigator.pop(context),
                   gamepadButton: GamepadButton.b,
                 ),
-                if (!isDownloaded || !isGenerated)
                   DialogButton(
-                    label: 'Download & Generate',
+                    label: isDownloaded? 'Re-Download' : 'Download',
                     onPressed: () => Navigator.pop(context, 'download'),
                     primary: true,
-                    gamepadButton: GamepadButton.a,
-                  ),
-                if (isDownloaded && !isGenerated)
-                  DialogButton(
-                    label: 'Generate ROMs Only',
-                    onPressed: () => Navigator.pop(context, 'generate'),
-                    primary: true,
-                    gamepadButton: GamepadButton.a,
-                  ),
-                if (isDownloaded)
-                  DialogButton(
-                    label: 'Re-download All',
-                    onPressed: () => Navigator.pop(context, 'redownload'),
-                    primary: !isGenerated,
                     gamepadButton: GamepadButton.a,
                   ),
               ],
@@ -544,73 +520,10 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
         });
       }
 
-      // Generate fake ROMs
-      if (action == 'download' ||
-          action == 'generate' ||
-          action == 'redownload') {
-        setState(() {
-          _tasks['generate_roms'] = DownloadTask(
-            name: 'Generate Fake ROMs',
-            type: DownloadType.gamelist,
-            status: DownloadStatus.downloading,
-            statusMessage: 'Generating...',
-          );
-        });
-
-        await _romListService.generateFakeRoms(
-          onProgress: (progress) {
-            if (mounted) {
-              setState(() {
-                _tasks['generate_roms']!.progress = progress;
-              });
-            }
-          },
-          onStatus: (status) {
-            if (mounted) {
-              setState(() {
-                _tasks['generate_roms']!.statusMessage = status;
-              });
-            }
-          },
-        );
-
-        setState(() {
-          _tasks['generate_roms']!.status = DownloadStatus.completed;
-          _tasks['generate_roms']!.progress = 1.0;
-          _tasks['generate_roms']!.statusMessage = 'Completed';
-        });
-      }
-
-      // Copy game lists to ES-DE
-      setState(() {
-        _tasks['copy_gamelists'] = DownloadTask(
-          name: 'Copy to ES-DE',
-          type: DownloadType.gamelist,
-          status: DownloadStatus.downloading,
-          statusMessage: 'Copying...',
-        );
-      });
-
-      await _romListService.copyGameListsToESDE(
-        onStatus: (status) {
-          if (mounted) {
-            setState(() {
-              _tasks['copy_gamelists']!.statusMessage = status;
-            });
-          }
-        },
-      );
-
-      setState(() {
-        _tasks['copy_gamelists']!.status = DownloadStatus.completed;
-        _tasks['copy_gamelists']!.progress = 1.0;
-        _tasks['copy_gamelists']!.statusMessage = 'Completed';
-      });
-
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Game lists downloaded and ROMs generated!'),
+            content: Text('Game lists downloaded!'),
           ),
         );
       }

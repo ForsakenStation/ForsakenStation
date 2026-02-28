@@ -71,7 +71,6 @@ class RomlistDownloadService {
 
   // Legacy methods for backward compatibility
   Future<bool> isGameListsDownloaded() async => isDownloaded();
-  Future<bool> isRomsGenerated() async => false;
   Future<void> downloadGameLists({
     Function(double)? onProgress,
     Function(String)? onStatus,
@@ -83,20 +82,6 @@ class RomlistDownloadService {
       },
     );
     onStatus?.call('Completed');
-  }
-
-  /// Unsupported - legacy method from older architecture
-  Future<void> generateFakeRoms({
-    Function(String)? onPlatform,
-    Function(double)? onProgress,
-    Function(String)? onStatus,
-  }) async {
-    _debug.warning('generateFakeRoms is no longer supported');
-  }
-
-  /// Unsupported - legacy method from older architecture
-  Future<void> copyGameListsToESDE({Function(String)? onStatus}) async {
-    _debug.warning('copyGameListsToESDE is no longer supported');
   }
 }
 

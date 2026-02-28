@@ -5,22 +5,22 @@
     "description": "Multi-platform emulator frontend (cores included)",
     "downloads": {
       "linux": {
-        "url": "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch.7z",
+        "url": "https://buildbot.libretro.com/stable/1.22.2/linux/x86_64/RetroArch.7z",
         "fileName": "RetroArch.7z",
         "sha256": null,
-        "estimatedSizeMB": 50
+        "estimatedSizeMB": 180
       },
       "windows": {
-        "url": "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch.7z",
+        "url": "https://buildbot.libretro.com/stable/1.22.2/windows/x86_64/RetroArch.7z",
         "fileName": "RetroArch.7z",
         "sha256": null,
-        "estimatedSizeMB": 50
+        "estimatedSizeMB": 180
       },
       "macos": {
-        "url": "https://buildbot.libretro.com/nightly/apple/osx/x86_64/RetroArch.dmg",
+        "url": "https://buildbot.libretro.com/stable/1.22.2/apple/osx/universal/RetroArch_Metal.dmg",
         "fileName": "RetroArch.dmg",
         "sha256": null,
-        "estimatedSizeMB": 50
+        "estimatedSizeMB": 180
       }
     },
     "requiresExtraction": true,
@@ -29,9 +29,8 @@
     "postDownloadCommands": {
       "linux": [
         "mv RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage ./retroarch.AppImage",
-        "cp -r RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/* ~/.config/retroarch/",
-        "rm -rf RetroArch-Linux-x86_64",
-        "chmod +x retroarch.AppImage"
+        "cp -r RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch ~/.config/retroarch",
+        "rm -rf RetroArch-Linux-x86_64"
       ],
       "windows": [
         "move RetroArch-Windows-x86_64\\\\retroarch.exe .\\\\retroarch.exe",
@@ -55,19 +54,19 @@
         "url": "https://buildbot.libretro.com/stable/1.22.2/linux/x86_64/RetroArch_cores.7z",
         "fileName": "RetroArch_cores.7z",
         "sha256": null,
-        "estimatedSizeMB": 200
+        "estimatedSizeMB": 262
       },
       "windows": {
         "url": "https://buildbot.libretro.com/stable/1.22.2/windows/x86_64/RetroArch_cores.7z",
         "fileName": "RetroArch_cores.7z",
         "sha256": null,
-        "estimatedSizeMB": 200
+        "estimatedSizeMB": 262
       },
       "macos": {
         "url": "https://buildbot.libretro.com/stable/1.22.2/apple/osx/x86_64/RetroArch_cores.zip",
         "fileName": "RetroArch_cores.zip",
         "sha256": null,
-        "estimatedSizeMB": 200
+        "estimatedSizeMB": 262
       }
     },
     "requiresExtraction": true,
@@ -75,17 +74,14 @@
     "finalFileName": null,
     "postDownloadCommands": {
       "linux": [
-        "mkdir -p ~/.config/retroarch/cores",
-        "cp -r cores/* ~/.config/retroarch/cores/",
-        "rm -rf cores"
+        "cp -r RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch ~/.config/retroarch",
+        "rm -rf RetroArch-Linux-x86_64"
       ],
       "windows": [
-        ""
       ],
       "macos": [
         "mkdir -p ~/Library/Application\\\\ Support/RetroArch/cores",
-        "cp -r cores/* ~/Library/Application\\\\ Support/RetroArch/cores/",
-        "rm -rf cores"
+        "cp -r cores/* ~/Library/Application\\\\ Support/RetroArch/cores/"
       ]
     },
     "isRetroArchCore": true
@@ -189,14 +185,11 @@
     "finalFileName": null,
     "postDownloadCommands": {
       "linux": [
-        "chmod +x rpcs3.AppImage"
       ],
       "windows": [
-        "7z x rpcs3.7z -o./ && rm rpcs3.7z",
         "move rpcs3-v0.0.39-18705-0f85e912_win64_msvc.exe rpcs3.exe"
       ],
       "macos": [
-        "7z x rpcs3.7z -o./ && rm rpcs3.7z",
         "mv RPCS3.app App"
       ]
     },
@@ -208,16 +201,22 @@
     "description": "PlayStation 4 emulator",
     "downloads": {
       "linux": {
-        "url": "https://github.com/shadps4-emu/shadPS4/releases/download/v.0.13.0/shadps4-linux-sdl-0.13.0.zip",
+        "url": "https://github.com/shadps4-emu/shadPS4/releases/download/v.0.14.0/shadps4-linux-sdl-0.14.0.zip",
         "fileName": "shadps4.zip",
         "sha256": null,
         "estimatedSizeMB": 15
       },
       "windows": {
-        "url": "https://github.com/shadps4-emu/shadPS4/releases/download/v.0.13.0/shadps4-win64-sdl-0.13.0.zip",
-        "fileName": "shadps4-win.zip",
+        "url": "https://github.com/shadps4-emu/shadPS4/releases/download/v.0.14.0/shadps4-win64-sdl-0.14.0.zip",
+        "fileName": "shadps4.zip",
         "sha256": null,
         "estimatedSizeMB": 18
+      },
+      "macos": {
+        "url": "https://github.com/shadps4-emu/shadPS4/releases/download/v.0.14.0/shadps4-macos-sdl-0.14.zip",
+        "fileName": "shadps4.zip",
+        "sha256": null,
+        "estimatedSizeMB": 15
       }
     },
     "requiresExtraction": true,
@@ -225,8 +224,7 @@
     "finalFileName": "shadps4.AppImage",
     "postDownloadCommands": {
       "linux": [
-        "mv Shadps4*.AppImage ./shadps4.AppImage",
-        "chmod +x shadps4.AppImage"
+        "mv Shadps4-sdl.AppImage ./shadps4.AppImage"
       ],
       "windows": [
         "move shadps4-win64-qt.exe shadps4.exe"
@@ -310,30 +308,6 @@
         "fileName": "ryujinx.dmg",
         "sha256": null,
         "estimatedSizeMB": 55
-      }
-    },
-    "requiresExtraction": false,
-    "extractedFileName": null,
-    "finalFileName": null,
-    "postDownloadCommands": {},
-    "isRetroArchCore": false
-  },
-  {
-    "name": "citron",
-    "displayName": "Citron",
-    "description": "Nintendo Switch emulator (alternative)",
-    "downloads": {
-      "linux": {
-        "url": "https://git.citron-emu.org/Citron/Emulator/releases/download/0.11.0/Citron_stable_0.11.0_linux.AppImage",
-        "fileName": "citron.AppImage",
-        "sha256": null,
-        "estimatedSizeMB": 40
-      },
-      "windows": {
-        "url": "https://git.citron-emu.org/Citron/Emulator/releases/download/0.11.0/Citron_stable_0.11.0_windows.zip",
-        "fileName": "citron.zip",
-        "sha256": null,
-        "estimatedSizeMB": 45
       }
     },
     "requiresExtraction": false,
@@ -503,7 +477,6 @@
     "finalFileName": null,
     "postDownloadCommands": {
       "linux": [
-        "chmod +x openbor.AppImage"
       ],
       "windows": [
         "unrar openbor.rar -o./ && rm openbor.rar",
@@ -536,18 +509,93 @@
         "estimatedSizeMB": 5
       }
     },
+    "requiresExtraction": true,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {
+      "linux": [
+        "chmod +x Ikemen_GO.command"
+      ],
+      "windows": [
+      ],
+      "macos": [
+      ]
+    },
+    "isRetroArchCore": false
+  },
+  {
+    "name": "hypseus",
+    "displayName": "Hypseus Singe",
+    "description": "",
+    "downloads": {
+      "linux": {
+        "url": "https://github.com/DirtBagXon/hypseus-singe/releases/download/v2.11.7/hypseus-singe_v2.11.7_AppImage.tar.gz",
+        "fileName": "hypseus-singe_v2.11.7_AppImage.tar.gz",
+        "sha256": null,
+        "estimatedSizeMB": 21
+      },
+      "windows": {
+        "url": "https://github.com/DirtBagXon/hypseus-singe/releases/download/v2.11.7/Hypseus.Singe-v2.11.7-win64.zip",
+        "fileName": "Hypseus.Singe-v2.11.7-win64.zip",
+        "sha256": null,
+        "estimatedSizeMB": 23
+      },
+      "macos": {
+        "url": "https://github.com/DirtBagXon/hypseus-singe/releases/download/v2.11.7/Hypseus.Singe-v2.11.7-macOS-arm64-brew-mpeg2-Sonoma.zip",
+        "fileName": "Hypseus.Singe-v2.11.7-macOS-arm64-brew-mpeg2-Sonoma.zip",
+        "sha256": null,
+        "estimatedSizeMB": 10
+      }
+    },
     "requiresExtraction": false,
     "extractedFileName": null,
     "finalFileName": null,
     "postDownloadCommands": {
       "linux": [
-        "7z x Ikemen_GO-v0.99.0-linux.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-linux.zip"
+        "7z x -y hypseus-singe_v2.11.7_AppImage.tar.gz && 7z x -y hypseus-singe_a7ab176_ES-DE.tar.gz && 7z x -y hypseus-singe_a7ab176_ES-DE.tar"
       ],
       "windows": [
-        "7z x Ikemen_GO-v0.99.0-windows.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-windows.zip"
       ],
       "macos": [
-        "7z x Ikemen_GO-v0.99.0-macos.zip -o./ikemen_go && rm Ikemen_GO-v0.99.0-macos.zip"
+      ]
+    },
+    "isRetroArchCore": false
+  },
+  {
+    "name": "model3emu",
+    "displayName": "Supermodel 3",
+    "description": "",
+    "downloads": {
+      "linux": {
+        "url": "https://github.com/DirtBagXon/model3emu-code-sinden/releases/download/337462e/supermodel-Linux-0.3a-fe00551.tgz",
+        "fileName": "supermodel-Linux-0.3a-fe00551.tgz",
+        "sha256": null,
+        "estimatedSizeMB": 21
+      },
+      "windows": {
+        "url": "https://github.com/DirtBagXon/model3emu-code-sinden/releases/download/337462e/supermodel-Windows-0.3a-fe00551.zip",
+        "fileName": "supermodel-Windows-0.3a-fe00551.zip",
+        "sha256": null,
+        "estimatedSizeMB": 23
+      },
+      "macos": {
+        "url": "https://github.com/DirtBagXon/model3emu-code-sinden/releases/download/337462e/supermodel-macOS-0.3a-fe00551.tgz",
+        "fileName": "supermodel-macOS-0.3a-fe00551.tgz",
+        "sha256": null,
+        "estimatedSizeMB": 10
+      }
+    },
+    "requiresExtraction": false,
+    "extractedFileName": null,
+    "finalFileName": null,
+    "postDownloadCommands": {
+      "linux": [
+        "7z x -y supermodel-Linux-0.3a-fe00551.tgz && 7z x -y supermodel-Linux-0.3a-fe00551.tar -osupermodel"
+      ],
+      "windows": [
+      ],
+      "macos": [
+        "7z x -y supermodel-macOS-0.3a-fe00551.tgz && 7z x -y supermodel-macOS-0.3a-fe00551.tar -osupermodel"
       ]
     },
     "isRetroArchCore": false

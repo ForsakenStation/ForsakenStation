@@ -362,7 +362,6 @@ PLATFORM_IDS = {
     "zx81": 77,
 }
 
-
 def log(level: str, message: str):
     """Print colored log message"""
     color = COLORS.get(level.upper(), COLORS["NC"])
@@ -810,6 +809,7 @@ def scrape_platform(
     limit: Optional[int] = None,
     skip_gamelist: bool = False,
     gamelist_only: bool = False,
+    startIndex: int = 0
 ):
     """Scrape media for a platform"""
 
@@ -874,6 +874,8 @@ def scrape_platform(
         parent = rom["parent"]
 
         print(f"[{i}/{stats['total']}] {rom_name}")
+        if i < startIndex:
+            continue
 
         # Check if gamelist entry already exists with full metadata
         gamelist_exists = False
@@ -1073,6 +1075,7 @@ Examples:
   %(prog)s amiga500 --limit 10 --no-skip-existing
   %(prog)s gb --gamelist-only --limit 50
   %(prog)s gba --skip-gamelist
+  %(prog)s gba --skip-gamelist --start-index 524
         """,
     )
 
@@ -1110,6 +1113,8 @@ Examples:
         action="store_true",
         help="Show what would be downloaded without actually downloading",
     )
+
+    parser.add_argument("--start-index", type=int, help="Index to start from", default=0)
     parser.add_argument("--limit", type=int, help="Limit number of ROMs to process")
 
     args = parser.parse_args()
@@ -1154,6 +1159,7 @@ Examples:
         limit=args.limit,
         skip_gamelist=args.skip_gamelist,
         gamelist_only=args.gamelist_only,
+        startIndex=args.start_index
     )
 
     return 0 if success else 1
