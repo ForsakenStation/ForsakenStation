@@ -47,7 +47,20 @@ class RegionFlags extends StatelessWidget {
 
     if (isEmoji) {
       // Display emoji flag
-      return Text(flag, style: TextStyle(fontSize: size, height: 1.2));
+      return Text(
+        flag,
+        style: TextStyle(
+          fontSize: size,
+          height: 1.2,
+          fontFamily: 'Noto Color Emoji',
+          fontFamilyFallback: const [
+            'Apple Color Emoji',
+            'Segoe UI Emoji',
+            'Noto Color Emoji',
+            'Twemoji Mozilla',
+          ],
+        ),
+      );
     } else {
       // Fallback: display region text in a colored box
       return Container(

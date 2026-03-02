@@ -125,7 +125,8 @@ class RomsScreenController extends ChangeNotifier {
           item.path,
         );
         if (gameInfo != null && gameInfo.name.isNotEmpty) {
-          item.displayName = gameInfo.name;
+          item.setGameInfo(gameInfo);
+          _gameInfoCache[item.name] = gameInfo;
         }
       }
     }
@@ -164,7 +165,14 @@ class RomsScreenController extends ChangeNotifier {
     }
 
     final actualPlatform = item.platform ?? platformName;
-    final media = await _mediaService.getMediaForRomItem(item, actualPlatform);
+
+    // Pass GameInfo to MediaService for fast cached-path lookup
+    final gameInfo = item.gameInfo ?? _gameInfoCache[item.name];
+    final media = await _mediaService.getMediaForRomItem(
+      item,
+      actualPlatform,
+      gameInfo: gameInfo,
+    );
 
     _mediaCache[item.name] = media;
     notifyListeners();
@@ -266,7 +274,7 @@ class RomsScreenController extends ChangeNotifier {
         if (_preloadedThumbnailIndices.contains(i)) continue;
 
         final item = _filteredItems[i];
-        if (item.isRom && !_mediaCache.containsKey(item.name)) {
+        if (item.isRom && !_mediaCache.containsKey(item.name) && isMounted()) {
           await loadMediaForItem(item, platformName);
           _preloadedThumbnailIndices.add(i);
           await Future.delayed(

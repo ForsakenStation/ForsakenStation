@@ -1,5 +1,7 @@
 /// Model for game information loaded from gamelist.xml files
 /// This contains metadata about ROMs such as description, genre, developer, etc.
+/// Media path fields are optional and used to avoid filesystem scanning when
+/// the gamelist.xml has been enriched with media information.
 class GameInfo {
   final String path;
   final String name;
@@ -11,6 +13,18 @@ class GameInfo {
   final String? genre;
   final int? players;
 
+  // Media paths (relative to media base path, e.g., "snes/3dboxes/rom.webp")
+  final String? box3dPath;
+  final String? coverPath;
+  final String? marqueePath;
+  final String? screenshotPath;
+  final String? mixImagePath;
+  final String? videoPath;
+  final String? titlescreenPath;
+  final String? manualPath;
+  final String? backcoverPath;
+  final String? fanartPath;
+
   const GameInfo({
     required this.path,
     required this.name,
@@ -21,6 +35,16 @@ class GameInfo {
     this.publisher,
     this.genre,
     this.players,
+    this.box3dPath,
+    this.coverPath,
+    this.marqueePath,
+    this.screenshotPath,
+    this.mixImagePath,
+    this.videoPath,
+    this.titlescreenPath,
+    this.manualPath,
+    this.backcoverPath,
+    this.fanartPath,
   });
 
   /// Creates a GameInfo instance from XML element data
@@ -74,8 +98,31 @@ class GameInfo {
       publisher: data['publisher'],
       genre: data['genre'],
       players: parsePlayers(data['players']),
+      box3dPath: data['media_box3d'],
+      coverPath: data['media_cover'],
+      marqueePath: data['media_marquee'],
+      screenshotPath: data['media_screenshot'],
+      mixImagePath: data['media_miximage'],
+      videoPath: data['media_video'],
+      titlescreenPath: data['media_titlescreen'],
+      manualPath: data['media_manual'],
+      backcoverPath: data['media_backcover'],
+      fanartPath: data['media_fanart'],
     );
   }
+
+  /// Returns true if this GameInfo has any media path information
+  bool get hasMediaPaths =>
+      box3dPath != null ||
+      coverPath != null ||
+      marqueePath != null ||
+      screenshotPath != null ||
+      mixImagePath != null ||
+      videoPath != null ||
+      titlescreenPath != null ||
+      manualPath != null ||
+      backcoverPath != null ||
+      fanartPath != null;
 
   /// Returns a formatted release year string
   String? get releaseYear {

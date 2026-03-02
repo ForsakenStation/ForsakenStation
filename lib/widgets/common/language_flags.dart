@@ -34,7 +34,19 @@ class LanguageFlags extends StatelessWidget {
             height: size,
             alignment: Alignment.center,
             child: flag != null
-                ? Text(flag, style: TextStyle(fontSize: size * 0.8))
+                ? Text(
+                    flag,
+                    style: TextStyle(
+                      fontSize: size * 0.8,
+                      fontFamily: 'Noto Color Emoji',
+                      fontFamilyFallback: const [
+                        'Apple Color Emoji',
+                        'Segoe UI Emoji',
+                        'Noto Color Emoji',
+                        'Twemoji Mozilla',
+                      ],
+                    ),
+                  )
                 : Container(
                     width: size,
                     height: size,

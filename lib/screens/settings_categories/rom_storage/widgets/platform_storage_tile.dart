@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../utils/format_utils.dart';
 import '../../../../widgets/common/gamepad_button_indicator.dart';
 
@@ -56,7 +57,12 @@ class PlatformStorageTile extends StatelessWidget {
               color: isSelected ? Theme.of(context).colorScheme.primary : null,
             ),
           ),
-          subtitle: Text('${roms.length} ROMs • ${formatBytes(totalSize)}'),
+          subtitle: Text(
+            AppLocalizations.of(context)!.romsCountWithSize(
+              roms.length.toString(),
+              formatBytes(totalSize),
+            ),
+          ),
           children: roms.map((rom) => romBuilder(rom)).toList(),
         ),
       ),

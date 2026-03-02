@@ -9,6 +9,7 @@ import '../../services/debug_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../widgets/common/dialog_button_bar.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for system utilities and maintenance
 ///
@@ -143,16 +144,21 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       }
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Cleaned up $deletedCount temporary ROM files'),
+            content: Text(l10n.cleanedUpTempFiles(deletedCount.toString())),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error cleaning temp files: $e')),
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)!.errorCleaningTempFiles} $e',
+            ),
+          ),
         );
       }
     }
@@ -166,7 +172,11 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       if (!await romsDir.exists()) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('ROMs directory does not exist')),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.romsDirectoryDoesNotExist,
+              ),
+            ),
           );
         }
         return;
@@ -198,21 +208,27 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('ROM Verification Results'),
+            title: Text(AppLocalizations.of(context)!.romVerificationResults),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Total ROM files: $totalRoms'),
-                Text('Empty ROM files: $missingRoms'),
-                Text('Valid ROM files: ${totalRoms - missingRoms}'),
+                Text(
+                  '${AppLocalizations.of(context)!.totalRomFiles}: $totalRoms',
+                ),
+                Text(
+                  '${AppLocalizations.of(context)!.emptyRomFiles}: $missingRoms',
+                ),
+                Text(
+                  '${AppLocalizations.of(context)!.validRomFiles}: ${totalRoms - missingRoms}',
+                ),
               ],
             ),
             actions: [
               DialogButtonBar(
                 buttons: [
                   DialogButton(
-                    label: 'Close',
+                    label: AppLocalizations.of(context)!.close,
                     onPressed: () => Navigator.pop(context),
                     primary: true,
                     gamepadButton: GamepadButton.b,
@@ -226,7 +242,11 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error verifying ROM files: $e')),
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)!.errorVerifyingRomFiles} $e',
+            ),
+          ),
         );
       }
     }
@@ -242,7 +262,11 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       if (!await romsDir.exists()) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('ROMs directory does not exist')),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.romsDirectoryDoesNotExist,
+              ),
+            ),
           );
         }
         return;
@@ -269,21 +293,22 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       }
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Gamelist Check Results'),
+            title: Text(AppLocalizations.of(context)!.gamelistCheckResults),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Total platforms: ${platforms.length}'),
-                Text('Missing gamelists: ${missingGamelists.length}'),
+                Text('${l10n.totalPlatforms}: ${platforms.length}'),
+                Text('${l10n.missingGamelists}: ${missingGamelists.length}'),
                 if (missingGamelists.isNotEmpty) ...[
                   const SizedBox(height: 8),
-                  const Text(
-                    'Missing for:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                    AppLocalizations.of(context)!.missingFor,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   ...missingGamelists.map((p) => Text('  • $p')),
                 ],
@@ -293,7 +318,7 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
               DialogButtonBar(
                 buttons: [
                   DialogButton(
-                    label: 'Close',
+                    label: AppLocalizations.of(context)!.close,
                     onPressed: () => Navigator.pop(context),
                     primary: true,
                     gamepadButton: GamepadButton.b,
@@ -306,9 +331,13 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error checking gamelists: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)!.errorCheckingGamelists} $e',
+            ),
+          ),
+        );
       }
     }
   }
@@ -319,10 +348,9 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       if (!_configService.hasLocalOverrides) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text(
-                'No custom configuration to backup. '
-                'Using bundled defaults.',
+                AppLocalizations.of(context)!.noCustomConfigToBackup,
               ),
             ),
           );
@@ -340,7 +368,7 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       // Get save location from user
       final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
       final result = await FilePicker.platform.saveFile(
-        dialogTitle: 'Save Configuration Backup',
+        dialogTitle: AppLocalizations.of(context)!.saveConfigurationBackup,
         fileName: 'config_backup_$timestamp.json',
         type: FileType.custom,
         allowedExtensions: ['json'],
@@ -352,14 +380,20 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Configuration backed up to:\n$result')),
+            SnackBar(
+              content: Text(
+                '${AppLocalizations.of(context)!.configurationBackedUp}\n$result',
+              ),
+            ),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error backing up configuration: $e')),
+          SnackBar(
+            content: Text('${AppLocalizations.of(context)!.errorBackingUp} $e'),
+          ),
         );
       }
     }
@@ -373,12 +407,12 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('System Utilities'),
+          title: Text(AppLocalizations.of(context)!.systemUtilities),
           actions: [
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _loadStats,
-              tooltip: 'Refresh stats (R)',
+              tooltip: AppLocalizations.of(context)!.refreshStatsR,
             ),
           ],
         ),
@@ -394,9 +428,9 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'System Statistics',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!.systemStatistics,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -406,13 +440,13 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
                         const Center(child: CircularProgressIndicator())
                       else if (_stats != null) ...[
                         _StatRow(
-                          label: 'ROM Files',
+                          label: AppLocalizations.of(context)!.romFiles,
                           value: '${_stats!['romCount'] ?? 0}',
                           icon: Icons.file_copy,
                         ),
                         const SizedBox(height: 8),
                         _StatRow(
-                          label: 'ROMs Path',
+                          label: AppLocalizations.of(context)!.romsPath,
                           value: _configService.romsPath,
                           icon: Icons.folder,
                         ),
@@ -424,9 +458,12 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
 
               const SizedBox(height: 24),
 
-              const Text(
-                'Maintenance Tools',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                AppLocalizations.of(context)!.maintenanceTools,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
 
               const SizedBox(height: 16),
@@ -436,28 +473,36 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
                   children: [
                     _UtilityCard(
                       icon: Icons.cleaning_services,
-                      title: 'Cleanup Temporary ROMs',
-                      description:
-                          'Remove temporary ROM files from system temp directory',
+                      title: AppLocalizations.of(context)!.cleanupTemporaryRoms,
+                      description: AppLocalizations.of(
+                        context,
+                      )!.cleanupTemporaryRomsDescription,
                       onPressed: _cleanupTempRoms,
                     ),
                     _UtilityCard(
                       icon: Icons.verified,
-                      title: 'Verify ROM Files',
-                      description:
-                          'Check that all ROM files exist and are valid',
+                      title: AppLocalizations.of(context)!.verifyRomFiles,
+                      description: AppLocalizations.of(
+                        context,
+                      )!.verifyRomFilesDescription,
                       onPressed: _verifyRomFiles,
                     ),
                     _UtilityCard(
                       icon: Icons.checklist,
-                      title: 'Check Missing Gamelists',
-                      description: 'Find platforms missing gamelist.xml files',
+                      title: AppLocalizations.of(
+                        context,
+                      )!.checkMissingGamelists,
+                      description: AppLocalizations.of(
+                        context,
+                      )!.checkMissingGamelistsDescription,
                       onPressed: _checkMissingGamelists,
                     ),
                     _UtilityCard(
                       icon: Icons.backup,
-                      title: 'Backup Configuration',
-                      description: 'Create a backup of config.json',
+                      title: AppLocalizations.of(context)!.backupConfiguration,
+                      description: AppLocalizations.of(
+                        context,
+                      )!.backupConfigurationDescription,
                       onPressed: _backupConfiguration,
                     ),
                   ],

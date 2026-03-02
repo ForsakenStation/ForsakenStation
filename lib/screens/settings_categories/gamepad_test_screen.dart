@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../services/gamepad_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for testing and debugging gamepad input
 /// Shows real-time button states and axis values
@@ -171,7 +172,7 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Gamepad Test'),
+          title: Text(AppLocalizations.of(context)!.gamepadTest),
           backgroundColor: Colors.deepPurple,
         ),
         body: Column(

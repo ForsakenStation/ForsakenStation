@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../mixins/dialog_controls_mixin.dart';
 import '../../services/gamepad_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'gamepad_button_indicator.dart';
 
 /// Help dialog that shows keyboard and gamepad controls for the application
@@ -78,6 +79,7 @@ class _HelpDialogState extends State<HelpDialog>
   @override
   Widget build(BuildContext context) {
     final hasGamepad = GamepadService.instance.isGamepadConnected;
+    final l10n = AppLocalizations.of(context)!;
 
     return wrapWithKeyboardHandler(
       onEscape: () => Navigator.pop(context),
@@ -105,9 +107,9 @@ class _HelpDialogState extends State<HelpDialog>
                       size: 28,
                     ),
                     const SizedBox(width: 12),
-                    const Text(
-                      'Keyboard & Gamepad Controls',
-                      style: TextStyle(
+                    Text(
+                      l10n.keyboardAndGamepadControls,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -117,7 +119,7 @@ class _HelpDialogState extends State<HelpDialog>
                     IconButton(
                       icon: const Icon(Icons.close, color: Colors.white),
                       onPressed: () => Navigator.of(context).pop(),
-                      tooltip: 'Close',
+                      tooltip: l10n.close,
                     ),
                   ],
                 ),
@@ -129,69 +131,68 @@ class _HelpDialogState extends State<HelpDialog>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSection(context, 'Navigation', Icons.navigation, [
-                        _ShortcutItem('Arrow Keys', 'Navigate through items'),
-                        _ShortcutItem(
-                          'D-Pad / Left Stick',
-                          'Gamepad navigation',
-                        ),
-                        _ShortcutItem(
-                          'Page Up / Page Down',
-                          'Quick navigation (jump multiple items)',
-                        ),
-                        _ShortcutItem(
-                          'LB / RB Buttons',
-                          'Gamepad page navigation',
-                        ),
-                        _ShortcutItem('Home', 'Go to first item'),
-                        _ShortcutItem('End', 'Go to last item'),
-                        _ShortcutItem(
-                          'Shift + Letter',
-                          'Jump to item starting with that letter',
-                        ),
-                      ]),
+                      _buildSection(
+                        context,
+                        l10n.navigation,
+                        Icons.navigation,
+                        [
+                          _ShortcutItem('Arrow Keys', l10n.helpNavigateItems),
+                          _ShortcutItem(
+                            'D-Pad / Left Stick',
+                            l10n.helpGamepadNavigation,
+                          ),
+                          _ShortcutItem(
+                            'Page Up / Page Down',
+                            l10n.helpQuickNavigation,
+                          ),
+                          _ShortcutItem(
+                            'LB / RB Buttons',
+                            l10n.helpGamepadPageNavigation,
+                          ),
+                          _ShortcutItem('Home', l10n.helpGoToFirst),
+                          _ShortcutItem('End', l10n.helpGoToLast),
+                          _ShortcutItem(
+                            'Shift + Letter',
+                            l10n.helpJumpToLetter,
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 24),
-                      _buildSection(context, 'Actions', Icons.touch_app, [
-                        _ShortcutItem('Enter / Space', 'Select item'),
-                        _ShortcutItem('A Button', 'Gamepad select'),
+                      _buildSection(context, l10n.actions, Icons.touch_app, [
+                        _ShortcutItem('Enter / Space', l10n.helpSelectItem),
+                        _ShortcutItem('A Button', l10n.helpGamepadSelect),
                         _ShortcutItem(
                           'Escape',
                           widget.showSearchShortcut
-                              ? 'Go back / Close dialogs'
-                              : 'Exit application',
+                              ? l10n.helpGoBackCloseDialogs
+                              : l10n.helpExitApplication,
                         ),
-                        _ShortcutItem(
-                          'B Button',
-                          'Gamepad back / Close dialogs',
-                        ),
+                        _ShortcutItem('B Button', l10n.helpGamepadBackClose),
                       ]),
                       const SizedBox(height: 24),
                       _buildSection(
                         context,
-                        'View Controls',
+                        l10n.viewControls,
                         Icons.view_module,
                         [
-                          _ShortcutItem(
-                            'V',
-                            'Toggle view mode (Grid/List/Carousel)',
-                          ),
+                          _ShortcutItem('V', l10n.helpToggleViewMode),
                           _ShortcutItem(
                             'Right Stick Click',
-                            'Gamepad view toggle',
+                            l10n.helpGamepadViewToggle,
                           ),
-                          _ShortcutItem('R', 'Refresh current view'),
+                          _ShortcutItem('R', l10n.helpRefreshView),
                           if (widget.showPlatformInfoShortcut)
-                            _ShortcutItem('I', 'Show platform information'),
+                            _ShortcutItem('I', l10n.helpShowPlatformInfo),
                           if (widget.showSearchShortcut)
-                            _ShortcutItem('S', 'Activate search'),
+                            _ShortcutItem('S', l10n.helpActivateSearch),
                           if (widget.showSearchShortcut)
-                            _ShortcutItem('X Button', 'Gamepad search'),
+                            _ShortcutItem('X Button', l10n.helpGamepadSearch),
                         ],
                       ),
                       const SizedBox(height: 24),
-                      _buildSection(context, 'Help', Icons.info_outline, [
-                        _ShortcutItem('?', 'Show this help dialog'),
-                        _ShortcutItem('Y Button', 'Gamepad help'),
+                      _buildSection(context, l10n.help, Icons.info_outline, [
+                        _ShortcutItem('?', l10n.helpShowHelpDialog),
+                        _ShortcutItem('Y Button', l10n.helpGamepadHelp),
                       ]),
                       const SizedBox(height: 24),
                       // Tips section
@@ -220,7 +221,7 @@ class _HelpDialogState extends State<HelpDialog>
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Tips',
+                                  l10n.tips,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -230,14 +231,10 @@ class _HelpDialogState extends State<HelpDialog>
                               ],
                             ),
                             const SizedBox(height: 12),
-                            _buildTip('Use keyboard or gamepad for navigation'),
-                            _buildTip(
-                              'Alphabetical jump works in all view modes',
-                            ),
-                            _buildTip('Press ? anytime to see this help'),
-                            _buildTip(
-                              'Gamepad works alongside keyboard controls',
-                            ),
+                            _buildTip(l10n.tipUseKeyboardOrGamepad),
+                            _buildTip(l10n.tipAlphabeticalJump),
+                            _buildTip(l10n.tipPressQuestionMark),
+                            _buildTip(l10n.tipGamepadAlongside),
                           ],
                         ),
                       ),
@@ -275,7 +272,7 @@ class _HelpDialogState extends State<HelpDialog>
                             GamepadButtonIndicator(button: GamepadButton.b),
                             const SizedBox(width: 8),
                           ],
-                          const Text('Got it!'),
+                          Text(l10n.gotIt),
                         ],
                       ),
                     ),

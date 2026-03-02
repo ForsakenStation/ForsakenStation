@@ -6,6 +6,7 @@ import '../../widgets/common/platform_logo.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for managing emulator configurations
 ///
@@ -75,18 +76,22 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Configuration reloaded'),
-            duration: Duration(seconds: 1),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.configurationReloaded),
+            duration: const Duration(seconds: 1),
           ),
         );
       }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error loading emulators: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)!.errorLoadingEmulators} $e',
+            ),
+          ),
+        );
       }
     }
   }
@@ -102,13 +107,19 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             await _loadEmulators();
             if (mounted) {
               scaffoldMessenger.showSnackBar(
-                const SnackBar(content: Text('Emulator added successfully')),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.emulatorAdded),
+                ),
               );
             }
           } catch (e) {
             if (mounted) {
               scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text('Error adding emulator: $e')),
+                SnackBar(
+                  content: Text(
+                    '${AppLocalizations.of(context)!.errorAddingEmulator} $e',
+                  ),
+                ),
               );
             }
           }
@@ -132,13 +143,19 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             await _loadEmulators();
             if (mounted) {
               scaffoldMessenger.showSnackBar(
-                const SnackBar(content: Text('Emulator updated successfully')),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.emulatorUpdated),
+                ),
               );
             }
           } catch (e) {
             if (mounted) {
               scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text('Error updating emulator: $e')),
+                SnackBar(
+                  content: Text(
+                    '${AppLocalizations.of(context)!.errorUpdatingEmulator} $e',
+                  ),
+                ),
               );
             }
           }
@@ -152,7 +169,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Emulator'),
+        title: Text(AppLocalizations.of(context)!.deleteEmulator),
         content: Text(
           'Are you sure you want to delete the emulator configuration for $system?',
         ),
@@ -173,13 +190,21 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                     await _loadEmulators();
                     if (mounted) {
                       scaffoldMessenger.showSnackBar(
-                        const SnackBar(content: Text('Emulator deleted')),
+                        SnackBar(
+                          content: Text(
+                            AppLocalizations.of(context)!.emulatorDeleted,
+                          ),
+                        ),
                       );
                     }
                   } catch (e) {
                     if (mounted) {
                       scaffoldMessenger.showSnackBar(
-                        SnackBar(content: Text('Error deleting emulator: $e')),
+                        SnackBar(
+                          content: Text(
+                            '${AppLocalizations.of(context)!.errorDeletingEmulator} $e',
+                          ),
+                        ),
                       );
                     }
                   }
@@ -212,7 +237,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Emulator Management'),
+          title: Text(AppLocalizations.of(context)!.emulatorManagement),
           actions: [
             // Reload button
             IconButton(
@@ -228,7 +253,9 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Configuration Source'),
+                    title: Text(
+                      AppLocalizations.of(context)!.configurationSource,
+                    ),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,7 +331,9 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                           ElevatedButton.icon(
                             onPressed: _addEmulator,
                             icon: const Icon(Icons.add),
-                            label: const Text('Add Emulator'),
+                            label: Text(
+                              AppLocalizations.of(context)!.addEmulator,
+                            ),
                           ),
                         ],
                       ),
@@ -502,9 +531,11 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
     final system = _systemController.text.trim();
 
     if (system.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('System name is required')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.systemNameRequired),
+        ),
+      );
       return;
     }
 
@@ -515,7 +546,7 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
 
     if (commandStrings.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('At least one command is required')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.commandRequired)),
       );
       return;
     }
@@ -593,7 +624,7 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
                   TextButton.icon(
                     onPressed: _addCommand,
                     icon: const Icon(Icons.add),
-                    label: const Text('Add Command'),
+                    label: Text(AppLocalizations.of(context)!.addCommand),
                   ),
                 ],
               ),
@@ -647,8 +678,8 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
               const SizedBox(height: 8),
 
               CheckboxListTile(
-                title: const Text('Accept ZIP files'),
-                subtitle: const Text('Allow launching ROMs from ZIP archives'),
+                title: Text(AppLocalizations.of(context)!.acceptZipFiles),
+                subtitle: Text(AppLocalizations.of(context)!.acceptZipSubtitle),
                 value: _acceptZipFiles,
                 onChanged: (value) =>
                     setState(() => _acceptZipFiles = value ?? false),
@@ -656,8 +687,10 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
               ),
 
               CheckboxListTile(
-                title: const Text('Use Forever Mode'),
-                subtitle: const Text('Keep emulator running'),
+                title: Text(AppLocalizations.of(context)!.useForeverMode),
+                subtitle: Text(
+                  AppLocalizations.of(context)!.useForeverSubtitle,
+                ),
                 value: _useForeverMode,
                 onChanged: (value) =>
                     setState(() => _useForeverMode = value ?? false),
@@ -665,8 +698,8 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
               ),
 
               CheckboxListTile(
-                title: const Text('Work In Progress'),
-                subtitle: const Text('Mark as not yet fully configured'),
+                title: Text(AppLocalizations.of(context)!.workInProgress),
+                subtitle: Text(AppLocalizations.of(context)!.wipSubtitle),
                 value: _todo,
                 onChanged: (value) => setState(() => _todo = value ?? false),
                 dense: true,
@@ -678,9 +711,12 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
-        ElevatedButton(onPressed: _save, child: const Text('Save')),
+        ElevatedButton(
+          onPressed: _save,
+          child: Text(AppLocalizations.of(context)!.save),
+        ),
       ],
     );
   }

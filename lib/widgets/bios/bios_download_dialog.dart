@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/bios_download_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'enhanced_error_display.dart';
 
 class BiosDownloadDialog extends StatefulWidget {
@@ -191,7 +192,7 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
               else if (_currentProgress is BatchDownloadProgress)
                 _buildBatchProgress(_currentProgress as BatchDownloadProgress),
             ] else ...[
-              const Text('Preparing download...'),
+              Text(AppLocalizations.of(context)!.preparingDownload),
               const SizedBox(height: 16),
               const LinearProgressIndicator(),
             ],
@@ -209,9 +210,15 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
       ),
       actions: [
         if (_isCompleted || _hasFailed || _isCancelled)
-          TextButton(onPressed: _close, child: const Text('Close'))
+          TextButton(
+            onPressed: _close,
+            child: Text(AppLocalizations.of(context)!.close),
+          )
         else
-          TextButton(onPressed: _cancel, child: const Text('Cancel')),
+          TextButton(
+            onPressed: _cancel,
+            child: Text(AppLocalizations.of(context)!.cancel),
+          ),
       ],
     );
   }

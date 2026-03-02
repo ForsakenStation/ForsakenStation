@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../mixins/dialog_controls_mixin.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'dialog_button_bar.dart';
 import 'gamepad_button_indicator.dart';
 
@@ -43,16 +44,17 @@ class _ExitDialogState extends State<ExitDialog>
   @override
   void initState() {
     super.initState();
+    final l10n = AppLocalizations.of(context)!;
 
     // Build buttons list
     _buttons = [
       DialogButton(
-        label: 'Cancel',
+        label: l10n.cancel,
         gamepadButton: GamepadButton.b,
         onPressed: _handleDismiss,
       ),
       DialogButton(
-        label: 'Exit',
+        label: l10n.exit,
         primary: true,
         gamepadButton: GamepadButton.a,
         onPressed: _handleExit,
@@ -90,6 +92,7 @@ class _ExitDialogState extends State<ExitDialog>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return wrapWithKeyboardHandler(
       onEscape: _handleDismiss,
       child: Dialog(
@@ -102,13 +105,13 @@ class _ExitDialogState extends State<ExitDialog>
             children: [
               // Title
               Text(
-                'Exit Application',
+                l10n.exitApplication,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 16),
 
               // Content
-              const Text('Are you sure you want to exit?'),
+              Text(l10n.exitConfirm),
               const SizedBox(height: 24),
 
               // Buttons

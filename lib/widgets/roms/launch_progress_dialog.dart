@@ -6,6 +6,7 @@ import '../../mixins/dialog_controls_mixin.dart';
 import '../../models/rom_item.dart';
 import '../../models/emulator_config.dart';
 import '../../services/gamepad_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../common/placeholder_image.dart';
 import '../../utils/format_utils.dart';
 import '../common/gamepad_button_indicator.dart';
@@ -294,7 +295,7 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog>
                     label: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text('Cancel Download'),
+                        Text(AppLocalizations.of(context)!.cancelDownload),
                         if (GamepadService.instance.isGamepadConnected) ...[
                           const SizedBox(width: 8),
                           GamepadButtonIndicator(button: GamepadButton.b),

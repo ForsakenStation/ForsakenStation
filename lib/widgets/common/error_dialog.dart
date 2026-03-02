@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../mixins/dialog_controls_mixin.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'dialog_button_bar.dart';
 import 'gamepad_button_indicator.dart';
 
@@ -96,7 +97,10 @@ class _ErrorDialogState extends State<ErrorDialog>
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Title
-              Text('Error', style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                AppLocalizations.of(context)!.error,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               const SizedBox(height: 16),
 
               // Content

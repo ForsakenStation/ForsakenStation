@@ -166,7 +166,7 @@ PLATFORM_IDS = {
     "comad": 177,
     "c64": 66,
     "coregrafx": 50,
-    "cpc": 65,
+    "amstradcpc": 65,
     "creativision": 241,
     "daphne": 49,
     "data east classics": 162,
@@ -233,6 +233,7 @@ PLATFORM_IDS = {
     "model2": 54,
     "model3": 55,
     "msx": 113,
+    "msx1": 113,
     "msx turbo r": 118,
     "msx2": 116,
     "msx2+": 117,
@@ -809,7 +810,7 @@ def scrape_platform(
     limit: Optional[int] = None,
     skip_gamelist: bool = False,
     gamelist_only: bool = False,
-    startIndex: int = 0
+    startIndex: int = 0,
 ):
     """Scrape media for a platform"""
 
@@ -1114,7 +1115,9 @@ Examples:
         help="Show what would be downloaded without actually downloading",
     )
 
-    parser.add_argument("--start-index", type=int, help="Index to start from", default=0)
+    parser.add_argument(
+        "--start-index", type=int, help="Index to start from", default=0
+    )
     parser.add_argument("--limit", type=int, help="Limit number of ROMs to process")
 
     args = parser.parse_args()
@@ -1159,7 +1162,7 @@ Examples:
         limit=args.limit,
         skip_gamelist=args.skip_gamelist,
         gamelist_only=args.gamelist_only,
-        startIndex=args.start_index
+        startIndex=args.start_index,
     )
 
     return 0 if success else 1

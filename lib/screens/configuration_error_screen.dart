@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:forsaken/l10n/generated/app_localizations.dart';
 
 class ConfigurationErrorScreen extends StatelessWidget {
   const ConfigurationErrorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Configuration Error')),
+      appBar: AppBar(title: Text(l10n.configurationError)),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -15,14 +17,16 @@ class ConfigurationErrorScreen extends StatelessWidget {
             children: [
               const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 24),
-              const Text(
-                'Configuration Error',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Text(
+                l10n.configurationError,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'The application could not find the required configuration.\n'
-                'Please configure your paths in Settings > System Paths.',
+              Text(
+                l10n.configurationErrorDescription,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -32,19 +36,15 @@ class ConfigurationErrorScreen extends StatelessWidget {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  'Required:\n'
-                  '- Media Path: directory containing media assets\n'
-                  '- Emulators Path: directory containing emulator binaries\n\n'
-                  'Optional:\n'
-                  '- ROM storage paths for temporary/permanent downloads',
-                  style: TextStyle(fontFamily: 'monospace'),
+                child: Text(
+                  l10n.configurationRequired,
+                  style: const TextStyle(fontFamily: 'monospace'),
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Go to Settings > System Paths to configure',
-                style: TextStyle(color: Colors.grey),
+              Text(
+                l10n.goToSettingsToConfigure,
+                style: const TextStyle(color: Colors.grey),
               ),
             ],
           ),

@@ -6,6 +6,7 @@ import 'package:pdfrx/pdfrx.dart';
 import 'package:path/path.dart' as path;
 import '../services/debug_service.dart';
 import '../services/gamepad_service.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// Full-screen PDF viewer with page navigation and zoom
 /// Works on all platforms including Linux desktop
@@ -332,7 +333,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
               ElevatedButton.icon(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back),
-                label: const Text('Go Back'),
+                label: Text(AppLocalizations.of(context)!.goBack),
               ),
             ],
           ),

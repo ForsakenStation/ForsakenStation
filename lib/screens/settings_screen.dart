@@ -11,11 +11,13 @@ import 'settings_categories/system_check_screen.dart';
 import 'settings_categories/gamepad_test_screen.dart';
 import 'settings_categories/bios_help_screen.dart';
 import 'settings_categories/web_settings_screen.dart';
+import 'settings_categories/language_settings_screen.dart';
 import 'setup_wizard_screen.dart';
 import '../services/debug_service.dart';
 import '../services/config_service.dart';
 import '../services/keyboard_service.dart';
 import '../services/gamepad_service.dart';
+import '../l10n/generated/app_localizations.dart';
 
 // Web-specific import (conditional for web platform)
 import '../platforms/web/web_emulator_service.dart'
@@ -39,7 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _scrollController = ScrollController();
   Timer? _gamepadPollTimer;
   int _selectedIndex = 0;
-  final int _categoryCount = kIsWeb ? 11 : 10;
+  final int _categoryCount = kIsWeb ? 12 : 11;
   bool _isGamepadNavigating = false;
 
   // Height of each card + spacing (approximate)
@@ -126,17 +128,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _stopGamepadPolling();
 
     // "About & Debug" is the last item (index depends on platform)
-    final aboutIndex = kIsWeb ? 10 : 9;
+    final aboutIndex = kIsWeb ? 12 : 11;
     if (index == aboutIndex) {
       _showAboutDialog(context);
       if (mounted) _startGamepadPolling();
       return;
     }
 
-    // "Setup Wizard" is the second-to-last item
-    final wizardIndex = kIsWeb ? 9 : 8;
+    // "Setup Wizard"
+    final wizardIndex = kIsWeb ? 10 : 9;
     if (index == wizardIndex) {
       _rerunSetupWizard();
+      return;
+    }
+
+    // "Language Settings"
+    final languageIndex = kIsWeb ? 11 : 10;
+    if (index == languageIndex) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LanguageSettingsScreen()),
+      ).then((_) {
+        if (mounted) _startGamepadPolling();
+      });
       return;
     }
 
@@ -167,7 +181,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         screen = const BiosHelpScreen();
         break;
       case 8:
-        // Web Settings (only reachable on web since wizardIndex is 9 on web)
+        // Web Settings (only reachable on web since wizardIndex is 10 on web)
         screen = const WebSettingsScreen();
         break;
       default:
@@ -266,7 +280,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Settings & Configuration'),
+          title: Text(AppLocalizations.of(context)!.settingsAndConfiguration),
           centerTitle: true,
         ),
         body: ListView(
@@ -407,17 +421,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             _buildCategoryCard(
               context,
-              index: kIsWeb ? 9 : 8,
+              index: kIsWeb ? 10 : 9,
               icon: Icons.auto_fix_high,
               title: 'Setup Wizard',
               description: 'Re-run the initial setup wizard',
-              onTap: () => _navigateToCategory(kIsWeb ? 9 : 8),
+              onTap: () => _navigateToCategory(kIsWeb ? 10 : 9),
             ),
             const SizedBox(height: 12),
 
             _buildCategoryCard(
               context,
-              index: kIsWeb ? 10 : 9,
+              index: kIsWeb ? 11 : 10,
+              icon: Icons.language,
+              title: 'Language',
+              description: 'Select application language',
+              onTap: () => _navigateToCategory(kIsWeb ? 11 : 10),
+            ),
+            const SizedBox(height: 12),
+
+            _buildCategoryCard(
+              context,
+              index: kIsWeb ? 12 : 11,
               icon: Icons.info_outline,
               title: 'About & Debug',
               description: 'App information and debug settings',
@@ -506,23 +530,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showAboutDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('About Forsaken Emulator'),
+        title: Text(l10n.aboutForsakenEmulator),
         content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Version $kAppVersion',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                '${l10n.version} $kAppVersion',
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'A modern multi-platform emulator frontend built with Flutter.',
-              ),
+              Text(l10n.appDescription),
               const SizedBox(height: 16),
               const Divider(),
               const SizedBox(height: 16),
@@ -642,7 +665,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  const Text('Debug Mode: '),
+                  Text(AppLocalizations.of(context)!.debugMode),
                   Text(
                     DebugService.instance.isDebugEnabled
                         ? 'Enabled'
@@ -663,7 +686,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pop(context);
                   _showAboutDialog(context);
                 },
-                child: const Text('Toggle Debug Mode'),
+                child: Text(AppLocalizations.of(context)!.toggleDebugMode),
               ),
             ],
           ),

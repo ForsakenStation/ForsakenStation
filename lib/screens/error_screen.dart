@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String message;
@@ -8,8 +9,9 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Error')),
+      appBar: AppBar(title: Text(l10n.error)),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -18,15 +20,18 @@ class ErrorScreen extends StatelessWidget {
             children: [
               const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 24),
-              const Text(
-                'Initialization Error',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Text(
+                l10n.initializationError,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
               Text(message, textAlign: TextAlign.center),
               if (onRetry != null) ...[
                 const SizedBox(height: 24),
-                ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
+                ElevatedButton(onPressed: onRetry, child: Text(l10n.retry)),
               ],
             ],
           ),

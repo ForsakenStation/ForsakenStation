@@ -1,6 +1,6 @@
 name: forsaken
 description: "A modern multi-platform emulator frontend"
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
@@ -26,6 +26,9 @@ dependencies:
   gamepads: ^0.1.9
   pdfrx: ^2.2.24
   crypto: ^3.0.7
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
   # Web-specific dependencies
   web: ^1.1.1
 
@@ -38,6 +41,7 @@ dev_dependencies:
   asset_fill: ^2.0.0
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/config.json
@@ -78,7 +82,7 @@ flutter_launcher_icons:
   image_path: "assets/images/icon.png"
   
   # Android adaptive icon
-  adaptive_icon_background: "#000000"  # Color de fondo negro
+  adaptive_icon_background: "#000000"
   adaptive_icon_foreground: "assets/images/icon.png"
   
   # Web

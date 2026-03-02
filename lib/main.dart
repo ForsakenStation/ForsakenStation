@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:media_kit/media_kit.dart';
 
@@ -8,7 +9,10 @@ import 'screens/error_screen.dart';
 import 'screens/setup_wizard_screen.dart';
 import 'services/debug_service.dart';
 import 'services/config_service.dart';
+import 'services/locale_service.dart';
 import 'providers/theme_provider.dart';
+import 'providers/locale_provider.dart';
+import 'l10n/generated/app_localizations.dart';
 import 'utils/app_theme.dart';
 
 // Platform-specific imports (use stubs on web to avoid dart:io)
@@ -38,6 +42,9 @@ Future<void> main() async {
 
   // Initialize ConfigService (loads path settings from SharedPreferences)
   await ConfigService.instance.initialize();
+
+  // Initialize LocaleService (loads saved locale from SharedPreferences)
+  await LocaleService.instance.initialize();
 
   // Initialize DebugService from config settings
   _initializeDebugService();
@@ -161,6 +168,13 @@ class _EmulatorAppState extends State<EmulatorApp> {
         theme: AppTheme.lightTheme(),
         darkTheme: AppTheme.darkTheme(),
         themeMode: ThemeMode.system,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: LocaleService.supportedLocales,
         home: const InitializingScreen(),
       );
     }
@@ -171,6 +185,13 @@ class _EmulatorAppState extends State<EmulatorApp> {
         theme: AppTheme.lightTheme(),
         darkTheme: AppTheme.darkTheme(),
         themeMode: ThemeMode.system,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: LocaleService.supportedLocales,
         home: ErrorScreen(
           message: _errorMessage!,
           onRetry: () {
@@ -188,15 +209,30 @@ class _EmulatorAppState extends State<EmulatorApp> {
       create: (_) => ThemeProvider(),
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Forsaken Emulator',
-            theme: AppTheme.lightTheme(),
-            darkTheme: AppTheme.darkTheme(),
-            themeMode: themeProvider.themeMode,
-            home: _showWizard
-                ? SetupWizardScreen(onComplete: _onWizardComplete)
-                : _homeScreen,
+          return ChangeNotifierProvider(
+            create: (_) => LocaleProvider(),
+            child: Consumer<LocaleProvider>(
+              builder: (context, localeProvider, _) {
+                return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'Forsaken Emulator',
+                  theme: AppTheme.lightTheme(),
+                  darkTheme: AppTheme.darkTheme(),
+                  themeMode: themeProvider.themeMode,
+                  locale: localeProvider.currentLocale,
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: LocaleService.supportedLocales,
+                  home: _showWizard
+                      ? SetupWizardScreen(onComplete: _onWizardComplete)
+                      : _homeScreen,
+                );
+              },
+            ),
           );
         },
       ),

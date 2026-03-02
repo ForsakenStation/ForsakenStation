@@ -7,6 +7,7 @@ import '../../../models/emulator_config.dart';
 import '../../../models/media.dart';
 import '../../../services/emulator_service.dart';
 import '../../../services/media_service.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../widgets/roms/launch_progress_dialog.dart';
 import '../../../widgets/roms/emulator_selection_dialog.dart';
 import '../../../widgets/common/error_dialog.dart';
@@ -169,10 +170,12 @@ class RomLauncher {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).clearSnackBars();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Download cancelled'),
+                    SnackBar(
+                      content: Text(
+                        AppLocalizations.of(context)!.downloadCancelled,
+                      ),
                       backgroundColor: Colors.orange,
-                      duration: Duration(seconds: 5),
+                      duration: const Duration(seconds: 5),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -216,7 +219,9 @@ class RomLauncher {
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Launched: ${item.displayName}'),
+              content: Text(
+                '${AppLocalizations.of(context)!.launched} ${item.displayName}',
+              ),
               backgroundColor: Colors.green,
               duration: const Duration(seconds: 3),
               behavior: SnackBarBehavior.floating,

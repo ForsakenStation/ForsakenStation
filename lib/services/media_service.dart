@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as path;
+import '../models/game_info.dart';
 import '../models/media.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
@@ -95,6 +96,138 @@ class MediaService {
   }
 
   Future<RomMedia> getMediaForRomItem(
+    RomItem romItem,
+    String platformName, {
+    GameInfo? gameInfo,
+  }) async {
+    // Fast path: if GameInfo has cached media paths, use them directly
+    // This avoids up to 50 filesystem stat calls per ROM
+    if (gameInfo != null && gameInfo.hasMediaPaths) {
+      _debug.info(
+        'Using cached media paths for ${romItem.name}',
+        tag: 'MediaService',
+      );
+      return _buildMediaFromGameInfo(romItem, platformName, gameInfo);
+    }
+
+    // Slow path: filesystem scanning (fallback when gamelist has no media info)
+    return _findMediaByFilesystemScan(romItem, platformName);
+  }
+
+  /// Build RomMedia from cached paths in GameInfo (no filesystem calls)
+  RomMedia _buildMediaFromGameInfo(
+    RomItem romItem,
+    String platformName,
+    GameInfo gameInfo,
+  ) {
+    final romNameWithoutExt = _getRomNameWithoutExtension(romItem.name);
+
+    final romMedia = RomMedia(
+      romName: romNameWithoutExt,
+      platform: platformName,
+    );
+
+    if (gameInfo.box3dPath != null) {
+      romMedia.box3d = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.box3d,
+        path: path.join(mediaBasePath, gameInfo.box3dPath!),
+        existsVerified: true,
+      );
+    }
+    if (gameInfo.coverPath != null) {
+      romMedia.cover = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.cover,
+        path: path.join(mediaBasePath, gameInfo.coverPath!),
+        existsVerified: true,
+      );
+    }
+    if (gameInfo.marqueePath != null) {
+      romMedia.marquee = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.marquee,
+        path: path.join(mediaBasePath, gameInfo.marqueePath!),
+        existsVerified: true,
+      );
+    }
+    if (gameInfo.screenshotPath != null) {
+      romMedia.screenshot = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.screenshot,
+        path: path.join(mediaBasePath, gameInfo.screenshotPath!),
+        existsVerified: true,
+      );
+    }
+    if (gameInfo.mixImagePath != null) {
+      romMedia.mixImage = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.mixImage,
+        path: path.join(mediaBasePath, gameInfo.mixImagePath!),
+        existsVerified: true,
+      );
+    }
+    if (gameInfo.videoPath != null) {
+      romMedia.video = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.video,
+        path: path.join(mediaBasePath, gameInfo.videoPath!),
+        existsVerified: true,
+      );
+    }
+    if (gameInfo.titlescreenPath != null) {
+      romMedia.titlescreen = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.titlescreen,
+        path: path.join(mediaBasePath, gameInfo.titlescreenPath!),
+        existsVerified: true,
+      );
+    }
+    if (gameInfo.manualPath != null) {
+      romMedia.manual = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.manual,
+        path: path.join(mediaBasePath, gameInfo.manualPath!),
+        existsVerified: true,
+      );
+    }
+    if (gameInfo.backcoverPath != null) {
+      romMedia.backcover = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.backcover,
+        path: path.join(mediaBasePath, gameInfo.backcoverPath!),
+        existsVerified: true,
+      );
+    }
+    if (gameInfo.fanartPath != null) {
+      romMedia.fanart = Media(
+        romName: romNameWithoutExt,
+        platform: platformName,
+        type: MediaType.fanart,
+        path: path.join(mediaBasePath, gameInfo.fanartPath!),
+        existsVerified: true,
+      );
+    }
+
+    _debug.info(
+      'Built media from cache: ${romMedia.allMedia.length} items for ${romItem.name}',
+      tag: 'MediaService',
+    );
+
+    return romMedia;
+  }
+
+  /// Filesystem scanning fallback for media discovery
+  Future<RomMedia> _findMediaByFilesystemScan(
     RomItem romItem,
     String platformName,
   ) async {
@@ -306,6 +439,7 @@ class MediaService {
           platform: platform,
           type: type,
           path: mediaPath,
+          existsVerified: true,
         );
       }
     }

@@ -4,6 +4,7 @@ import '../web_emulator_service.dart';
 import '../../../models/rom_item.dart';
 import '../../../models/launch_result.dart';
 import '../../../services/debug_service.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import 'web_emulator_view.dart';
 
 /// Web-specific emulator widget that embeds EmulatorJS
@@ -183,7 +184,7 @@ class _WebEmulatorWidgetState extends State<WebEmulatorWidget> {
                   foregroundColor: Colors.red,
                   side: BorderSide(color: Colors.red.withValues(alpha: 0.3)),
                 ),
-                child: const Text('Retry'),
+                child: Text(AppLocalizations.of(context)!.retry),
               ),
               if (widget.onClose != null) ...[
                 const SizedBox(width: 16),
@@ -193,7 +194,7 @@ class _WebEmulatorWidgetState extends State<WebEmulatorWidget> {
                     backgroundColor: Colors.grey.withValues(alpha: 0.1),
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('Close'),
+                  child: Text(AppLocalizations.of(context)!.close),
                 ),
               ],
             ],

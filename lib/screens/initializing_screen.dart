@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/legal.dart';
+import '../l10n/generated/app_localizations.dart';
 
 class InitializingScreen extends StatefulWidget {
   const InitializingScreen({super.key});
@@ -92,7 +93,7 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                   // App title
                   Text(
-                    'FORSAKEN',
+                    AppLocalizations.of(context)!.appTitle.toUpperCase(),
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
@@ -111,7 +112,7 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                   // Subtitle
                   Text(
-                    'Retro Gaming Frontend',
+                    AppLocalizations.of(context)!.retroGamingFrontend,
                     style: TextStyle(
                       fontSize: 14,
                       letterSpacing: 2,
@@ -142,7 +143,7 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                         // Status text
                         Text(
-                          'Loading...',
+                          AppLocalizations.of(context)!.loading,
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[300],

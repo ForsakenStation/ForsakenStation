@@ -10,6 +10,7 @@ import 'package:forsaken/models/emulator_download_info.dart';
 import 'package:forsaken/widgets/common/controls_bottom_bar.dart';
 import 'package:forsaken/widgets/common/dialog_button_bar.dart';
 import 'package:forsaken/widgets/common/gamepad_button_indicator.dart';
+import 'package:forsaken/l10n/generated/app_localizations.dart';
 
 /// Screen for managing downloads
 ///
@@ -66,7 +67,9 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       autofocus: true,
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Download Manager')),
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.downloadManager),
+        ),
         body: Column(
           children: [
             Expanded(
@@ -75,9 +78,11 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Download emulators and game lists',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    Text(
+                      AppLocalizations.of(
+                        context,
+                      )!.downloadEmulatorsAndGameLists,
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const SizedBox(height: 24),
 
@@ -88,8 +93,8 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Quick Actions',
+                            Text(
+                              AppLocalizations.of(context)!.quickActions,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -102,21 +107,27 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
                               children: [
                                 _ActionButton(
                                   icon: Icons.download,
-                                  label: 'Download All',
+                                  label: AppLocalizations.of(
+                                    context,
+                                  )!.downloadAll,
                                   onPressed: _isDownloading
                                       ? null
                                       : () => _downloadCategory('all'),
                                 ),
                                 _ActionButton(
                                   icon: Icons.category,
-                                  label: 'By Category',
+                                  label: AppLocalizations.of(
+                                    context,
+                                  )!.byCategory,
                                   onPressed: _isDownloading
                                       ? null
                                       : _showCategoryDialog,
                                 ),
                                 _ActionButton(
                                   icon: Icons.list,
-                                  label: 'Download Game Lists',
+                                  label: AppLocalizations.of(
+                                    context,
+                                  )!.downloadGameLists,
                                   onPressed: _isDownloading
                                       ? null
                                       : _downloadGameLists,
@@ -134,8 +145,8 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Download Queue',
+                        Text(
+                          AppLocalizations.of(context)!.downloadQueue,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -144,7 +155,9 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
                         if (_tasks.isNotEmpty) ...[
                           TextButton(
                             onPressed: _clearCompleted,
-                            child: const Text('Clear Completed'),
+                            child: Text(
+                              AppLocalizations.of(context)!.clearCompleted,
+                            ),
                           ),
                         ],
                       ],
@@ -166,16 +179,20 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
                                   ),
                                   const SizedBox(height: 16),
                                   Text(
-                                    'No downloads in progress',
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.noDownloadsInProgress,
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.grey.shade600,
                                     ),
                                   ),
                                   const SizedBox(height: 32),
-                                  const Text(
-                                    'Select a quick action above to start downloading',
-                                    style: TextStyle(color: Colors.grey),
+                                  Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.selectQuickActionToStart,
+                                    style: const TextStyle(color: Colors.grey),
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -224,13 +241,13 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Select Category'),
+        title: Text(AppLocalizations.of(context)!.selectCategory),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             _CategoryTile(
               icon: Icons.videogame_asset,
-              title: 'Sony (PS1-PS4)',
+              title: AppLocalizations.of(context)!.categorySony,
               onTap: () {
                 Navigator.pop(context);
                 _downloadCategory('sony');
@@ -238,7 +255,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
             ),
             _CategoryTile(
               icon: Icons.sports_esports,
-              title: 'Nintendo (GC, Wii, Switch)',
+              title: AppLocalizations.of(context)!.categoryNintendo,
               onTap: () {
                 Navigator.pop(context);
                 _downloadCategory('nintendo');
@@ -246,7 +263,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
             ),
             _CategoryTile(
               icon: Icons.gamepad,
-              title: 'Microsoft (Xbox, Xbox 360)',
+              title: AppLocalizations.of(context)!.categoryMicrosoft,
               onTap: () {
                 Navigator.pop(context);
                 _downloadCategory('microsoft');
@@ -254,7 +271,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
             ),
             _CategoryTile(
               icon: Icons.apps,
-              title: 'Multi-Platform (RetroArch)',
+              title: AppLocalizations.of(context)!.categoryMultiPlatform,
               onTap: () {
                 Navigator.pop(context);
                 _downloadCategory('multi');
@@ -262,7 +279,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
             ),
             _CategoryTile(
               icon: Icons.more_horiz,
-              title: 'Other Emulators',
+              title: AppLocalizations.of(context)!.categoryOtherEmulators,
               onTap: () {
                 Navigator.pop(context);
                 _downloadCategory('other');
@@ -270,7 +287,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
             ),
             _CategoryTile(
               icon: Icons.build,
-              title: 'Utilities',
+              title: AppLocalizations.of(context)!.categoryUtilities,
               onTap: () {
                 Navigator.pop(context);
                 _downloadCategory('utilities');
@@ -282,7 +299,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
           DialogButtonBar(
             buttons: [
               DialogButton(
-                label: 'Cancel',
+                label: AppLocalizations.of(context)!.cancel,
                 onPressed: () => Navigator.pop(context),
                 primary: true,
                 gamepadButton: GamepadButton.b,
@@ -312,8 +329,8 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       if (emulators.isEmpty) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No emulators available for this category'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.noEmulatorsAvailable),
           ),
         );
         return;
@@ -327,22 +344,23 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       final confirm = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Confirm Download'),
+          title: Text(AppLocalizations.of(context)!.confirmDownload),
           content: Text(
-            'Download ${emulators.length} emulator(s)?\n'
-            'Estimated size: ~$totalSizeMB MB\n\n'
-            'This may take a while depending on your internet connection.',
+            AppLocalizations.of(context)!.confirmDownloadDescription(
+              '${emulators.length}',
+              '$totalSizeMB',
+            ),
           ),
           actions: [
             DialogButtonBar(
               buttons: [
                 DialogButton(
-                  label: 'Cancel',
+                  label: AppLocalizations.of(context)!.cancel,
                   onPressed: () => Navigator.pop(context, false),
                   gamepadButton: GamepadButton.b,
                 ),
                 DialogButton(
-                  label: 'Download',
+                  label: AppLocalizations.of(context)!.download,
                   onPressed: () => Navigator.pop(context, true),
                   primary: true,
                   gamepadButton: GamepadButton.a,
@@ -368,7 +386,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
               type: DownloadType.emulator,
               status: DownloadStatus.completed,
               progress: 1.0,
-              statusMessage: 'Already installed',
+              statusMessage: AppLocalizations.of(context)!.alreadyInstalled,
             );
           });
           continue;
@@ -390,7 +408,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
 
         setState(() {
           task.status = DownloadStatus.downloading;
-          task.statusMessage = 'Starting...';
+          task.statusMessage = AppLocalizations.of(context)!.starting;
         });
 
         await _downloadService.downloadEmulator(
@@ -414,21 +432,23 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
         setState(() {
           task.status = DownloadStatus.completed;
           task.progress = 1.0;
-          task.statusMessage = 'Completed';
+          task.statusMessage = AppLocalizations.of(context)!.completed;
         });
       }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('All downloads completed')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.allDownloads)),
         );
       }
-      _downloadService.makeAppImagesExecutable(Directory(ConfigService.instance.emulatorsPath).path);
+      _downloadService.makeAppImagesExecutable(
+        Directory(ConfigService.instance.emulatorsPath).path,
+      );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+        );
       }
     } finally {
       setState(() => _isDownloading = false);
@@ -447,17 +467,17 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       final action = await showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Download Game Lists'),
+          title: Text(AppLocalizations.of(context)!.downloadGameLists),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('This will download ROM lists from GitHub.'),
+              Text(AppLocalizations.of(context)!.downloadGameListsDescription),
               const SizedBox(height: 16),
               if (isDownloaded) ...[
-                const Text(
-                  '✓ Game lists already downloaded',
-                  style: TextStyle(color: Colors.green),
+                Text(
+                  AppLocalizations.of(context)!.gameListsAlreadyDownloaded,
+                  style: const TextStyle(color: Colors.green),
                 ),
                 const SizedBox(height: 8),
               ],
@@ -467,16 +487,18 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
             DialogButtonBar(
               buttons: [
                 DialogButton(
-                  label: 'Cancel',
+                  label: AppLocalizations.of(context)!.cancel,
                   onPressed: () => Navigator.pop(context),
                   gamepadButton: GamepadButton.b,
                 ),
-                  DialogButton(
-                    label: isDownloaded? 'Re-Download' : 'Download',
-                    onPressed: () => Navigator.pop(context, 'download'),
-                    primary: true,
-                    gamepadButton: GamepadButton.a,
-                  ),
+                DialogButton(
+                  label: isDownloaded
+                      ? AppLocalizations.of(context)!.redownload
+                      : AppLocalizations.of(context)!.download,
+                  onPressed: () => Navigator.pop(context, 'download'),
+                  primary: true,
+                  gamepadButton: GamepadButton.a,
+                ),
               ],
             ),
           ],
@@ -489,10 +511,10 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       if (action == 'download' || action == 'redownload') {
         setState(() {
           _tasks['gamelists'] = DownloadTask(
-            name: 'Game Lists (from GitHub)',
+            name: AppLocalizations.of(context)!.gameListsFromGitHub,
             type: DownloadType.gamelist,
             status: DownloadStatus.downloading,
-            statusMessage: 'Downloading...',
+            statusMessage: AppLocalizations.of(context)!.downloading,
           );
         });
 
@@ -516,22 +538,24 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
         setState(() {
           _tasks['gamelists']!.status = DownloadStatus.completed;
           _tasks['gamelists']!.progress = 1.0;
-          _tasks['gamelists']!.statusMessage = 'Downloaded';
+          _tasks['gamelists']!.statusMessage = AppLocalizations.of(
+            context,
+          )!.downloaded;
         });
       }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Game lists downloaded!'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.gameListsDownloaded),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+        );
       }
 
       // Mark all pending tasks as failed
@@ -539,7 +563,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
         for (final task in _tasks.values) {
           if (task.status == DownloadStatus.downloading) {
             task.status = DownloadStatus.failed;
-            task.statusMessage = 'Error: $e';
+            task.statusMessage = '${AppLocalizations.of(context)!.error}: $e';
           }
         }
       });
@@ -553,7 +577,7 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
       final task = _tasks[taskKey];
       if (task != null) {
         task.status = DownloadStatus.failed;
-        task.statusMessage = 'Cancelled';
+        task.statusMessage = AppLocalizations.of(context)!.cancelled;
       }
     });
   }
@@ -669,7 +693,7 @@ class _DownloadTaskCard extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.close, size: 20),
                     onPressed: onCancel,
-                    tooltip: 'Cancel',
+                    tooltip: AppLocalizations.of(context)!.cancel,
                   ),
                 if (task.status == DownloadStatus.downloading)
                   const SizedBox(

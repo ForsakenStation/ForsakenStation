@@ -27,6 +27,7 @@ import '../widgets/common/controls_bottom_bar.dart';
 import '../widgets/common/smart_svg.dart';
 import '../widgets/roms/fullscreen_image_viewer.dart';
 import '../widgets/roms/rom_detail_dialog.dart';
+import '../l10n/generated/app_localizations.dart';
 import 'settings_screen.dart';
 
 import 'roms/widgets/roms_header.dart';
@@ -367,7 +368,9 @@ class _RomsScreenState extends State<RomsScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('🎮 Gamepad connected: $gamepadName'),
+        content: Text(
+          '${AppLocalizations.of(context)!.gamepadConnected}: $gamepadName',
+        ),
         duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.green.shade700,

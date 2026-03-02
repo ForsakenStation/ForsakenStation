@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/bios_download_mapping.dart';
 import '../../models/bios_requirement.dart';
 import '../../services/bios_checksum_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../common/controls_bottom_bar.dart';
 
 /// Comprehensive BIOS Status Dashboard
@@ -150,7 +151,7 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BIOS Status Dashboard'),
+        title: Text(AppLocalizations.of(context)!.biosStatusDashboard),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -295,7 +296,11 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
                             onPressed: () =>
                                 _downloadMissingFiles(platformStatus),
                             icon: const Icon(Icons.download),
-                            label: const Text('Download Missing Files'),
+                            label: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.downloadMissingFiles,
+                            ),
                           ),
                         ),
                     ],

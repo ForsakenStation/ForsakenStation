@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/rom_item.dart';
 import '../../../services/debug_service.dart';
 import '../../../services/rom_storage_service.dart';
@@ -109,15 +110,16 @@ class RomSaveHandler {
       );
 
       if (newPath != null && context.mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${item.displayName} saved permanently'),
+            content: Text(l10n.romSavedPermanently(item.displayName)),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 5),
             behavior: SnackBarBehavior.floating,
             action: SnackBarAction(
-              label: 'Undo',
+              label: l10n.undo,
               textColor: Colors.white,
               onPressed: () async {
                 // Move back to temp storage by deleting from forever
@@ -134,10 +136,10 @@ class RomSaveHandler {
       } else if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to save ROM permanently'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.failedToSaveRom),
             backgroundColor: Colors.orange,
-            duration: Duration(seconds: 5),
+            duration: const Duration(seconds: 5),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -147,7 +149,9 @@ class RomSaveHandler {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error saving ROM: $e'),
+            content: Text(
+              AppLocalizations.of(context)!.errorSavingRom(e.toString()),
+            ),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 5),
             behavior: SnackBarBehavior.floating,
@@ -166,7 +170,9 @@ class RomSaveHandler {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${item.displayName} kept in temporary storage'),
+          content: Text(
+            AppLocalizations.of(context)!.romKeptInTemporary(item.displayName),
+          ),
           backgroundColor: Colors.grey[700],
           duration: const Duration(seconds: 5),
           behavior: SnackBarBehavior.floating,

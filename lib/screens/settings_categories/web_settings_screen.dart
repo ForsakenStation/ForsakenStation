@@ -9,6 +9,7 @@ import '../../services/gamepad_service.dart';
 import '../../mixins/gamepad_polling_mixin.dart';
 import '../../mixins/screen_navigation_mixin.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for configuring web-specific settings.
 ///
@@ -228,9 +229,13 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error saving settings: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)!.errorSavingSettings} $e',
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -246,7 +251,10 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
       autofocus: true,
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Web Settings'), centerTitle: true),
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.webSettings),
+          centerTitle: true,
+        ),
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -493,7 +501,7 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
                           : null,
                     ),
                     child: _isSaving
-                        ? const Row(
+                        ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
@@ -504,10 +512,10 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
                                 ),
                               ),
                               SizedBox(width: 12),
-                              Text('Saving...'),
+                              Text(AppLocalizations.of(context)!.saving),
                             ],
                           )
-                        : const Text('Save Settings'),
+                        : Text(AppLocalizations.of(context)!.saveSettings),
                   ),
                 ),
               ),

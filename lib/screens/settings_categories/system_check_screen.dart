@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import '../../services/system_check_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for checking system requirements
 ///
@@ -68,9 +69,13 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
     } catch (e) {
       setState(() => _isChecking = false);
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error checking system: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${AppLocalizations.of(context)!.errorCheckingSystem}: $e',
+            ),
+          ),
+        );
       }
     }
   }
@@ -83,12 +88,12 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('System Requirements'),
+          title: Text(AppLocalizations.of(context)!.systemRequirements),
           actions: [
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _isChecking ? null : _performCheck,
-              tooltip: 'Re-check (R)',
+              tooltip: AppLocalizations.of(context)!.recheckR,
             ),
           ],
         ),
@@ -98,7 +103,11 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
               child: _isChecking
                   ? const Center(child: CircularProgressIndicator())
                   : _result == null
-                  ? const Center(child: Text('Failed to check system'))
+                  ? Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.failedToCheckSystem,
+                      ),
+                    )
                   : SingleChildScrollView(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -130,8 +139,12 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
                                       children: [
                                         Text(
                                           _result!.allRequiredMet
-                                              ? 'All Required Tools Installed'
-                                              : 'Missing Required Tools',
+                                              ? AppLocalizations.of(
+                                                  context,
+                                                )!.allRequiredToolsInstalled
+                                              : AppLocalizations.of(
+                                                  context,
+                                                )!.missingRequiredTools,
                                           style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
@@ -140,8 +153,12 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
                                         const SizedBox(height: 4),
                                         Text(
                                           _result!.allRequiredMet
-                                              ? 'Your system is ready to use the emulator'
-                                              : 'Some required tools are missing',
+                                              ? AppLocalizations.of(
+                                                  context,
+                                                )!.systemReadyToUse
+                                              : AppLocalizations.of(
+                                                  context,
+                                                )!.someRequiredToolsMissing,
                                           style: TextStyle(
                                             color: Colors.grey.shade700,
                                           ),
@@ -157,17 +174,19 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
                           const SizedBox(height: 24),
 
                           // Required Tools Section
-                          const Text(
-                            'Required Tools',
+                          Text(
+                            AppLocalizations.of(context)!.requiredTools,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'These tools are required for downloading and extracting emulators',
-                            style: TextStyle(color: Colors.grey),
+                          Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.requiredToolsDescription,
+                            style: const TextStyle(color: Colors.grey),
                           ),
                           const SizedBox(height: 16),
 
@@ -193,8 +212,10 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
                                           color: Colors.orange.shade700,
                                         ),
                                         const SizedBox(width: 8),
-                                        const Text(
-                                          'Installation Instructions',
+                                        Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.installationInstructions,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16,
@@ -268,7 +289,9 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
           ),
           trailing: Chip(
             label: Text(
-              isInstalled ? 'Installed' : 'Missing',
+              isInstalled
+                  ? AppLocalizations.of(context)!.installed
+                  : AppLocalizations.of(context)!.missing,
               style: const TextStyle(fontSize: 11),
             ),
             backgroundColor: isInstalled

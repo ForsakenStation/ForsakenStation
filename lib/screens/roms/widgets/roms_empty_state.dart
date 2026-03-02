@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class RomsEmptyState extends StatelessWidget {
   final bool isSearchMode;
@@ -42,7 +43,7 @@ class RomsEmptyState extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onClearSearch,
               icon: const Icon(Icons.clear_all),
-              label: const Text('Clear Search'),
+              label: Text(AppLocalizations.of(context)!.clearSearch),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.cyan[900],
                 foregroundColor: Colors.white,

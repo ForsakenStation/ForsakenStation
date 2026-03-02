@@ -11,6 +11,7 @@ import '../services/gamepad_service.dart';
 import '../widgets/common/controls_bottom_bar.dart';
 import '../mixins/gamepad_polling_mixin.dart';
 import '../mixins/screen_navigation_mixin.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// First-run setup wizard that guides users through initial configuration.
 ///
@@ -83,24 +84,24 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
     // Build step list based on platform
     _steps = [
       _WizardStep(
-        title: 'Welcome',
+        title: AppLocalizations.of(context)!.welcome,
         icon: Icons.waving_hand,
         builder: _buildWelcomeStep,
       ),
       if (!kIsWeb) ...[
         _WizardStep(
-          title: 'Emulators',
+          title: AppLocalizations.of(context)!.emulators,
           icon: Icons.videogame_asset,
           builder: _buildEmulatorsStep,
         ),
         _WizardStep(
-          title: 'Storage',
+          title: AppLocalizations.of(context)!.storage,
           icon: Icons.folder,
           builder: _buildStorageStep,
         ),
       ],
       _WizardStep(
-        title: 'Ready',
+        title: AppLocalizations.of(context)!.ready,
         icon: Icons.check_circle,
         builder: _buildReadyStep,
       ),
@@ -329,20 +330,20 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
             ControlsBottomBar(
               actions: [
                 if (_canGoBack)
-                  const BottomBarAction(
-                    label: 'Back',
+                  BottomBarAction(
+                    label: AppLocalizations.of(context)!.back,
                     keyboardKey: 'ESC',
                     gamepadButton: 'B',
                   ),
                 if (_canGoNext)
-                  const BottomBarAction(
-                    label: 'Next',
+                  BottomBarAction(
+                    label: AppLocalizations.of(context)!.next,
                     keyboardKey: 'Enter',
                     gamepadButton: 'A',
                   ),
                 if (_isLastStep)
-                  const BottomBarAction(
-                    label: 'Finish',
+                  BottomBarAction(
+                    label: AppLocalizations.of(context)!.finish,
                     keyboardKey: 'Enter',
                     gamepadButton: 'A',
                   ),
@@ -463,7 +464,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
               ),
               const SizedBox(height: 24),
               Text(
-                'Welcome to Forsaken Emulator',
+                AppLocalizations.of(context)!.welcomeMessage,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -471,14 +472,14 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
               ),
               const SizedBox(height: 8),
               Text(
-                'Version $kAppVersion',
+                '${AppLocalizations.of(context)!.version} $kAppVersion',
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
               const SizedBox(height: 16),
               Text(
-                'A modern multi-platform emulator frontend built with Flutter.',
+                AppLocalizations.of(context)!.appDescription,
                 style: theme.textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
@@ -509,7 +510,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
                     _validationError = null;
                   });
                 },
-                title: const Text('I understand and agree to these terms'),
+                title: Text(AppLocalizations.of(context)!.iUnderstand),
                 controlAffinity: ListTileControlAffinity.leading,
                 contentPadding: EdgeInsets.zero,
               ),
@@ -677,7 +678,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
               FilledButton.icon(
                 onPressed: _finishSetup,
                 icon: const Icon(Icons.arrow_forward),
-                label: const Text('Start'),
+                label: Text(AppLocalizations.of(context)!.start),
               ),
             ],
           ),

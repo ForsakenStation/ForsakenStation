@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../services/romlist_download_service.dart';
+import '../../services/gamelist_download_service.dart';
+import '../../services/gamelist_media_cache_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../services/gamepad_service.dart';
+import '../../services/debug_service.dart';
 import '../../mixins/gamepad_polling_mixin.dart';
 import '../../mixins/dialog_controls_mixin.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
+import '../../l10n/generated/app_localizations.dart';
 
-/// Screen for managing ROM database (romLists JSONL lists)
+/// Screen for managing ROM database, gamelists, and media cache.
 ///
 /// Allows users to:
-/// - View database status
-/// - Re-download ROM lists
-/// - Clear database
+/// - View ROM database status and download/clear romLists
+/// - View gamelists status and download/clear gamelists
+/// - Rebuild media cache (scan media dirs, write paths to gamelists)
 class RomDatabaseScreen extends StatefulWidget {
   const RomDatabaseScreen({super.key});
 
@@ -25,19 +29,36 @@ class RomDatabaseScreen extends StatefulWidget {
 class _RomDatabaseScreenState extends State<RomDatabaseScreen>
     with GamepadPollingMixin<RomDatabaseScreen> {
   final _romlistService = RomlistDownloadService.instance;
+  final _gamelistService = GamelistDownloadService.instance;
   final _keyboardService = KeyboardService.instance;
+  final _debug = DebugService.instance;
   final _focusNode = FocusNode();
 
+  // ROM database state
   bool _isLoading = true;
-  bool _isDownloaded = false;
-  Map<String, dynamic>? _downloadInfo;
-  bool _isDownloading = false;
-  double _downloadProgress = 0.0;
-  int _downloadReceived = 0;
-  int _downloadTotal = 0;
+  bool _isRomDbDownloaded = false;
+  Map<String, dynamic>? _romDbInfo;
+  bool _isRomDbDownloading = false;
+  double _romDbProgress = 0.0;
+  int _romDbReceived = 0;
+  int _romDbTotal = 0;
 
-  // Navigation state
-  int _selectedButtonIndex = 0;
+  // Gamelists state
+  bool _isGamelistsDownloaded = false;
+  Map<String, dynamic>? _gamelistsInfo;
+  bool _isGamelistsDownloading = false;
+  double _gamelistsProgress = 0.0;
+  int _gamelistsReceived = 0;
+  int _gamelistsTotal = 0;
+
+  // Media cache state
+  bool _isRebuildingCache = false;
+  String _cacheProgressText = '';
+
+  // Navigation state: section + button within section
+  // Sections: 0=ROM Database, 1=Gamelists, 2=Media Cache
+  int _selectedSection = 0;
+  int _selectedButtonInSection = 0;
   bool _isGamepadConnected = false;
 
   @override
@@ -55,10 +76,24 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
     });
   }
 
+  int _buttonCountForSection(int section) {
+    switch (section) {
+      case 0: // ROM Database
+        return _isRomDbDownloaded ? 2 : 1;
+      case 1: // Gamelists
+        return _isGamelistsDownloaded ? 2 : 1;
+      case 2: // Media Cache
+        return 1;
+      default:
+        return 1;
+    }
+  }
+
+  static const _sectionCount = 3;
+
   void _handleGamepadInput() {
     final gamepad = GamepadService.instance;
 
-    // Update gamepad connection status
     final connected = gamepad.isGamepadConnected;
     if (connected != _isGamepadConnected) {
       setState(() => _isGamepadConnected = connected);
@@ -69,21 +104,27 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
       return;
     }
 
-    // Navigation (horizontal: left/right)
     final direction = gamepad.getNavigationDirection();
     if (direction != null) {
       setState(() {
-        final totalButtons = _isDownloaded ? 2 : 1;
         if (direction == 'left') {
-          _selectedButtonIndex = (_selectedButtonIndex - 1) % totalButtons;
-          if (_selectedButtonIndex < 0) _selectedButtonIndex = totalButtons - 1;
+          final count = _buttonCountForSection(_selectedSection);
+          _selectedButtonInSection =
+              (_selectedButtonInSection - 1 + count) % count;
         } else if (direction == 'right') {
-          _selectedButtonIndex = (_selectedButtonIndex + 1) % totalButtons;
+          final count = _buttonCountForSection(_selectedSection);
+          _selectedButtonInSection = (_selectedButtonInSection + 1) % count;
+        } else if (direction == 'up') {
+          _selectedSection =
+              (_selectedSection - 1 + _sectionCount) % _sectionCount;
+          _selectedButtonInSection = 0;
+        } else if (direction == 'down') {
+          _selectedSection = (_selectedSection + 1) % _sectionCount;
+          _selectedButtonInSection = 0;
         }
       });
     }
 
-    // Actions
     if (gamepad.isSelectPressed()) {
       _activateSelectedButton();
     } else if (gamepad.isBackPressed()) {
@@ -94,10 +135,24 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
   }
 
   void _activateSelectedButton() {
-    if (_selectedButtonIndex == 0) {
-      _downloadDatabase();
-    } else if (_selectedButtonIndex == 1 && _isDownloaded) {
-      _clearDatabase();
+    switch (_selectedSection) {
+      case 0: // ROM Database
+        if (_selectedButtonInSection == 0) {
+          _downloadRomDatabase();
+        } else if (_selectedButtonInSection == 1 && _isRomDbDownloaded) {
+          _clearRomDatabase();
+        }
+        break;
+      case 1: // Gamelists
+        if (_selectedButtonInSection == 0) {
+          _downloadGamelists();
+        } else if (_selectedButtonInSection == 1 && _isGamelistsDownloaded) {
+          _clearGamelists();
+        }
+        break;
+      case 2: // Media Cache
+        _rebuildMediaCache();
+        break;
     }
   }
 
@@ -110,29 +165,36 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
   Future<void> _loadStatus() async {
     setState(() => _isLoading = true);
 
-    final isDownloaded = await _romlistService.isDownloaded();
-    final info = await _romlistService.getDownloadInfo();
+    final romDbDownloaded = await _romlistService.isDownloaded();
+    final romDbInfo = await _romlistService.getDownloadInfo();
+    final gamelistsDownloaded = await _gamelistService.isDownloaded();
+    final gamelistsInfo = await _gamelistService.getDownloadInfo();
 
     if (mounted) {
       setState(() {
-        _isDownloaded = isDownloaded;
-        _downloadInfo = info;
+        _isRomDbDownloaded = romDbDownloaded;
+        _romDbInfo = romDbInfo;
+        _isGamelistsDownloaded = gamelistsDownloaded;
+        _gamelistsInfo = gamelistsInfo;
         _isLoading = false;
       });
     }
   }
 
-  Future<void> _downloadDatabase() async {
+  // --- ROM Database actions ---
+
+  Future<void> _downloadRomDatabase() async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => _DownloadConfirmDialog(isDownloaded: _isDownloaded),
+      builder: (context) =>
+          _RomDbDownloadConfirmDialog(isDownloaded: _isRomDbDownloaded),
     );
 
     if (confirm != true) return;
 
     setState(() {
-      _isDownloading = true;
-      _downloadProgress = 0.0;
+      _isRomDbDownloading = true;
+      _romDbProgress = 0.0;
     });
 
     try {
@@ -140,29 +202,33 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
         onProgress: (progress, received, total) {
           if (mounted) {
             setState(() {
-              _downloadProgress = progress;
-              _downloadReceived = received;
-              _downloadTotal = total;
+              _romDbProgress = progress;
+              _romDbReceived = received;
+              _romDbTotal = total;
             });
           }
         },
       );
 
       if (mounted) {
-        setState(() => _isDownloading = false);
+        setState(() => _isRomDbDownloading = false);
 
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('ROM database downloaded successfully'),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.romDatabaseDownloaded,
+              ),
               backgroundColor: Colors.green,
             ),
           );
           await _loadStatus();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to download ROM database'),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.failedDownloadRomDatabase,
+              ),
               backgroundColor: Colors.red,
             ),
           );
@@ -170,18 +236,21 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _isDownloading = false);
+        setState(() => _isRomDbDownloading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('${AppLocalizations.of(context)!.error}: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
   }
 
-  Future<void> _clearDatabase() async {
+  Future<void> _clearRomDatabase() async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => const _ClearConfirmDialog(),
+      builder: (context) => const _RomDbClearConfirmDialog(),
     );
 
     if (confirm != true) return;
@@ -191,16 +260,197 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
     if (mounted) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('ROM database cleared'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.romDatabaseCleared),
             backgroundColor: Colors.orange,
           ),
         );
         await _loadStatus();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to clear database'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.failedClearDatabase),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  // --- Gamelists actions ---
+
+  Future<void> _downloadGamelists() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) =>
+          _GamelistDownloadConfirmDialog(isDownloaded: _isGamelistsDownloaded),
+    );
+
+    if (confirm != true) return;
+
+    setState(() {
+      _isGamelistsDownloading = true;
+      _gamelistsProgress = 0.0;
+    });
+
+    try {
+      final success = await _gamelistService.downloadAndExtract(
+        onProgress: (progress, received, total) {
+          if (mounted) {
+            setState(() {
+              _gamelistsProgress = progress;
+              _gamelistsReceived = received;
+              _gamelistsTotal = total;
+            });
+          }
+        },
+      );
+
+      if (mounted) {
+        setState(() => _isGamelistsDownloading = false);
+
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.gamelistsDownloadedSuccess,
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+          await _loadStatus();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.failedDownloadGamelists,
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isGamelistsDownloading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${AppLocalizations.of(context)!.error}: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _clearGamelists() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => const _GamelistClearConfirmDialog(),
+    );
+
+    if (confirm != true) return;
+
+    final success = await _gamelistService.deleteGamelists();
+
+    if (mounted) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.gamelistsCleared),
+            backgroundColor: Colors.orange,
+          ),
+        );
+        await _loadStatus();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.failedClearGamelists),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  // --- Media Cache actions ---
+
+  Future<void> _rebuildMediaCache() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => const _MediaCacheConfirmDialog(),
+    );
+
+    if (confirm != true) return;
+
+    setState(() {
+      _isRebuildingCache = true;
+      _cacheProgressText = AppLocalizations.of(
+        context,
+      )!.rebuildMediaCacheProgress;
+    });
+
+    try {
+      final service = GamelistMediaCacheService(
+        onPlatformProgress: (platform, current, total) {
+          if (mounted) {
+            setState(() {
+              _cacheProgressText = AppLocalizations.of(context)!
+                  .rebuildMediaCacheProcessingPlatform(
+                    platform,
+                    current.toString(),
+                    total.toString(),
+                  );
+            });
+          }
+        },
+      );
+
+      final result = await service.rebuildAll();
+
+      if (mounted) {
+        setState(() => _isRebuildingCache = false);
+
+        if (result.hasError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.rebuildMediaCacheError,
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+        } else {
+          final summary = AppLocalizations.of(context)!
+              .rebuildMediaCacheSummary(
+                result.platformsProcessed.toString(),
+                result.gamesTotal.toString(),
+                result.gamesUpdated.toString(),
+                result.mediaPathsAdded.toString(),
+              );
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(summary),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 5),
+            ),
+          );
+
+          if (result.errors > 0) {
+            _debug.warning(
+              '${result.errors} errors during media cache rebuild',
+              tag: 'RomDatabaseScreen',
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isRebuildingCache = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${AppLocalizations.of(context)!.error}: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -213,29 +463,45 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
 
     final key = event.logicalKey;
 
-    // Handle navigation (horizontal: left/right arrow keys)
+    // Horizontal navigation (buttons within section)
     if (key == LogicalKeyboardKey.arrowRight) {
       setState(() {
-        final totalButtons = _isDownloaded ? 2 : 1;
-        _selectedButtonIndex = (_selectedButtonIndex + 1) % totalButtons;
+        final count = _buttonCountForSection(_selectedSection);
+        _selectedButtonInSection = (_selectedButtonInSection + 1) % count;
       });
       return KeyEventResult.handled;
     } else if (key == LogicalKeyboardKey.arrowLeft) {
       setState(() {
-        final totalButtons = _isDownloaded ? 2 : 1;
-        _selectedButtonIndex = (_selectedButtonIndex - 1) % totalButtons;
-        if (_selectedButtonIndex < 0) _selectedButtonIndex = totalButtons - 1;
+        final count = _buttonCountForSection(_selectedSection);
+        _selectedButtonInSection =
+            (_selectedButtonInSection - 1 + count) % count;
       });
       return KeyEventResult.handled;
     }
 
-    // Handle activation (Enter/Space)
+    // Vertical navigation (between sections)
+    if (key == LogicalKeyboardKey.arrowDown) {
+      setState(() {
+        _selectedSection = (_selectedSection + 1) % _sectionCount;
+        _selectedButtonInSection = 0;
+      });
+      return KeyEventResult.handled;
+    } else if (key == LogicalKeyboardKey.arrowUp) {
+      setState(() {
+        _selectedSection =
+            (_selectedSection - 1 + _sectionCount) % _sectionCount;
+        _selectedButtonInSection = 0;
+      });
+      return KeyEventResult.handled;
+    }
+
+    // Activation
     if (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.space) {
       _activateSelectedButton();
       return KeyEventResult.handled;
     }
 
-    // Handle back key (Escape, Backspace)
+    // Back
     if (_keyboardService.isBackKey(key)) {
       Navigator.of(context).pop();
       return KeyEventResult.handled;
@@ -246,19 +512,27 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
 
   @override
   Widget build(BuildContext context) {
+    final bool isAnyDownloading =
+        _isRomDbDownloading || _isGamelistsDownloading;
+
     return Focus(
       focusNode: _focusNode,
       autofocus: true,
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
-        appBar: AppBar(title: const Text('ROM Database'), centerTitle: true),
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.romDatabase),
+          centerTitle: true,
+        ),
         body: Column(
           children: [
             Expanded(
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : _isDownloading
+                  : isAnyDownloading
                   ? _buildDownloadingView()
+                  : _isRebuildingCache
+                  ? _buildRebuildingView()
                   : _buildContentView(),
             ),
             ControlsBottomBar(
@@ -270,7 +544,7 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
                 ),
                 BottomBarAction(
                   label: 'Navigate',
-                  keyboardKey: '←→',
+                  keyboardKey: '↑↓←→',
                   gamepadButton: 'D-pad',
                 ),
                 BottomBarAction(
@@ -287,9 +561,17 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
   }
 
   Widget _buildDownloadingView() {
-    final progressPercent = (_downloadProgress * 100).toStringAsFixed(1);
-    final receivedMB = (_downloadReceived / 1024 / 1024).toStringAsFixed(2);
-    final totalMB = (_downloadTotal / 1024 / 1024).toStringAsFixed(2);
+    final isRomDb = _isRomDbDownloading;
+    final progress = isRomDb ? _romDbProgress : _gamelistsProgress;
+    final received = isRomDb ? _romDbReceived : _gamelistsReceived;
+    final total = isRomDb ? _romDbTotal : _gamelistsTotal;
+    final label = isRomDb
+        ? AppLocalizations.of(context)!.downloadingRomDatabase
+        : AppLocalizations.of(context)!.downloadingGamelists;
+
+    final progressPercent = (progress * 100).toStringAsFixed(1);
+    final receivedMB = (received / 1024 / 1024).toStringAsFixed(2);
+    final totalMB = (total / 1024 / 1024).toStringAsFixed(2);
 
     return Center(
       child: Padding(
@@ -299,21 +581,43 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
           children: [
             const CircularProgressIndicator(),
             const SizedBox(height: 24),
-            Text(
-              'Downloading ROM Database...',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text(label, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
-            LinearProgressIndicator(value: _downloadProgress),
+            LinearProgressIndicator(value: progress),
             const SizedBox(height: 8),
             Text(
               '$progressPercent% - $receivedMB MB / $totalMB MB',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 24),
-            const Text(
-              'This may take a few minutes depending on your connection...',
-              style: TextStyle(color: Colors.grey),
+            Text(
+              AppLocalizations.of(context)!.downloadMayTakeMinutes,
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRebuildingView() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 24),
+            Text(
+              AppLocalizations.of(context)!.rebuildMediaCacheProgress,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              _cacheProgressText,
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
           ],
@@ -326,182 +630,321 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // Status Card
+        // --- Section 0: ROM Database ---
+        _buildSectionHeader(
+          AppLocalizations.of(context)!.romDatabase,
+          Icons.storage,
+        ),
+        _buildStatusCard(
+          isDownloaded: _isRomDbDownloaded,
+          statusLabel: AppLocalizations.of(context)!.databaseStatus,
+          downloadedLabel: AppLocalizations.of(context)!.downloaded,
+          notDownloadedLabel: AppLocalizations.of(context)!.notDownloaded,
+          info: _romDbInfo,
+        ),
+        const SizedBox(height: 8),
+        _buildInfoCard(
+          title: AppLocalizations.of(context)!.aboutRomDatabase,
+          description: AppLocalizations.of(
+            context,
+          )!.aboutRomDatabaseDescription,
+          source: AppLocalizations.of(context)!.romDatabaseSource,
+        ),
+        const SizedBox(height: 12),
+        _buildActionButtons(
+          section: 0,
+          isDownloaded: _isRomDbDownloaded,
+          onDownload: _downloadRomDatabase,
+          onClear: _clearRomDatabase,
+        ),
+        const SizedBox(height: 32),
+
+        // --- Section 1: Gamelists ---
+        _buildSectionHeader(
+          AppLocalizations.of(context)!.gamelistsStatus,
+          Icons.list_alt,
+        ),
+        _buildStatusCard(
+          isDownloaded: _isGamelistsDownloaded,
+          statusLabel: AppLocalizations.of(context)!.gamelistsStatus,
+          downloadedLabel: AppLocalizations.of(context)!.gamelistsDownloaded,
+          notDownloadedLabel: AppLocalizations.of(
+            context,
+          )!.gamelistsNotDownloaded,
+          info: _gamelistsInfo,
+        ),
+        const SizedBox(height: 8),
+        _buildInfoCard(
+          title: AppLocalizations.of(context)!.aboutGamelists,
+          description: AppLocalizations.of(context)!.aboutGamelistsDescription,
+          source: AppLocalizations.of(context)!.gamelistsSource,
+        ),
+        const SizedBox(height: 12),
+        _buildActionButtons(
+          section: 1,
+          isDownloaded: _isGamelistsDownloaded,
+          onDownload: _downloadGamelists,
+          onClear: _clearGamelists,
+        ),
+        const SizedBox(height: 32),
+
+        // --- Section 2: Media Cache ---
+        _buildSectionHeader(
+          AppLocalizations.of(context)!.rebuildMediaCache,
+          Icons.cached,
+        ),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+            child: Text(
+              AppLocalizations.of(context)!.rebuildMediaCacheDescription,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            _buildAnimatedButton(
+              section: 2,
+              buttonIndex: 0,
+              child: ElevatedButton.icon(
+                onPressed: _rebuildMediaCache,
+                icon: const Icon(Icons.build),
+                label: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      _isDownloaded ? Icons.check_circle : Icons.cloud_download,
-                      color: _isDownloaded ? Colors.green : Colors.orange,
-                      size: 32,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Database Status',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          Text(
-                            _isDownloaded ? 'Downloaded' : 'Not Downloaded',
-                            style: TextStyle(
-                              color: _isDownloaded
-                                  ? Colors.green
-                                  : Colors.orange,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                    Text(AppLocalizations.of(context)!.rebuildMediaCache),
+                    if (_isGamepadConnected &&
+                        _selectedSection == 2 &&
+                        _selectedButtonInSection == 0) ...[
+                      const SizedBox(width: 8),
+                      const GamepadButtonIndicator(
+                        button: GamepadButton.a,
+                        size: 16,
                       ),
-                    ),
+                    ],
                   ],
                 ),
-                if (_isDownloaded && _downloadInfo != null) ...[
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 16),
-                  _buildInfoRow('Platforms', '${_downloadInfo!['fileCount']}'),
-                  _buildInfoRow(
-                    'Total Size',
-                    '${_downloadInfo!['totalSizeMB']} MB',
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader(String title, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusCard({
+    required bool isDownloaded,
+    required String statusLabel,
+    required String downloadedLabel,
+    required String notDownloadedLabel,
+    Map<String, dynamic>? info,
+  }) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  isDownloaded ? Icons.check_circle : Icons.cloud_download,
+                  color: isDownloaded ? Colors.green : Colors.orange,
+                  size: 32,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        statusLabel,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      Text(
+                        isDownloaded ? downloadedLabel : notDownloadedLabel,
+                        style: TextStyle(
+                          color: isDownloaded ? Colors.green : Colors.orange,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (isDownloaded && info != null) ...[
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+              if (info['fileCount'] != null)
+                _buildInfoRow(
+                  AppLocalizations.of(context)!.platforms,
+                  '${info['fileCount']}',
+                ),
+              if (info['totalSizeMB'] != null)
+                _buildInfoRow(
+                  AppLocalizations.of(context)!.totalSize,
+                  '${info['totalSizeMB']} MB',
+                ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoCard({
+    required String title,
+    required String description,
+    required String source,
+  }) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 12),
+            Text(description),
+            const SizedBox(height: 12),
+            Text(
+              source,
+              style: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons({
+    required int section,
+    required bool isDownloaded,
+    required VoidCallback onDownload,
+    required VoidCallback onClear,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        // Download/Re-download button
+        _buildAnimatedButton(
+          section: section,
+          buttonIndex: 0,
+          child: ElevatedButton.icon(
+            onPressed: onDownload,
+            icon: Icon(isDownloaded ? Icons.refresh : Icons.download),
+            label: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  isDownloaded
+                      ? AppLocalizations.of(context)!.redownload
+                      : AppLocalizations.of(context)!.download,
+                ),
+                if (_isGamepadConnected &&
+                    _selectedSection == section &&
+                    _selectedButtonInSection == 0) ...[
+                  const SizedBox(width: 8),
+                  const GamepadButtonIndicator(
+                    button: GamepadButton.a,
+                    size: 16,
                   ),
                 ],
               ],
             ),
           ),
         ),
-        const SizedBox(height: 16),
 
-        // Info Card
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'About ROM Database',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'The ROM database contains lists of available ROMs organized by platform. '
-                  'This data is sourced from the Forsaken romList repository on GitHub.',
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Source: github.com/ForsakenStation/romList',
-                  style: TextStyle(
-                    fontFamily: 'monospace',
-                    fontSize: 12,
-                    color: Colors.grey,
+        // Clear button (only if downloaded)
+        if (isDownloaded) ...[
+          const SizedBox(width: 8),
+          _buildAnimatedButton(
+            section: section,
+            buttonIndex: 1,
+            child: TextButton.icon(
+              onPressed: onClear,
+              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              label: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.clear,
+                    style: const TextStyle(color: Colors.red),
                   ),
-                ),
-              ],
+                  if (_isGamepadConnected &&
+                      _selectedSection == section &&
+                      _selectedButtonInSection == 1) ...[
+                    const SizedBox(width: 8),
+                    const GamepadButtonIndicator(
+                      button: GamepadButton.a,
+                      size: 16,
+                    ),
+                  ],
+                ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 24),
-
-        // Actions - styled like DialogButtonBar
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            // Download/Re-download button
-            Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: AnimatedScale(
-                scale: _selectedButtonIndex == 0 ? 1.02 : 1.0,
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.easeOut,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
-                  decoration: BoxDecoration(
-                    border: _selectedButtonIndex == 0
-                        ? Border.all(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 2,
-                          )
-                        : Border.all(color: Colors.transparent, width: 2),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: ElevatedButton.icon(
-                    onPressed: _downloadDatabase,
-                    icon: Icon(_isDownloaded ? Icons.refresh : Icons.download),
-                    label: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(_isDownloaded ? 'Re-download' : 'Download'),
-                        if (_isGamepadConnected &&
-                            _selectedButtonIndex == 0) ...[
-                          const SizedBox(width: 8),
-                          const GamepadButtonIndicator(
-                            button: GamepadButton.a,
-                            size: 16,
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // Clear button (only if downloaded)
-            if (_isDownloaded) ...[
-              const SizedBox(width: 8),
-              Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: AnimatedScale(
-                  scale: _selectedButtonIndex == 1 ? 1.02 : 1.0,
-                  duration: const Duration(milliseconds: 150),
-                  curve: Curves.easeOut,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    decoration: BoxDecoration(
-                      border: _selectedButtonIndex == 1
-                          ? Border.all(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 2,
-                            )
-                          : Border.all(color: Colors.transparent, width: 2),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: TextButton.icon(
-                      onPressed: _clearDatabase,
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      label: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'Clear',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          if (_isGamepadConnected &&
-                              _selectedButtonIndex == 1) ...[
-                            const SizedBox(width: 8),
-                            const GamepadButtonIndicator(
-                              button: GamepadButton.a,
-                              size: 16,
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ),
+        ],
       ],
+    );
+  }
+
+  Widget _buildAnimatedButton({
+    required int section,
+    required int buttonIndex,
+    required Widget child,
+  }) {
+    final isSelected =
+        _selectedSection == section && _selectedButtonInSection == buttonIndex;
+
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: AnimatedScale(
+        scale: isSelected ? 1.02 : 1.0,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOut,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          decoration: BoxDecoration(
+            border: isSelected
+                ? Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  )
+                : Border.all(color: Colors.transparent, width: 2),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: child,
+        ),
+      ),
     );
   }
 
@@ -519,18 +962,24 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
   }
 }
 
-/// Download confirmation dialog with gamepad/keyboard navigation
-class _DownloadConfirmDialog extends StatefulWidget {
+// =============================================================================
+// Confirmation Dialogs
+// =============================================================================
+
+/// ROM Database download confirmation dialog
+class _RomDbDownloadConfirmDialog extends StatefulWidget {
   final bool isDownloaded;
 
-  const _DownloadConfirmDialog({required this.isDownloaded});
+  const _RomDbDownloadConfirmDialog({required this.isDownloaded});
 
   @override
-  State<_DownloadConfirmDialog> createState() => _DownloadConfirmDialogState();
+  State<_RomDbDownloadConfirmDialog> createState() =>
+      _RomDbDownloadConfirmDialogState();
 }
 
-class _DownloadConfirmDialogState extends State<_DownloadConfirmDialog>
-    with DialogControlsMixin<_DownloadConfirmDialog> {
+class _RomDbDownloadConfirmDialogState
+    extends State<_RomDbDownloadConfirmDialog>
+    with DialogControlsMixin<_RomDbDownloadConfirmDialog> {
   late final List<DialogButton> _buttons;
 
   @override
@@ -539,12 +988,14 @@ class _DownloadConfirmDialogState extends State<_DownloadConfirmDialog>
 
     _buttons = [
       DialogButton(
-        label: 'Cancel',
+        label: AppLocalizations.of(context)!.cancel,
         onPressed: () => Navigator.pop(context, false),
         gamepadButton: GamepadButton.b,
       ),
       DialogButton(
-        label: widget.isDownloaded ? 'Re-download' : 'Download',
+        label: widget.isDownloaded
+            ? AppLocalizations.of(context)!.redownload
+            : AppLocalizations.of(context)!.download,
         onPressed: () => Navigator.pop(context, true),
         primary: true,
         gamepadButton: GamepadButton.a,
@@ -557,7 +1008,7 @@ class _DownloadConfirmDialogState extends State<_DownloadConfirmDialog>
       onButtonSelected: (index) => setState(() {}),
       onConfirm: () => _buttons[selectedButtonIndex].onPressed(),
       layout: ButtonLayout.horizontal,
-      defaultIndex: 1, // Default to Download button
+      defaultIndex: 1,
     );
   }
 
@@ -566,23 +1017,21 @@ class _DownloadConfirmDialogState extends State<_DownloadConfirmDialog>
     return wrapWithKeyboardHandler(
       onEscape: () => Navigator.pop(context, false),
       child: AlertDialog(
-        title: const Text('Download ROM Database'),
+        title: Text(AppLocalizations.of(context)!.downloadRomDatabase),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'This will download ROM lists from the Forsaken romList repository on GitHub.',
-            ),
+            Text(AppLocalizations.of(context)!.downloadRomDatabaseDescription),
             const SizedBox(height: 16),
-            const Text(
-              'Size: ~7 MB\nPlatforms: 138\nTotal ROMs: ~240,000',
-              style: TextStyle(fontFamily: 'monospace'),
+            Text(
+              AppLocalizations.of(context)!.downloadRomDatabaseStats,
+              style: const TextStyle(fontFamily: 'monospace'),
             ),
             const SizedBox(height: 16),
             if (widget.isDownloaded)
-              const Text(
-                'Note: This will overwrite existing data.',
+              Text(
+                AppLocalizations.of(context)!.downloadWillOverwrite,
                 style: TextStyle(
                   color: Colors.orange,
                   fontWeight: FontWeight.bold,
@@ -601,16 +1050,17 @@ class _DownloadConfirmDialogState extends State<_DownloadConfirmDialog>
   }
 }
 
-/// Clear confirmation dialog with gamepad/keyboard navigation
-class _ClearConfirmDialog extends StatefulWidget {
-  const _ClearConfirmDialog();
+/// ROM Database clear confirmation dialog
+class _RomDbClearConfirmDialog extends StatefulWidget {
+  const _RomDbClearConfirmDialog();
 
   @override
-  State<_ClearConfirmDialog> createState() => _ClearConfirmDialogState();
+  State<_RomDbClearConfirmDialog> createState() =>
+      _RomDbClearConfirmDialogState();
 }
 
-class _ClearConfirmDialogState extends State<_ClearConfirmDialog>
-    with DialogControlsMixin<_ClearConfirmDialog> {
+class _RomDbClearConfirmDialogState extends State<_RomDbClearConfirmDialog>
+    with DialogControlsMixin<_RomDbClearConfirmDialog> {
   late final List<DialogButton> _buttons;
 
   @override
@@ -619,12 +1069,12 @@ class _ClearConfirmDialogState extends State<_ClearConfirmDialog>
 
     _buttons = [
       DialogButton(
-        label: 'Cancel',
+        label: AppLocalizations.of(context)!.cancel,
         onPressed: () => Navigator.pop(context, false),
         gamepadButton: GamepadButton.b,
       ),
       DialogButton(
-        label: 'Delete',
+        label: AppLocalizations.of(context)!.delete,
         onPressed: () => Navigator.pop(context, true),
         primary: true,
         gamepadButton: GamepadButton.a,
@@ -637,7 +1087,7 @@ class _ClearConfirmDialogState extends State<_ClearConfirmDialog>
       onButtonSelected: (index) => setState(() {}),
       onConfirm: () => _buttons[selectedButtonIndex].onPressed(),
       layout: ButtonLayout.horizontal,
-      defaultIndex: 0, // Default to Cancel
+      defaultIndex: 0,
     );
   }
 
@@ -646,10 +1096,211 @@ class _ClearConfirmDialogState extends State<_ClearConfirmDialog>
     return wrapWithKeyboardHandler(
       onEscape: () => Navigator.pop(context, false),
       child: AlertDialog(
-        title: const Text('Clear ROM Database'),
-        content: const Text(
-          'This will delete all downloaded ROM lists. '
-          'You will need to download them again to browse ROMs.',
+        title: Text(AppLocalizations.of(context)!.clearRomDatabase),
+        content: Text(
+          AppLocalizations.of(context)!.clearRomDatabaseDescription,
+        ),
+        actions: [
+          DialogButtonBar(
+            buttons: _buttons,
+            selectedIndex: selectedButtonIndex,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Gamelist download confirmation dialog
+class _GamelistDownloadConfirmDialog extends StatefulWidget {
+  final bool isDownloaded;
+
+  const _GamelistDownloadConfirmDialog({required this.isDownloaded});
+
+  @override
+  State<_GamelistDownloadConfirmDialog> createState() =>
+      _GamelistDownloadConfirmDialogState();
+}
+
+class _GamelistDownloadConfirmDialogState
+    extends State<_GamelistDownloadConfirmDialog>
+    with DialogControlsMixin<_GamelistDownloadConfirmDialog> {
+  late final List<DialogButton> _buttons;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _buttons = [
+      DialogButton(
+        label: AppLocalizations.of(context)!.cancel,
+        onPressed: () => Navigator.pop(context, false),
+        gamepadButton: GamepadButton.b,
+      ),
+      DialogButton(
+        label: widget.isDownloaded
+            ? AppLocalizations.of(context)!.redownload
+            : AppLocalizations.of(context)!.download,
+        onPressed: () => Navigator.pop(context, true),
+        primary: true,
+        gamepadButton: GamepadButton.a,
+      ),
+    ];
+
+    startDialogControlsWithNavigation(
+      onCancel: () => Navigator.pop(context, false),
+      buttonCount: _buttons.length,
+      onButtonSelected: (index) => setState(() {}),
+      onConfirm: () => _buttons[selectedButtonIndex].onPressed(),
+      layout: ButtonLayout.horizontal,
+      defaultIndex: 1,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return wrapWithKeyboardHandler(
+      onEscape: () => Navigator.pop(context, false),
+      child: AlertDialog(
+        title: Text(AppLocalizations.of(context)!.downloadGamelists),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(AppLocalizations.of(context)!.downloadGamelistsDescription),
+            const SizedBox(height: 16),
+            if (widget.isDownloaded)
+              Text(
+                AppLocalizations.of(context)!.downloadGamelistsWillOverwrite,
+                style: TextStyle(
+                  color: Colors.orange,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          ],
+        ),
+        actions: [
+          DialogButtonBar(
+            buttons: _buttons,
+            selectedIndex: selectedButtonIndex,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Gamelist clear confirmation dialog
+class _GamelistClearConfirmDialog extends StatefulWidget {
+  const _GamelistClearConfirmDialog();
+
+  @override
+  State<_GamelistClearConfirmDialog> createState() =>
+      _GamelistClearConfirmDialogState();
+}
+
+class _GamelistClearConfirmDialogState
+    extends State<_GamelistClearConfirmDialog>
+    with DialogControlsMixin<_GamelistClearConfirmDialog> {
+  late final List<DialogButton> _buttons;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _buttons = [
+      DialogButton(
+        label: AppLocalizations.of(context)!.cancel,
+        onPressed: () => Navigator.pop(context, false),
+        gamepadButton: GamepadButton.b,
+      ),
+      DialogButton(
+        label: AppLocalizations.of(context)!.delete,
+        onPressed: () => Navigator.pop(context, true),
+        primary: true,
+        gamepadButton: GamepadButton.a,
+      ),
+    ];
+
+    startDialogControlsWithNavigation(
+      onCancel: () => Navigator.pop(context, false),
+      buttonCount: _buttons.length,
+      onButtonSelected: (index) => setState(() {}),
+      onConfirm: () => _buttons[selectedButtonIndex].onPressed(),
+      layout: ButtonLayout.horizontal,
+      defaultIndex: 0,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return wrapWithKeyboardHandler(
+      onEscape: () => Navigator.pop(context, false),
+      child: AlertDialog(
+        title: Text(AppLocalizations.of(context)!.clearGamelists),
+        content: Text(AppLocalizations.of(context)!.clearGamelistsDescription),
+        actions: [
+          DialogButtonBar(
+            buttons: _buttons,
+            selectedIndex: selectedButtonIndex,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Media cache rebuild confirmation dialog
+class _MediaCacheConfirmDialog extends StatefulWidget {
+  const _MediaCacheConfirmDialog();
+
+  @override
+  State<_MediaCacheConfirmDialog> createState() =>
+      _MediaCacheConfirmDialogState();
+}
+
+class _MediaCacheConfirmDialogState extends State<_MediaCacheConfirmDialog>
+    with DialogControlsMixin<_MediaCacheConfirmDialog> {
+  late final List<DialogButton> _buttons;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _buttons = [
+      DialogButton(
+        label: AppLocalizations.of(context)!.cancel,
+        onPressed: () => Navigator.pop(context, false),
+        gamepadButton: GamepadButton.b,
+      ),
+      DialogButton(
+        label: AppLocalizations.of(context)!.rebuildMediaCache,
+        onPressed: () => Navigator.pop(context, true),
+        primary: true,
+        gamepadButton: GamepadButton.a,
+      ),
+    ];
+
+    startDialogControlsWithNavigation(
+      onCancel: () => Navigator.pop(context, false),
+      buttonCount: _buttons.length,
+      onButtonSelected: (index) => setState(() {}),
+      onConfirm: () => _buttons[selectedButtonIndex].onPressed(),
+      layout: ButtonLayout.horizontal,
+      defaultIndex: 1,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return wrapWithKeyboardHandler(
+      onEscape: () => Navigator.pop(context, false),
+      child: AlertDialog(
+        title: Text(
+          AppLocalizations.of(context)!.rebuildMediaCacheConfirmTitle,
+        ),
+        content: Text(
+          AppLocalizations.of(context)!.rebuildMediaCacheConfirmBody,
         ),
         actions: [
           DialogButtonBar(

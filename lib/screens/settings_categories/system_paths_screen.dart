@@ -12,6 +12,7 @@ import '../../mixins/screen_navigation_mixin.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for configuring system paths
 ///
@@ -251,22 +252,22 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
         final confirm = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Migrate ROMs?'),
+            title: Text(AppLocalizations.of(context)!.migrateRoms),
             content: Text(
-              'The permanent ROM storage path has changed. '
-              'Would you like to move existing ROMs from:\n\n'
-              '$oldForeverPath\n\nto:\n\n$newForeverPath',
+              AppLocalizations.of(context)!.migrateRomsDescription
+                  .replaceAll('\$oldPath', oldForeverPath)
+                  .replaceAll('\$newPath', newForeverPath),
             ),
             actions: [
               DialogButtonBar(
                 buttons: [
                   DialogButton(
-                    label: 'No, keep them where they are',
+                    label: AppLocalizations.of(context)!.noKeepThem,
                     onPressed: () => Navigator.of(context).pop(false),
                     gamepadButton: GamepadButton.b,
                   ),
                   DialogButton(
-                    label: 'Yes, migrate ROMs',
+                    label: AppLocalizations.of(context)!.yesMigrateRoms,
                     onPressed: () => Navigator.of(context).pop(true),
                     primary: true,
                     gamepadButton: GamepadButton.a,
@@ -287,11 +288,11 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
           if (!success && mounted) {
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Warning: ROM migration failed'),
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.romMigrationFailed),
                 backgroundColor: Colors.orange,
                 behavior: SnackBarBehavior.floating,
-                duration: Duration(seconds: 5),
+                duration: const Duration(seconds: 5),
               ),
             );
           }
@@ -334,10 +335,10 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Paths saved successfully'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.pathsSaved),
             behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 5),
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -346,7 +347,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error saving paths: $e'),
+            content: Text(
+              '${AppLocalizations.of(context)!.errorSavingPaths} $e',
+            ),
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 5),
           ),
@@ -369,21 +372,18 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reset Configuration'),
-        content: const Text(
-          'This will reset the emulator configuration to bundled defaults. '
-          'Any custom emulator settings will be lost. Continue?',
-        ),
+        title: Text(AppLocalizations.of(context)!.resetConfiguration),
+        content: Text(AppLocalizations.of(context)!.resetConfigDescription),
         actions: [
           DialogButtonBar(
             buttons: [
               DialogButton(
-                label: 'Cancel',
+                label: AppLocalizations.of(context)!.cancel,
                 onPressed: () => Navigator.of(context).pop(false),
                 gamepadButton: GamepadButton.b,
               ),
               DialogButton(
-                label: 'Reset',
+                label: AppLocalizations.of(context)!.reset,
                 onPressed: () => Navigator.of(context).pop(true),
                 primary: true,
                 gamepadButton: GamepadButton.a,
@@ -399,14 +399,20 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
         await _configService.resetToDefaults();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Configuration reset to defaults')),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.configurationReset),
+            ),
           );
           setState(() {}); // Refresh to show updated config path
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error resetting configuration: $e')),
+            SnackBar(
+              content: Text(
+                '${AppLocalizations.of(context)!.errorResettingConfiguration} $e',
+              ),
+            ),
           );
         }
       }
@@ -421,7 +427,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('System Paths Configuration'),
+          title: Text(AppLocalizations.of(context)!.systemPathsConfiguration),
           actions: [
             Stack(
               alignment: Alignment.center,
@@ -438,7 +444,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                   child: IconButton(
                     icon: const Icon(Icons.restore),
                     onPressed: _resetToDefaults,
-                    tooltip: 'Reset to defaults',
+                    tooltip: AppLocalizations.of(context)!.resetToDefaults,
                   ),
                 ),
                 if (_isGamepadConnected && _selectedIndex == 4)
@@ -460,9 +466,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
               Expanded(
                 child: ListView(
                   children: [
-                    const Text(
-                      'Configure paths for media and emulators',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    Text(
+                      AppLocalizations.of(context)!.configurePathsDescription,
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const SizedBox(height: 16),
                     // Info card about ROM database
@@ -479,7 +485,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                'ROM lists are now managed automatically through the ROM Database settings. No need to configure a ROMs path.',
+                                AppLocalizations.of(
+                                  context,
+                                )!.romListsAutoManaged,
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: Colors.blue.shade900,
@@ -492,8 +500,8 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                     ),
                     const SizedBox(height: 24),
                     _PathField(
-                      label: 'Media Path',
-                      hint: 'Directory containing media (images, videos)',
+                      label: AppLocalizations.of(context)!.mediaPathLabel,
+                      hint: AppLocalizations.of(context)!.mediaPathHint,
                       controller: _mediaPathController,
                       onBrowse: () => _pickDirectory(_mediaPathController),
                       isSelected: _selectedIndex == 0,
@@ -501,8 +509,8 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                     ),
                     const SizedBox(height: 16),
                     _PathField(
-                      label: 'Emulators Path',
-                      hint: 'Directory containing emulator binaries',
+                      label: AppLocalizations.of(context)!.emulatorsPathLabel,
+                      hint: AppLocalizations.of(context)!.emulatorsPathHint,
                       controller: _emulatorsPathController,
                       onBrowse: () => _pickDirectory(_emulatorsPathController),
                       isSelected: _selectedIndex == 1,
@@ -525,7 +533,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Gamelist Path (Automatic)',
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.gamelistPathAutomatic,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -544,7 +554,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Gamelists are now managed automatically in the app data directory. This makes the app fully independent and prepares for future GitHub-based gamelist distribution.',
+                              AppLocalizations.of(
+                                context,
+                              )!.gamelistAutoDescription,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.green.shade900,
@@ -559,47 +571,57 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                     const SizedBox(height: 16),
                     // ROM Storage section
                     Text(
-                      'ROM Storage',
+                      AppLocalizations.of(context)!.romStorage,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Configure where downloaded ROMs are stored',
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    Text(
+                      AppLocalizations.of(
+                        context,
+                      )!.configureRomStorageDescription,
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                     const SizedBox(height: 16),
                     _PathField(
-                      label: 'Temporary ROM Storage (Optional)',
+                      label: AppLocalizations.of(context)!.tempRomStorageLabel,
                       hint: _tempPathDisplay.isEmpty
-                          ? 'Default: app support directory'
-                          : 'Current: $_tempPathDisplay',
+                          ? AppLocalizations.of(context)!.defaultAppSupportDir
+                          : AppLocalizations.of(
+                              context,
+                            )!.currentPathDisplay(_tempPathDisplay),
                       controller: _romTempPathController,
                       onBrowse: () => _pickDirectory(_romTempPathController),
                       isSelected: _selectedIndex == 2,
                       showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'ROMs downloaded temporarily for single play sessions',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    Text(
+                      AppLocalizations.of(context)!.tempRomStorageDescription,
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     const SizedBox(height: 16),
                     _PathField(
-                      label: 'Permanent ROM Storage (Optional)',
+                      label: AppLocalizations.of(
+                        context,
+                      )!.permanentRomStorageLabel,
                       hint: _foreverPathDisplay.isEmpty
-                          ? 'Default: app support directory'
-                          : 'Current: $_foreverPathDisplay',
+                          ? AppLocalizations.of(context)!.defaultAppSupportDir
+                          : AppLocalizations.of(
+                              context,
+                            )!.currentPathDisplay(_foreverPathDisplay),
                       controller: _romForeverPathController,
                       onBrowse: () => _pickDirectory(_romForeverPathController),
                       isSelected: _selectedIndex == 3,
                       showGamepadIndicator: _isGamepadConnected,
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'ROMs saved permanently for offline play. Changing this path will offer to migrate existing ROMs.',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    Text(
+                      AppLocalizations.of(
+                        context,
+                      )!.permanentRomStorageDescription,
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     const SizedBox(height: 16),
                     // Config source display (read-only)
@@ -618,7 +640,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Configuration File',
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.configurationFile,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -635,9 +659,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        'Source:',
-                                        style: TextStyle(
+                                      Text(
+                                        AppLocalizations.of(context)!.source,
+                                        style: const TextStyle(
                                           fontSize: 12,
                                           color: Colors.black,
                                         ),
@@ -652,9 +676,11 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                                       ),
                                       if (_configService.hasLocalOverrides) ...[
                                         const SizedBox(height: 8),
-                                        const Text(
-                                          'Custom configuration active',
-                                          style: TextStyle(
+                                        Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.customConfigActive,
+                                          style: const TextStyle(
                                             fontSize: 12,
                                             color: Colors.orange,
                                             fontWeight: FontWeight.w500,
@@ -668,7 +694,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                                   IconButton(
                                     icon: const Icon(Icons.restore),
                                     onPressed: _resetConfigToDefaults,
-                                    tooltip: 'Reset to defaults',
+                                    tooltip: AppLocalizations.of(
+                                      context,
+                                    )!.resetToDefaults,
                                     color: Colors.orange.shade700,
                                   ),
                               ],
@@ -695,7 +723,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Path Structure',
+                                  AppLocalizations.of(context)!.pathStructure,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -705,11 +733,11 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                               ],
                             ),
                             const SizedBox(height: 12),
-                            const Text(
-                              'Media Path: MEDIA_PATH/platform/boxart|screenshots|videos/rom.png\n'
-                              'Gamelist Path: ~/.local/share/com.example.emulator/gamelists/{platform}/gamelist.xml (automatic)\n'
-                              'Emulators Path: EMULATORS_PATH/emulator_binary',
-                              style: TextStyle(
+                            Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.pathStructureDescription,
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.black,
                                 fontFamily: 'monospace',
@@ -760,15 +788,17 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                               const SizedBox(width: 12),
                               Text(
                                 _isMigrating
-                                    ? 'Migrating ROMs...'
-                                    : 'Saving...',
+                                    ? AppLocalizations.of(
+                                        context,
+                                      )!.migratingRoms
+                                    : AppLocalizations.of(context)!.saving,
                               ),
                             ],
                           )
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text('Save Paths'),
+                              Text(AppLocalizations.of(context)!.savePaths),
                               if (_isGamepadConnected &&
                                   _selectedIndex == 5) ...[
                                 const SizedBox(width: 8),

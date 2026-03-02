@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../widgets/common/placeholder_image.dart';
 import '../../widgets/roms/media_carousel.dart';
 import '../../widgets/roms/folder_widget.dart';
@@ -95,7 +96,7 @@ class RomsCarouselView extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () => onFolderTap(item),
               icon: const Icon(Icons.folder_open),
-              label: const Text('Open Folder'),
+              label: Text(AppLocalizations.of(context)!.openFolder),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
@@ -211,7 +212,7 @@ class RomsCarouselView extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () => onRomLaunch(item),
                 icon: const Icon(Icons.gamepad),
-                label: const Text('Play'),
+                label: Text(AppLocalizations.of(context)!.play),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,

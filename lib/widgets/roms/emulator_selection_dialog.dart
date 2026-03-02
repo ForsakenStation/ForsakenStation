@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../models/emulator_config.dart';
 import '../../mixins/dialog_controls_mixin.dart';
 import '../../services/gamepad_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../common/gamepad_button_indicator.dart';
 
 /// Dialog for selecting an emulator when multiple commands are available
@@ -116,7 +117,7 @@ class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog>
         }
       },
       child: AlertDialog(
-        title: const Text('Select Emulator'),
+        title: Text(AppLocalizations.of(context)!.selectEmulator),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: widget.config.commands.asMap().entries.map((entry) {
@@ -152,7 +153,7 @@ class _EmulatorSelectionDialogState extends State<EmulatorSelectionDialog>
               children: [
                 if (hasGamepad) GamepadButtonIndicator(button: GamepadButton.b),
                 const SizedBox(width: 8),
-                const Text('Cancel'),
+                Text(AppLocalizations.of(context)!.cancel),
               ],
             ),
           ),

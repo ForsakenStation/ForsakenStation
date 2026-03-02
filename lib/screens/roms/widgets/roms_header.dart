@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../models/emulator_platform.dart';
 import '../../../widgets/common/platform_logo.dart';
 import '../../../services/media_service.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class RomsHeader extends StatelessWidget {
   final EmulatorPlatform platform;
@@ -35,7 +36,7 @@ class RomsHeader extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: onBack,
-            tooltip: 'Back to Platforms',
+            tooltip: AppLocalizations.of(context)!.back,
           ),
           const SizedBox(width: 8),
           Hero(
@@ -66,7 +67,7 @@ class RomsHeader extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '$itemCount items',
+                  AppLocalizations.of(context)!.romsCount(itemCount),
                   style: TextStyle(fontSize: 12, color: Colors.grey[400]),
                 ),
               ],

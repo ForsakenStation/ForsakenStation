@@ -4,6 +4,7 @@ import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../models/game_info.dart';
 import '../../screens/pdf_viewer_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'media_carousel.dart';
 import '../common/placeholder_image.dart';
 import '../common/language_flags.dart';
@@ -127,7 +128,7 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
               child: ElevatedButton.icon(
                 onPressed: widget.onFolderTap ?? widget.onLaunch,
                 icon: const Icon(Icons.folder_open),
-                label: const Text('Open Folder'),
+                label: Text(AppLocalizations.of(context)!.openFolder),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
@@ -266,7 +267,7 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                         );
                       },
                       icon: const Icon(Icons.menu_book),
-                      label: const Text('View Manual'),
+                      label: Text(AppLocalizations.of(context)!.viewManual),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         side: BorderSide(
@@ -294,7 +295,7 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                 child: ElevatedButton.icon(
                   onPressed: widget.onLaunch,
                   icon: const Icon(Icons.gamepad),
-                  label: const Text('Play'),
+                  label: Text(AppLocalizations.of(context)!.play),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,

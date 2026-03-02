@@ -20,14 +20,21 @@ class Media {
   final MediaType type;
   final String path;
 
+  // Cached existence check - avoids repeated sync filesystem calls
+  bool? _existsCache;
+
   Media({
     required this.romName,
     required this.platform,
     required this.type,
     required this.path,
-  });
+    bool? existsVerified,
+  }) : _existsCache = existsVerified;
 
-  bool get exists => fileExistsSync(path);
+  bool get exists {
+    _existsCache ??= fileExistsSync(path);
+    return _existsCache!;
+  }
 
   String get typeName {
     switch (type) {

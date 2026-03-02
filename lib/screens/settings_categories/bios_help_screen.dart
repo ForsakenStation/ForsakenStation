@@ -9,6 +9,7 @@ import '../../services/bios_download_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
 import '../../widgets/bios/bios_download_dialog.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class BiosHelpScreen extends StatefulWidget {
   const BiosHelpScreen({super.key});
@@ -123,7 +124,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Download failed: $e'),
+            content: Text(
+              '${AppLocalizations.of(context)!.downloadFailed}: $e',
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -155,8 +158,8 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
 
     if (missingByPlatform.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No downloadable BIOS files are missing'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.noDownloadableBios),
           backgroundColor: Colors.blue,
         ),
       );
@@ -192,8 +195,10 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('All downloads completed successfully!'),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.allDownloadsCompleted,
+              ),
               backgroundColor: Colors.green,
             ),
           );
@@ -203,7 +208,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Batch download failed: $e'),
+            content: Text(
+              '${AppLocalizations.of(context)!.batchDownloadFailed}: $e',
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -223,7 +230,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
     return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Download All Missing BIOS'),
+            title: Text(AppLocalizations.of(context)!.downloadAllMissingBios),
             content: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,11 +270,11 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context)!.cancel),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Download'),
+                child: Text(AppLocalizations.of(context)!.download),
               ),
             ],
           ),
@@ -644,7 +651,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                 ElevatedButton.icon(
                   onPressed: _downloadAllMissingBios,
                   icon: const Icon(Icons.download, size: 16),
-                  label: Text('Download All ($downloadableCount)'),
+                  label: Text(
+                    AppLocalizations.of(context)!.downloadAllMissingBios,
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
@@ -717,7 +726,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
       onKeyEvent: _handleKeyEvent,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('BIOS & Firmware Help'),
+          title: Text(AppLocalizations.of(context)!.biosFirmwareHelp),
           actions: [
             IconButton(
               icon: const Icon(Icons.refresh),
@@ -737,7 +746,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: SwitchListTile(
-                      title: const Text('Show only missing'),
+                      title: Text(
+                        AppLocalizations.of(context)!.showOnlyMissing,
+                      ),
                       value: _showOnlyMissing,
                       onChanged: (value) => _toggleFilter(),
                     ),

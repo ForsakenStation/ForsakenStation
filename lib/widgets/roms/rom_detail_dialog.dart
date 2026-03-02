@@ -7,6 +7,7 @@ import '../../models/game_info.dart';
 import '../../screens/pdf_viewer_screen.dart';
 import '../../services/debug_service.dart';
 import '../../mixins/dialog_controls_mixin.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'media_carousel.dart';
 import '../common/placeholder_image.dart';
 import '../common/dialog_button_bar.dart';
@@ -184,7 +185,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to launch web emulator: $e'),
+            content: Text('${AppLocalizations.of(context)!.failedToLaunch} $e'),
             backgroundColor: Colors.red,
           ),
         );

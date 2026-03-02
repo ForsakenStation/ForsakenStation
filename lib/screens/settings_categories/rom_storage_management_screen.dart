@@ -8,6 +8,7 @@ import '../../../mixins/screen_navigation_mixin.dart';
 import '../../../widgets/common/gamepad_button_indicator.dart';
 import '../../../widgets/common/controls_bottom_bar.dart';
 import '../../../widgets/common/dialog_button_bar.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 import 'rom_storage/rom_storage_controller.dart';
 import 'rom_storage/widgets/storage_statistics_card.dart';
@@ -286,8 +287,10 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete ROM?'),
-        content: Text('Delete $fileName?\nThis action cannot be undone.'),
+        title: Text(AppLocalizations.of(context)!.deleteRom),
+        content: Text(
+          '${AppLocalizations.of(context)!.deleteRomConfirm}\n${AppLocalizations.of(context)!.actionCannotBeUndone}',
+        ),
         actions: [
           DialogButtonBar(
             buttons: [
@@ -318,7 +321,7 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Deleted: $fileName'),
+            content: Text('${AppLocalizations.of(context)!.deleted} $fileName'),
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 5),
           ),
@@ -331,8 +334,10 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Save Permanently?'),
-        content: Text('Move $fileName to permanent storage?'),
+        title: Text(AppLocalizations.of(context)!.savePermanently),
+        content: Text(
+          '${AppLocalizations.of(context)!.moveRomConfirm}\n$fileName',
+        ),
         actions: [
           DialogButtonBar(
             buttons: [
@@ -359,7 +364,7 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Saved: $fileName'),
+            content: Text('${AppLocalizations.of(context)!.saved} $fileName'),
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 5),
           ),
@@ -372,8 +377,8 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear All?'),
-        content: const Text('Delete all temporary ROMs?'),
+        title: Text(AppLocalizations.of(context)!.clearAll),
+        content: Text(AppLocalizations.of(context)!.clearAllConfirm),
         actions: [
           DialogButtonBar(
             buttons: [
@@ -399,10 +404,10 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('All temporary ROMs cleared'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.allCleared),
             behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 5),
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -417,7 +422,7 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('ROM Storage Management'),
+          title: Text(AppLocalizations.of(context)!.romStorageManagement),
           actions: _buildAppBarActions(),
         ),
         body: _controller.isLoading

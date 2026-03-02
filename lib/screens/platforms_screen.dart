@@ -21,6 +21,7 @@ import '../widgets/common/exit_dialog.dart';
 import '../widgets/common/smart_svg.dart';
 import '../widgets/common/controls_bottom_bar.dart';
 import '../services/debug_service.dart';
+import '../l10n/generated/app_localizations.dart';
 import 'roms_screen.dart';
 import 'settings_screen.dart';
 
@@ -152,7 +153,9 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('🎮 Gamepad connected: $gamepadName'),
+        content: Text(
+          '${AppLocalizations.of(context)!.gamepadConnected}: $gamepadName',
+        ),
         duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.green.shade700,
@@ -643,13 +646,17 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                   },
                   itemBuilder: (context) => [
                     if (_platforms.isNotEmpty)
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'platform_info',
                         child: Row(
                           children: [
-                            Icon(Icons.info_outline),
-                            SizedBox(width: 12),
-                            Text('EmulatorPlatform Info'),
+                            const Icon(Icons.info_outline),
+                            const SizedBox(width: 12),
+                            Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.emulatorPlatformInfo,
+                            ),
                           ],
                         ),
                       ),
@@ -665,29 +672,29 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                           const SizedBox(width: 12),
                           Text(
                             _viewMode == ScreenViewMode.grid
-                                ? 'Carousel View'
-                                : 'Grid View',
+                                ? AppLocalizations.of(context)!.carouselView
+                                : AppLocalizations.of(context)!.gridView,
                           ),
                         ],
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'refresh',
                       child: Row(
                         children: [
-                          Icon(Icons.refresh),
-                          SizedBox(width: 12),
-                          Text('Refresh'),
+                          const Icon(Icons.refresh),
+                          const SizedBox(width: 12),
+                          Text(AppLocalizations.of(context)!.refresh),
                         ],
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'settings',
                       child: Row(
                         children: [
-                          Icon(Icons.settings),
-                          SizedBox(width: 12),
-                          Text('Settings'),
+                          const Icon(Icons.settings),
+                          const SizedBox(width: 12),
+                          Text(AppLocalizations.of(context)!.settings),
                         ],
                       ),
                     ),
@@ -711,13 +718,13 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                   ),
                   onPressed: _toggleScreenViewMode,
                   tooltip: _viewMode == ScreenViewMode.grid
-                      ? 'Carousel View'
-                      : 'Grid View',
+                      ? AppLocalizations.of(context)!.carouselView
+                      : AppLocalizations.of(context)!.gridView,
                 ),
                 IconButton(
                   icon: const Icon(Icons.refresh),
                   onPressed: _loadPlatforms,
-                  tooltip: 'Refresh',
+                  tooltip: AppLocalizations.of(context)!.refresh,
                 ),
                 IconButton(
                   icon: const Icon(Icons.settings),
@@ -729,7 +736,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                       ),
                     );
                   },
-                  tooltip: 'Settings',
+                  tooltip: AppLocalizations.of(context)!.settings,
                 ),
               ],
       ),
@@ -807,7 +814,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _loadPlatforms,
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.retry),
             ),
           ],
         ),
@@ -815,17 +822,17 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
 
     if (_platforms.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.folder_off, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('No platforms found'),
-            SizedBox(height: 8),
+            const Icon(Icons.folder_off, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(AppLocalizations.of(context)!.noPlatformsFound),
+            const SizedBox(height: 8),
             Text(
-              'Check your ROMS_PATH environment variable',
-              style: TextStyle(color: Colors.grey),
+              AppLocalizations.of(context)!.checkRomsPath,
+              style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Enhanced error information with recovery suggestions
 class BiosDownloadError {
@@ -305,9 +306,9 @@ class BiosErrorDisplay extends StatelessWidget {
           // Recovery suggestions
           if (error.recoverySuggestions.isNotEmpty) ...[
             const SizedBox(height: 12),
-            const Text(
-              'What you can try:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+            Text(
+              AppLocalizations.of(context)!.whatYouCanTry,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
             ),
             const SizedBox(height: 4),
             ...error.recoverySuggestions.map(
@@ -337,7 +338,7 @@ class BiosErrorDisplay extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh, size: 16),
-                label: const Text('Try Again'),
+                label: Text(AppLocalizations.of(context)!.tryAgain),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: error.color,
                   foregroundColor: Colors.white,
