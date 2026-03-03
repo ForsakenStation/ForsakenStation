@@ -190,7 +190,7 @@ PLATFORM_IDS = {
     "gb": 9,
     "gba": 12,
     "gbc": 10,
-    "game gear": 21,
+    "gamegear": 21,
     "gmaster": 103,
     "gamepock": 95,
     "gamecube": 13,

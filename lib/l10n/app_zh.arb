@@ -1,15 +1,23 @@
 {
   "@@locale": "zh",
   "appTitle": "Forsaken Emulator",
+  "retroGamingFrontend": "复古游戏前端",
   "platforms": "平台",
   "roms": "ROM",
   "settings": "设置",
+  "settingsAndConfiguration": "设置和配置",
+  "aboutForsakenEmulator": "关于 Forsaken Emulator",
+  "version": "版本",
+  "appDescription": "使用Flutter构建的现代多平台模拟器前端。",
+  "emulators": "模拟器",
+  "ready": "就绪",
   "back": "返回",
   "select": "选择",
   "search": "搜索",
   "refresh": "刷新",
   "loading": "加载中...",
   "error": "错误",
+  "initializationError": "初始化错误",
   "retry": "重试",
   "cancel": "取消",
   "ok": "确定",
@@ -21,6 +29,7 @@
   "close": "关闭",
   "noRomsFound": "未找到ROM",
   "noPlatformsFound": "未找到平台",
+  "checkRomsPath": "检查ROMS_PATH环境变量",
   "downloading": "下载中...",
   "downloadComplete": "下载完成",
   "downloadFailed": "下载失败",
@@ -32,13 +41,562 @@
   "theme": "主题",
   "systemDefault": "系统默认",
   "help": "帮助",
+  "keyboardAndGamepadControls": "键盘和手柄控制",
+  "navigation": "导航",
+  "actions": "操作",
+  "viewControls": "视图控制",
+  "gotIt": "知道了!",
   "exit": "退出",
-  "exitConfirm": "确定要退出吗？",
+  "exitApplication": "退出应用",
+  "exitConfirm": "确定要退出吗?",
+  "downloadManager": "下载管理器",
+  "clearCompleted": "清除已完成",
+  "selectCategory": "选择类别",
+  "confirmDownload": "确认下载",
+  "downloadGameLists": "下载游戏列表",
+  "downloadGameListsDescription": "这将从GitHub下载ROM列表。",
+  "gameListsDownloaded": "游戏列表已下载!",
+  "romStorageManagement": "ROM存储管理",
+  "deleteRom": "删除ROM?",
+  "deleteRomConfirm": "删除 {fileName}?",
+  "actionCannotBeUndone": "此操作无法撤销。",
+  "deleted": "已删除: {fileName}",
+  "savePermanently": "永久保存?",
+  "moveRomConfirm": "将 {fileName} 移动到永久存储?",
+  "saved": "已保存: {fileName}",
+  "clearAll": "全部清除?",
+  "clearAllConfirm": "删除所有临时ROM?",
+  "allCleared": "所有临时ROM已清除",
+  "systemPathsConfiguration": "系统路径配置",
+  "migrateRoms": "迁移ROM?",
+  "migrateRomsDescription": "ROM永久存储路径已从 $oldPath 更改为 $newPath。是否要将现有ROM迁移到新位置?",
+  "noKeepThem": "不,保留它们",
+  "yesMigrateRoms": "是,迁移ROM",
+  "migratingRoms": "正在迁移ROM...",
+  "romMigrationFailed": "警告: ROM迁移失败",
+  "pathsSaved": "路径保存成功",
+  "errorSavingPaths": "保存路径时出错:",
+  "resetConfiguration": "重置配置",
+  "resetConfigDescription": "这将把所有路径重置为默认值。您的ROM和媒体文件不会受到影响。",
+  "configurationReset": "配置已重置为默认值",
+  "errorResettingConfiguration": "重置配置时出错:",
+  "savePaths": "保存路径",
+  "saving": "保存中...",
+  "emulatorManagement": "模拟器管理",
+  "configurationReloaded": "配置已重新加载",
+  "errorLoadingEmulators": "加载模拟器时出错:",
+  "emulatorAdded": "模拟器添加成功",
+  "errorAddingEmulator": "添加模拟器时出错:",
+  "emulatorUpdated": "模拟器更新成功",
+  "errorUpdatingEmulator": "更新模拟器时出错:",
+  "deleteEmulator": "删除模拟器",
+  "emulatorDeleted": "模拟器已删除",
+  "errorDeletingEmulator": "删除模拟器时出错:",
+  "configurationSource": "配置来源",
+  "addEmulator": "添加模拟器",
+  "systemNameRequired": "系统名称为必填项",
+  "commandRequired": "至少需要一个命令",
+  "addCommand": "添加命令",
+  "acceptZipFiles": "接受ZIP文件",
+  "acceptZipSubtitle": "允许从ZIP存档启动ROM",
+  "useForeverMode": "使用Forever模式",
+  "useForeverSubtitle": "保持模拟器运行",
+  "workInProgress": "进行中的工作",
+  "wipSubtitle": "标记为尚未完全配置",
+  "biosFirmwareHelp": "BIOS和固件帮助",
+  "downloadMissingFiles": "下载缺失文件",
+  "showOnlyMissing": "仅显示缺失",
+  "downloadAllMissingBios": "下载所有缺失的BIOS",
+  "configurationError": "配置错误",
+  "configurationErrorDescription": "应用程序找不到所需的配置。\n请在设置 > 系统路径中配置您的路径。",
+  "configurationRequired": "必需:\n- 媒体路径: 包含媒体资产的目录\n- 模拟器路径: 包含模拟器可执行文件的目录\n\n可选:\n- 用于临时/永久下载的ROM存储路径",
+  "goToSettingsToConfigure": "前往设置 > 系统路径进行配置",
+  "noDownloadableBios": "没有缺失的可下载BIOS文件",
+  "allDownloadsCompleted": "所有下载已成功完成!",
+  "batchDownloadFailed": "批量下载失败:",
+  "download": "下载",
+  "downloadCancelled": "下载已取消",
+  "launched": "已启动:",
+  "failedToSave": "无法永久保存ROM",
+  "failedToSaveRom": "无法永久保存ROM",
+  "errorSaving": "保存ROM时出错:",
+  "errorSavingRom": "保存ROM时出错: {error}",
+  "openFolder": "打开文件夹",
+  "viewManual": "查看手册",
+  "play": "玩",
+  "goBack": "返回",
+  "clearSearch": "清除搜索",
+  "iUnderstand": "我理解并同意这些条款",
+  "start": "开始",
+  "debugMode": "调试模式: ",
+  "toggleDebugMode": "切换调试模式",
+  "preparingDownload": "准备下载...",
+  "noEmulatorsAvailable": "此类别没有可用的模拟器",
+  "failedToLaunch": "无法启动网络模拟器:",
+  "platformInfo": "平台信息",
+  "emulatorPlatformInfo": "模拟器平台信息",
   "favorites": "收藏",
   "all": "全部",
-  "collections": "集合",
+  "collections": "收藏集",
   "searchRoms": "搜索ROM...",
   "searchPlatforms": "搜索平台...",
   "romsCount": "{count} 个ROM",
-  "platformsCount": "{count} 个平台"
+  "platformsCount": "{count} 个平台",
+  "region": "地区",
+  "genre": "类型",
+  "year": "年份",
+  "publisher": "发行商",
+  "developer": "开发商",
+  "playWithNetplay": "使用网络对战游玩",
+  "downloadBios": "下载BIOS",
+  "viewDetails": "查看详情",
+  "addToFavorites": "添加到收藏",
+  "removeFromFavorites": "从收藏中移除",
+  "biosMissing": "BIOS缺失",
+  "biosPresent": "BIOS存在",
+  "checkingBios": "正在检查BIOS...",
+  "emulatorDownloading": "正在下载模拟器...",
+  "emulatorDownloadComplete": "模拟器已下载",
+  "emulatorDownloadFailed": "下载模拟器失败",
+  "installingEmulator": "正在安装模拟器...",
+  "emulatorReady": "模拟器就绪",
+  "configuration": "配置",
+  "paths": "路径",
+  "storage": "存储",
+  "emulatorsPath": "模拟器路径",
+  "romsPath": "ROM路径",
+  "mediaPath": "媒体路径",
+  "biosPath": "BIOS路径",
+  "tempPath": "临时路径",
+  "browse": "浏览",
+  "apply": "应用",
+  "reset": "重置",
+  "clear": "清除",
+  "scan": "扫描",
+  "scanForRoms": "扫描ROM",
+  "scanningRoms": "正在扫描ROM...",
+  "scanComplete": "扫描完成",
+  "romsFound": "找到 {count} 个ROM",
+  "noNewRomsFound": "未找到新的ROM",
+  "launchEmulator": "启动模拟器",
+  "emulatorError": "模拟器错误",
+  "gamepadConnected": "手柄已连接",
+  "gamepadDisconnected": "手柄已断开",
+  "gamepadTest": "测试手柄",
+  "pressAnyButton": "按任意按钮进行测试",
+  "buttonA": "A",
+  "buttonB": "B",
+  "buttonX": "X",
+  "buttonY": "Y",
+  "buttonStart": "Start",
+  "buttonSelect": "Select",
+  "dpadUp": "D-Pad 上",
+  "dpadDown": "D-Pad 下",
+  "dpadLeft": "D-Pad 左",
+  "dpadRight": "D-Pad 右",
+  "leftShoulder": "L1",
+  "rightShoulder": "R1",
+  "leftTrigger": "L2",
+  "rightTrigger": "R2",
+  "leftStick": "左摇杆",
+  "rightStick": "右摇杆",
+  "setupWizard": "设置向导",
+  "welcome": "欢迎",
+  "welcomeMessage": "欢迎使用 Forsaken Emulator",
+  "next": "下一步",
+  "previous": "上一步",
+  "finish": "完成",
+  "skip": "跳过",
+  "setupComplete": "设置完成",
+  "selectLanguage": "选择语言",
+  "selectEmulatorsPath": "选择模拟器路径",
+  "selectRomsPath": "选择ROM路径",
+  "selectMediaPath": "选择媒体路径",
+  "allSettingsConfigured": "所有设置已配置",
+  "darkTheme": "深色",
+  "lightTheme": "浅色",
+  "systemTheme": "系统",
+  "about": "关于",
+  "checkForUpdates": "检查更新",
+  "noUpdatesAvailable": "没有可用的更新",
+  "updateAvailable": "有可用更新",
+  "downloadingUpdate": "正在下载更新...",
+  "installingUpdate": "正在安装更新...",
+  "updateComplete": "更新完成",
+  "updateFailed": "更新失败",
+  "networkError": "网络错误",
+  "connectionError": "连接错误",
+  "timeoutError": "超时错误",
+  "unknownError": "未知错误",
+  "permissionDenied": "权限被拒绝",
+  "fileNotFound": "文件未找到",
+  "directoryNotFound": "目录未找到",
+  "diskFull": "磁盘已满",
+  "invalidPath": "无效路径",
+  "pathNotWritable": "路径不可写",
+  "romCorrupted": "ROM文件可能已损坏",
+  "zipError": "ZIP存档错误",
+  "extractionFailed": "解压失败",
+  "checksumMismatch": "校验和不匹配",
+  "biosCheckFailed": "BIOS检查失败",
+  "continueAnyway": "仍然继续",
+  "reportIssue": "报告问题",
+  "copyToClipboard": "复制到剪贴板",
+  "copiedToClipboard": "已复制到剪贴板",
+  "share": "分享",
+  "hide": "隐藏",
+  "show": "显示",
+  "toggleView": "切换视图",
+  "gridView": "网格视图",
+  "listView": "列表视图",
+  "carouselView": "轮播视图",
+  "sortBy": "排序方式",
+  "sortByName": "名称",
+  "sortByDate": "日期",
+  "sortBySize": "大小",
+  "sortByRegion": "地区",
+  "ascending": "升序",
+  "descending": "降序",
+  "filter": "筛选",
+  "filterByRegion": "按地区筛选",
+  "filterByGenre": "按类型筛选",
+  "filterByYear": "按年份筛选",
+  "clearFilters": "清除筛选",
+  "systemInfo": "系统信息",
+  "cpu": "CPU",
+  "memory": "内存",
+  "storageInfo": "存储",
+  "os": "操作系统",
+  "emulatorVersion": "模拟器版本",
+  "totalRoms": "ROM总数",
+  "totalSize": "总大小",
+  "freeSpace": "可用空间",
+  "usedSpace": "已用空间",
+  "systemUtilities": "系统工具",
+  "romVerificationResults": "ROM验证结果",
+  "totalRomFiles": "ROM文件总数",
+  "emptyRomFiles": "空ROM文件",
+  "validRomFiles": "有效ROM文件",
+  "romsDirectoryDoesNotExist": "ROM目录不存在",
+  "gamelistCheckResults": "游戏列表检查结果",
+  "totalPlatforms": "平台总数",
+  "missingGamelists": "缺失的游戏列表",
+  "configurationBackup": "配置备份",
+  "configurationBackedUp": "配置已备份到:",
+  "errorBackingUp": "备份配置时出错:",
+  "romDatabase": "ROM数据库",
+  "romDatabaseDownloaded": "ROM数据库下载成功",
+  "failedDownloadRomDatabase": "下载ROM数据库失败",
+  "romDatabaseCleared": "ROM数据库已清除",
+  "failedClearDatabase": "清除数据库失败",
+  "downloadRomDatabase": "下载ROM数据库",
+  "clearRomDatabase": "清除ROM数据库",
+  "systemRequirements": "系统要求",
+  "failedToCheckSystem": "检查系统失败",
+  "cleanedUpTempFiles": "已清理 {deletedCount} 个临时ROM文件",
+  "errorCleaningTempFiles": "清理临时文件时出错:",
+  "errorVerifyingRomFiles": "验证ROM文件时出错:",
+  "errorCheckingGamelists": "检查游戏列表时出错:",
+  "cancelDownload": "取消下载",
+  "selectEmulator": "选择模拟器",
+  "biosStatusDashboard": "BIOS状态仪表板",
+  "webSettings": "网络设置",
+  "saveSettings": "保存设置",
+  "errorSavingSettings": "保存设置时出错:",
+  "romsCountItems": "{count} 个ROM",
+  "savedPermanently": "已永久保存",
+  "keptInTemporary": "保留在临时存储中",
+  "tryAgain": "重试",
+  "allDownloads": "所有下载已完成",
+  "romSavedPermanently": "{name} 已永久保存",
+  "undo": "撤销",
+  "romKeptInTemporary": "{name} 保留在临时存储中",
+  "romsCountWithSize": "{count} 个ROM • {size}",
+  "whatYouCanTry": "您可以尝试:",
+  "tips": "提示",
+  "helpNavigateItems": "在项目间导航",
+  "helpGamepadNavigation": "手柄导航",
+  "helpQuickNavigation": "快速导航 (跳过多个项目)",
+  "helpGamepadPageNavigation": "手柄页面导航",
+  "helpGoToFirst": "转到第一个项目",
+  "helpGoToLast": "转到最后一个项目",
+  "helpJumpToLetter": "跳转到以该字母开头的项目",
+  "helpSelectItem": "选择项目",
+  "helpGamepadSelect": "手柄选择",
+  "helpGoBackCloseDialogs": "返回 / 关闭对话框",
+  "helpExitApplication": "退出应用",
+  "helpGamepadBackClose": "手柄返回 / 关闭对话框",
+  "helpToggleViewMode": "切换视图模式 (网格/列表/轮播)",
+  "helpGamepadViewToggle": "使用手柄切换视图",
+  "helpRefreshView": "刷新当前视图",
+  "helpShowPlatformInfo": "显示平台信息",
+  "helpActivateSearch": "激活搜索",
+  "helpGamepadSearch": "手柄搜索",
+  "helpShowHelpDialog": "显示此帮助对话框",
+  "helpGamepadHelp": "手柄帮助",
+  "tipUseKeyboardOrGamepad": "使用键盘或手柄导航",
+  "tipAlphabeticalJump": "字母跳转在所有视图模式下都有效",
+  "tipPressQuestionMark": "随时按 ? 查看此帮助",
+  "tipGamepadAlongside": "手柄可与键盘控制配合使用",
+  "configurePathsDescription": "配置应用程序用于定位ROM、媒体和模拟器的路径。",
+  "romListsAutoManaged": "ROM列表现在自动管理。请从设置 > ROM数据库下载。",
+  "romStorage": "ROM存储",
+  "configureRomStorageDescription": "配置下载的ROM的临时和永久存储位置。",
+  "resetToDefaults": "重置为默认值",
+  "mediaPathLabel": "媒体路径",
+  "mediaPathHint": "包含媒体 (图片、视频) 的目录",
+  "emulatorsPathLabel": "模拟器路径",
+  "emulatorsPathHint": "包含模拟器可执行文件的目录",
+  "gamelistPathAutomatic": "游戏列表路径 (自动)",
+  "gamelistAutoDescription": "游戏列表现在在应用数据目录中自动管理。这使应用完全独立，并为未来基于GitHub的游戏列表分发做好准备。",
+  "tempRomStorageLabel": "临时ROM存储 (可选)",
+  "tempRomStorageDescription": "ROM首先下载到这里。可以在玩完后升级到永久存储。",
+  "permanentRomStorageLabel": "永久ROM存储 (可选)",
+  "permanentRomStorageDescription": "永久保存的ROM存储在这里。这些不会自动清理。",
+  "defaultAppSupportDir": "默认: 应用支持目录",
+  "currentPathDisplay": "当前: {path}",
+  "configurationFile": "配置文件",
+  "source": "来源:",
+  "customConfigActive": "自定义配置已激活",
+  "pathStructure": "路径结构",
+  "pathStructureDescription": "媒体路径: MEDIA_PATH/平台/boxart|screenshots|videos/rom.png\n游戏列表路径: ~/.local/share/com.example.emulator/gamelists/平台/gamelist.xml (自动)\n模拟器路径: EMULATORS_PATH/emulator_binary",
+  "errorCheckingSystem": "检查系统时出错",
+  "recheckR": "重新检查 (R)",
+  "allRequiredToolsInstalled": "所有必需工具已安装",
+  "missingRequiredTools": "缺少必需工具",
+  "systemReadyToUse": "您的系统已准备好使用模拟器",
+  "someRequiredToolsMissing": "一些必需工具缺失",
+  "requiredTools": "必需工具",
+  "requiredToolsDescription": "这些工具是下载和解压模拟器所必需的",
+  "installationInstructions": "安装说明",
+  "installed": "已安装",
+  "missing": "缺失",
+  "downloadEmulatorsAndGameLists": "下载模拟器和游戏列表",
+  "quickActions": "快速操作",
+  "downloadAll": "下载全部",
+  "byCategory": "按类别",
+  "downloadQueue": "下载队列",
+  "noDownloadsInProgress": "没有正在进行的下载",
+  "selectQuickActionToStart": "选择上面的快速操作开始下载",
+  "categorySony": "Sony (PS1-PS4)",
+  "categoryNintendo": "Nintendo (GC, Wii, Switch)",
+  "categoryMicrosoft": "Microsoft (Xbox, Xbox 360)",
+  "categoryMultiPlatform": "多平台 (RetroArch)",
+  "categoryOtherEmulators": "其他模拟器",
+  "categoryUtilities": "工具",
+  "confirmDownloadDescription": "下载 {count} 个模拟器?\n估计大小: ~{size} MB\n\n根据您的网络连接,这可能需要一些时间。",
+  "alreadyInstalled": "已安装",
+  "starting": "正在启动...",
+  "completed": "已完成",
+  "gameListsAlreadyDownloaded": "游戏列表已下载",
+  "redownload": "重新下载",
+  "gameListsFromGitHub": "游戏列表 (来自GitHub)",
+  "downloaded": "已下载",
+  "cancelled": "已取消",
+  "missingFor": "缺失于:",
+  "noCustomConfigToBackup": "没有要备份的自定义配置。使用默认设置。",
+  "saveConfigurationBackup": "保存配置备份",
+  "refreshStatsR": "刷新统计 (R)",
+  "systemStatistics": "系统统计",
+  "romFiles": "ROM文件",
+  "maintenanceTools": "维护工具",
+  "cleanupTemporaryRoms": "清理临时ROM",
+  "cleanupTemporaryRomsDescription": "从系统临时目录中删除临时ROM文件",
+  "verifyRomFiles": "验证ROM文件",
+  "verifyRomFilesDescription": "检查所有ROM文件是否存在且有效",
+  "checkMissingGamelists": "检查缺失的游戏列表",
+  "checkMissingGamelistsDescription": "查找没有gamelist.xml文件的平台",
+  "backupConfiguration": "备份配置",
+  "backupConfigurationDescription": "创建config.json的备份",
+  "downloadingRomDatabase": "正在下载ROM数据库...",
+  "downloadMayTakeMinutes": "根据您的连接,这可能需要几分钟...",
+  "databaseStatus": "数据库状态",
+  "notDownloaded": "未下载",
+  "aboutRomDatabase": "关于ROM数据库",
+  "aboutRomDatabaseDescription": "ROM数据库包含按平台组织的可用ROM列表。它从GitHub上的Forsaken romList仓库下载。",
+  "romDatabaseSource": "来源: github.com/ForsakenStation/romList",
+  "downloadRomDatabaseDescription": "这将从GitHub上的Forsaken romList仓库下载ROM列表。",
+  "downloadRomDatabaseStats": "大小: ~7 MB\n平台: 138\nROM总数: ~240,000",
+  "downloadWillOverwrite": "注意: 这将覆盖现有数据。",
+  "clearRomDatabaseDescription": "这将删除所有下载的ROM列表并将数据库重置为初始状态。",
+  "gamelistsStatus": "游戏列表状态",
+  "gamelistsDownloaded": "已下载",
+  "gamelistsNotDownloaded": "未下载",
+  "aboutGamelists": "关于游戏列表",
+  "aboutGamelistsDescription": "游戏列表包含每个平台的游戏元数据 (名称、描述、评分)。它们从GitHub上的Forsaken gamelists仓库下载。",
+  "gamelistsSource": "来源: github.com/ForsakenStation/gamelists",
+  "downloadGamelists": "下载游戏列表",
+  "downloadGamelistsDescription": "这将从GitHub上的Forsaken gamelists仓库下载gamelist.xml文件。",
+  "downloadGamelistsWillOverwrite": "注意: 这将覆盖现有的游戏列表文件。",
+  "downloadingGamelists": "正在下载游戏列表...",
+  "gamelistsDownloadedSuccess": "游戏列表下载成功",
+  "failedDownloadGamelists": "下载游戏列表失败",
+  "clearGamelists": "清除游戏列表",
+  "clearGamelistsDescription": "这将删除所有下载的游戏列表文件。",
+  "gamelistsCleared": "游戏列表已清除",
+  "failedClearGamelists": "清除游戏列表失败",
+  "rebuildMediaCache": "重建媒体缓存",
+  "rebuildMediaCacheDescription": "扫描媒体目录并将路径缓存到游戏列表中以加快加载速度",
+  "rebuildMediaCacheConfirmTitle": "重建媒体缓存?",
+  "rebuildMediaCacheConfirmBody": "这将扫描所有媒体目录并用媒体路径更新gamelist.xml文件。对于大型收藏集,这可能需要一些时间。",
+  "rebuildMediaCacheProgress": "正在重建媒体缓存...",
+  "rebuildMediaCacheProcessingPlatform": "正在处理 {platform} ({current}/{total})",
+  "rebuildMediaCacheComplete": "媒体缓存已重建",
+  "rebuildMediaCacheSummary": "{platforms} 个平台,{games} 个游戏已扫描,{updated} 个已更新,{paths} 个媒体路径已缓存",
+  "rebuildMediaCacheError": "重建媒体缓存失败",
+  "rebuildMediaCacheErrors": "重建过程中发生 {count} 个错误",
+  "@locale": "en",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "@retroGamingFrontend": {
+    "description": "Subtitle shown on initializing screen"
+  },
+  "@deleteRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleted": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@moveRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@saved": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@errorSavingRom": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@platformsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@romsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@cleanedUpTempFiles": {
+    "placeholders": {
+      "deletedCount": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountItems": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "@romSavedPermanently": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romKeptInTemporary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountWithSize": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@currentPathDisplay": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "@confirmDownloadDescription": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheProcessingPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheSummary": {
+    "placeholders": {
+      "platforms": {
+        "type": "String"
+      },
+      "games": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      },
+      "paths": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheErrors": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  }
 }

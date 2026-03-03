@@ -1,0 +1,602 @@
+{
+  "@@locale": "eu",
+  "appTitle": "Forsaken Emulator",
+  "retroGamingFrontend": "Retro Joko Frontend-a",
+  "platforms": "Platformak",
+  "roms": "ROMak",
+  "settings": "Ezarpenak",
+  "settingsAndConfiguration": "Ezarpenak eta Konfigurazioa",
+  "aboutForsakenEmulator": "Forsaken Emulator-ri buruz",
+  "version": "Bertsioa",
+  "appDescription": "Flutter-rekin egindako moderno eta multiplataforma emuladore frontend bat.",
+  "emulators": "Emuladoreak",
+  "ready": "Prest",
+  "back": "Atzera",
+  "select": "Hautatu",
+  "search": "Bilatu",
+  "refresh": "Berriztu",
+  "loading": "Kargatzen...",
+  "error": "Akatsa",
+  "initializationError": "Hasieratze Akatsa",
+  "retry": "Saiatu berriro",
+  "cancel": "Ezeztatu",
+  "ok": "Ados",
+  "save": "Gorde",
+  "delete": "Ezabatu",
+  "confirm": "Berretsi",
+  "yes": "Bai",
+  "no": "Ez",
+  "close": "Itxi",
+  "noRomsFound": "ROMrik ez da aurkitu",
+  "noPlatformsFound": "Platformarik ez da aurkitu",
+  "checkRomsPath": "EGIAZTATU ROMS_PATH ingurune-aldagaia",
+  "downloading": "Deskargatzen...",
+  "downloadComplete": "Deskarga amaituta",
+  "downloadFailed": "Deskarga huts egin du",
+  "emulatorNotFound": "Emuladorea ez da aurkitu",
+  "romNotFound": "ROMa ez da aurkitu",
+  "biosRequired": "BIOS beharrezkoa",
+  "systemCheck": "Sistemaren Egiaztapena",
+  "language": "Hizkuntza",
+  "theme": "Gaia",
+  "systemDefault": "Sistemaren lehenetsia",
+  "help": "Laguntza",
+  "keyboardAndGamepadControls": "Teklatu eta Gamepad Kontrolak",
+  "navigation": "Nabigazioa",
+  "actions": "Ekintzak",
+  "viewControls": "Ikuspegi Kontrolak",
+  "gotIt": "Ulertuta!",
+  "exit": "Irten",
+  "exitApplication": "Aplikaziotik Irten",
+  "exitConfirm": "Irten nahi al duzu?",
+  "downloadManager": "Deskarga Kudeatzailea",
+  "clearCompleted": "Amaitutakoak Garbitu",
+  "selectCategory": "Kategoria Hautatu",
+  "confirmDownload": "Deskarga Berretsi",
+  "downloadGameLists": "Joko Zerrendak Deskargatu",
+  "downloadGameListsDescription": "ROM zerrendak GitHub-etik deskargatuko ditu.",
+  "gameListsDownloaded": "Joko zerrendak deskargatuta!",
+  "romStorageManagement": "ROM Biltegiratze Kudeaketa",
+  "deleteRom": "ROMa Ezabatu?",
+  "deleteRomConfirm": "{fileName} ezabatu?",
+  "actionCannotBeUndone": "Ekintza hau ezin da desegin.",
+  "deleted": "Ezabatuta: {fileName}",
+  "savePermanently": "Betiko Gorde?",
+  "moveRomConfirm": "{fileName} biltegiratze permanentera mugitu?",
+  "saved": "Gordeta: {fileName}",
+  "clearAll": "Dena Garbitu?",
+  "clearAllConfirm": "ROM临时 guztiak ezabatu?",
+  "allCleared": "ROM临时 guztiak garbituta",
+  "systemPathsConfiguration": "Sistemaren Bide Konfigurazioa",
+  "migrateRoms": "ROMak Migratu?",
+  "migrateRomsDescription": "ROMen biltegiratze permanentearen bidea $oldPath-tik $newPath-ra aldatu da. Existitzen diren ROMak kokaleku berrira migratu nahi al dituzu?",
+  "noKeepThem": "Ez, mantendu",
+  "yesMigrateRoms": "Bai, ROMak migratu",
+  "migratingRoms": "ROMak migratzen...",
+  "romMigrationFailed": "Abisua: ROMen migraketa huts egin du",
+  "pathsSaved": "Bideak ondo gorde dira",
+  "errorSavingPaths": "Bideak gordetzean akatsa:",
+  "resetConfiguration": "Konfigurazioa Berrezarri",
+  "resetConfigDescription": "Hau bide guztiak lehenetsitako balioetara berrezarriko ditu. Zure ROM eta multimedia fitxategiak ez dute eragingo.",
+  "configurationReset": "Konfigurazioa lehenetsitakoetara berrezarrita",
+  "errorResettingConfiguration": "Konfigurazioa berrezartzean akatsa:",
+  "savePaths": "Bideak Gorde",
+  "saving": "Gordetzen...",
+  "emulatorManagement": "Emuladore Kudeaketa",
+  "configurationReloaded": "Konfigurazioa berriro kargatuta",
+  "errorLoadingEmulators": "Emuladoreak kargatzean akatsa:",
+  "emulatorAdded": "Emuladorea ondo gehituta",
+  "errorAddingEmulator": "Emuladorea gehitzean akatsa:",
+  "emulatorUpdated": "Emuladorea ondo eguneratuta",
+  "errorUpdatingEmulator": "Emuladorea eguneratzean akatsa:",
+  "deleteEmulator": "Emuladorea Ezabatu",
+  "emulatorDeleted": "Emuladorea ezabatuta",
+  "errorDeletingEmulator": "Emuladorea ezabatzean akatsa:",
+  "configurationSource": "Konfigurazio Iturburua",
+  "addEmulator": "Emuladorea Gehitu",
+  "systemNameRequired": "Sistemaren izena beharrezkoa da",
+  "commandRequired": "Gutxienez komando bat beharrezkoa da",
+  "addCommand": "Komandoa Gehitu",
+  "acceptZipFiles": "ZIP fitxategiak onartu",
+  "acceptZipSubtitle": "ROMak ZIP artxibotik abiaraztea baimendu",
+  "useForeverMode": "Forever Modua Erabili",
+  "useForeverSubtitle": "Emuladorea martxan mantendu",
+  "workInProgress": "Lanean",
+  "wipSubtitle": "Oraindik guztiz konfiguratu gabe dagoela markatu",
+  "biosFirmwareHelp": "BIOS eta Firmware Laguntza",
+  "downloadMissingFiles": "Fitxategi Faltenak Deskargatu",
+  "showOnlyMissing": "Faltak soilik erakutsi",
+  "downloadAllMissingBios": "Falta diren BIOS guztiak Deskargatu",
+  "configurationError": "Konfigurazio Akatsa",
+  "configurationErrorDescription": "Aplikazioak ezin izan du beharrezko konfigurazioa aurkitu.\nMesedez, konfiguratu zure bideak Ezarpenak > Sistemaren Bideak-en.",
+  "configurationRequired": "Beharrezkoa:\n- Multimedia Bidea: aktibo multimedia dituen direktorioa\n- Emuladore Bidea: emuladore binarioak dituen direktorioa\n\nAukerakoa:\n- ROM biltegiratzeko bideak deskarga temporaletarako/permanentetarako",
+  "goToSettingsToConfigure": "Ezarpenak > Sistemaren Bideak-era jo konfiguratzeko",
+  "noDownloadableBios": "Ez dago falta den BIOS fitxategi deskargagarririk",
+  "allDownloadsCompleted": "Deskarga guztiak ondo amaituta!",
+  "batchDownloadFailed": "Bildumako deskarga huts egin du:",
+  "download": "Deskargatu",
+  "downloadCancelled": "Deskarga ezeztatuta",
+  "launched": "Abiarazita:",
+  "failedToSave": "ROMa betiko gordetzea huts egin du",
+  "failedToSaveRom": "ROMa betiko gordetzea huts egin du",
+  "errorSaving": "ROMa gordetzean akatsa:",
+  "errorSavingRom": "ROMa gordetzean akatsa: {error}",
+  "openFolder": "Karpeta Ireki",
+  "viewManual": "Eskuliburua Ikusi",
+  "play": "Jolastu",
+  "goBack": "Itzuli",
+  "clearSearch": "Bilaketa Garbitu",
+  "iUnderstand": "Ulertzen dut eta baldintza hauek onartzen ditut",
+  "start": "Hasi",
+  "debugMode": "Debug Modua: ",
+  "toggleDebugMode": "Debug Modua Aldatu",
+  "preparingDownload": "Deskarga prestatzen...",
+  "noEmulatorsAvailable": "Ez dago emuladore erabilgarririk kategoria honetarako",
+  "failedToLaunch": "Web emuladorea abiaratzea huts egin du:",
+  "platformInfo": "Plataforma Info",
+  "emulatorPlatformInfo": "Emuladore Plataforma Info",
+  "favorites": "Gogokoak",
+  "all": "Guztiak",
+  "collections": "Bildumak",
+  "searchRoms": "ROMak Bilatu...",
+  "searchPlatforms": "Plataformak Bilatu...",
+  "romsCount": "{count} ROM",
+  "platformsCount": "{count} plataforma",
+  "region": "Eskualdea",
+  "genre": "Generoa",
+  "year": "Urtea",
+  "publisher": "Argitaratzailea",
+  "developer": "Garatzailea",
+  "playWithNetplay": "Netplay-rekin Jolastu",
+  "downloadBios": "BIOS Deskargatu",
+  "viewDetails": "Xehetasunak Ikusi",
+  "addToFavorites": "Gogokoetara Gehitu",
+  "removeFromFavorites": "Gogokoetatik Kendu",
+  "biosMissing": "BIOS falta",
+  "biosPresent": "BIOS dago",
+  "checkingBios": "BIOS egiaztatzen...",
+  "emulatorDownloading": "Emuladorea deskargatzen...",
+  "emulatorDownloadComplete": "Emuladorea deskargatuta",
+  "emulatorDownloadFailed": "Emuladorea deskargatzea huts egin du",
+  "installingEmulator": "Emuladorea instalatzen...",
+  "emulatorReady": "Emuladorea prest",
+  "configuration": "Konfigurazioa",
+  "paths": "Bideak",
+  "storage": "Biltegiratzea",
+  "emulatorsPath": "Emuladore Bidea",
+  "romsPath": "ROM Bidea",
+  "mediaPath": "Multimedia Bidea",
+  "biosPath": "BIOS Bidea",
+  "tempPath": "Aldi Biko Bidea",
+  "browse": "Arakatu",
+  "apply": "Aplikatu",
+  "reset": "Berrezarri",
+  "clear": "Garbitu",
+  "scan": "Eskaneatu",
+  "scanForRoms": "ROMak Eskaneatu",
+  "scanningRoms": "ROMak eskaneatzen...",
+  "scanComplete": "Eskaneoa amaituta",
+  "romsFound": "{count} ROM aurkituta",
+  "noNewRomsFound": "ROM berririk ez da aurkitu",
+  "launchEmulator": "Emuladorea Abiarazi",
+  "emulatorError": "Emuladore Akatsa",
+  "gamepadConnected": "Gamepad konektatuta",
+  "gamepadDisconnected": "Gamepad deskonektatuta",
+  "gamepadTest": "Gamepad Probatu",
+  "pressAnyButton": "Edozein botoi sakatu probatzeko",
+  "buttonA": "A",
+  "buttonB": "B",
+  "buttonX": "X",
+  "buttonY": "Y",
+  "buttonStart": "Start",
+  "buttonSelect": "Select",
+  "dpadUp": "D-Pad Gora",
+  "dpadDown": "D-Pad Behera",
+  "dpadLeft": "D-Pad Ezker",
+  "dpadRight": "D-Pad Eskuin",
+  "leftShoulder": "L1",
+  "rightShoulder": "R1",
+  "leftTrigger": "L2",
+  "rightTrigger": "R2",
+  "leftStick": "Ezkerreko Stick-a",
+  "rightStick": "Eskuineko Stick-a",
+  "setupWizard": "Konfigurazio Laguntzailea",
+  "welcome": "Ongi etorri",
+  "welcomeMessage": "Ongi etorri Forsaken Emulator-era",
+  "next": "Hurrengoa",
+  "previous": "Aurrekoa",
+  "finish": "Amaitu",
+  "skip": "Saltatu",
+  "setupComplete": "Konfigurazioa Amaituta",
+  "selectLanguage": "Hizkuntza Hautatu",
+  "selectEmulatorsPath": "Emuladore Bidea Hautatu",
+  "selectRomsPath": "ROM Bidea Hautatu",
+  "selectMediaPath": "Multimedia Bidea Hautatu",
+  "allSettingsConfigured": "Ezarpen guztiak konfiguratuta",
+  "darkTheme": "Iluna",
+  "lightTheme": "Argia",
+  "systemTheme": "Sistema",
+  "about": "Honi buruz",
+  "checkForUpdates": "Eguneraketak Egiaztatu",
+  "noUpdatesAvailable": "Ez dago eguneraketarik erabilgarririk",
+  "updateAvailable": "Eguneraketarik erabilgarri",
+  "downloadingUpdate": "Eguneraketa deskargatzen...",
+  "installingUpdate": "Eguneraketa instalatzen...",
+  "updateComplete": "Eguneraketa amaituta",
+  "updateFailed": "Eguneraketa huts egin du",
+  "networkError": "Sare Akatsa",
+  "connectionError": "Konexio Akatsa",
+  "timeoutError": "Denbora-muga Akatsa",
+  "unknownError": "Akats ezezaguna",
+  "permissionDenied": "Baimena ukatuta",
+  "fileNotFound": "Fitxategia ez da aurkitu",
+  "directoryNotFound": "Direktorioa ez da aurkitu",
+  "diskFull": "Diskoa beteta",
+  "invalidPath": "Bide baliogabea",
+  "pathNotWritable": "Bide idazgarririk ez",
+  "romCorrupted": "ROM fitxategia corrupted egon liteke",
+  "zipError": "ZIP artxibo Akatsa",
+  "extractionFailed": "Eskuratzea huts egin du",
+  "checksumMismatch": "Checksumen desez",
+  "biosCheckFailed": "BIOS egiaztapena huts egin du",
+  "continueAnyway": "Halere Jarraitu",
+  "reportIssue": "Arazoa Salatu",
+  "copyToClipboard": "Arbelera Kopiatu",
+  "copiedToClipboard": "Arbelera kopiatuta",
+  "share": "Partekatu",
+  "hide": "Ezkutatu",
+  "show": "Erakutsi",
+  "toggleView": "Ikuspegia Aldatu",
+  "gridView": "Sareta Ikuspegia",
+  "listView": "Zerrenda Ikuspegia",
+  "carouselView": "Karusel Ikuspegia",
+  "sortBy": "Honen arabera ordenatu",
+  "sortByName": "Izena",
+  "sortByDate": "Data",
+  "sortBySize": "Tamaina",
+  "sortByRegion": "Eskualdea",
+  "ascending": "Goraka",
+  "descending": "Beheraka",
+  "filter": "Iragazi",
+  "filterByRegion": "Eskualdearen arabera Iragazi",
+  "filterByGenre": "Generoaren arabera Iragazi",
+  "filterByYear": "Urtearen arabera Iragazi",
+  "clearFilters": "Iragazkiak Garbitu",
+  "systemInfo": "Sistema Info",
+  "cpu": "CPU",
+  "memory": "Memoria",
+  "storageInfo": "Biltegiratzea",
+  "os": "Sistema Eragilea",
+  "emulatorVersion": "Emuladore Bertsioa",
+  "totalRoms": "ROM Guztiak",
+  "totalSize": "Tamaina Totala",
+  "freeSpace": "Leku Librea",
+  "usedSpace": "Erabilitako Lekua",
+  "systemUtilities": "Sistema Tresnak",
+  "romVerificationResults": "ROM Egiaztapen Emaitzak",
+  "totalRomFiles": "ROM Fitxategi Guztiak",
+  "emptyRomFiles": "ROM Fitxategi Hutsa",
+  "validRomFiles": "ROM Fitxategi Baliagarriak",
+  "romsDirectoryDoesNotExist": "ROM direktorioa ez da existitzen",
+  "gamelistCheckResults": "Zerrenda Egiaztapen Emaitzak",
+  "totalPlatforms": "Plataforma Guztiak",
+  "missingGamelists": "Zerrenda Falten",
+  "configurationBackup": "Konfigurazio Babeskopia",
+  "configurationBackedUp": "Konfigurazioa honetan babestuta:",
+  "errorBackingUp": "Konfigurazioa babestean akatsa:",
+  "romDatabase": "ROM Datu-basea",
+  "romDatabaseDownloaded": "ROM datu-basea ondo deskargatuta",
+  "failedDownloadRomDatabase": "ROM datu-basea deskargatzea huts egin du",
+  "romDatabaseCleared": "ROM datu-basea garbituta",
+  "failedClearDatabase": "Datu-basea garbitzea huts egin du",
+  "downloadRomDatabase": "ROM Datu-basea Deskargatu",
+  "clearRomDatabase": "ROM Datu-basea Garbitu",
+  "systemRequirements": "Sistemaren Baldintzak",
+  "failedToCheckSystem": "Sistema egiaztatzea huts egin du",
+  "cleanedUpTempFiles": "{deletedCount} ROM临时 fitxategi garbituta",
+  "errorCleaningTempFiles": "临时 fitxategiak garbitzean akatsa:",
+  "errorVerifyingRomFiles": "ROM fitxategiak egiaztatzean akatsa:",
+  "errorCheckingGamelists": "Zerrendak egiaztatzean akatsa:",
+  "cancelDownload": "Deskarga Ezeztatu",
+  "selectEmulator": "Emuladorea Hautatu",
+  "biosStatusDashboard": "BIOS Egoera Panela",
+  "webSettings": "Web Ezarpenak",
+  "saveSettings": "Ezarpenak Gorde",
+  "errorSavingSettings": "Ezarpenak gordetzean akatsa:",
+  "romsCountItems": "{count} ROM",
+  "savedPermanently": "betiko gordeta",
+  "keptInTemporary": "aldian mantenduta",
+  "tryAgain": "Saiatu berriro",
+  "allDownloads": "Deskarga guztiak amaituta",
+  "romSavedPermanently": "{name} betiko gordeta",
+  "undo": "Desegin",
+  "romKeptInTemporary": "{name} aldi-biltegian mantenduta",
+  "romsCountWithSize": "{count} ROM • {size}",
+  "whatYouCanTry": "Zer saia daitekeen:",
+  "tips": "Aholkuak",
+  "helpNavigateItems": "Elementuen artean nabigatu",
+  "helpGamepadNavigation": "Gamepad nabigazioa",
+  "helpQuickNavigation": "Nabigazio azkarra (elementu asko saltatu)",
+  "helpGamepadPageNavigation": "Gamepad orrialde nabigazioa",
+  "helpGoToFirst": "Lehen elementura joan",
+  "helpGoToLast": "Azken elementura joan",
+  "helpJumpToLetter": "Hartzatiletrarekin hasten den elementura saltatu",
+  "helpSelectItem": "Elementua hautatu",
+  "helpGamepadSelect": "Gamepad hautapena",
+  "helpGoBackCloseDialogs": "Atzera / Elkarrizketak itxi",
+  "helpExitApplication": "Aplikaziotik irten",
+  "helpGamepadBackClose": "Gamepad atzera / Elkarrizketak itxi",
+  "helpToggleViewMode": "Ikuspegi modua aldatu (Sareta/Zerrenda/Karusela)",
+  "helpGamepadViewToggle": "Gamepad-ekin ikuspegia aldatu",
+  "helpRefreshView": "Oraineko ikuspegia berriztu",
+  "helpShowPlatformInfo": "Plataforma informazioa erakutsi",
+  "helpActivateSearch": "Bilaketa aktibatu",
+  "helpGamepadSearch": "Gamepad bilaketa",
+  "helpShowHelpDialog": "Laguntza elkarrizketa hau erakutsi",
+  "helpGamepadHelp": "Gamepad laguntza",
+  "tipUseKeyboardOrGamepad": "Teklatua edo gamepad-a erabili nabigatzeko",
+  "tipAlphabeticalJump": "Alfabetiko jauzak ikuspegi guztietan funtzionatzen du",
+  "tipPressQuestionMark": "Sakatu ? edozein unetan laguntza hau ikusteko",
+  "tipGamepadAlongside": "Gamepad-a teklatu kontrolekin batera funtzionatzen du",
+  "configurePathsDescription": "Konfiguratu aplikazioak ROM, multimedia eta emuladoreak aurkitzeko erabiltzen dituen bideak.",
+  "romListsAutoManaged": "ROM zerrendak automatikoki kudeatzen dira orain. Deskargatu Ezarpenak > ROM Datu-basea-tik.",
+  "romStorage": "ROM Biltegiratzea",
+  "configureRomStorageDescription": "Konfiguratu deskargatutako ROMak non biltegiratzen diren aldi baterako eta betiko.",
+  "resetToDefaults": "Lehenetsietara berrezarri",
+  "mediaPathLabel": "Multimedia Bidea",
+  "mediaPathHint": "Multimedia (irudiak, bideoak) duen direktorioa",
+  "emulatorsPathLabel": "Emuladore Bidea",
+  "emulatorsPathHint": "Emuladore binarioak dituen direktorioa",
+  "gamelistPathAutomatic": "Zerrenda Bidea (Automatikoa)",
+  "gamelistAutoDescription": "Joko zerrendak orain app datu direktorioan automatikoki kudeatzen dira. Hau app oso independente egiten du eta etorkizuneko GitHub-ek oinarritutako zerrenda banaketa prestatzen du.",
+  "tempRomStorageLabel": "ROM Biltegiratze Aldibikoa (Aukerakoa)",
+  "tempRomStorageDescription": "ROMak hemen deskargatzen dira lehenengo. Jolastu ondoren biltegiratze permanentera igo daitezke.",
+  "permanentRomStorageLabel": "ROM Biltegiratze Permanentea (Aukerakoa)",
+  "permanentRomStorageDescription": "Betiko gordeta dauden ROMak hemen biltegiratzen dira. Hau ez dira automatikoki garbitzen.",
+  "defaultAppSupportDir": "Lehenetsia: app euskarri direktorioa",
+  "currentPathDisplay": "Orain: {path}",
+  "configurationFile": "Konfigurazio Fitxategia",
+  "source": "Iturburua:",
+  "customConfigActive": "Konfigurazio pertsonalizatua aktibo",
+  "pathStructure": "Bide Egitura",
+  "pathStructureDescription": "Multimedia Bidea: MEDIA_PATH/plataforma/boxart|screenshots|videos/rom.png\nZerrenda Bidea: ~/.local/share/com.example.emulator/gamelists/plataforma/gamelist.xml (automatikoa)\nEmuladore Bidea: EMULATORS_PATH/emulador_binario",
+  "errorCheckingSystem": "Sistemaren egiaztatzean akatsa",
+  "recheckR": "Berriro egiaztatu (R)",
+  "allRequiredToolsInstalled": "Beharrezko Tresna Guztiak Instalatuak",
+  "missingRequiredTools": "Beharrezko Tresnak Faltan",
+  "systemReadyToUse": "Zure sistema emuladorea erabiltzeko prest dago",
+  "someRequiredToolsMissing": "Beharrezko tresna batzuk falta dira",
+  "requiredTools": "Beharrezko Tresnak",
+  "requiredToolsDescription": "Tresna hauek emuladoreak deskargatu eta ateratzeko beharrezkoak dira",
+  "installationInstructions": "Instalazio Argibideak",
+  "installed": "Instalatuta",
+  "missing": "Faltan",
+  "downloadEmulatorsAndGameLists": "Emuladoreak eta joko zerrendak deskargatu",
+  "quickActions": "Ekintza Azkarrak",
+  "downloadAll": "Denak Deskargatu",
+  "byCategory": "Kategoriaka",
+  "downloadQueue": "Deskarga Ilara",
+  "noDownloadsInProgress": "Ez dago martxan deskargarik",
+  "selectQuickActionToStart": "Hautatu goiko ekintza azkar bat deskargatzen hasteko",
+  "categorySony": "Sony (PS1-PS4)",
+  "categoryNintendo": "Nintendo (GC, Wii, Switch)",
+  "categoryMicrosoft": "Microsoft (Xbox, Xbox 360)",
+  "categoryMultiPlatform": "Multi-Plataforma (RetroArch)",
+  "categoryOtherEmulators": "Beste Emuladoreak",
+  "categoryUtilities": "Tresnak",
+  "confirmDownloadDescription": "{count} emuladore deskargatu?\nZenbatetsitako tamaina: ~{size} MB\n\nHau denbora pixka bat har dezake zure internet konexioaren arabera.",
+  "alreadyInstalled": "Jadanik instalatuta",
+  "starting": "Abiarazten...",
+  "completed": "Amaituta",
+  "gameListsAlreadyDownloaded": "Joko zerrenda jadanik deskargatuta",
+  "redownload": "Berriro Deskargatu",
+  "gameListsFromGitHub": "Joko Zerrendak (GitHub-etik)",
+  "downloaded": "Deskargatuta",
+  "cancelled": "Ezeztatuta",
+  "missingFor": "Faltan:",
+  "noCustomConfigToBackup": "Ez dago babesteko konfigurazio pertsonalizaturik. Lehenetsiak erabiltzen.",
+  "saveConfigurationBackup": "Konfigurazio Babeskopia Gorde",
+  "refreshStatsR": "Estatistikak berriztu (R)",
+  "systemStatistics": "Sistema Estatistikak",
+  "romFiles": "ROM Fitxategiak",
+  "maintenanceTools": "Mantentze Tresnak",
+  "cleanupTemporaryRoms": "ROM Aldibikoak Garbitu",
+  "cleanupTemporaryRomsDescription": "Sistemaren aldi-biko direktorioko ROM临时 fitxategiak ezabatu",
+  "verifyRomFiles": "ROM Fitxategiak Egiaztatu",
+  "verifyRomFilesDescription": "ROM fitxategi guztiak existitzen eta baliogarriak direla egiaztatu",
+  "checkMissingGamelists": "Zerrenda Faltak Egiaztatu",
+  "checkMissingGamelistsDescription": "gamelist.xml fitxategia falta duten platformak aurkitu",
+  "backupConfiguration": "Konfigurazio Babeskopia",
+  "backupConfigurationDescription": "config.json-ren babeskopia sortu",
+  "downloadingRomDatabase": "ROM Datu-basea deskargatzen...",
+  "downloadMayTakeMinutes": "Hau minutu batzuk har ditzake zure konexioaren arabera...",
+  "databaseStatus": "Datu-base Egoera",
+  "notDownloaded": "Deskargatu gabe",
+  "aboutRomDatabase": "ROM Datu-baseari Buruz",
+  "aboutRomDatabaseDescription": "ROM datu-baseak platformaren arabera antolatutako ROM eskuragarrien zerrendak ditu. GitHub-eko Forsaken romList repositoriotik deskargatzen da.",
+  "romDatabaseSource": "Iturburua: github.com/ForsakenStation/romList",
+  "downloadRomDatabaseDescription": "Hau ROM zerrendak deskargatuko ditu GitHub-eko Forsaken romList repositoriotik.",
+  "downloadRomDatabaseStats": "Tamaina: ~7 MB\nPlataforma: 138\nROM Guztiak: ~240.000",
+  "downloadWillOverwrite": "Oharra: honek existitzen diren datuak gainidatziko ditu.",
+  "clearRomDatabaseDescription": "Hau deskargatutako ROM zerrenda guztiak ezabatu eta datu-basea bere egoera hasierara itzuliko du.",
+  "gamelistsStatus": "Zerrenda Egoera",
+  "gamelistsDownloaded": "Deskargatuta",
+  "gamelistsNotDownloaded": "Deskargatu gabe",
+  "aboutGamelists": "Zerrendei Buruz",
+  "aboutGamelistsDescription": "Joko zerrendek plataforma bakoitzeko joko metadatuak (izenak, deskribapenak, balorazioak) dituzte. GitHub-eko Forsaken gamelists repositoriotik deskargatzen dira.",
+  "gamelistsSource": "Iturburua: github.com/ForsakenStation/gamelists",
+  "downloadGamelists": "Zerrendak Deskargatu",
+  "downloadGamelistsDescription": "Hau gamelist.xml fitxategiak deskargatuko ditu GitHub-eko Forsaken gamelists repositoriotik.",
+  "downloadGamelistsWillOverwrite": "Oharra: honek existitzen diren zerrenda fitxategiak gainidatziko ditu.",
+  "downloadingGamelists": "Zerrendak deskargatzen...",
+  "gamelistsDownloadedSuccess": "Zerrendak ondo deskargatuta",
+  "failedDownloadGamelists": "Zerrendak deskargatzea huts egin du",
+  "clearGamelists": "Zerrendak Garbitu",
+  "clearGamelistsDescription": "Hau deskargatutako zerrenda fitxategi guztiak ezabatuko ditu.",
+  "gamelistsCleared": "Zerrendak garbituta",
+  "failedClearGamelists": "Zerrendak garbitzea huts egin du",
+  "rebuildMediaCache": "Multimedia Cache-a Berriz Eraiki",
+  "rebuildMediaCacheDescription": "Multimedia direktorioak eskaneatu eta zerrendetan bideak cache-atu karga azkarragoa izateko",
+  "rebuildMediaCacheConfirmTitle": "Multimedia Cache-a Berriz Eraiki?",
+  "rebuildMediaCacheConfirmBody": "Hau multimedia direktorio guztiak eskaneatuko eta gamelist.xml fitxategiak multimedia bideekin eguneratuko ditu. Honek denbora pixka bat har dezake bilduma handientzat.",
+  "rebuildMediaCacheProgress": "Multimedia cache-a berriz eraikitzen...",
+  "rebuildMediaCacheProcessingPlatform": "{platform} ({current}/{total}) prozesatzen",
+  "rebuildMediaCacheComplete": "Multimedia Cache-a Berriz Eraikita",
+  "rebuildMediaCacheSummary": "{platforms} plataforma, {games} joko eskaneatuta, {updated} eguneratuta, {paths} multimedia bide cache-atu",
+  "rebuildMediaCacheError": "Multimedia cache-a berriz eratzea huts egin du",
+  "rebuildMediaCacheErrors": "{count} akats gertatu da berrizeratzean",
+  "@locale": "en",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "@retroGamingFrontend": {
+    "description": "Subtitle shown on initializing screen"
+  },
+  "@deleteRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleted": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@moveRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@saved": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@errorSavingRom": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@platformsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@romsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@cleanedUpTempFiles": {
+    "placeholders": {
+      "deletedCount": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountItems": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "@romSavedPermanently": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romKeptInTemporary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountWithSize": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@currentPathDisplay": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "@confirmDownloadDescription": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheProcessingPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheSummary": {
+    "placeholders": {
+      "platforms": {
+        "type": "String"
+      },
+      "games": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      },
+      "paths": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheErrors": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  }
+}

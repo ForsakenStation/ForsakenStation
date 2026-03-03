@@ -1,15 +1,23 @@
 {
   "@@locale": "ja",
   "appTitle": "Forsaken Emulator",
+  "retroGamingFrontend": "レトロゲームフロントエンド",
   "platforms": "プラットフォーム",
   "roms": "ROM",
   "settings": "設定",
+  "settingsAndConfiguration": "設定と構成",
+  "aboutForsakenEmulator": "Forsaken Emulatorについて",
+  "version": "バージョン",
+  "appDescription": "Flutterで構築されたモダンなマルチプラットフォームエミュレーターフロントエンド。",
+  "emulators": "エミュレーター",
+  "ready": "準備完了",
   "back": "戻る",
   "select": "選択",
   "search": "検索",
   "refresh": "更新",
   "loading": "読み込み中...",
   "error": "エラー",
+  "initializationError": "初期化エラー",
   "retry": "再試行",
   "cancel": "キャンセル",
   "ok": "OK",
@@ -21,24 +29,574 @@
   "close": "閉じる",
   "noRomsFound": "ROMが見つかりません",
   "noPlatformsFound": "プラットフォームが見つかりません",
+  "checkRomsPath": "ROMS_PATH環境変数を 확인하세요",
   "downloading": "ダウンロード中...",
   "downloadComplete": "ダウンロード完了",
   "downloadFailed": "ダウンロード失敗",
-  "emulatorNotFound": "エミュレータが見つかりません",
+  "emulatorNotFound": "エミュレーターが見つかりません",
   "romNotFound": "ROMが見つかりません",
-  "biosRequired": "BIOSが必要です",
+  "biosRequired": "BIOSが必要",
   "systemCheck": "システムチェック",
   "language": "言語",
   "theme": "テーマ",
-  "systemDefault": "システムのデフォルト",
+  "systemDefault": "システムデフォルト",
   "help": "ヘルプ",
+  "keyboardAndGamepadControls": "キーボードとゲームパッドの操作",
+  "navigation": "ナビゲーション",
+  "actions": "アクション",
+  "viewControls": "表示コントロール",
+  "gotIt": "了解!",
   "exit": "終了",
-  "exitConfirm": "終了してもよろしいですか？",
+  "exitApplication": "アプリケーションを終了",
+  "exitConfirm": "終了してもよろしいですか?",
+  "downloadManager": "ダウンロードマネージャー",
+  "clearCompleted": "完了をクリア",
+  "selectCategory": "カテゴリを選択",
+  "confirmDownload": "ダウンロードを確認",
+  "downloadGameLists": "ゲームリストをダウンロード",
+  "downloadGameListsDescription": "GitHubからROMリストをダウンロードします。",
+  "gameListsDownloaded": "ゲームリストをダウンロードしました!",
+  "romStorageManagement": "ROMストレージ管理",
+  "deleteRom": "ROMを削除?",
+  "deleteRomConfirm": "{fileName}を削除しますか?",
+  "actionCannotBeUndone": "この操作は元に戻せません。",
+  "deleted": "削除: {fileName}",
+  "savePermanently": "永久に保存?",
+  "moveRomConfirm": "{fileName}を永久ストレージに移動しますか?",
+  "saved": "保存: {fileName}",
+  "clearAll": "すべてクリア?",
+  "clearAllConfirm": "すべての 임시ROMを削除しますか?",
+  "allCleared": "すべての仮ROMをクリアしました",
+  "systemPathsConfiguration": "システムパス構成",
+  "migrateRoms": "ROMを移行?",
+  "migrateRomsDescription": "ROMの永続ストレージパスが$oldPathから$newPathに変更されました。既存のROMを新しい場所に移行しますか?",
+  "noKeepThem": "いいえ、保持",
+  "yesMigrateRoms": "はい、ROMを移行",
+  "migratingRoms": "ROMを移行中...",
+  "romMigrationFailed": "警告: ROMの移行に失敗しました",
+  "pathsSaved": "パスが正常に保存されました",
+  "errorSavingPaths": "パス保存エラー:",
+  "resetConfiguration": "構成をリセット",
+  "resetConfigDescription": "すべてのパスをデフォルト値にリセットします。ROMとメディアファイルは影響を受けません。",
+  "configurationReset": "構成がデフォルトにリセットされました",
+  "errorResettingConfiguration": "構成リセットエラー:",
+  "savePaths": "パスを保存",
+  "saving": "保存中...",
+  "emulatorManagement": "エミュレーター管理",
+  "configurationReloaded": "構成が再読み込みされました",
+  "errorLoadingEmulators": "エミュレーター読み込みエラー:",
+  "emulatorAdded": "エミュレーターが正常に追加されました",
+  "errorAddingEmulator": "エミュレーター追加エラー:",
+  "emulatorUpdated": "エミュレーターが正常に更新されました",
+  "errorUpdatingEmulator": "エミュレーター更新エラー:",
+  "deleteEmulator": "エミュレーターを削除",
+  "emulatorDeleted": "エミュレーターが削除されました",
+  "errorDeletingEmulator": "エミュレーター削除エラー:",
+  "configurationSource": "構成ソース",
+  "addEmulator": "エミュレーターを追加",
+  "systemNameRequired": "システム名は必須です",
+  "commandRequired": "少なくとも1つのコマンドが必要です",
+  "addCommand": "コマンドを追加",
+  "acceptZipFiles": "ZIPファイルを受け入れる",
+  "acceptZipSubtitle": "ZIPアーカイブからROMを起動することを許可",
+  "useForeverMode": "Foreverモードを使用",
+  "useForeverSubtitle": "エミュレーターを実行し続ける",
+  "workInProgress": "作業中",
+  "wipSubtitle": "まだ完全に構成されていないとしてマーク",
+  "biosFirmwareHelp": "BIOSとファームウェアのヘルプ",
+  "downloadMissingFiles": "欠落ファイルをダウンロード",
+  "showOnlyMissing": "欠落のみ表示",
+  "downloadAllMissingBios": "すべての欠落BIOSをダウンロード",
+  "configurationError": "構成エラー",
+  "configurationErrorDescription": "アプリケーションが必要な構成を見つけられませんでした。\n設定>システムパスでパスを構成してください。",
+  "configurationRequired": "必須:\n- メデイアパス: メディアアセットを含むディレクトリ\n- エミュレーターパス: エミュレーターのバイナリを含むディレクトリ\n\nオプション:\n- 一時/永続的なダウンロード用のROMストレージパス",
+  "goToSettingsToConfigure": "設定>システムパスで構成するには移動",
+  "noDownloadableBios": "ダウンロード可能なBIOSファイルは欠落していません",
+  "allDownloadsCompleted": "すべてのダウンロードが正常に完了しました!",
+  "batchDownloadFailed": "バッチダウンロード失敗:",
+  "download": "ダウンロード",
+  "downloadCancelled": "ダウンロードがキャンセルされました",
+  "launched": "起動:",
+  "failedToSave": "ROMを永久に保存できませんでした",
+  "failedToSaveRom": "ROMを永久に保存できませんでした",
+  "errorSaving": "ROM保存エラー:",
+  "errorSavingRom": "ROM保存エラー: {error}",
+  "openFolder": "フォルダを開く",
+  "viewManual": "マニュアルを見る",
+  "play": "プレイ",
+  "goBack": "戻る",
+  "clearSearch": "検索をクリア",
+  "iUnderstand": "理解し、これらの条件に同意します",
+  "start": "開始",
+  "debugMode": "デバッグモード: ",
+  "toggleDebugMode": "デバッグモード切替",
+  "preparingDownload": "ダウンロードを準備中...",
+  "noEmulatorsAvailable": "このカテゴリには利用可能なエミュレーターがありません",
+  "failedToLaunch": "Webエミュレーターの起動に失敗しました:",
+  "platformInfo": "プラットフォーム情報",
+  "emulatorPlatformInfo": "エミュレータープラットフォーム情報",
   "favorites": "お気に入り",
   "all": "すべて",
   "collections": "コレクション",
   "searchRoms": "ROMを検索...",
   "searchPlatforms": "プラットフォームを検索...",
   "romsCount": "{count} ROM",
-  "platformsCount": "{count} プラットフォーム"
+  "platformsCount": "{count} プラットフォーム",
+  "region": "地域",
+  "genre": "ジャンル",
+  "year": "年",
+  "publisher": "発売元",
+  "developer": "開発者",
+  "playWithNetplay": "ネットプレイでプレイ",
+  "downloadBios": "BIOSをダウンロード",
+  "viewDetails": "詳細を見る",
+  "addToFavorites": "お気に入りに追加",
+  "removeFromFavorites": "お気に入りから削除",
+  "biosMissing": "BIOSが欠落",
+  "biosPresent": "BIOSが存在",
+  "checkingBios": "BIOSを確認中...",
+  "emulatorDownloading": "エミュレーターをダウンロード中...",
+  "emulatorDownloadComplete": "エミュレーターがダウンロードされました",
+  "emulatorDownloadFailed": "エミュレーターのダウンロードに失敗しました",
+  "installingEmulator": "エミュレーターをインストール中...",
+  "emulatorReady": "エミュレーター準備完了",
+  "configuration": "構成",
+  "paths": "パス",
+  "storage": "ストレージ",
+  "emulatorsPath": "エミュレーターへのパス",
+  "romsPath": "ROMへのパス",
+  "mediaPath": "メディアへのパス",
+  "biosPath": "BIOSへのパス",
+  "tempPath": "一時パス",
+  "browse": "参照",
+  "apply": "適用",
+  "reset": "リセット",
+  "clear": "クリア",
+  "scan": "スキャン",
+  "scanForRoms": "ROMをスキャン",
+  "scanningRoms": "ROMをスキャン中...",
+  "scanComplete": "スキャン完了",
+  "romsFound": "{count} ROMが見つかりました",
+  "noNewRomsFound": "新しいROMが見つかりません",
+  "launchEmulator": "エミュレーターを起動",
+  "emulatorError": "エミュレーターエラー",
+  "gamepadConnected": "ゲームパッド接続済み",
+  "gamepadDisconnected": "ゲームパッド切断",
+  "gamepadTest": "ゲームパッドテスト",
+  "pressAnyButton": "テストするには任意のボタンを押してください",
+  "buttonA": "A",
+  "buttonB": "B",
+  "buttonX": "X",
+  "buttonY": "Y",
+  "buttonStart": "Start",
+  "buttonSelect": "Select",
+  "dpadUp": "D-Pad 上",
+  "dpadDown": "D-Pad 下",
+  "dpadLeft": "D-Pad 左",
+  "dpadRight": "D-Pad 右",
+  "leftShoulder": "L1",
+  "rightShoulder": "R1",
+  "leftTrigger": "L2",
+  "rightTrigger": "R2",
+  "leftStick": "左スティック",
+  "rightStick": "右スティック",
+  "setupWizard": "セットアップウィザード",
+  "welcome": "ようこそ",
+  "welcomeMessage": "Forsaken Emulatorへようこそ",
+  "next": "次へ",
+  "previous": "前へ",
+  "finish": "完了",
+  "skip": "スキップ",
+  "setupComplete": "セットアップ完了",
+  "selectLanguage": "言語を選択",
+  "selectEmulatorsPath": "エミュレーターパスを選択",
+  "selectRomsPath": "ROMパスを選択",
+  "selectMediaPath": "メディアパスを選択",
+  "allSettingsConfigured": "すべての設定が完了しました",
+  "darkTheme": "ダーク",
+  "lightTheme": "ライト",
+  "systemTheme": "システム",
+  "about": "概要",
+  "checkForUpdates": "アップデートを確認",
+  "noUpdatesAvailable": "利用可能なアップデートはありません",
+  "updateAvailable": "アップデートが利用可能です",
+  "downloadingUpdate": "アップデートをダウンロード中...",
+  "installingUpdate": "アップデートをインストール中...",
+  "updateComplete": "アップデート完了",
+  "updateFailed": "アップデート失敗",
+  "networkError": "ネットワークエラー",
+  "connectionError": "接続エラー",
+  "timeoutError": "タイムアウトエラー",
+  "unknownError": "不明なエラー",
+  "permissionDenied": "権限が拒否されました",
+  "fileNotFound": "ファイルが見つかりません",
+  "directoryNotFound": "ディレクトリが見つかりません",
+  "diskFull": "ディスクがいっぱいです",
+  "invalidPath": "無効なパス",
+  "pathNotWritable": "パスが書き込み不可",
+  "romCorrupted": "ROMファイルが破損している可能性があります",
+  "zipError": "ZIPアーカイブエラー",
+  "extractionFailed": "展開に失敗しました",
+  "checksumMismatch": "チェックサム不一致",
+  "biosCheckFailed": "BIOSチェックに失敗しました",
+  "continueAnyway": "関係なく続行",
+  "reportIssue": "問題を報告",
+  "copyToClipboard": "クリップボードにコピー",
+  "copiedToClipboard": "クリップボードにコピーしました",
+  "share": "共有",
+  "hide": "非表示",
+  "show": "表示",
+  "toggleView": "表示切替",
+  "gridView": "グリッド表示",
+  "listView": "リスト表示",
+  "carouselView": "カルーセル表示",
+  "sortBy": "並び替え",
+  "sortByName": "名前",
+  "sortByDate": "日付",
+  "sortBySize": "サイズ",
+  "sortByRegion": "地域",
+  "ascending": "昇順",
+  "descending": "降順",
+  "filter": "フィルター",
+  "filterByRegion": "地域でフィルター",
+  "filterByGenre": "ジャンルでフィルター",
+  "filterByYear": "年でフィルター",
+  "clearFilters": "フィルターをクリア",
+  "systemInfo": "システム情報",
+  "cpu": "CPU",
+  "memory": "メモリ",
+  "storageInfo": "ストレージ",
+  "os": "オペレーティングシステム",
+  "emulatorVersion": "エミュレーターバージョン",
+  "totalRoms": "ROM合計",
+  "totalSize": "合計サイズ",
+  "freeSpace": "空き容量",
+  "usedSpace": "使用容量",
+  "systemUtilities": "システムユーティリティ",
+  "romVerificationResults": "ROM検証結果",
+  "totalRomFiles": "ROMファイル合計",
+  "emptyRomFiles": "空のROMファイル",
+  "validRomFiles": "有効なROMファイル",
+  "romsDirectoryDoesNotExist": "ROMディレクトリが存在しません",
+  "gamelistCheckResults": "ゲームリスト確認結果",
+  "totalPlatforms": "プラットフォーム合計",
+  "missingGamelists": "欠落ゲームリスト",
+  "configurationBackup": "構成バックアップ",
+  "configurationBackedUp": "構成がバックアップされました:",
+  "errorBackingUp": "構成バックアップエラー:",
+  "romDatabase": "ROMデータベース",
+  "romDatabaseDownloaded": "ROMデータベースが正常にダウンロードされました",
+  "failedDownloadRomDatabase": "ROMデータベースのダウンロードに失敗しました",
+  "romDatabaseCleared": "ROMデータベースがクリアされました",
+  "failedClearDatabase": "データベースのクリアに失敗しました",
+  "downloadRomDatabase": "ROMデータベースをダウンロード",
+  "clearRomDatabase": "ROMデータベースをクリア",
+  "systemRequirements": "システム要件",
+  "failedToCheckSystem": "システムチェックに失敗しました",
+  "cleanedUpTempFiles": "{deletedCount}の一時ROMファイルをクリーンアップしました",
+  "errorCleaningTempFiles": "一時ファイルクリーンアップエラー:",
+  "errorVerifyingRomFiles": "ROMファイル検証エラー:",
+  "errorCheckingGamelists": "ゲームリスト確認エラー:",
+  "cancelDownload": "ダウンロードをキャンセル",
+  "selectEmulator": "エミュレーターを選択",
+  "biosStatusDashboard": "BIOSステータスパネル",
+  "webSettings": "Web設定",
+  "saveSettings": "設定を保存",
+  "errorSavingSettings": "設定保存エラー:",
+  "romsCountItems": "{count} ROM",
+  "savedPermanently": "永久に保存されました",
+  "keptInTemporary": "一時ストレージに保持",
+  "tryAgain": "再試行",
+  "allDownloads": "すべてのダウンロードが完了しました",
+  "romSavedPermanently": "{name}が永久に保存されました",
+  "undo": "元に戻す",
+  "romKeptInTemporary": "{name}が一時ストレージに保持されました",
+  "romsCountWithSize": "{count} ROM • {size}",
+  "whatYouCanTry": "試せること:",
+  "tips": "ヒント",
+  "helpNavigateItems": "アイテム間を移動",
+  "helpGamepadNavigation": "ゲームパッドナビゲーション",
+  "helpQuickNavigation": "クイックナビゲーション (複数アイテムをスキップ)",
+  "helpGamepadPageNavigation": "ゲームパッドページナビゲーション",
+  "helpGoToFirst": "最初のアイテムへ移動",
+  "helpGoToLast": "最後のアイテムへ移動",
+  "helpJumpToLetter": "その文字で始まるアイテムへスキップ",
+  "helpSelectItem": "アイテムを選択",
+  "helpGamepadSelect": "ゲームパッド選択",
+  "helpGoBackCloseDialogs": "戻る / ダイアログを閉じる",
+  "helpExitApplication": "アプリケーションを終了",
+  "helpGamepadBackClose": "ゲームパッド戻る / ダイアログを閉じる",
+  "helpToggleViewMode": "表示モード切替 (グリッド/リスト/カルーセル)",
+  "helpGamepadViewToggle": "ゲームパッドで表示を切替",
+  "helpRefreshView": "現在の表示を更新",
+  "helpShowPlatformInfo": "プラットフォーム情報を表示",
+  "helpActivateSearch": "検索をアクティブ化",
+  "helpGamepadSearch": "ゲームパッド検索",
+  "helpShowHelpDialog": "このヘルプダイアログを表示",
+  "helpGamepadHelp": "ゲームパッドヘルプ",
+  "tipUseKeyboardOrGamepad": "ナビゲーションにはキーボードまたはゲームパッドを使用",
+  "tipAlphabeticalJump": "アルファベットスキップはすべての表示モードで機能します",
+  "tipPressQuestionMark": "このヘルプを表示するには?を押してください",
+  "tipGamepadAlongside": "ゲームパッドはキーボード操作と一緒に動作します",
+  "configurePathsDescription": "ROM、メディア、エミュレーターを見つけるためにアプリケーションが使用するパスを構成します。",
+  "romListsAutoManaged": "ROMリストは自動的に管理されるようになりました。設定>ROMデータベースからダウンロードしてください。",
+  "romStorage": "ROMストレージ",
+  "configureRomStorageDescription": "ダウンロードしたROMを一時的および永続的に保存する場所を構成します。",
+  "resetToDefaults": "デフォルトにリセット",
+  "mediaPathLabel": "メディアパス",
+  "mediaPathHint": "メディア (画像、ビデオ) を含むディレクトリ",
+  "emulatorsPathLabel": "エミュレーターパス",
+  "emulatorsPathHint": "エミュレーターのバイナリを含むディレクトリ",
+  "gamelistPathAutomatic": "ゲームリストパス (自動)",
+  "gamelistAutoDescription": "ゲームリストはアプリのデータディレクトリで自動的に管理されるようになりました。これにより、アプリは完全に独立し、将来のGitHubベースのゲームリスト配布の準備ができます。",
+  "tempRomStorageLabel": "一時ROMストレージ (オプション)",
+  "tempRomStorageDescription": "ROMはまずここにダウンロードされます。プレイ後に永続ストレージに昇格できます。",
+  "permanentRomStorageLabel": "永続ROMストレージ (オプション)",
+  "permanentRomStorageDescription": "永久に保存されたROMはここに保存されます。これらは自動的にクリーンアップされません。",
+  "defaultAppSupportDir": "デフォルト: アプリサポートディレクトリ",
+  "currentPathDisplay": "現在: {path}",
+  "configurationFile": "構成ファイル",
+  "source": "ソース:",
+  "customConfigActive": "カスタム構成アクティブ",
+  "pathStructure": "パス構造",
+  "pathStructureDescription": "メデイアパス: MEDIA_PATH/プラットフォーム/boxart|screenshots|videos/rom.png\nゲームリストパス: ~/.local/share/com.example.emulator/gamelists/プラットフォーム/gamelist.xml (自動)\nエミュレーターパス: EMULATORS_PATH/emulator_binary",
+  "errorCheckingSystem": "システム確認エラー",
+  "recheckR": "再確認 (R)",
+  "allRequiredToolsInstalled": "すべての必要なツールがインストール済み",
+  "missingRequiredTools": "必要なツールが欠落",
+  "systemReadyToUse": "システムはエミュレーターを使用 готовです",
+  "someRequiredToolsMissing": "一部の必要なツールが欠落しています",
+  "requiredTools": "必要なツール",
+  "requiredToolsDescription": "これらのツールはエミュレーターのダウンロードと展開に必要です",
+  "installationInstructions": "インストール手順",
+  "installed": "インストール済み",
+  "missing": "欠落",
+  "downloadEmulatorsAndGameLists": "エミュレーターとゲームリストをダウンロード",
+  "quickActions": "クイックアクション",
+  "downloadAll": "すべてダウンロード",
+  "byCategory": "カテゴリ別",
+  "downloadQueue": "ダウンロードキュー",
+  "noDownloadsInProgress": "進行中のダウンロードはありません",
+  "selectQuickActionToStart": "ダウンロードを開始するには上のクイックアクションを選択",
+  "categorySony": "Sony (PS1-PS4)",
+  "categoryNintendo": "Nintendo (GC, Wii, Switch)",
+  "categoryMicrosoft": "Microsoft (Xbox, Xbox 360)",
+  "categoryMultiPlatform": "マルチプラットフォーム (RetroArch)",
+  "categoryOtherEmulators": "その他のエミュレーター",
+  "categoryUtilities": "ユーティリティ",
+  "confirmDownloadDescription": "{count}個のエミュレーターをダウンロード?\n推定サイズ: ~{size} MB\n\nインターネット接続によっては時間がかかる場合があります。",
+  "alreadyInstalled": "既にインストール済み",
+  "starting": "起動中...",
+  "completed": "完了",
+  "gameListsAlreadyDownloaded": "ゲームリストは既にダウンロード済みです",
+  "redownload": "再ダウンロード",
+  "gameListsFromGitHub": "ゲームリスト (GitHubから)",
+  "downloaded": "ダウンロード済み",
+  "cancelled": "キャンセル済み",
+  "missingFor": "欠落:",
+  "noCustomConfigToBackup": "バックアップするカスタム構成はありません。デフォルトを使用します。",
+  "saveConfigurationBackup": "構成バックアップを保存",
+  "refreshStatsR": "統計を更新 (R)",
+  "systemStatistics": "システム統計",
+  "romFiles": "ROMファイル",
+  "maintenanceTools": "メンテナンスツール",
+  "cleanupTemporaryRoms": "一時ROMをクリーンアップ",
+  "cleanupTemporaryRomsDescription": "システムの一時ディレクトリから一時ROMファイルを削除",
+  "verifyRomFiles": "ROMファイルを検証",
+  "verifyRomFilesDescription": "すべてのROMファイルが存在し、有効であることを確認",
+  "checkMissingGamelists": "欠落ゲームリストを確認",
+  "checkMissingGamelistsDescription": "gamelist.xmlファイルがないプラットフォームを見つける",
+  "backupConfiguration": "構成をバックアップ",
+  "backupConfigurationDescription": "config.jsonのバックアップを作成",
+  "downloadingRomDatabase": "ROMデータベースをダウンロード中...",
+  "downloadMayTakeMinutes": "接続によっては数分かかる場合があります...",
+  "databaseStatus": "データベースステータス",
+  "notDownloaded": "未ダウンロード",
+  "aboutRomDatabase": "ROMデータベースについて",
+  "aboutRomDatabaseDescription": "ROMデータベースには、プラットフォーム別に整理された利用可能なROMのリストが含まれています。GitHubのForsaken romListリポジトリからダウンロードされます。",
+  "romDatabaseSource": "ソース: github.com/ForsakenStation/romList",
+  "downloadRomDatabaseDescription": "GitHubのForsaken romListリポジトリからROMリストをダウンロードします。",
+  "downloadRomDatabaseStats": "サイズ: ~7 MB\nプラットフォーム: 138\nROM合計: ~240,000",
+  "downloadWillOverwrite": "注意: 既存のデータが上書きされます。",
+  "clearRomDatabaseDescription": "すべてのダウンロードされたROMリストが削除され、データベースが初期状態にリセットされます。",
+  "gamelistsStatus": "ゲームリストステータス",
+  "gamelistsDownloaded": "ダウンロード済み",
+  "gamelistsNotDownloaded": "未ダウンロード",
+  "aboutGamelists": "ゲームリストについて",
+  "aboutGamelistsDescription": "ゲームリストには、各プラットフォームのゲームメタデータ (名前、説明、評価) が含まれます。GitHubのForsaken gamelistsリポジトリからダウンロードされます。",
+  "gamelistsSource": "ソース: github.com/ForsakenStation/gamelists",
+  "downloadGamelists": "ゲームリストをダウンロード",
+  "downloadGamelistsDescription": "GitHubのForsaken gamelistsリポジトリからgamelist.xmlファイルをダウンロードします。",
+  "downloadGamelistsWillOverwrite": "注意: 既存のゲームリストファイルが上書きされます。",
+  "downloadingGamelists": "ゲームリストをダウンロード中...",
+  "gamelistsDownloadedSuccess": "ゲームリストが正常にダウンロードされました",
+  "failedDownloadGamelists": "ゲームリストのダウンロードに失敗しました",
+  "clearGamelists": "ゲームリストをクリア",
+  "clearGamelistsDescription": "すべてのダウンロードされたゲームリストファイルが削除されます。",
+  "gamelistsCleared": "ゲームリストがクリアされました",
+  "failedClearGamelists": "ゲームリストのクリアに失敗しました",
+  "rebuildMediaCache": "メディアキャッシュを再構築",
+  "rebuildMediaCacheDescription": "メディアディレクトリをスキャンし、ゲームリストにパスをキャッシュして高速読み込み",
+  "rebuildMediaCacheConfirmTitle": "メディアキャッシュを再構築?",
+  "rebuildMediaCacheConfirmBody": "すべてのメディアディレクトリをスキャンし、gamelist.xmlファイルをメディアパスで更新します。大きなコレクションには時間がかかる場合があります。",
+  "rebuildMediaCacheProgress": "メディアキャッシュを再構築中...",
+  "rebuildMediaCacheProcessingPlatform": "{platform}を処理中 ({current}/{total})",
+  "rebuildMediaCacheComplete": "メディアキャッシュ再構築完了",
+  "rebuildMediaCacheSummary": "{platforms}プラットフォーム、{games}ゲームスキャン、{updated}更新、{paths}メデイアパスキャッシュ済み",
+  "rebuildMediaCacheError": "メディアキャッシュの再構築に失敗しました",
+  "rebuildMediaCacheErrors": "再構築中に{count}個のエラーが発生しました",
+  "@locale": "en",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "@retroGamingFrontend": {
+    "description": "Subtitle shown on initializing screen"
+  },
+  "@deleteRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleted": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@moveRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@saved": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@errorSavingRom": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@platformsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@romsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@cleanedUpTempFiles": {
+    "placeholders": {
+      "deletedCount": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountItems": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "@romSavedPermanently": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romKeptInTemporary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountWithSize": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@currentPathDisplay": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "@confirmDownloadDescription": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheProcessingPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheSummary": {
+    "placeholders": {
+      "platforms": {
+        "type": "String"
+      },
+      "games": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      },
+      "paths": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheErrors": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  }
 }

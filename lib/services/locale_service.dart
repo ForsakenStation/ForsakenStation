@@ -19,6 +19,9 @@ class LocaleService {
     Locale('ko'),
     Locale('ar'),
     Locale('ru'),
+    Locale('ca'),
+    Locale('eu'),
+    Locale('gl'),
   ];
 
   static const Map<String, String> localeNames = {
@@ -33,6 +36,9 @@ class LocaleService {
     'ko': '한국어',
     'ar': 'العربية',
     'ru': 'Русский',
+    'ca': 'Català',
+    'eu': 'Euskera',
+    'gl': 'Galego',
   };
 
   static const Map<String, String> localeCountryCodes = {
@@ -47,6 +53,9 @@ class LocaleService {
     'ko': 'KR',
     'ar': 'SA',
     'ru': 'RU',
+    'ca': 'CA',
+    'eu': 'EU',
+    'gl': 'GL',
   };
 
   Locale? _currentLocale;

@@ -1,15 +1,23 @@
 {
   "@@locale": "ru",
   "appTitle": "Forsaken Emulator",
+  "retroGamingFrontend": "Ретро-игровой интерфейс",
   "platforms": "Платформы",
   "roms": "РОМы",
   "settings": "Настройки",
+  "settingsAndConfiguration": "Настройки и конфигурация",
+  "aboutForsakenEmulator": "О Forsaken Emulator",
+  "version": "Версия",
+  "appDescription": "Современный мультиплатформенный эмуляторный интерфейс, построенный на Flutter.",
+  "emulators": "Эмуляторы",
+  "ready": "Готов",
   "back": "Назад",
   "select": "Выбрать",
   "search": "Поиск",
   "refresh": "Обновить",
   "loading": "Загрузка...",
   "error": "Ошибка",
+  "initializationError": "Ошибка инициализации",
   "retry": "Повторить",
   "cancel": "Отмена",
   "ok": "ОК",
@@ -21,6 +29,7 @@
   "close": "Закрыть",
   "noRomsFound": "РОМы не найдены",
   "noPlatformsFound": "Платформы не найдены",
+  "checkRomsPath": "Проверьте переменную окружения ROMS_PATH",
   "downloading": "Загрузка...",
   "downloadComplete": "Загрузка завершена",
   "downloadFailed": "Ошибка загрузки",
@@ -32,13 +41,562 @@
   "theme": "Тема",
   "systemDefault": "Системная",
   "help": "Помощь",
+  "keyboardAndGamepadControls": "Управление клавиатурой и геймпадом",
+  "navigation": "Навигация",
+  "actions": "Действия",
+  "viewControls": "Управление вида",
+  "gotIt": "Понятно!",
   "exit": "Выход",
+  "exitApplication": "Выйти из приложения",
   "exitConfirm": "Вы уверены, что хотите выйти?",
+  "downloadManager": "Менеджер загрузок",
+  "clearCompleted": "Очистить завершённые",
+  "selectCategory": "Выбрать категорию",
+  "confirmDownload": "Подтвердить загрузку",
+  "downloadGameLists": "Загрузить списки игр",
+  "downloadGameListsDescription": "Это загрузит списки РОМов с GitHub.",
+  "gameListsDownloaded": "Списки игр загружены!",
+  "romStorageManagement": "Управление хранилищем РОМов",
+  "deleteRom": "Удалить РОМ?",
+  "deleteRomConfirm": "Удалить {fileName}?",
+  "actionCannotBeUndone": "Это действие нельзя отменить.",
+  "deleted": "Удалено: {fileName}",
+  "savePermanently": "Сохранить навсегда?",
+  "moveRomConfirm": "Переместить {fileName} в постоянное хранилище?",
+  "saved": "Сохранено: {fileName}",
+  "clearAll": "Очистить всё?",
+  "clearAllConfirm": "Удалить все временные РОМы?",
+  "allCleared": "Все временные РОМы очищены",
+  "systemPathsConfiguration": "Конфигурация системных путей",
+  "migrateRoms": "Мигрировать РОМы?",
+  "migrateRomsDescription": "Путь постоянного хранения РОМов изменился с $oldPath на $newPath. Хотите перенести существующие РОМы в новое место?",
+  "noKeepThem": "Нет, оставить",
+  "yesMigrateRoms": "Да, мигрировать РОМы",
+  "migratingRoms": "Миграция РОМов...",
+  "romMigrationFailed": "Предупреждение: миграция РОМов не удалась",
+  "pathsSaved": "Пути сохранены успешно",
+  "errorSavingPaths": "Ошибка сохранения путей:",
+  "resetConfiguration": "Сбросить конфигурацию",
+  "resetConfigDescription": "Это сбросит все пути к значениям по умолчанию. Ваши РОМы и медиафайлы не будут затронуты.",
+  "configurationReset": "Конфигурация сброшена к значениям по умолчанию",
+  "errorResettingConfiguration": "Ошибка сброса конфигурации:",
+  "savePaths": "Сохранить пути",
+  "saving": "Сохранение...",
+  "emulatorManagement": "Управление эмуляторами",
+  "configurationReloaded": "Конфигурация перезагружена",
+  "errorLoadingEmulators": "Ошибка загрузки эмуляторов:",
+  "emulatorAdded": "Эмулятор успешно добавлен",
+  "errorAddingEmulator": "Ошибка добавления эмулятора:",
+  "emulatorUpdated": "Эмулятор успешно обновлён",
+  "errorUpdatingEmulator": "Ошибка обновления эмулятора:",
+  "deleteEmulator": "Удалить эмулятор",
+  "emulatorDeleted": "Эмулятор удалён",
+  "errorDeletingEmulator": "Ошибка удаления эмулятора:",
+  "configurationSource": "Источник конфигурации",
+  "addEmulator": "Добавить эмулятор",
+  "systemNameRequired": "Имя системы обязательно",
+  "commandRequired": "Требуется хотя бы одна команда",
+  "addCommand": "Добавить команду",
+  "acceptZipFiles": "Принимать ZIP-файлы",
+  "acceptZipSubtitle": "Разрешить запуск РОМов из ZIP-архивов",
+  "useForeverMode": "Использовать режим Forever",
+  "useForeverSubtitle": "Держать эмулятор запущенным",
+  "workInProgress": "В работе",
+  "wipSubtitle": "Отметить как ещё не полностью настроенный",
+  "biosFirmwareHelp": "Помощь по BIOS и прошивке",
+  "downloadMissingFiles": "Загрузить отсутствующие файлы",
+  "showOnlyMissing": "Показать только отсутствующие",
+  "downloadAllMissingBios": "Загрузить все отсутствующие BIOS",
+  "configurationError": "Ошибка конфигурации",
+  "configurationErrorDescription": "Приложение не смогло найти требуемую конфигурацию.\nПожалуйста, настройте пути в Настройки > Системные пути.",
+  "configurationRequired": "Требуется:\n- Путь к медиа: директория с медиа-ассетами\n- Путь к эмуляторам: директория с исполняемыми файлами эмуляторов\n\nНеобязательно:\n- Пути хранилища РОМов для временных/постоянных загрузок",
+  "goToSettingsToConfigure": "Перейдите в Настройки > Системные пути для настройки",
+  "noDownloadableBios": "Нет отсутствующих загружаемых BIOS-файлов",
+  "allDownloadsCompleted": "Все загрузки успешно завершены!",
+  "batchDownloadFailed": "Пакетная загрузка не удалась:",
+  "download": "Загрузить",
+  "downloadCancelled": "Загрузка отменена",
+  "launched": "Запущен:",
+  "failedToSave": "Не удалось сохранить РОМ навсегда",
+  "failedToSaveRom": "Не удалось сохранить РОМ навсегда",
+  "errorSaving": "Ошибка сохранения РОМа:",
+  "errorSavingRom": "Ошибка сохранения РОМа: {error}",
+  "openFolder": "Открыть папку",
+  "viewManual": "Посмотреть руководство",
+  "play": "Играть",
+  "goBack": "Вернуться",
+  "clearSearch": "Очистить поиск",
+  "iUnderstand": "Я понимаю и согласен с этими условиями",
+  "start": "Начать",
+  "debugMode": "Режим отладки: ",
+  "toggleDebugMode": "Переключить режим отладки",
+  "preparingDownload": "Подготовка загрузки...",
+  "noEmulatorsAvailable": "Нет доступных эмуляторов для этой категории",
+  "failedToLaunch": "Не удалось запустить веб-эмулятор:",
+  "platformInfo": "Информация о платформе",
+  "emulatorPlatformInfo": "Информация о платформе эмулятора",
   "favorites": "Избранное",
   "all": "Все",
   "collections": "Коллекции",
   "searchRoms": "Поиск РОМов...",
   "searchPlatforms": "Поиск платформ...",
   "romsCount": "{count} РОМов",
-  "platformsCount": "{count} платформ"
+  "platformsCount": "{count} платформ",
+  "region": "Регион",
+  "genre": "Жанр",
+  "year": "Год",
+  "publisher": "Издатель",
+  "developer": "Разработчик",
+  "playWithNetplay": "Играть по сети",
+  "downloadBios": "Загрузить BIOS",
+  "viewDetails": "Подробнее",
+  "addToFavorites": "Добавить в избранное",
+  "removeFromFavorites": "Удалить из избранного",
+  "biosMissing": "BIOS отсутствует",
+  "biosPresent": "BIOS присутствует",
+  "checkingBios": "Проверка BIOS...",
+  "emulatorDownloading": "Загрузка эмулятора...",
+  "emulatorDownloadComplete": "Эмулятор загружен",
+  "emulatorDownloadFailed": "Ошибка загрузки эмулятора",
+  "installingEmulator": "Установка эмулятора...",
+  "emulatorReady": "Эмулятор готов",
+  "configuration": "Конфигурация",
+  "paths": "Пути",
+  "storage": "Хранилище",
+  "emulatorsPath": "Путь к эмуляторам",
+  "romsPath": "Путь к РОМам",
+  "mediaPath": "Путь к медиа",
+  "biosPath": "Путь к BIOS",
+  "tempPath": "Временный путь",
+  "browse": "Обзор",
+  "apply": "Применить",
+  "reset": "Сбросить",
+  "clear": "Очистить",
+  "scan": "Сканировать",
+  "scanForRoms": "Сканировать РОМы",
+  "scanningRoms": "Сканирование РОМов...",
+  "scanComplete": "Сканирование завершено",
+  "romsFound": "Найдено {count} РОМов",
+  "noNewRomsFound": "Новые РОМы не найдены",
+  "launchEmulator": "Запустить эмулятор",
+  "emulatorError": "Ошибка эмулятора",
+  "gamepadConnected": "Геймпад подключён",
+  "gamepadDisconnected": "Геймпад отключён",
+  "gamepadTest": "Тест геймпада",
+  "pressAnyButton": "Нажмите любую кнопку для теста",
+  "buttonA": "A",
+  "buttonB": "B",
+  "buttonX": "X",
+  "buttonY": "Y",
+  "buttonStart": "Start",
+  "buttonSelect": "Select",
+  "dpadUp": "D-Pad Вверх",
+  "dpadDown": "D-Pad Вниз",
+  "dpadLeft": "D-Pad Влево",
+  "dpadRight": "D-Pad Вправо",
+  "leftShoulder": "L1",
+  "rightShoulder": "R1",
+  "leftTrigger": "L2",
+  "rightTrigger": "R2",
+  "leftStick": "Левый стик",
+  "rightStick": "Правый стик",
+  "setupWizard": "Мастер настройки",
+  "welcome": "Добро пожаловать",
+  "welcomeMessage": "Добро пожаловать в Forsaken Emulator",
+  "next": "Далее",
+  "previous": "Назад",
+  "finish": "Завершить",
+  "skip": "Пропустить",
+  "setupComplete": "Настройка завершена",
+  "selectLanguage": "Выбрать язык",
+  "selectEmulatorsPath": "Выбрать путь к эмуляторам",
+  "selectRomsPath": "Выбрать путь к РОМам",
+  "selectMediaPath": "Выбрать путь к медиа",
+  "allSettingsConfigured": "Все настройки настроены",
+  "darkTheme": "Тёмная",
+  "lightTheme": "Светлая",
+  "systemTheme": "Системная",
+  "about": "О приложении",
+  "checkForUpdates": "Проверить обновления",
+  "noUpdatesAvailable": "Нет доступных обновлений",
+  "updateAvailable": "Доступно обновление",
+  "downloadingUpdate": "Загрузка обновления...",
+  "installingUpdate": "Установка обновления...",
+  "updateComplete": "Обновление завершено",
+  "updateFailed": "Обновление не удалось",
+  "networkError": "Ошибка сети",
+  "connectionError": "Ошибка соединения",
+  "timeoutError": "Превышен таймаут",
+  "unknownError": "Неизвестная ошибка",
+  "permissionDenied": "Доступ запрещён",
+  "fileNotFound": "Файл не найден",
+  "directoryNotFound": "Директория не найдена",
+  "diskFull": "Диск заполнен",
+  "invalidPath": "Неверный путь",
+  "pathNotWritable": "Путь недоступен для записи",
+  "romCorrupted": "Файл РОМа может быть повреждён",
+  "zipError": "Ошибка ZIP-архива",
+  "extractionFailed": "Ошибка извлечения",
+  "checksumMismatch": "Несовпадение контрольной суммы",
+  "biosCheckFailed": "Проверка BIOS не удалась",
+  "continueAnyway": "Продолжить всё равно",
+  "reportIssue": "Сообщить о проблеме",
+  "copyToClipboard": "Копировать в буфер обмена",
+  "copiedToClipboard": "Скопировано в буфер обмена",
+  "share": "Поделиться",
+  "hide": "Скрыть",
+  "show": "Показать",
+  "toggleView": "Переключить вид",
+  "gridView": "Сетка",
+  "listView": "Список",
+  "carouselView": "Карусель",
+  "sortBy": "Сортировать по",
+  "sortByName": "Имя",
+  "sortByDate": "Дата",
+  "sortBySize": "Размер",
+  "sortByRegion": "Регион",
+  "ascending": "По возрастанию",
+  "descending": "По убыванию",
+  "filter": "Фильтр",
+  "filterByRegion": "Фильтр по региону",
+  "filterByGenre": "Фильтр по жанру",
+  "filterByYear": "Фильтр по году",
+  "clearFilters": "Очистить фильтры",
+  "systemInfo": "Системная информация",
+  "cpu": "ЦП",
+  "memory": "Память",
+  "storageInfo": "Хранилище",
+  "os": "Операционная система",
+  "emulatorVersion": "Версия эмулятора",
+  "totalRoms": "Всего РОМов",
+  "totalSize": "Общий размер",
+  "freeSpace": "Свободно",
+  "usedSpace": "Использовано",
+  "systemUtilities": "Системные утилиты",
+  "romVerificationResults": "Результаты проверки РОМов",
+  "totalRomFiles": "Всего файлов РОМ",
+  "emptyRomFiles": "Пустые файлы РОМ",
+  "validRomFiles": "Валидные файлы РОМ",
+  "romsDirectoryDoesNotExist": "Директория РОМов не существует",
+  "gamelistCheckResults": "Результаты проверки списков игр",
+  "totalPlatforms": "Всего платформ",
+  "missingGamelists": "Отсутствующие списки игр",
+  "configurationBackup": "Резервная копия конфигурации",
+  "configurationBackedUp": "Конфигурация сохранена в:",
+  "errorBackingUp": "Ошибка сохранения конфигурации:",
+  "romDatabase": "База данных РОМов",
+  "romDatabaseDownloaded": "База данных РОМов успешно загружена",
+  "failedDownloadRomDatabase": "Ошибка загрузки базы данных РОМов",
+  "romDatabaseCleared": "База данных РОМов очищена",
+  "failedClearDatabase": "Ошибка очистки базы данных",
+  "downloadRomDatabase": "Загрузить базу данных РОМов",
+  "clearRomDatabase": "Очистить базу данных РОМов",
+  "systemRequirements": "Системные требования",
+  "failedToCheckSystem": "Не удалось проверить систему",
+  "cleanedUpTempFiles": "Очищено {deletedCount} временных файлов РОМ",
+  "errorCleaningTempFiles": "Ошибка очистки временных файлов:",
+  "errorVerifyingRomFiles": "Ошибка проверки файлов РОМ:",
+  "errorCheckingGamelists": "Ошибка проверки списков игр:",
+  "cancelDownload": "Отменить загрузку",
+  "selectEmulator": "Выбрать эмулятор",
+  "biosStatusDashboard": "Панель статуса BIOS",
+  "webSettings": "Веб-настройки",
+  "saveSettings": "Сохранить настройки",
+  "errorSavingSettings": "Ошибка сохранения настроек:",
+  "romsCountItems": "{count} РОМов",
+  "savedPermanently": "сохранено навсегда",
+  "keptInTemporary": "оставлено во временном хранилище",
+  "tryAgain": "Повторить",
+  "allDownloads": "Все загрузки завершены",
+  "romSavedPermanently": "{name} сохранён навсегда",
+  "undo": "Отменить",
+  "romKeptInTemporary": "{name} оставлен во временном хранилище",
+  "romsCountWithSize": "{count} РОМов • {size}",
+  "whatYouCanTry": "Что можно попробовать:",
+  "tips": "Советы",
+  "helpNavigateItems": "Навигация между элементами",
+  "helpGamepadNavigation": "Навигация геймпадом",
+  "helpQuickNavigation": "Быстрая навигация (пропуск нескольких элементов)",
+  "helpGamepadPageNavigation": "Навигация по страницам геймпадом",
+  "helpGoToFirst": "Перейти к первому элементу",
+  "helpGoToLast": "Перейти к последнему элементу",
+  "helpJumpToLetter": "Перейти к элементу, начинающемуся с этой буквы",
+  "helpSelectItem": "Выбрать элемент",
+  "helpGamepadSelect": "Выбор геймпадом",
+  "helpGoBackCloseDialogs": "Назад / Закрыть диалоги",
+  "helpExitApplication": "Выйти из приложения",
+  "helpGamepadBackClose": "Геймпад назад / Закрыть диалоги",
+  "helpToggleViewMode": "Переключить режим вида (Сетка/Список/Карусель)",
+  "helpGamepadViewToggle": "Переключить вид геймпадом",
+  "helpRefreshView": "Обновить текущий вид",
+  "helpShowPlatformInfo": "Показать информацию о платформе",
+  "helpActivateSearch": "Активировать поиск",
+  "helpGamepadSearch": "Поиск геймпадом",
+  "helpShowHelpDialog": "Показать это окно помощи",
+  "helpGamepadHelp": "Помощь по геймпаду",
+  "tipUseKeyboardOrGamepad": "Используйте клавиатуру или геймпад для навигации",
+  "tipAlphabeticalJump": "Алфавитный прыжок работает во всех режимах вида",
+  "tipPressQuestionMark": "Нажмите ? в любое время, чтобы увидеть эту помощь",
+  "tipGamepadAlongside": "Геймпад работает вместе с клавиатурой",
+  "configurePathsDescription": "Настройте пути, используемые приложением для поиска РОМов, медиа и эмуляторов.",
+  "romListsAutoManaged": "Списки РОМов теперь управляются автоматически. Загрузите их в Настройки > База данных РОМов.",
+  "romStorage": "Хранилище РОМов",
+  "configureRomStorageDescription": "Настройте, где загруженные РОМы хранятся временно и постоянно.",
+  "resetToDefaults": "Сбросить к значениям по умолчанию",
+  "mediaPathLabel": "Путь к медиа",
+  "mediaPathHint": "Директория с медиа (изображения, видео)",
+  "emulatorsPathLabel": "Путь к эмуляторам",
+  "emulatorsPathHint": "Директория с исполняемыми файлами эмуляторов",
+  "gamelistPathAutomatic": "Путь к спискам игр (автоматически)",
+  "gamelistAutoDescription": "Списки игр теперь автоматически управляются в директории данных приложения. Это делает приложение полностью автономным и готовит к будущему распространению списков игр через GitHub.",
+  "tempRomStorageLabel": "Временное хранилище РОМов (опционально)",
+  "tempRomStorageDescription": "РОМы сначала загружаются сюда. После игры их можно переместить в постоянное хранилище.",
+  "permanentRomStorageLabel": "Постоянное хранилище РОМов (опционально)",
+  "permanentRomStorageDescription": "РОМы, сохранённые навсегда, хранятся здесь. Они не очищаются автоматически.",
+  "defaultAppSupportDir": "По умолчанию: директория поддержки приложения",
+  "currentPathDisplay": "Текущий: {path}",
+  "configurationFile": "Файл конфигурации",
+  "source": "Источник:",
+  "customConfigActive": "Пользовательская конфигурация активна",
+  "pathStructure": "Структура путей",
+  "pathStructureDescription": "Путь к медиа: MEDIA_PATH/платформа/boxart|screenshots|videos/rom.png\nПуть к спискам игр: ~/.local/share/com.example.emulator/gamelists/платформа/gamelist.xml (автоматически)\nПуть к эмуляторам: EMULATORS_PATH/emulator_binary",
+  "errorCheckingSystem": "Ошибка проверки системы",
+  "recheckR": "Перепроверить (R)",
+  "allRequiredToolsInstalled": "Все необходимые инструменты установлены",
+  "missingRequiredTools": "Отсутствуют необходимые инструменты",
+  "systemReadyToUse": "Ваша система готова к использованию эмулятора",
+  "someRequiredToolsMissing": "Некоторые необходимые инструменты отсутствуют",
+  "requiredTools": "Необходимые инструменты",
+  "requiredToolsDescription": "Эти инструменты необходимы для загрузки и распаковки эмуляторов",
+  "installationInstructions": "Инструкции по установке",
+  "installed": "Установлено",
+  "missing": "Отсутствует",
+  "downloadEmulatorsAndGameLists": "Загрузить эмуляторы и списки игр",
+  "quickActions": "Быстрые действия",
+  "downloadAll": "Загрузить всё",
+  "byCategory": "По категориям",
+  "downloadQueue": "Очередь загрузок",
+  "noDownloadsInProgress": "Нет загрузок",
+  "selectQuickActionToStart": "Выберите быстрое действие выше, чтобы начать загрузку",
+  "categorySony": "Sony (PS1-PS4)",
+  "categoryNintendo": "Nintendo (GC, Wii, Switch)",
+  "categoryMicrosoft": "Microsoft (Xbox, Xbox 360)",
+  "categoryMultiPlatform": "Мультиплатформенные (RetroArch)",
+  "categoryOtherEmulators": "Другие эмуляторы",
+  "categoryUtilities": "Утилиты",
+  "confirmDownloadDescription": "Загрузить {count} эмулятор(ов)?\nПримерный размер: ~{size} МБ\n\nЭто может занять некоторое время в зависимости от вашего интернет-соединения.",
+  "alreadyInstalled": "Уже установлено",
+  "starting": "Запуск...",
+  "completed": "Завершено",
+  "gameListsAlreadyDownloaded": "Списки игр уже загружены",
+  "redownload": "Перезагрузить",
+  "gameListsFromGitHub": "Списки игр (с GitHub)",
+  "downloaded": "Загружено",
+  "cancelled": "Отменено",
+  "missingFor": "Отсутствует для:",
+  "noCustomConfigToBackup": "Нет пользовательской конфигурации для резервного копирования. Используются значения по умолчанию.",
+  "saveConfigurationBackup": "Сохранить резервную копию конфигурации",
+  "refreshStatsR": "Обновить статистику (R)",
+  "systemStatistics": "Системная статистика",
+  "romFiles": "Файлы РОМ",
+  "maintenanceTools": "Инструменты обслуживания",
+  "cleanupTemporaryRoms": "Очистить временные РОМы",
+  "cleanupTemporaryRomsDescription": "Удалить временные файлы РОМ из системной временной директории",
+  "verifyRomFiles": "Проверить файлы РОМ",
+  "verifyRomFilesDescription": "Проверить, что все файлы РОМ существуют и валидны",
+  "checkMissingGamelists": "Проверить отсутствующие списки игр",
+  "checkMissingGamelistsDescription": "Найти платформы без файлов gamelist.xml",
+  "backupConfiguration": "Резервная копия конфигурации",
+  "backupConfigurationDescription": "Создать резервную копию config.json",
+  "downloadingRomDatabase": "Загрузка базы данных РОМов...",
+  "downloadMayTakeMinutes": "Это может занять несколько минут в зависимости от вашего соединения...",
+  "databaseStatus": "Статус базы данных",
+  "notDownloaded": "Не загружено",
+  "aboutRomDatabase": "О базе данных РОМов",
+  "aboutRomDatabaseDescription": "База данных РОМов содержит списки доступных РОМов, организованные по платформам. Она загружается из репозитория romList Forsaken на GitHub.",
+  "romDatabaseSource": "Источник: github.com/ForsakenStation/romList",
+  "downloadRomDatabaseDescription": "Это загрузит списки РОМов из репозитория romList Forsaken на GitHub.",
+  "downloadRomDatabaseStats": "Размер: ~7 МБ\nПлатформ: 138\nВсего РОМов: ~240 000",
+  "downloadWillOverwrite": "Примечание: это перезапишет существующие данные.",
+  "clearRomDatabaseDescription": "Это удалит все загруженные списки РОМов и сбросит базу данных к начальному состоянию.",
+  "gamelistsStatus": "Статус списков игр",
+  "gamelistsDownloaded": "Загружено",
+  "gamelistsNotDownloaded": "Не загружено",
+  "aboutGamelists": "О списках игр",
+  "aboutGamelistsDescription": "Списки игр содержат метаданные игр (названия, описания, рейтинги) для каждой платформы. Они загружаются из репозитория gamelists Forsaken на GitHub.",
+  "gamelistsSource": "Источник: github.com/ForsakenStation/gamelists",
+  "downloadGamelists": "Загрузить списки игр",
+  "downloadGamelistsDescription": "Это загрузит файлы gamelist.xml из репозитория gamelists Forsaken на GitHub.",
+  "downloadGamelistsWillOverwrite": "Примечание: это перезапишет существующие файлы списков игр.",
+  "downloadingGamelists": "Загрузка списков игр...",
+  "gamelistsDownloadedSuccess": "Списки игр успешно загружены",
+  "failedDownloadGamelists": "Ошибка загрузки списков игр",
+  "clearGamelists": "Очистить списки игр",
+  "clearGamelistsDescription": "Это удалит все загруженные файлы списков игр.",
+  "gamelistsCleared": "Списки игр очищены",
+  "failedClearGamelists": "Ошибка очистки списков игр",
+  "rebuildMediaCache": "Перестроить кэш медиа",
+  "rebuildMediaCacheDescription": "Сканировать медиа-директории и кэшировать пути в списках игр для более быстрой загрузки",
+  "rebuildMediaCacheConfirmTitle": "Перестроить кэш медиа?",
+  "rebuildMediaCacheConfirmBody": "Это просканирует все медиа-директории и обновит файлы gamelist.xml путями к медиа. Это может занять некоторое время для больших коллекций.",
+  "rebuildMediaCacheProgress": "Перестроение кэша медиа...",
+  "rebuildMediaCacheProcessingPlatform": "Обработка {platform} ({current}/{total})",
+  "rebuildMediaCacheComplete": "Кэш медиа перестроен",
+  "rebuildMediaCacheSummary": "{platforms} платформ, {games} игр просканировано, {updated} обновлено, {paths} путей к медиа закэшировано",
+  "rebuildMediaCacheError": "Не удалось перестроить кэш медиа",
+  "rebuildMediaCacheErrors": "Произошло {count} ошибок при перестроении",
+  "@locale": "en",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "@retroGamingFrontend": {
+    "description": "Subtitle shown on initializing screen"
+  },
+  "@deleteRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleted": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@moveRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@saved": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@errorSavingRom": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@platformsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@romsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@cleanedUpTempFiles": {
+    "placeholders": {
+      "deletedCount": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountItems": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "@romSavedPermanently": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romKeptInTemporary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountWithSize": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@currentPathDisplay": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "@confirmDownloadDescription": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheProcessingPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheSummary": {
+    "placeholders": {
+      "platforms": {
+        "type": "String"
+      },
+      "games": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      },
+      "paths": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheErrors": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -12,7 +12,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appTitle => 'Forsaken Emulator';
 
   @override
-  String get retroGamingFrontend => 'Retro Gaming Frontend';
+  String get retroGamingFrontend => '复古游戏前端';
 
   @override
   String get platforms => '平台';
@@ -24,23 +24,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings => '设置';
 
   @override
-  String get settingsAndConfiguration => 'Settings & Configuration';
+  String get settingsAndConfiguration => '设置和配置';
 
   @override
-  String get aboutForsakenEmulator => 'About Forsaken Emulator';
+  String get aboutForsakenEmulator => '关于 Forsaken Emulator';
 
   @override
-  String get version => 'Version';
+  String get version => '版本';
 
   @override
-  String get appDescription =>
-      'A modern multi-platform emulator frontend built with Flutter.';
+  String get appDescription => '使用Flutter构建的现代多平台模拟器前端。';
 
   @override
-  String get emulators => 'Emulators';
+  String get emulators => '模拟器';
 
   @override
-  String get ready => 'Ready';
+  String get ready => '就绪';
 
   @override
   String get back => '返回';
@@ -61,7 +60,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get error => '错误';
 
   @override
-  String get initializationError => 'Initialization Error';
+  String get initializationError => '初始化错误';
 
   @override
   String get retry => '重试';
@@ -97,7 +96,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noPlatformsFound => '未找到平台';
 
   @override
-  String get checkRomsPath => 'Check your ROMS_PATH environment variable';
+  String get checkRomsPath => '检查ROMS_PATH环境变量';
 
   @override
   String get downloading => '下载中...';
@@ -133,302 +132,299 @@ class AppLocalizationsZh extends AppLocalizations {
   String get help => '帮助';
 
   @override
-  String get keyboardAndGamepadControls => 'Keyboard & Gamepad Controls';
+  String get keyboardAndGamepadControls => '键盘和手柄控制';
 
   @override
-  String get navigation => 'Navigation';
+  String get navigation => '导航';
 
   @override
-  String get actions => 'Actions';
+  String get actions => '操作';
 
   @override
-  String get viewControls => 'View Controls';
+  String get viewControls => '视图控制';
 
   @override
-  String get gotIt => 'Got it!';
+  String get gotIt => '知道了!';
 
   @override
   String get exit => '退出';
 
   @override
-  String get exitApplication => 'Exit Application';
+  String get exitApplication => '退出应用';
 
   @override
-  String get exitConfirm => '确定要退出吗？';
+  String get exitConfirm => '确定要退出吗?';
 
   @override
-  String get downloadManager => 'Download Manager';
+  String get downloadManager => '下载管理器';
 
   @override
-  String get clearCompleted => 'Clear Completed';
+  String get clearCompleted => '清除已完成';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => '选择类别';
 
   @override
-  String get confirmDownload => 'Confirm Download';
+  String get confirmDownload => '确认下载';
 
   @override
-  String get downloadGameLists => 'Download Game Lists';
+  String get downloadGameLists => '下载游戏列表';
 
   @override
-  String get downloadGameListsDescription =>
-      'This will download ROM lists from GitHub.';
+  String get downloadGameListsDescription => '这将从GitHub下载ROM列表。';
 
   @override
-  String get gameListsDownloaded => 'Game lists downloaded!';
+  String get gameListsDownloaded => '游戏列表已下载!';
 
   @override
-  String get romStorageManagement => 'ROM Storage Management';
+  String get romStorageManagement => 'ROM存储管理';
 
   @override
-  String get deleteRom => 'Delete ROM?';
+  String get deleteRom => '删除ROM?';
 
   @override
   String deleteRomConfirm(String fileName) {
-    return 'Delete $fileName?';
+    return '删除 $fileName?';
   }
 
   @override
-  String get actionCannotBeUndone => 'This action cannot be undone.';
+  String get actionCannotBeUndone => '此操作无法撤销。';
 
   @override
   String deleted(String fileName) {
-    return 'Deleted: $fileName';
+    return '已删除: $fileName';
   }
 
   @override
-  String get savePermanently => 'Save Permanently?';
+  String get savePermanently => '永久保存?';
 
   @override
   String moveRomConfirm(String fileName) {
-    return 'Move $fileName to permanent storage?';
+    return '将 $fileName 移动到永久存储?';
   }
 
   @override
   String saved(String fileName) {
-    return 'Saved: $fileName';
+    return '已保存: $fileName';
   }
 
   @override
-  String get clearAll => 'Clear All?';
+  String get clearAll => '全部清除?';
 
   @override
-  String get clearAllConfirm => 'Delete all temporary ROMs?';
+  String get clearAllConfirm => '删除所有临时ROM?';
 
   @override
-  String get allCleared => 'All temporary ROMs cleared';
+  String get allCleared => '所有临时ROM已清除';
 
   @override
-  String get systemPathsConfiguration => 'System Paths Configuration';
+  String get systemPathsConfiguration => '系统路径配置';
 
   @override
-  String get migrateRoms => 'Migrate ROMs?';
+  String get migrateRoms => '迁移ROM?';
 
   @override
   String get migrateRomsDescription =>
-      'The permanent ROM storage path has changed from \$oldPath to \$newPath. Would you like to migrate existing ROMs to the new location?';
+      'ROM永久存储路径已从 \$oldPath 更改为 \$newPath。是否要将现有ROM迁移到新位置?';
 
   @override
-  String get noKeepThem => 'No, keep them';
+  String get noKeepThem => '不,保留它们';
 
   @override
-  String get yesMigrateRoms => 'Yes, migrate ROMs';
+  String get yesMigrateRoms => '是,迁移ROM';
 
   @override
-  String get migratingRoms => 'Migrating ROMs...';
+  String get migratingRoms => '正在迁移ROM...';
 
   @override
-  String get romMigrationFailed => 'Warning: ROM migration failed';
+  String get romMigrationFailed => '警告: ROM迁移失败';
 
   @override
-  String get pathsSaved => 'Paths saved successfully';
+  String get pathsSaved => '路径保存成功';
 
   @override
-  String get errorSavingPaths => 'Error saving paths:';
+  String get errorSavingPaths => '保存路径时出错:';
 
   @override
-  String get resetConfiguration => 'Reset Configuration';
+  String get resetConfiguration => '重置配置';
 
   @override
-  String get resetConfigDescription =>
-      'This will reset all paths to their default values. Your ROMs and media files will not be affected.';
+  String get resetConfigDescription => '这将把所有路径重置为默认值。您的ROM和媒体文件不会受到影响。';
 
   @override
-  String get configurationReset => 'Configuration reset to defaults';
+  String get configurationReset => '配置已重置为默认值';
 
   @override
-  String get errorResettingConfiguration => 'Error resetting configuration:';
+  String get errorResettingConfiguration => '重置配置时出错:';
 
   @override
-  String get savePaths => 'Save Paths';
+  String get savePaths => '保存路径';
 
   @override
-  String get saving => 'Saving...';
+  String get saving => '保存中...';
 
   @override
-  String get emulatorManagement => 'Emulator Management';
+  String get emulatorManagement => '模拟器管理';
 
   @override
-  String get configurationReloaded => 'Configuration reloaded';
+  String get configurationReloaded => '配置已重新加载';
 
   @override
-  String get errorLoadingEmulators => 'Error loading emulators:';
+  String get errorLoadingEmulators => '加载模拟器时出错:';
 
   @override
-  String get emulatorAdded => 'Emulator added successfully';
+  String get emulatorAdded => '模拟器添加成功';
 
   @override
-  String get errorAddingEmulator => 'Error adding emulator:';
+  String get errorAddingEmulator => '添加模拟器时出错:';
 
   @override
-  String get emulatorUpdated => 'Emulator updated successfully';
+  String get emulatorUpdated => '模拟器更新成功';
 
   @override
-  String get errorUpdatingEmulator => 'Error updating emulator:';
+  String get errorUpdatingEmulator => '更新模拟器时出错:';
 
   @override
-  String get deleteEmulator => 'Delete Emulator';
+  String get deleteEmulator => '删除模拟器';
 
   @override
-  String get emulatorDeleted => 'Emulator deleted';
+  String get emulatorDeleted => '模拟器已删除';
 
   @override
-  String get errorDeletingEmulator => 'Error deleting emulator:';
+  String get errorDeletingEmulator => '删除模拟器时出错:';
 
   @override
-  String get configurationSource => 'Configuration Source';
+  String get configurationSource => '配置来源';
 
   @override
-  String get addEmulator => 'Add Emulator';
+  String get addEmulator => '添加模拟器';
 
   @override
-  String get systemNameRequired => 'System name is required';
+  String get systemNameRequired => '系统名称为必填项';
 
   @override
-  String get commandRequired => 'At least one command is required';
+  String get commandRequired => '至少需要一个命令';
 
   @override
-  String get addCommand => 'Add Command';
+  String get addCommand => '添加命令';
 
   @override
-  String get acceptZipFiles => 'Accept ZIP files';
+  String get acceptZipFiles => '接受ZIP文件';
 
   @override
-  String get acceptZipSubtitle => 'Allow launching ROMs from ZIP archives';
+  String get acceptZipSubtitle => '允许从ZIP存档启动ROM';
 
   @override
-  String get useForeverMode => 'Use Forever Mode';
+  String get useForeverMode => '使用Forever模式';
 
   @override
-  String get useForeverSubtitle => 'Keep emulator running';
+  String get useForeverSubtitle => '保持模拟器运行';
 
   @override
-  String get workInProgress => 'Work In Progress';
+  String get workInProgress => '进行中的工作';
 
   @override
-  String get wipSubtitle => 'Mark as not yet fully configured';
+  String get wipSubtitle => '标记为尚未完全配置';
 
   @override
-  String get biosFirmwareHelp => 'BIOS & Firmware Help';
+  String get biosFirmwareHelp => 'BIOS和固件帮助';
 
   @override
-  String get downloadMissingFiles => 'Download Missing Files';
+  String get downloadMissingFiles => '下载缺失文件';
 
   @override
-  String get showOnlyMissing => 'Show only missing';
+  String get showOnlyMissing => '仅显示缺失';
 
   @override
-  String get downloadAllMissingBios => 'Download All Missing BIOS';
+  String get downloadAllMissingBios => '下载所有缺失的BIOS';
 
   @override
-  String get configurationError => 'Configuration Error';
+  String get configurationError => '配置错误';
 
   @override
   String get configurationErrorDescription =>
-      'The application could not find the required configuration.\nPlease configure your paths in Settings > System Paths.';
+      '应用程序找不到所需的配置。\n请在设置 > 系统路径中配置您的路径。';
 
   @override
   String get configurationRequired =>
-      'Required:\n- Media Path: directory containing media assets\n- Emulators Path: directory containing emulator binaries\n\nOptional:\n- ROM storage paths for temporary/permanent downloads';
+      '必需:\n- 媒体路径: 包含媒体资产的目录\n- 模拟器路径: 包含模拟器可执行文件的目录\n\n可选:\n- 用于临时/永久下载的ROM存储路径';
 
   @override
-  String get goToSettingsToConfigure =>
-      'Go to Settings > System Paths to configure';
+  String get goToSettingsToConfigure => '前往设置 > 系统路径进行配置';
 
   @override
-  String get noDownloadableBios => 'No downloadable BIOS files are missing';
+  String get noDownloadableBios => '没有缺失的可下载BIOS文件';
 
   @override
-  String get allDownloadsCompleted => 'All downloads completed successfully!';
+  String get allDownloadsCompleted => '所有下载已成功完成!';
 
   @override
-  String get batchDownloadFailed => 'Batch download failed:';
+  String get batchDownloadFailed => '批量下载失败:';
 
   @override
-  String get download => 'Download';
+  String get download => '下载';
 
   @override
-  String get downloadCancelled => 'Download cancelled';
+  String get downloadCancelled => '下载已取消';
 
   @override
-  String get launched => 'Launched:';
+  String get launched => '已启动:';
 
   @override
-  String get failedToSave => 'Failed to save ROM permanently';
+  String get failedToSave => '无法永久保存ROM';
 
   @override
-  String get failedToSaveRom => 'Failed to save ROM permanently';
+  String get failedToSaveRom => '无法永久保存ROM';
 
   @override
-  String get errorSaving => 'Error saving ROM:';
+  String get errorSaving => '保存ROM时出错:';
 
   @override
   String errorSavingRom(String error) {
-    return 'Error saving ROM: $error';
+    return '保存ROM时出错: $error';
   }
 
   @override
-  String get openFolder => 'Open Folder';
+  String get openFolder => '打开文件夹';
 
   @override
-  String get viewManual => 'View Manual';
+  String get viewManual => '查看手册';
 
   @override
-  String get play => 'Play';
+  String get play => '玩';
 
   @override
-  String get goBack => 'Go Back';
+  String get goBack => '返回';
 
   @override
-  String get clearSearch => 'Clear Search';
+  String get clearSearch => '清除搜索';
 
   @override
-  String get iUnderstand => 'I understand and agree to these terms';
+  String get iUnderstand => '我理解并同意这些条款';
 
   @override
-  String get start => 'Start';
+  String get start => '开始';
 
   @override
-  String get debugMode => 'Debug Mode: ';
+  String get debugMode => '调试模式: ';
 
   @override
-  String get toggleDebugMode => 'Toggle Debug Mode';
+  String get toggleDebugMode => '切换调试模式';
 
   @override
-  String get preparingDownload => 'Preparing download...';
+  String get preparingDownload => '准备下载...';
 
   @override
-  String get noEmulatorsAvailable => 'No emulators available for this category';
+  String get noEmulatorsAvailable => '此类别没有可用的模拟器';
 
   @override
-  String get failedToLaunch => 'Failed to launch web emulator:';
+  String get failedToLaunch => '无法启动网络模拟器:';
 
   @override
-  String get platformInfo => 'Platform Info';
+  String get platformInfo => '平台信息';
 
   @override
-  String get emulatorPlatformInfo => 'EmulatorPlatform Info';
+  String get emulatorPlatformInfo => '模拟器平台信息';
 
   @override
   String get favorites => '收藏';
@@ -437,7 +433,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get all => '全部';
 
   @override
-  String get collections => '集合';
+  String get collections => '收藏集';
 
   @override
   String get searchRoms => '搜索ROM...';
@@ -456,132 +452,132 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get region => 'Region';
+  String get region => '地区';
 
   @override
-  String get genre => 'Genre';
+  String get genre => '类型';
 
   @override
-  String get year => 'Year';
+  String get year => '年份';
 
   @override
-  String get publisher => 'Publisher';
+  String get publisher => '发行商';
 
   @override
-  String get developer => 'Developer';
+  String get developer => '开发商';
 
   @override
-  String get playWithNetplay => 'Play with Netplay';
+  String get playWithNetplay => '使用网络对战游玩';
 
   @override
-  String get downloadBios => 'Download BIOS';
+  String get downloadBios => '下载BIOS';
 
   @override
-  String get viewDetails => 'View Details';
+  String get viewDetails => '查看详情';
 
   @override
-  String get addToFavorites => 'Add to Favorites';
+  String get addToFavorites => '添加到收藏';
 
   @override
-  String get removeFromFavorites => 'Remove from Favorites';
+  String get removeFromFavorites => '从收藏中移除';
 
   @override
-  String get biosMissing => 'BIOS missing';
+  String get biosMissing => 'BIOS缺失';
 
   @override
-  String get biosPresent => 'BIOS present';
+  String get biosPresent => 'BIOS存在';
 
   @override
-  String get checkingBios => 'Checking BIOS...';
+  String get checkingBios => '正在检查BIOS...';
 
   @override
-  String get emulatorDownloading => 'Downloading emulator...';
+  String get emulatorDownloading => '正在下载模拟器...';
 
   @override
-  String get emulatorDownloadComplete => 'Emulator downloaded';
+  String get emulatorDownloadComplete => '模拟器已下载';
 
   @override
-  String get emulatorDownloadFailed => 'Failed to download emulator';
+  String get emulatorDownloadFailed => '下载模拟器失败';
 
   @override
-  String get installingEmulator => 'Installing emulator...';
+  String get installingEmulator => '正在安装模拟器...';
 
   @override
-  String get emulatorReady => 'Emulator ready';
+  String get emulatorReady => '模拟器就绪';
 
   @override
-  String get configuration => 'Configuration';
+  String get configuration => '配置';
 
   @override
-  String get paths => 'Paths';
+  String get paths => '路径';
 
   @override
-  String get storage => 'Storage';
+  String get storage => '存储';
 
   @override
-  String get emulatorsPath => 'Emulators Path';
+  String get emulatorsPath => '模拟器路径';
 
   @override
-  String get romsPath => 'ROMs Path';
+  String get romsPath => 'ROM路径';
 
   @override
-  String get mediaPath => 'Media Path';
+  String get mediaPath => '媒体路径';
 
   @override
-  String get biosPath => 'BIOS Path';
+  String get biosPath => 'BIOS路径';
 
   @override
-  String get tempPath => 'Temporary Path';
+  String get tempPath => '临时路径';
 
   @override
-  String get browse => 'Browse';
+  String get browse => '浏览';
 
   @override
-  String get apply => 'Apply';
+  String get apply => '应用';
 
   @override
-  String get reset => 'Reset';
+  String get reset => '重置';
 
   @override
-  String get clear => 'Clear';
+  String get clear => '清除';
 
   @override
-  String get scan => 'Scan';
+  String get scan => '扫描';
 
   @override
-  String get scanForRoms => 'Scan for ROMs';
+  String get scanForRoms => '扫描ROM';
 
   @override
-  String get scanningRoms => 'Scanning ROMs...';
+  String get scanningRoms => '正在扫描ROM...';
 
   @override
-  String get scanComplete => 'Scan complete';
+  String get scanComplete => '扫描完成';
 
   @override
   String romsFound(int count) {
-    return '$count ROMs found';
+    return '找到 $count 个ROM';
   }
 
   @override
-  String get noNewRomsFound => 'No new ROMs found';
+  String get noNewRomsFound => '未找到新的ROM';
 
   @override
-  String get launchEmulator => 'Launch Emulator';
+  String get launchEmulator => '启动模拟器';
 
   @override
-  String get emulatorError => 'Emulator Error';
+  String get emulatorError => '模拟器错误';
 
   @override
-  String get gamepadConnected => 'Gamepad connected';
+  String get gamepadConnected => '手柄已连接';
 
   @override
-  String get gamepadDisconnected => 'Gamepad disconnected';
+  String get gamepadDisconnected => '手柄已断开';
 
   @override
-  String get gamepadTest => 'Gamepad Test';
+  String get gamepadTest => '测试手柄';
 
   @override
-  String get pressAnyButton => 'Press any button to test';
+  String get pressAnyButton => '按任意按钮进行测试';
 
   @override
   String get buttonA => 'A';
@@ -602,16 +598,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get buttonSelect => 'Select';
 
   @override
-  String get dpadUp => 'D-Pad Up';
+  String get dpadUp => 'D-Pad 上';
 
   @override
-  String get dpadDown => 'D-Pad Down';
+  String get dpadDown => 'D-Pad 下';
 
   @override
-  String get dpadLeft => 'D-Pad Left';
+  String get dpadLeft => 'D-Pad 左';
 
   @override
-  String get dpadRight => 'D-Pad Right';
+  String get dpadRight => 'D-Pad 右';
 
   @override
   String get leftShoulder => 'L1';
@@ -626,567 +622,558 @@ class AppLocalizationsZh extends AppLocalizations {
   String get rightTrigger => 'R2';
 
   @override
-  String get leftStick => 'Left Stick';
+  String get leftStick => '左摇杆';
 
   @override
-  String get rightStick => 'Right Stick';
+  String get rightStick => '右摇杆';
 
   @override
-  String get setupWizard => 'Setup Wizard';
+  String get setupWizard => '设置向导';
 
   @override
-  String get welcome => 'Welcome';
+  String get welcome => '欢迎';
 
   @override
-  String get welcomeMessage => 'Welcome to Forsaken Emulator';
+  String get welcomeMessage => '欢迎使用 Forsaken Emulator';
 
   @override
-  String get next => 'Next';
+  String get next => '下一步';
 
   @override
-  String get previous => 'Previous';
+  String get previous => '上一步';
 
   @override
-  String get finish => 'Finish';
+  String get finish => '完成';
 
   @override
-  String get skip => 'Skip';
+  String get skip => '跳过';
 
   @override
-  String get setupComplete => 'Setup Complete';
+  String get setupComplete => '设置完成';
 
   @override
-  String get selectLanguage => 'Select Language';
+  String get selectLanguage => '选择语言';
 
   @override
-  String get selectEmulatorsPath => 'Select Emulators Path';
+  String get selectEmulatorsPath => '选择模拟器路径';
 
   @override
-  String get selectRomsPath => 'Select ROMs Path';
+  String get selectRomsPath => '选择ROM路径';
 
   @override
-  String get selectMediaPath => 'Select Media Path';
+  String get selectMediaPath => '选择媒体路径';
 
   @override
-  String get allSettingsConfigured => 'All settings configured';
+  String get allSettingsConfigured => '所有设置已配置';
 
   @override
-  String get darkTheme => 'Dark';
+  String get darkTheme => '深色';
 
   @override
-  String get lightTheme => 'Light';
+  String get lightTheme => '浅色';
 
   @override
-  String get systemTheme => 'System';
+  String get systemTheme => '系统';
 
   @override
-  String get about => 'About';
+  String get about => '关于';
 
   @override
-  String get checkForUpdates => 'Check for Updates';
+  String get checkForUpdates => '检查更新';
 
   @override
-  String get noUpdatesAvailable => 'No updates available';
+  String get noUpdatesAvailable => '没有可用的更新';
 
   @override
-  String get updateAvailable => 'Update available';
+  String get updateAvailable => '有可用更新';
 
   @override
-  String get downloadingUpdate => 'Downloading update...';
+  String get downloadingUpdate => '正在下载更新...';
 
   @override
-  String get installingUpdate => 'Installing update...';
+  String get installingUpdate => '正在安装更新...';
 
   @override
-  String get updateComplete => 'Update complete';
+  String get updateComplete => '更新完成';
 
   @override
-  String get updateFailed => 'Update failed';
+  String get updateFailed => '更新失败';
 
   @override
-  String get networkError => 'Network error';
+  String get networkError => '网络错误';
 
   @override
-  String get connectionError => 'Connection error';
+  String get connectionError => '连接错误';
 
   @override
-  String get timeoutError => 'Timeout error';
+  String get timeoutError => '超时错误';
 
   @override
-  String get unknownError => 'Unknown error';
+  String get unknownError => '未知错误';
 
   @override
-  String get permissionDenied => 'Permission denied';
+  String get permissionDenied => '权限被拒绝';
 
   @override
-  String get fileNotFound => 'File not found';
+  String get fileNotFound => '文件未找到';
 
   @override
-  String get directoryNotFound => 'Directory not found';
+  String get directoryNotFound => '目录未找到';
 
   @override
-  String get diskFull => 'Disk full';
+  String get diskFull => '磁盘已满';
 
   @override
-  String get invalidPath => 'Invalid path';
+  String get invalidPath => '无效路径';
 
   @override
-  String get pathNotWritable => 'Path not writable';
+  String get pathNotWritable => '路径不可写';
 
   @override
-  String get romCorrupted => 'ROM file may be corrupted';
+  String get romCorrupted => 'ROM文件可能已损坏';
 
   @override
-  String get zipError => 'ZIP archive error';
+  String get zipError => 'ZIP存档错误';
 
   @override
-  String get extractionFailed => 'Extraction failed';
+  String get extractionFailed => '解压失败';
 
   @override
-  String get checksumMismatch => 'Checksum mismatch';
+  String get checksumMismatch => '校验和不匹配';
 
   @override
-  String get biosCheckFailed => 'BIOS check failed';
+  String get biosCheckFailed => 'BIOS检查失败';
 
   @override
-  String get continueAnyway => 'Continue anyway';
+  String get continueAnyway => '仍然继续';
 
   @override
-  String get reportIssue => 'Report Issue';
+  String get reportIssue => '报告问题';
 
   @override
-  String get copyToClipboard => 'Copy to clipboard';
+  String get copyToClipboard => '复制到剪贴板';
 
   @override
-  String get copiedToClipboard => 'Copied to clipboard';
+  String get copiedToClipboard => '已复制到剪贴板';
 
   @override
-  String get share => 'Share';
+  String get share => '分享';
 
   @override
-  String get hide => 'Hide';
+  String get hide => '隐藏';
 
   @override
-  String get show => 'Show';
+  String get show => '显示';
 
   @override
-  String get toggleView => 'Toggle View';
+  String get toggleView => '切换视图';
 
   @override
-  String get gridView => 'Grid View';
+  String get gridView => '网格视图';
 
   @override
-  String get listView => 'List View';
+  String get listView => '列表视图';
 
   @override
-  String get carouselView => 'Carousel View';
+  String get carouselView => '轮播视图';
 
   @override
-  String get sortBy => 'Sort by';
+  String get sortBy => '排序方式';
 
   @override
-  String get sortByName => 'Name';
+  String get sortByName => '名称';
 
   @override
-  String get sortByDate => 'Date';
+  String get sortByDate => '日期';
 
   @override
-  String get sortBySize => 'Size';
+  String get sortBySize => '大小';
 
   @override
-  String get sortByRegion => 'Region';
+  String get sortByRegion => '地区';
 
   @override
-  String get ascending => 'Ascending';
+  String get ascending => '升序';
 
   @override
-  String get descending => 'Descending';
+  String get descending => '降序';
 
   @override
-  String get filter => 'Filter';
+  String get filter => '筛选';
 
   @override
-  String get filterByRegion => 'Filter by Region';
+  String get filterByRegion => '按地区筛选';
 
   @override
-  String get filterByGenre => 'Filter by Genre';
+  String get filterByGenre => '按类型筛选';
 
   @override
-  String get filterByYear => 'Filter by Year';
+  String get filterByYear => '按年份筛选';
 
   @override
-  String get clearFilters => 'Clear Filters';
+  String get clearFilters => '清除筛选';
 
   @override
-  String get systemInfo => 'System Info';
+  String get systemInfo => '系统信息';
 
   @override
   String get cpu => 'CPU';
 
   @override
-  String get memory => 'Memory';
+  String get memory => '内存';
 
   @override
-  String get storageInfo => 'Storage';
+  String get storageInfo => '存储';
 
   @override
-  String get os => 'Operating System';
+  String get os => '操作系统';
 
   @override
-  String get emulatorVersion => 'Emulator Version';
+  String get emulatorVersion => '模拟器版本';
 
   @override
-  String get totalRoms => 'Total ROMs';
+  String get totalRoms => 'ROM总数';
 
   @override
-  String get totalSize => 'Total Size';
+  String get totalSize => '总大小';
 
   @override
-  String get freeSpace => 'Free Space';
+  String get freeSpace => '可用空间';
 
   @override
-  String get usedSpace => 'Used Space';
+  String get usedSpace => '已用空间';
 
   @override
-  String get systemUtilities => 'System Utilities';
+  String get systemUtilities => '系统工具';
 
   @override
-  String get romVerificationResults => 'ROM Verification Results';
+  String get romVerificationResults => 'ROM验证结果';
 
   @override
-  String get totalRomFiles => 'Total ROM files';
+  String get totalRomFiles => 'ROM文件总数';
 
   @override
-  String get emptyRomFiles => 'Empty ROM files';
+  String get emptyRomFiles => '空ROM文件';
 
   @override
-  String get validRomFiles => 'Valid ROM files';
+  String get validRomFiles => '有效ROM文件';
 
   @override
-  String get romsDirectoryDoesNotExist => 'ROMs directory does not exist';
+  String get romsDirectoryDoesNotExist => 'ROM目录不存在';
 
   @override
-  String get gamelistCheckResults => 'Gamelist Check Results';
+  String get gamelistCheckResults => '游戏列表检查结果';
 
   @override
-  String get totalPlatforms => 'Total platforms';
+  String get totalPlatforms => '平台总数';
 
   @override
-  String get missingGamelists => 'Missing gamelists';
+  String get missingGamelists => '缺失的游戏列表';
 
   @override
-  String get configurationBackup => 'Configuration Backup';
+  String get configurationBackup => '配置备份';
 
   @override
-  String get configurationBackedUp => 'Configuration backed up to:';
+  String get configurationBackedUp => '配置已备份到:';
 
   @override
-  String get errorBackingUp => 'Error backing up configuration:';
+  String get errorBackingUp => '备份配置时出错:';
 
   @override
-  String get romDatabase => 'ROM Database';
+  String get romDatabase => 'ROM数据库';
 
   @override
-  String get romDatabaseDownloaded => 'ROM database downloaded successfully';
+  String get romDatabaseDownloaded => 'ROM数据库下载成功';
 
   @override
-  String get failedDownloadRomDatabase => 'Failed to download ROM database';
+  String get failedDownloadRomDatabase => '下载ROM数据库失败';
 
   @override
-  String get romDatabaseCleared => 'ROM database cleared';
+  String get romDatabaseCleared => 'ROM数据库已清除';
 
   @override
-  String get failedClearDatabase => 'Failed to clear database';
+  String get failedClearDatabase => '清除数据库失败';
 
   @override
-  String get downloadRomDatabase => 'Download ROM Database';
+  String get downloadRomDatabase => '下载ROM数据库';
 
   @override
-  String get clearRomDatabase => 'Clear ROM Database';
+  String get clearRomDatabase => '清除ROM数据库';
 
   @override
-  String get systemRequirements => 'System Requirements';
+  String get systemRequirements => '系统要求';
 
   @override
-  String get failedToCheckSystem => 'Failed to check system';
+  String get failedToCheckSystem => '检查系统失败';
 
   @override
   String cleanedUpTempFiles(String deletedCount) {
-    return 'Cleaned up $deletedCount temporary ROM files';
+    return '已清理 $deletedCount 个临时ROM文件';
   }
 
   @override
-  String get errorCleaningTempFiles => 'Error cleaning temp files:';
+  String get errorCleaningTempFiles => '清理临时文件时出错:';
 
   @override
-  String get errorVerifyingRomFiles => 'Error verifying ROM files:';
+  String get errorVerifyingRomFiles => '验证ROM文件时出错:';
 
   @override
-  String get errorCheckingGamelists => 'Error checking gamelists:';
+  String get errorCheckingGamelists => '检查游戏列表时出错:';
 
   @override
-  String get cancelDownload => 'Cancel Download';
+  String get cancelDownload => '取消下载';
 
   @override
-  String get selectEmulator => 'Select Emulator';
+  String get selectEmulator => '选择模拟器';
 
   @override
-  String get biosStatusDashboard => 'BIOS Status Dashboard';
+  String get biosStatusDashboard => 'BIOS状态仪表板';
 
   @override
-  String get webSettings => 'Web Settings';
+  String get webSettings => '网络设置';
 
   @override
-  String get saveSettings => 'Save Settings';
+  String get saveSettings => '保存设置';
 
   @override
-  String get errorSavingSettings => 'Error saving settings:';
+  String get errorSavingSettings => '保存设置时出错:';
 
   @override
   String romsCountItems(String count) {
-    return '$count ROMs';
+    return '$count 个ROM';
   }
 
   @override
-  String get savedPermanently => 'saved permanently';
+  String get savedPermanently => '已永久保存';
 
   @override
-  String get keptInTemporary => 'kept in temporary storage';
+  String get keptInTemporary => '保留在临时存储中';
 
   @override
-  String get tryAgain => 'Try Again';
+  String get tryAgain => '重试';
 
   @override
-  String get allDownloads => 'All downloads completed';
+  String get allDownloads => '所有下载已完成';
 
   @override
   String romSavedPermanently(String name) {
-    return '$name saved permanently';
+    return '$name 已永久保存';
   }
 
   @override
-  String get undo => 'Undo';
+  String get undo => '撤销';
 
   @override
   String romKeptInTemporary(String name) {
-    return '$name kept in temporary storage';
+    return '$name 保留在临时存储中';
   }
 
   @override
   String romsCountWithSize(String count, String size) {
-    return '$count ROMs • $size';
+    return '$count 个ROM • $size';
   }
 
   @override
-  String get whatYouCanTry => 'What you can try:';
+  String get whatYouCanTry => '您可以尝试:';
 
   @override
-  String get tips => 'Tips';
+  String get tips => '提示';
 
   @override
-  String get helpNavigateItems => 'Navigate through items';
+  String get helpNavigateItems => '在项目间导航';
 
   @override
-  String get helpGamepadNavigation => 'Gamepad navigation';
+  String get helpGamepadNavigation => '手柄导航';
 
   @override
-  String get helpQuickNavigation => 'Quick navigation (jump multiple items)';
+  String get helpQuickNavigation => '快速导航 (跳过多个项目)';
 
   @override
-  String get helpGamepadPageNavigation => 'Gamepad page navigation';
+  String get helpGamepadPageNavigation => '手柄页面导航';
 
   @override
-  String get helpGoToFirst => 'Go to first item';
+  String get helpGoToFirst => '转到第一个项目';
 
   @override
-  String get helpGoToLast => 'Go to last item';
+  String get helpGoToLast => '转到最后一个项目';
 
   @override
-  String get helpJumpToLetter => 'Jump to item starting with that letter';
+  String get helpJumpToLetter => '跳转到以该字母开头的项目';
 
   @override
-  String get helpSelectItem => 'Select item';
+  String get helpSelectItem => '选择项目';
 
   @override
-  String get helpGamepadSelect => 'Gamepad select';
+  String get helpGamepadSelect => '手柄选择';
 
   @override
-  String get helpGoBackCloseDialogs => 'Go back / Close dialogs';
+  String get helpGoBackCloseDialogs => '返回 / 关闭对话框';
 
   @override
-  String get helpExitApplication => 'Exit application';
+  String get helpExitApplication => '退出应用';
 
   @override
-  String get helpGamepadBackClose => 'Gamepad back / Close dialogs';
+  String get helpGamepadBackClose => '手柄返回 / 关闭对话框';
 
   @override
-  String get helpToggleViewMode => 'Toggle view mode (Grid/List/Carousel)';
+  String get helpToggleViewMode => '切换视图模式 (网格/列表/轮播)';
 
   @override
-  String get helpGamepadViewToggle => 'Gamepad view toggle';
+  String get helpGamepadViewToggle => '使用手柄切换视图';
 
   @override
-  String get helpRefreshView => 'Refresh current view';
+  String get helpRefreshView => '刷新当前视图';
 
   @override
-  String get helpShowPlatformInfo => 'Show platform information';
+  String get helpShowPlatformInfo => '显示平台信息';
 
   @override
-  String get helpActivateSearch => 'Activate search';
+  String get helpActivateSearch => '激活搜索';
 
   @override
-  String get helpGamepadSearch => 'Gamepad search';
+  String get helpGamepadSearch => '手柄搜索';
 
   @override
-  String get helpShowHelpDialog => 'Show this help dialog';
+  String get helpShowHelpDialog => '显示此帮助对话框';
 
   @override
-  String get helpGamepadHelp => 'Gamepad help';
+  String get helpGamepadHelp => '手柄帮助';
 
   @override
-  String get tipUseKeyboardOrGamepad =>
-      'Use keyboard or gamepad for navigation';
+  String get tipUseKeyboardOrGamepad => '使用键盘或手柄导航';
 
   @override
-  String get tipAlphabeticalJump => 'Alphabetical jump works in all view modes';
+  String get tipAlphabeticalJump => '字母跳转在所有视图模式下都有效';
 
   @override
-  String get tipPressQuestionMark => 'Press ? anytime to see this help';
+  String get tipPressQuestionMark => '随时按 ? 查看此帮助';
 
   @override
-  String get tipGamepadAlongside => 'Gamepad works alongside keyboard controls';
+  String get tipGamepadAlongside => '手柄可与键盘控制配合使用';
 
   @override
-  String get configurePathsDescription =>
-      'Configure the paths used by the application to locate ROMs, media, and emulators.';
+  String get configurePathsDescription => '配置应用程序用于定位ROM、媒体和模拟器的路径。';
 
   @override
-  String get romListsAutoManaged =>
-      'ROM lists are now managed automatically. Download them from Settings > ROM Database.';
+  String get romListsAutoManaged => 'ROM列表现在自动管理。请从设置 > ROM数据库下载。';
 
   @override
-  String get romStorage => 'ROM Storage';
+  String get romStorage => 'ROM存储';
 
   @override
-  String get configureRomStorageDescription =>
-      'Configure where downloaded ROMs are stored temporarily and permanently.';
+  String get configureRomStorageDescription => '配置下载的ROM的临时和永久存储位置。';
 
   @override
-  String get resetToDefaults => 'Reset to defaults';
+  String get resetToDefaults => '重置为默认值';
 
   @override
-  String get mediaPathLabel => 'Media Path';
+  String get mediaPathLabel => '媒体路径';
 
   @override
-  String get mediaPathHint => 'Directory containing media (images, videos)';
+  String get mediaPathHint => '包含媒体 (图片、视频) 的目录';
 
   @override
-  String get emulatorsPathLabel => 'Emulators Path';
+  String get emulatorsPathLabel => '模拟器路径';
 
   @override
-  String get emulatorsPathHint => 'Directory containing emulator binaries';
+  String get emulatorsPathHint => '包含模拟器可执行文件的目录';
 
   @override
-  String get gamelistPathAutomatic => 'Gamelist Path (Automatic)';
+  String get gamelistPathAutomatic => '游戏列表路径 (自动)';
 
   @override
   String get gamelistAutoDescription =>
-      'Gamelists are now managed automatically in the app data directory. This makes the app fully independent and prepares for future GitHub-based gamelist distribution.';
+      '游戏列表现在在应用数据目录中自动管理。这使应用完全独立，并为未来基于GitHub的游戏列表分发做好准备。';
 
   @override
-  String get tempRomStorageLabel => 'Temporary ROM Storage (Optional)';
+  String get tempRomStorageLabel => '临时ROM存储 (可选)';
 
   @override
-  String get tempRomStorageDescription =>
-      'ROMs are downloaded here first. They can be promoted to permanent storage after playing.';
+  String get tempRomStorageDescription => 'ROM首先下载到这里。可以在玩完后升级到永久存储。';
 
   @override
-  String get permanentRomStorageLabel => 'Permanent ROM Storage (Optional)';
+  String get permanentRomStorageLabel => '永久ROM存储 (可选)';
 
   @override
-  String get permanentRomStorageDescription =>
-      'ROMs saved permanently are stored here. These are not cleaned up automatically.';
+  String get permanentRomStorageDescription => '永久保存的ROM存储在这里。这些不会自动清理。';
 
   @override
-  String get defaultAppSupportDir => 'Default: app support directory';
+  String get defaultAppSupportDir => '默认: 应用支持目录';
 
   @override
   String currentPathDisplay(String path) {
-    return 'Current: $path';
+    return '当前: $path';
   }
 
   @override
-  String get configurationFile => 'Configuration File';
+  String get configurationFile => '配置文件';
 
   @override
-  String get source => 'Source:';
+  String get source => '来源:';
 
   @override
-  String get customConfigActive => 'Custom configuration active';
+  String get customConfigActive => '自定义配置已激活';
 
   @override
-  String get pathStructure => 'Path Structure';
+  String get pathStructure => '路径结构';
 
   @override
   String get pathStructureDescription =>
-      'Media Path: MEDIA_PATH/platform/boxart|screenshots|videos/rom.png\nGamelist Path: ~/.local/share/com.example.emulator/gamelists/platform/gamelist.xml (automatic)\nEmulators Path: EMULATORS_PATH/emulator_binary';
+      '媒体路径: MEDIA_PATH/平台/boxart|screenshots|videos/rom.png\n游戏列表路径: ~/.local/share/com.example.emulator/gamelists/平台/gamelist.xml (自动)\n模拟器路径: EMULATORS_PATH/emulator_binary';
 
   @override
-  String get errorCheckingSystem => 'Error checking system';
+  String get errorCheckingSystem => '检查系统时出错';
 
   @override
-  String get recheckR => 'Re-check (R)';
+  String get recheckR => '重新检查 (R)';
 
   @override
-  String get allRequiredToolsInstalled => 'All Required Tools Installed';
+  String get allRequiredToolsInstalled => '所有必需工具已安装';
 
   @override
-  String get missingRequiredTools => 'Missing Required Tools';
+  String get missingRequiredTools => '缺少必需工具';
 
   @override
-  String get systemReadyToUse => 'Your system is ready to use the emulator';
+  String get systemReadyToUse => '您的系统已准备好使用模拟器';
 
   @override
-  String get someRequiredToolsMissing => 'Some required tools are missing';
+  String get someRequiredToolsMissing => '一些必需工具缺失';
 
   @override
-  String get requiredTools => 'Required Tools';
+  String get requiredTools => '必需工具';
 
   @override
-  String get requiredToolsDescription =>
-      'These tools are required for downloading and extracting emulators';
+  String get requiredToolsDescription => '这些工具是下载和解压模拟器所必需的';
 
   @override
-  String get installationInstructions => 'Installation Instructions';
+  String get installationInstructions => '安装说明';
 
   @override
-  String get installed => 'Installed';
+  String get installed => '已安装';
 
   @override
-  String get missing => 'Missing';
+  String get missing => '缺失';
 
   @override
-  String get downloadEmulatorsAndGameLists =>
-      'Download emulators and game lists';
+  String get downloadEmulatorsAndGameLists => '下载模拟器和游戏列表';
 
   @override
-  String get quickActions => 'Quick Actions';
+  String get quickActions => '快速操作';
 
   @override
-  String get downloadAll => 'Download All';
+  String get downloadAll => '下载全部';
 
   @override
-  String get byCategory => 'By Category';
+  String get byCategory => '按类别';
 
   @override
-  String get downloadQueue => 'Download Queue';
+  String get downloadQueue => '下载队列';
 
   @override
-  String get noDownloadsInProgress => 'No downloads in progress';
+  String get noDownloadsInProgress => '没有正在进行的下载';
 
   @override
-  String get selectQuickActionToStart =>
-      'Select a quick action above to start downloading';
+  String get selectQuickActionToStart => '选择上面的快速操作开始下载';
 
   @override
   String get categorySony => 'Sony (PS1-PS4)';
@@ -1198,199 +1185,188 @@ class AppLocalizationsZh extends AppLocalizations {
   String get categoryMicrosoft => 'Microsoft (Xbox, Xbox 360)';
 
   @override
-  String get categoryMultiPlatform => 'Multi-Platform (RetroArch)';
+  String get categoryMultiPlatform => '多平台 (RetroArch)';
 
   @override
-  String get categoryOtherEmulators => 'Other Emulators';
+  String get categoryOtherEmulators => '其他模拟器';
 
   @override
-  String get categoryUtilities => 'Utilities';
+  String get categoryUtilities => '工具';
 
   @override
   String confirmDownloadDescription(String count, String size) {
-    return 'Download $count emulator(s)?\nEstimated size: ~$size MB\n\nThis may take a while depending on your internet connection.';
+    return '下载 $count 个模拟器?\n估计大小: ~$size MB\n\n根据您的网络连接,这可能需要一些时间。';
   }
 
   @override
-  String get alreadyInstalled => 'Already installed';
+  String get alreadyInstalled => '已安装';
 
   @override
-  String get starting => 'Starting...';
+  String get starting => '正在启动...';
 
   @override
-  String get completed => 'Completed';
+  String get completed => '已完成';
 
   @override
-  String get gameListsAlreadyDownloaded => 'Game lists already downloaded';
+  String get gameListsAlreadyDownloaded => '游戏列表已下载';
 
   @override
-  String get redownload => 'Re-Download';
+  String get redownload => '重新下载';
 
   @override
-  String get gameListsFromGitHub => 'Game Lists (from GitHub)';
+  String get gameListsFromGitHub => '游戏列表 (来自GitHub)';
 
   @override
-  String get downloaded => 'Downloaded';
+  String get downloaded => '已下载';
 
   @override
-  String get cancelled => 'Cancelled';
+  String get cancelled => '已取消';
 
   @override
-  String get missingFor => 'Missing for:';
+  String get missingFor => '缺失于:';
 
   @override
-  String get noCustomConfigToBackup =>
-      'No custom configuration to backup. Using bundled defaults.';
+  String get noCustomConfigToBackup => '没有要备份的自定义配置。使用默认设置。';
 
   @override
-  String get saveConfigurationBackup => 'Save Configuration Backup';
+  String get saveConfigurationBackup => '保存配置备份';
 
   @override
-  String get refreshStatsR => 'Refresh stats (R)';
+  String get refreshStatsR => '刷新统计 (R)';
 
   @override
-  String get systemStatistics => 'System Statistics';
+  String get systemStatistics => '系统统计';
 
   @override
-  String get romFiles => 'ROM Files';
+  String get romFiles => 'ROM文件';
 
   @override
-  String get maintenanceTools => 'Maintenance Tools';
+  String get maintenanceTools => '维护工具';
 
   @override
-  String get cleanupTemporaryRoms => 'Cleanup Temporary ROMs';
+  String get cleanupTemporaryRoms => '清理临时ROM';
 
   @override
-  String get cleanupTemporaryRomsDescription =>
-      'Remove temporary ROM files from system temp directory';
+  String get cleanupTemporaryRomsDescription => '从系统临时目录中删除临时ROM文件';
 
   @override
-  String get verifyRomFiles => 'Verify ROM Files';
+  String get verifyRomFiles => '验证ROM文件';
 
   @override
-  String get verifyRomFilesDescription =>
-      'Check that all ROM files exist and are valid';
+  String get verifyRomFilesDescription => '检查所有ROM文件是否存在且有效';
 
   @override
-  String get checkMissingGamelists => 'Check Missing Gamelists';
+  String get checkMissingGamelists => '检查缺失的游戏列表';
 
   @override
-  String get checkMissingGamelistsDescription =>
-      'Find platforms missing gamelist.xml files';
+  String get checkMissingGamelistsDescription => '查找没有gamelist.xml文件的平台';
 
   @override
-  String get backupConfiguration => 'Backup Configuration';
+  String get backupConfiguration => '备份配置';
 
   @override
-  String get backupConfigurationDescription => 'Create a backup of config.json';
+  String get backupConfigurationDescription => '创建config.json的备份';
 
   @override
-  String get downloadingRomDatabase => 'Downloading ROM Database...';
+  String get downloadingRomDatabase => '正在下载ROM数据库...';
 
   @override
-  String get downloadMayTakeMinutes =>
-      'This may take a few minutes depending on your connection...';
+  String get downloadMayTakeMinutes => '根据您的连接,这可能需要几分钟...';
 
   @override
-  String get databaseStatus => 'Database Status';
+  String get databaseStatus => '数据库状态';
 
   @override
-  String get notDownloaded => 'Not Downloaded';
+  String get notDownloaded => '未下载';
 
   @override
-  String get aboutRomDatabase => 'About ROM Database';
+  String get aboutRomDatabase => '关于ROM数据库';
 
   @override
   String get aboutRomDatabaseDescription =>
-      'The ROM database contains lists of available ROMs organized by platform. It is downloaded from the Forsaken romList repository on GitHub.';
+      'ROM数据库包含按平台组织的可用ROM列表。它从GitHub上的Forsaken romList仓库下载。';
 
   @override
-  String get romDatabaseSource => 'Source: github.com/ForsakenStation/romList';
+  String get romDatabaseSource => '来源: github.com/ForsakenStation/romList';
 
   @override
   String get downloadRomDatabaseDescription =>
-      'This will download ROM lists from the Forsaken romList repository on GitHub.';
+      '这将从GitHub上的Forsaken romList仓库下载ROM列表。';
 
   @override
-  String get downloadRomDatabaseStats =>
-      'Size: ~7 MB\nPlatforms: 138\nTotal ROMs: ~240,000';
+  String get downloadRomDatabaseStats => '大小: ~7 MB\n平台: 138\nROM总数: ~240,000';
 
   @override
-  String get downloadWillOverwrite =>
-      'Note: This will overwrite existing data.';
+  String get downloadWillOverwrite => '注意: 这将覆盖现有数据。';
 
   @override
-  String get clearRomDatabaseDescription =>
-      'This will delete all downloaded ROM lists and reset the database to its initial state.';
+  String get clearRomDatabaseDescription => '这将删除所有下载的ROM列表并将数据库重置为初始状态。';
 
   @override
-  String get gamelistsStatus => 'Gamelists Status';
+  String get gamelistsStatus => '游戏列表状态';
 
   @override
-  String get gamelistsDownloaded => 'Downloaded';
+  String get gamelistsDownloaded => '已下载';
 
   @override
-  String get gamelistsNotDownloaded => 'Not Downloaded';
+  String get gamelistsNotDownloaded => '未下载';
 
   @override
-  String get aboutGamelists => 'About Gamelists';
+  String get aboutGamelists => '关于游戏列表';
 
   @override
   String get aboutGamelistsDescription =>
-      'Gamelists contain game metadata (names, descriptions, ratings) for each platform. They are downloaded from the Forsaken gamelists repository on GitHub.';
+      '游戏列表包含每个平台的游戏元数据 (名称、描述、评分)。它们从GitHub上的Forsaken gamelists仓库下载。';
 
   @override
-  String get gamelistsSource => 'Source: github.com/ForsakenStation/gamelists';
+  String get gamelistsSource => '来源: github.com/ForsakenStation/gamelists';
 
   @override
-  String get downloadGamelists => 'Download Gamelists';
+  String get downloadGamelists => '下载游戏列表';
 
   @override
   String get downloadGamelistsDescription =>
-      'This will download gamelist.xml files from the Forsaken gamelists repository on GitHub.';
+      '这将从GitHub上的Forsaken gamelists仓库下载gamelist.xml文件。';
 
   @override
-  String get downloadGamelistsWillOverwrite =>
-      'Note: This will overwrite existing gamelist files.';
+  String get downloadGamelistsWillOverwrite => '注意: 这将覆盖现有的游戏列表文件。';
 
   @override
-  String get downloadingGamelists => 'Downloading Gamelists...';
+  String get downloadingGamelists => '正在下载游戏列表...';
 
   @override
-  String get gamelistsDownloadedSuccess => 'Gamelists downloaded successfully';
+  String get gamelistsDownloadedSuccess => '游戏列表下载成功';
 
   @override
-  String get failedDownloadGamelists => 'Failed to download gamelists';
+  String get failedDownloadGamelists => '下载游戏列表失败';
 
   @override
-  String get clearGamelists => 'Clear Gamelists';
+  String get clearGamelists => '清除游戏列表';
 
   @override
-  String get clearGamelistsDescription =>
-      'This will delete all downloaded gamelist files.';
+  String get clearGamelistsDescription => '这将删除所有下载的游戏列表文件。';
 
   @override
-  String get gamelistsCleared => 'Gamelists cleared';
+  String get gamelistsCleared => '游戏列表已清除';
 
   @override
-  String get failedClearGamelists => 'Failed to clear gamelists';
+  String get failedClearGamelists => '清除游戏列表失败';
 
   @override
-  String get rebuildMediaCache => 'Rebuild Media Cache';
+  String get rebuildMediaCache => '重建媒体缓存';
 
   @override
-  String get rebuildMediaCacheDescription =>
-      'Scan media directories and cache paths in gamelists for faster loading';
+  String get rebuildMediaCacheDescription => '扫描媒体目录并将路径缓存到游戏列表中以加快加载速度';
 
   @override
-  String get rebuildMediaCacheConfirmTitle => 'Rebuild Media Cache?';
+  String get rebuildMediaCacheConfirmTitle => '重建媒体缓存?';
 
   @override
   String get rebuildMediaCacheConfirmBody =>
-      'This will scan all media directories and update gamelist.xml files with media paths. This may take a moment for large collections.';
+      '这将扫描所有媒体目录并用媒体路径更新gamelist.xml文件。对于大型收藏集,这可能需要一些时间。';
 
   @override
-  String get rebuildMediaCacheProgress => 'Rebuilding media cache...';
+  String get rebuildMediaCacheProgress => '正在重建媒体缓存...';
 
   @override
   String rebuildMediaCacheProcessingPlatform(
@@ -1398,11 +1374,11 @@ class AppLocalizationsZh extends AppLocalizations {
     String current,
     String total,
   ) {
-    return 'Processing $platform ($current/$total)';
+    return '正在处理 $platform ($current/$total)';
   }
 
   @override
-  String get rebuildMediaCacheComplete => 'Media Cache Rebuilt';
+  String get rebuildMediaCacheComplete => '媒体缓存已重建';
 
   @override
   String rebuildMediaCacheSummary(
@@ -1411,14 +1387,14 @@ class AppLocalizationsZh extends AppLocalizations {
     String updated,
     String paths,
   ) {
-    return '$platforms platforms, $games games scanned, $updated updated, $paths media paths cached';
+    return '$platforms 个平台,$games 个游戏已扫描,$updated 个已更新,$paths 个媒体路径已缓存';
   }
 
   @override
-  String get rebuildMediaCacheError => 'Failed to rebuild media cache';
+  String get rebuildMediaCacheError => '重建媒体缓存失败';
 
   @override
   String rebuildMediaCacheErrors(String count) {
-    return '$count errors occurred during rebuild';
+    return '重建过程中发生 $count 个错误';
   }
 }

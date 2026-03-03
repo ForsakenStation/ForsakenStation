@@ -1,15 +1,23 @@
 {
   "@@locale": "fr",
   "appTitle": "Forsaken Emulator",
+  "retroGamingFrontend": "Frontend de Jeu Rétro",
   "platforms": "Plateformes",
   "roms": "ROMs",
   "settings": "Paramètres",
+  "settingsAndConfiguration": "Paramètres et Configuration",
+  "aboutForsakenEmulator": "À propos de Forsaken Emulator",
+  "version": "Version",
+  "appDescription": "Un frontend d'émulateur multi-plateforme moderne construit avec Flutter.",
+  "emulators": "Émulateurs",
+  "ready": "Prêt",
   "back": "Retour",
   "select": "Sélectionner",
   "search": "Rechercher",
   "refresh": "Actualiser",
   "loading": "Chargement...",
   "error": "Erreur",
+  "initializationError": "Erreur d'Initialisation",
   "retry": "Réessayer",
   "cancel": "Annuler",
   "ok": "OK",
@@ -21,24 +29,574 @@
   "close": "Fermer",
   "noRomsFound": "Aucune ROM trouvée",
   "noPlatformsFound": "Aucune plateforme trouvée",
+  "checkRomsPath": "Vérifiez la variable d'environnement ROMS_PATH",
   "downloading": "Téléchargement...",
   "downloadComplete": "Téléchargement terminé",
   "downloadFailed": "Échec du téléchargement",
   "emulatorNotFound": "Émulateur non trouvé",
   "romNotFound": "ROM non trouvée",
   "biosRequired": "BIOS requis",
-  "systemCheck": "Vérification du système",
+  "systemCheck": "Vérification Système",
   "language": "Langue",
   "theme": "Thème",
   "systemDefault": "Par défaut du système",
   "help": "Aide",
+  "keyboardAndGamepadControls": "Contrôles Clavier et Manette",
+  "navigation": "Navigation",
+  "actions": "Actions",
+  "viewControls": "Contrôles d'Affichage",
+  "gotIt": "Compris!",
   "exit": "Quitter",
+  "exitApplication": "Quitter l'Application",
   "exitConfirm": "Êtes-vous sûr de vouloir quitter?",
+  "downloadManager": "Gestionnaire de Téléchargements",
+  "clearCompleted": "Effacer Terminés",
+  "selectCategory": "Sélectionner une Catégorie",
+  "confirmDownload": "Confirmer le Téléchargement",
+  "downloadGameLists": "Télécharger les Listes de Jeux",
+  "downloadGameListsDescription": "Cela téléchargera les listes de ROMs depuis GitHub.",
+  "gameListsDownloaded": "Listes de jeux téléchargées!",
+  "romStorageManagement": "Gestion du Stockage des ROMs",
+  "deleteRom": "Supprimer la ROM?",
+  "deleteRomConfirm": "Supprimer {fileName}?",
+  "actionCannotBeUndone": "Cette action ne peut pas être annulée.",
+  "deleted": "Supprimé: {fileName}",
+  "savePermanently": "Enregistrer Permanemment?",
+  "moveRomConfirm": "Déplacer {fileName} vers le stockage permanent?",
+  "saved": "Enregistré: {fileName}",
+  "clearAll": "Tout Effacer?",
+  "clearAllConfirm": "Supprimer toutes les ROMs temporaires?",
+  "allCleared": "Toutes les ROMs temporaires effacées",
+  "systemPathsConfiguration": "Configuration des Chemins Système",
+  "migrateRoms": "Migrer les ROMs?",
+  "migrateRomsDescription": "Le chemin de stockage permanent des ROMs a changé de $oldPath vers $newPath. Voulez-vous migrer les ROMs existantes vers le nouvel emplacement?",
+  "noKeepThem": "Non, les garder",
+  "yesMigrateRoms": "Oui, migrer les ROMs",
+  "migratingRoms": "Migration des ROMs...",
+  "romMigrationFailed": "Avertissement: La migration des ROMs a échoué",
+  "pathsSaved": "Chemins enregistrés avec succès",
+  "errorSavingPaths": "Erreur lors de l'enregistrement des chemins:",
+  "resetConfiguration": "Réinitialiser la Configuration",
+  "resetConfigDescription": "Cela réinitialisera tous les chemins à leurs valeurs par défaut. Vos ROMs et fichiers médias ne seront pas affectés.",
+  "configurationReset": "Configuration réinitialisée aux valeurs par défaut",
+  "errorResettingConfiguration": "Erreur lors de la réinitialisation de la configuration:",
+  "savePaths": "Enregistrer les Chemins",
+  "saving": "Enregistrement...",
+  "emulatorManagement": "Gestion des Émulateurs",
+  "configurationReloaded": "Configuration rechargée",
+  "errorLoadingEmulators": "Erreur lors du chargement des émulateurs:",
+  "emulatorAdded": "Émulateur ajouté avec succès",
+  "errorAddingEmulator": "Erreur lors de l'ajout de l'émulateur:",
+  "emulatorUpdated": "Émulateur mis à jour avec succès",
+  "errorUpdatingEmulator": "Erreur lors de la mise à jour de l'émulateur:",
+  "deleteEmulator": "Supprimer l'Émulateur",
+  "emulatorDeleted": "Émulateur supprimé",
+  "errorDeletingEmulator": "Erreur lors de la suppression de l'émulateur:",
+  "configurationSource": "Source de Configuration",
+  "addEmulator": "Ajouter un Émulateur",
+  "systemNameRequired": "Le nom du système est requis",
+  "commandRequired": "Au moins une commande est requise",
+  "addCommand": "Ajouter une Commande",
+  "acceptZipFiles": "Accepter les fichiers ZIP",
+  "acceptZipSubtitle": "Permettre le lancement des ROMs depuis des archives ZIP",
+  "useForeverMode": "Utiliser le Mode Forever",
+  "useForeverSubtitle": "Garder l'émulateur en cours d'exécution",
+  "workInProgress": "Travail en Cours",
+  "wipSubtitle": "Marquer comme pas encore entièrement configuré",
+  "biosFirmwareHelp": "Aide BIOS et Firmware",
+  "downloadMissingFiles": "Télécharger les Fichiers Manquants",
+  "showOnlyMissing": "Afficher seulement les manquants",
+  "downloadAllMissingBios": "Télécharger Tous les BIOS Manquants",
+  "configurationError": "Erreur de Configuration",
+  "configurationErrorDescription": "L'application n'a pas trouvé la configuration requise.\nVeuillez configurer vos chemins dans Paramètres > Chemins Système.",
+  "configurationRequired": "Requis:\n- Chemin Médias: répertoire contenant les assets médias\n- Chemin Émulateurs: répertoire contenant les binaires des émulateurs\n\nOptionnel:\n- Chemins de stockage des ROMs pour téléchargements temporaires/permanents",
+  "goToSettingsToConfigure": "Aller à Paramètres > Chemins Système pour configurer",
+  "noDownloadableBios": "Aucun fichier BIOS téléchargeable manquant",
+  "allDownloadsCompleted": "Tous les téléchargements terminés avec succès!",
+  "batchDownloadFailed": "Échec du téléchargement par lot:",
+  "download": "Télécharger",
+  "downloadCancelled": "Téléchargement annulé",
+  "launched": "Lancé:",
+  "failedToSave": "Échec de l'enregistrement permanent de la ROM",
+  "failedToSaveRom": "Échec de l'enregistrement permanent de la ROM",
+  "errorSaving": "Erreur lors de l'enregistrement de la ROM:",
+  "errorSavingRom": "Erreur lors de l'enregistrement de la ROM: {error}",
+  "openFolder": "Ouvrir le Dossier",
+  "viewManual": "Voir le Manuel",
+  "play": "Jouer",
+  "goBack": "Retourner",
+  "clearSearch": "Effacer la Recherche",
+  "iUnderstand": "Je comprends et j'accepte ces termes",
+  "start": "Démarrer",
+  "debugMode": "Mode Débogage: ",
+  "toggleDebugMode": "Basculer le Mode Débogage",
+  "preparingDownload": "Préparation du téléchargement...",
+  "noEmulatorsAvailable": "Aucun émulateur disponible pour cette catégorie",
+  "failedToLaunch": "Échec du lancement de l'émulateur web:",
+  "platformInfo": "Info Plateforme",
+  "emulatorPlatformInfo": "Info Plateforme Émulateur",
   "favorites": "Favoris",
   "all": "Tout",
   "collections": "Collections",
   "searchRoms": "Rechercher des ROMs...",
   "searchPlatforms": "Rechercher des plateformes...",
   "romsCount": "{count} ROMs",
-  "platformsCount": "{count} plateformes"
+  "platformsCount": "{count} plateformes",
+  "region": "Région",
+  "genre": "Genre",
+  "year": "Année",
+  "publisher": "Éditeur",
+  "developer": "Développeur",
+  "playWithNetplay": "Jouer avec Netplay",
+  "downloadBios": "Télécharger BIOS",
+  "viewDetails": "Voir les Détails",
+  "addToFavorites": "Ajouter aux Favoris",
+  "removeFromFavorites": "Retirer des Favoris",
+  "biosMissing": "BIOS manquant",
+  "biosPresent": "BIOS présent",
+  "checkingBios": "Vérification du BIOS...",
+  "emulatorDownloading": "Téléchargement de l'émulateur...",
+  "emulatorDownloadComplete": "Émulateur téléchargé",
+  "emulatorDownloadFailed": "Échec du téléchargement de l'émulateur",
+  "installingEmulator": "Installation de l'émulateur...",
+  "emulatorReady": "Émulateur prêt",
+  "configuration": "Configuration",
+  "paths": "Chemins",
+  "storage": "Stockage",
+  "emulatorsPath": "Chemin des Émulateurs",
+  "romsPath": "Chemin des ROMs",
+  "mediaPath": "Chemin des Médias",
+  "biosPath": "Chemin du BIOS",
+  "tempPath": "Chemin Temporaire",
+  "browse": "Parcourir",
+  "apply": "Appliquer",
+  "reset": "Réinitialiser",
+  "clear": "Effacer",
+  "scan": "Scanner",
+  "scanForRoms": "Scanner les ROMs",
+  "scanningRoms": "Scan des ROMs...",
+  "scanComplete": "Scan terminé",
+  "romsFound": "{count} ROMs trouvées",
+  "noNewRomsFound": "Aucune nouvelle ROM trouvée",
+  "launchEmulator": "Lancer l'Émulateur",
+  "emulatorError": "Erreur d'Émulateur",
+  "gamepadConnected": "Manette connectée",
+  "gamepadDisconnected": "Manette déconnectée",
+  "gamepadTest": "Test Manette",
+  "pressAnyButton": "Appuyez sur n'importe quel bouton pour tester",
+  "buttonA": "A",
+  "buttonB": "B",
+  "buttonX": "X",
+  "buttonY": "Y",
+  "buttonStart": "Start",
+  "buttonSelect": "Select",
+  "dpadUp": "D-Pad Haut",
+  "dpadDown": "D-Pad Bas",
+  "dpadLeft": "D-Pad Gauche",
+  "dpadRight": "D-Pad Droite",
+  "leftShoulder": "L1",
+  "rightShoulder": "R1",
+  "leftTrigger": "L2",
+  "rightTrigger": "R2",
+  "leftStick": "Stick Gauche",
+  "rightStick": "Stick Droit",
+  "setupWizard": "Assistant de Configuration",
+  "welcome": "Bienvenue",
+  "welcomeMessage": "Bienvenue dans Forsaken Emulator",
+  "next": "Suivant",
+  "previous": "Précédent",
+  "finish": "Terminer",
+  "skip": "Passer",
+  "setupComplete": "Configuration Terminée",
+  "selectLanguage": "Sélectionner la Langue",
+  "selectEmulatorsPath": "Sélectionner le Chemin des Émulateurs",
+  "selectRomsPath": "Sélectionner le Chemin des ROMs",
+  "selectMediaPath": "Sélectionner le Chemin des Médias",
+  "allSettingsConfigured": "Tous les paramètres configurés",
+  "darkTheme": "Sombre",
+  "lightTheme": "Clair",
+  "systemTheme": "Système",
+  "about": "À propos",
+  "checkForUpdates": "Vérifier les Mises à Jour",
+  "noUpdatesAvailable": "Aucune mise à jour disponible",
+  "updateAvailable": "Mise à jour disponible",
+  "downloadingUpdate": "Téléchargement de la mise à jour...",
+  "installingUpdate": "Installation de la mise à jour...",
+  "updateComplete": "Mise à jour terminée",
+  "updateFailed": "Échec de la mise à jour",
+  "networkError": "Erreur réseau",
+  "connectionError": "Erreur de connexion",
+  "timeoutError": "Erreur de délai",
+  "unknownError": "Erreur inconnue",
+  "permissionDenied": "Permission refusée",
+  "fileNotFound": "Fichier non trouvé",
+  "directoryNotFound": "Répertoire non trouvé",
+  "diskFull": "Disque plein",
+  "invalidPath": "Chemin invalide",
+  "pathNotWritable": "Chemin non inscriptible",
+  "romCorrupted": "Le fichier ROM peut être corrompu",
+  "zipError": "Erreur d'archive ZIP",
+  "extractionFailed": "Échec de l'extraction",
+  "checksumMismatch": "Incompatibilité de somme de contrôle",
+  "biosCheckFailed": "Échec de la vérification du BIOS",
+  "continueAnyway": "Continuer quand même",
+  "reportIssue": "Signaler un Problème",
+  "copyToClipboard": "Copier dans le presse-papiers",
+  "copiedToClipboard": "Copié dans le presse-papiers",
+  "share": "Partager",
+  "hide": "Masquer",
+  "show": "Afficher",
+  "toggleView": "Changer la Vue",
+  "gridView": "Vue en Grille",
+  "listView": "Vue en Liste",
+  "carouselView": "Vue en Carrousel",
+  "sortBy": "Trier par",
+  "sortByName": "Nom",
+  "sortByDate": "Date",
+  "sortBySize": "Taille",
+  "sortByRegion": "Région",
+  "ascending": "Croissant",
+  "descending": "Décroissant",
+  "filter": "Filtrer",
+  "filterByRegion": "Filtrer par Région",
+  "filterByGenre": "Filtrer par Genre",
+  "filterByYear": "Filtrer par Année",
+  "clearFilters": "Effacer les Filtres",
+  "systemInfo": "Info Système",
+  "cpu": "CPU",
+  "memory": "Mémoire",
+  "storageInfo": "Stockage",
+  "os": "Système d'Exploitation",
+  "emulatorVersion": "Version de l'Émulateur",
+  "totalRoms": "Total ROMs",
+  "totalSize": "Taille Totale",
+  "freeSpace": "Espace Libre",
+  "usedSpace": "Espace Utilisé",
+  "systemUtilities": "Utilitaires Système",
+  "romVerificationResults": "Résultats de Vérification des ROMs",
+  "totalRomFiles": "Total fichiers ROM",
+  "emptyRomFiles": "Fichiers ROM vides",
+  "validRomFiles": "Fichiers ROM valides",
+  "romsDirectoryDoesNotExist": "Le répertoire des ROMs n'existe pas",
+  "gamelistCheckResults": "Résultats de Vérification des Gamelists",
+  "totalPlatforms": "Total plateformes",
+  "missingGamelists": "Gamelists manquantes",
+  "configurationBackup": "Sauvegarde de Configuration",
+  "configurationBackedUp": "Configuration sauvegardée dans:",
+  "errorBackingUp": "Erreur lors de la sauvegarde de la configuration:",
+  "romDatabase": "Base de Données ROMs",
+  "romDatabaseDownloaded": "Base de données ROMs téléchargée avec succès",
+  "failedDownloadRomDatabase": "Échec du téléchargement de la base de données ROMs",
+  "romDatabaseCleared": "Base de données ROMs effacée",
+  "failedClearDatabase": "Échec de l'effacement de la base de données",
+  "downloadRomDatabase": "Télécharger la Base de Données ROMs",
+  "clearRomDatabase": "Effacer la Base de Données ROMs",
+  "systemRequirements": "Exigences Système",
+  "failedToCheckSystem": "Échec de la vérification du système",
+  "cleanedUpTempFiles": "{deletedCount} fichiers ROM temporaires nettoyés",
+  "errorCleaningTempFiles": "Erreur lors du nettoyage des fichiers temporaires:",
+  "errorVerifyingRomFiles": "Erreur lors de la vérification des fichiers ROM:",
+  "errorCheckingGamelists": "Erreur lors de la vérification des gamelists:",
+  "cancelDownload": "Annuler le Téléchargement",
+  "selectEmulator": "Sélectionner un Émulateur",
+  "biosStatusDashboard": "Tableau de Bord État BIOS",
+  "webSettings": "Paramètres Web",
+  "saveSettings": "Enregistrer les Paramètres",
+  "errorSavingSettings": "Erreur lors de l'enregistrement des paramètres:",
+  "romsCountItems": "{count} ROMs",
+  "savedPermanently": "enregistré permanentemment",
+  "keptInTemporary": "gardé dans le stockage temporaire",
+  "tryAgain": "Réessayer",
+  "allDownloads": "Tous les téléchargements terminés",
+  "romSavedPermanently": "{name} enregistré permanentemment",
+  "undo": "Annuler",
+  "romKeptInTemporary": "{name} gardé dans le stockage temporaire",
+  "romsCountWithSize": "{count} ROMs • {size}",
+  "whatYouCanTry": "Ce que vous pouvez essayer:",
+  "tips": "Conseils",
+  "helpNavigateItems": "Naviguer entre les éléments",
+  "helpGamepadNavigation": "Navigation manette",
+  "helpQuickNavigation": "Navigation rapide (sauter plusieurs éléments)",
+  "helpGamepadPageNavigation": "Navigation par pages manette",
+  "helpGoToFirst": "Aller au premier élément",
+  "helpGoToLast": "Aller au dernier élément",
+  "helpJumpToLetter": "Sauter à l'élément commençant par cette lettre",
+  "helpSelectItem": "Sélectionner un élément",
+  "helpGamepadSelect": "Sélection manette",
+  "helpGoBackCloseDialogs": "Retour / Fermer les dialogues",
+  "helpExitApplication": "Quitter l'application",
+  "helpGamepadBackClose": "Manette retour / Fermer les dialogues",
+  "helpToggleViewMode": "Basculer le mode d'affichage (Grille/Liste/Carrousel)",
+  "helpGamepadViewToggle": "Changer la vue avec la manette",
+  "helpRefreshView": "Actualiser la vue actuelle",
+  "helpShowPlatformInfo": "Afficher les informations de la plateforme",
+  "helpActivateSearch": "Activer la recherche",
+  "helpGamepadSearch": "Recherche manette",
+  "helpShowHelpDialog": "Afficher ce dialogue d'aide",
+  "helpGamepadHelp": "Aide manette",
+  "tipUseKeyboardOrGamepad": "Utilisez le clavier ou la manette pour naviguer",
+  "tipAlphabeticalJump": "Le saut alphabétique fonctionne dans tous les modes d'affichage",
+  "tipPressQuestionMark": "Appuyez sur ? à tout moment pour voir cette aide",
+  "tipGamepadAlongside": "La manette fonctionne avec les contrôles clavier",
+  "configurePathsDescription": "Configurez les chemins utilisés par l'application pour localiser les ROMs, médias et émulateurs.",
+  "romListsAutoManaged": "Les listes de ROMs sont maintenant gérées automatiquement. Téléchargez-les depuis Paramètres > Base de Données ROMs.",
+  "romStorage": "Stockage ROMs",
+  "configureRomStorageDescription": "Configurez où les ROMs téléchargées sont stockées temporairement et permanentemment.",
+  "resetToDefaults": "Réinitialiser aux valeurs par défaut",
+  "mediaPathLabel": "Chemin des Médias",
+  "mediaPathHint": "Répertoire contenant les médias (images, vidéos)",
+  "emulatorsPathLabel": "Chemin des Émulateurs",
+  "emulatorsPathHint": "Répertoire contenant les binaires des émulateurs",
+  "gamelistPathAutomatic": "Chemin Gamelist (Automatique)",
+  "gamelistAutoDescription": "Les gamelists sont maintenant gérées automatiquement dans le répertoire de données de l'application. Cela rend l'application complètement indépendante et prépare la future distribution de gamelists depuis GitHub.",
+  "tempRomStorageLabel": "Stockage Temporaire des ROMs (Optionnel)",
+  "tempRomStorageDescription": "Les ROMs sont téléchargées ici en premier. Elles peuvent être promues vers le stockage permanent après avoir joué.",
+  "permanentRomStorageLabel": "Stockage Permanent des ROMs (Optionnel)",
+  "permanentRomStorageDescription": "Les ROMs enregistrées permanentemment sont stockées ici. Celles-ci ne sont pas nettoyées automatiquement.",
+  "defaultAppSupportDir": "Par défaut: répertoire de support de l'application",
+  "currentPathDisplay": "Actuel: {path}",
+  "configurationFile": "Fichier de Configuration",
+  "source": "Source:",
+  "customConfigActive": "Configuration personnalisée active",
+  "pathStructure": "Structure des Chemins",
+  "pathStructureDescription": "Chemin Médias: MEDIA_PATH/plateforme/boxart|screenshots|videos/rom.png\nChemin Gamelist: ~/.local/share/com.example.emulator/gamelists/plateforme/gamelist.xml (automatique)\nChemin Émulateurs: EMULATORS_PATH/emulateur_binaire",
+  "errorCheckingSystem": "Erreur lors de la vérification du système",
+  "recheckR": "Re-vérifier (R)",
+  "allRequiredToolsInstalled": "Tous les Outils Requis Installés",
+  "missingRequiredTools": "Outils Requis Manquants",
+  "systemReadyToUse": "Votre système est prêt à utiliser l'émulateur",
+  "someRequiredToolsMissing": "Certains outils requis manquent",
+  "requiredTools": "Outils Requis",
+  "requiredToolsDescription": "Ces outils sont nécessaires pour télécharger et extraire les émulateurs",
+  "installationInstructions": "Instructions d'Installation",
+  "installed": "Installé",
+  "missing": "Manquant",
+  "downloadEmulatorsAndGameLists": "Télécharger les émulateurs et listes de jeux",
+  "quickActions": "Actions Rapides",
+  "downloadAll": "Tout Télécharger",
+  "byCategory": "Par Catégorie",
+  "downloadQueue": "File de Téléchargement",
+  "noDownloadsInProgress": "Aucun téléchargement en cours",
+  "selectQuickActionToStart": "Sélectionnez une action rapide ci-dessus pour commencer à télécharger",
+  "categorySony": "Sony (PS1-PS4)",
+  "categoryNintendo": "Nintendo (GC, Wii, Switch)",
+  "categoryMicrosoft": "Microsoft (Xbox, Xbox 360)",
+  "categoryMultiPlatform": "Multi-Platesforme (RetroArch)",
+  "categoryOtherEmulators": "Autres Émulateurs",
+  "categoryUtilities": "Utilitaires",
+  "confirmDownloadDescription": "Télécharger {count} émulateur(s)?\nTaille estimée: ~{size} MB\n\nCela peut prendre un certain temps selon votre connexion internet.",
+  "alreadyInstalled": "Déjà installé",
+  "starting": "Démarrage...",
+  "completed": "Terminé",
+  "gameListsAlreadyDownloaded": "Listes de jeux déjà téléchargées",
+  "redownload": "Re-Télécharger",
+  "gameListsFromGitHub": "Listes de Jeux (depuis GitHub)",
+  "downloaded": "Téléchargé",
+  "cancelled": "Annulé",
+  "missingFor": "Manquant pour:",
+  "noCustomConfigToBackup": "Aucune configuration personnalisée à sauvegarder. Utilisation des valeurs par défaut.",
+  "saveConfigurationBackup": "Sauvegarder la Configuration",
+  "refreshStatsR": "Actualiser les statistiques (R)",
+  "systemStatistics": "Statistiques Système",
+  "romFiles": "Fichiers ROM",
+  "maintenanceTools": "Outils de Maintenance",
+  "cleanupTemporaryRoms": "Nettoyer les ROMs Temporaires",
+  "cleanupTemporaryRomsDescription": "Supprimer les fichiers ROM temporaires du répertoire temporaire du système",
+  "verifyRomFiles": "Vérifier les Fichiers ROM",
+  "verifyRomFilesDescription": "Vérifier que tous les fichiers ROM existent et sont valides",
+  "checkMissingGamelists": "Vérifier les Gamelists Manquantes",
+  "checkMissingGamelistsDescription": "Trouver les plateformes sans fichier gamelist.xml",
+  "backupConfiguration": "Sauvegarder la Configuration",
+  "backupConfigurationDescription": "Créer une sauvegarde de config.json",
+  "downloadingRomDatabase": "Téléchargement de la Base de Données ROMs...",
+  "downloadMayTakeMinutes": "Cela peut prendre quelques minutes selon votre connexion...",
+  "databaseStatus": "État de la Base de Données",
+  "notDownloaded": "Non Téléchargé",
+  "aboutRomDatabase": "À propos de la Base de Données ROMs",
+  "aboutRomDatabaseDescription": "La base de données ROMs contient des listes de ROMs disponibles organisées par plateforme. Elle est téléchargée depuis le dépôt romList de Forsaken sur GitHub.",
+  "romDatabaseSource": "Source: github.com/ForsakenStation/romList",
+  "downloadRomDatabaseDescription": "Cela téléchargera les listes ROMs depuis le dépôt romList de Forsaken sur GitHub.",
+  "downloadRomDatabaseStats": "Taille: ~7 MB\nPlateformes: 138\nTotal ROMs: ~240,000",
+  "downloadWillOverwrite": "Note: Cela écrasera les données existantes.",
+  "clearRomDatabaseDescription": "Cela supprimera toutes les listes ROMs téléchargées et réinitialisera la base de données à son état initial.",
+  "gamelistsStatus": "État des Gamelists",
+  "gamelistsDownloaded": "Téléchargées",
+  "gamelistsNotDownloaded": "Non Téléchargées",
+  "aboutGamelists": "À propos des Gamelists",
+  "aboutGamelistsDescription": "Les gamelists contiennent les métadonnées des jeux (noms, descriptions, évaluations) pour chaque plateforme. Elles sont téléchargées depuis le dépôt gamelists de Forsaken sur GitHub.",
+  "gamelistsSource": "Source: github.com/ForsakenStation/gamelists",
+  "downloadGamelists": "Télécharger les Gamelists",
+  "downloadGamelistsDescription": "Cela téléchargera les fichiers gamelist.xml depuis le dépôt gamelists de Forsaken sur GitHub.",
+  "downloadGamelistsWillOverwrite": "Note: Cela écrasera les fichiers gamelists existants.",
+  "downloadingGamelists": "Téléchargement des Gamelists...",
+  "gamelistsDownloadedSuccess": "Gamelists téléchargées avec succès",
+  "failedDownloadGamelists": "Échec du téléchargement des gamelists",
+  "clearGamelists": "Effacer les Gamelists",
+  "clearGamelistsDescription": "Cela supprimera tous les fichiers gamelists téléchargés.",
+  "gamelistsCleared": "Gamelists effacées",
+  "failedClearGamelists": "Échec de l'effacement des gamelists",
+  "rebuildMediaCache": "Reconstruire le Cache Médias",
+  "rebuildMediaCacheDescription": "Scanner les répertoires médias et mettre en cache les chemins dans les gamelists pour un chargement plus rapide",
+  "rebuildMediaCacheConfirmTitle": "Reconstruire le Cache Médias?",
+  "rebuildMediaCacheConfirmBody": "Cela scannera tous les répertoires médias et mettra à jour les fichiers gamelist.xml avec les chemins médias. Cela peut prendre un moment pour les grandes collections.",
+  "rebuildMediaCacheProgress": "Reconstruction du cache médias...",
+  "rebuildMediaCacheProcessingPlatform": "Traitement de {platform} ({current}/{total})",
+  "rebuildMediaCacheComplete": "Cache Médias Reconstruit",
+  "rebuildMediaCacheSummary": "{platforms} plateformes, {games} jeux scannés, {updated} mis à jour, {paths} chemins médias mis en cache",
+  "rebuildMediaCacheError": "Échec de la reconstruction du cache médias",
+  "rebuildMediaCacheErrors": "{count} erreurs lors de la reconstruction",
+  "@locale": "en",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "@retroGamingFrontend": {
+    "description": "Subtitle shown on initializing screen"
+  },
+  "@deleteRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleted": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@moveRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@saved": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@errorSavingRom": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@platformsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@romsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@cleanedUpTempFiles": {
+    "placeholders": {
+      "deletedCount": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountItems": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "@romSavedPermanently": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romKeptInTemporary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountWithSize": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@currentPathDisplay": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "@confirmDownloadDescription": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheProcessingPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheSummary": {
+    "placeholders": {
+      "platforms": {
+        "type": "String"
+      },
+      "games": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      },
+      "paths": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheErrors": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -1,15 +1,23 @@
 {
   "@@locale": "ar",
   "appTitle": "Forsaken Emulator",
+  "retroGamingFrontend": "واجهة ألعاب الرجعي",
   "platforms": "المنصات",
-  "roms": "روم",
+  "roms": "الرومات",
   "settings": "الإعدادات",
+  "settingsAndConfiguration": "الإعدادات والتكوين",
+  "aboutForsakenEmulator": "حول Forsaken Emulator",
+  "version": "الإصدار",
+  "appDescription": "واجهة محاكيات متعددة المنصات الحديثة مبنية بـ Flutter.",
+  "emulators": "المحاكيات",
+  "ready": "جاهز",
   "back": "رجوع",
-  "select": "اختيار",
+  "select": "تحديد",
   "search": "بحث",
   "refresh": "تحديث",
-  "loading": "جاري التحميل...",
+  "loading": "جارٍ التحميل...",
   "error": "خطأ",
+  "initializationError": "خطأ في التهيئة",
   "retry": "إعادة المحاولة",
   "cancel": "إلغاء",
   "ok": "موافق",
@@ -19,26 +27,576 @@
   "yes": "نعم",
   "no": "لا",
   "close": "إغلاق",
-  "noRomsFound": "لم يتم العثور على روم",
+  "noRomsFound": "لم يتم العثور على رومات",
   "noPlatformsFound": "لم يتم العثور على منصات",
-  "downloading": "جاري التنزيل...",
+  "checkRomsPath": "تحقق من متغير البيئة ROMS_PATH",
+  "downloading": "جارٍ التنزيل...",
   "downloadComplete": "اكتمل التنزيل",
   "downloadFailed": "فشل التنزيل",
-  "emulatorNotFound": "لم يتم العثور على محاكي",
-  "romNotFound": "لم يتم العثور على روم",
-  "biosRequired": "مطلوب BIOS",
+  "emulatorNotFound": "المحاكي غير موجود",
+  "romNotFound": "الروم غير موجود",
+  "biosRequired": "BIOS مطلوب",
   "systemCheck": "فحص النظام",
   "language": "اللغة",
-  "theme": "المظهر",
+  "theme": "السمة",
   "systemDefault": "افتراضي النظام",
   "help": "مساعدة",
+  "keyboardAndGamepadControls": "عناصر تحكم لوحة المفاتيح وعصا التحكم",
+  "navigation": "التنقل",
+  "actions": "الإجراءات",
+  "viewControls": "عناصر تحكم العرض",
+  "gotIt": "فهمت!",
   "exit": "خروج",
+  "exitApplication": "الخروج من التطبيق",
   "exitConfirm": "هل أنت متأكد أنك تريد الخروج؟",
+  "downloadManager": "مدير التنزيلات",
+  "clearCompleted": "مسح المكتملة",
+  "selectCategory": "تحديد الفئة",
+  "confirmDownload": "تأكيد التنزيل",
+  "downloadGameLists": "تنزيل قوائم الألعاب",
+  "downloadGameListsDescription": "سيؤدي هذا إلى تنزيل قوائم الرومات من GitHub.",
+  "gameListsDownloaded": "تم تنزيل قوائم الألعاب!",
+  "romStorageManagement": "إدارة تخزين الرومات",
+  "deleteRom": "حذف الروم؟",
+  "deleteRomConfirm": "حذف {fileName}؟",
+  "actionCannotBeUndone": "لا يمكن التراجع عن هذا الإجراء.",
+  "deleted": "تم الحذف: {fileName}",
+  "savePermanently": "حفظ بشكل دائم؟",
+  "moveRomConfirm": "نقل {fileName} إلى التخزين الدائم؟",
+  "saved": "تم الحفظ: {fileName}",
+  "clearAll": "مسح الكل؟",
+  "clearAllConfirm": "حذف جميع الرومات المؤقتة؟",
+  "allCleared": "تم مسح جميع الرومات المؤقتة",
+  "systemPathsConfiguration": "تكوين مسارات النظام",
+  "migrateRoms": "ترحيل الرومات؟",
+  "migrateRomsDescription": "تم تغيير مسار التخزين الدائم للرومات من $oldPath إلى $newPath. هل تريد ترحيل الرومات الموجودة إلى الموقع الجديد؟",
+  "noKeepThem": "لا، الاحتفاظ بها",
+  "yesMigrateRoms": "نعم، ترحيل الرومات",
+  "migratingRoms": "جارٍ ترحيل الرومات...",
+  "romMigrationFailed": "تحذير: فشل ترحيل الرومات",
+  "pathsSaved": "تم حفظ المسارات بنجاح",
+  "errorSavingPaths": "خطأ في حفظ المسارات:",
+  "resetConfiguration": "إعادة تعيين التكوين",
+  "resetConfigDescription": "سيؤدي هذا إلى إعادة تعيين جميع المسارات إلى قيمها الافتراضية. لن تتأثر روماتك وملفات الوسائط.",
+  "configurationReset": "تمت إعادة تعيين التكوين إلى القيم الافتراضية",
+  "errorResettingConfiguration": "خطأ في إعادة تعيين التكوين:",
+  "savePaths": "حفظ المسارات",
+  "saving": "جارٍ الحفظ...",
+  "emulatorManagement": "إدارة المحاكيات",
+  "configurationReloaded": "تمت إعادة تحميل التكوين",
+  "errorLoadingEmulators": "خطأ في تحميل المحاكيات:",
+  "emulatorAdded": "تمت إضافة المحاكي بنجاح",
+  "errorAddingEmulator": "خطأ في إضافة المحاكي:",
+  "emulatorUpdated": "تم تحديث المحاكي بنجاح",
+  "errorUpdatingEmulator": "خطأ في تحديث المحاكي:",
+  "deleteEmulator": "حذف المحاكي",
+  "emulatorDeleted": "تم حذف المحاكي",
+  "errorDeletingEmulator": "خطأ في حذف المحاكي:",
+  "configurationSource": "مصدر التكوين",
+  "addEmulator": "إضافة محاكي",
+  "systemNameRequired": "اسم النظام مطلوب",
+  "commandRequired": "مطلوب أمر واحد على الأقل",
+  "addCommand": "إضافة أمر",
+  "acceptZipFiles": "قبول ملفات ZIP",
+  "acceptZipSubtitle": "السماح بتشغيل الرومات من أرشيفات ZIP",
+  "useForeverMode": "استخدام وضع Forever",
+  "useForeverSubtitle": "إبقاء المحاكي قيد التشغيل",
+  "workInProgress": "عمل قيد التقدم",
+  "wipSubtitle": "وضع علامة كغير مكون بالكامل بعد",
+  "biosFirmwareHelp": "مساعدة BIOS والبرمجية الثابتة",
+  "downloadMissingFiles": "تنزيل الملفات المفقودة",
+  "showOnlyMissing": "إظهار المفقودة فقط",
+  "downloadAllMissingBios": "تنزيل جميع BIOS المفقودة",
+  "configurationError": "خطأ في التكوين",
+  "configurationErrorDescription": "لم تتمكن التطبيق من العثور على التكوين المطلوب.\nيرجى تكوين مساراتك في الإعدادات > مسارات النظام.",
+  "configurationRequired": "مطلوب:\n- مسار الوسائط: المجلد الذي يحتوي على أصول الوسائط\n- مسار المحاكيات: المجلد الذي يحتوي على ملفات المحاكيات الثنائية\n\nاختياري:\n- مسارات تخزين الرومات للتنزيلات المؤقتة/الدائمة",
+  "goToSettingsToConfigure": "انتقل إلى الإعدادات > مسارات النظام للتكوين",
+  "noDownloadableBios": "لا توجد ملفات BIOS قابلة للتنزيل مفقودة",
+  "allDownloadsCompleted": "تمت جميع التنزيلات بنجاح!",
+  "batchDownloadFailed": "فشل التنزيل الدفعي:",
+  "download": "تنزيل",
+  "downloadCancelled": "تم إلغاء التنزيل",
+  "launched": "تم التشغيل:",
+  "failedToSave": "فشل في حفظ الروم بشكل دائم",
+  "failedToSaveRom": "فشل في حفظ الروم بشكل دائم",
+  "errorSaving": "خطأ في حفظ الروم:",
+  "errorSavingRom": "خطأ في حفظ الروم: {error}",
+  "openFolder": "فتح المجلد",
+  "viewManual": "عرض الدليل",
+  "play": "لعب",
+  "goBack": "رجوع",
+  "clearSearch": "مسح البحث",
+  "iUnderstand": "أفهم وأقبل هذه الشروط",
+  "start": "بدء",
+  "debugMode": "وضع التصحيح: ",
+  "toggleDebugMode": "تبديل وضع التصحيح",
+  "preparingDownload": "جارٍ إعداد التنزيل...",
+  "noEmulatorsAvailable": "لا توجد محاكيات متاحة لهذه الفئة",
+  "failedToLaunch": "فشل في تشغيل المحاكي الويب:",
+  "platformInfo": "معلومات المنصة",
+  "emulatorPlatformInfo": "معلومات منصة المحاكي",
   "favorites": "المفضلة",
   "all": "الكل",
   "collections": "المجموعات",
-  "searchRoms": "البحث عن روم...",
+  "searchRoms": "البحث عن رومات...",
   "searchPlatforms": "البحث عن منصات...",
-  "romsCount": "{count} روم",
-  "platformsCount": "{count} منصات"
+  "romsCount": "{count} رومات",
+  "platformsCount": "{count} منصات",
+  "region": "المنطقة",
+  "genre": "النوع",
+  "year": "السنة",
+  "publisher": "الناشر",
+  "developer": "المطور",
+  "playWithNetplay": "اللعب عبر الشبكة",
+  "downloadBios": "تنزيل BIOS",
+  "viewDetails": "عرض التفاصيل",
+  "addToFavorites": "إضافة إلى المفضلة",
+  "removeFromFavorites": "إزالة من المفضلة",
+  "biosMissing": "BIOS مفقود",
+  "biosPresent": "BIOS موجود",
+  "checkingBios": "جارٍ فحص BIOS...",
+  "emulatorDownloading": "جارٍ تنزيل المحاكي...",
+  "emulatorDownloadComplete": "تم تنزيل المحاكي",
+  "emulatorDownloadFailed": "فشل تنزيل المحاكي",
+  "installingEmulator": "جارٍ تثبيت المحاكي...",
+  "emulatorReady": "المحاكي جاهز",
+  "configuration": "التكوين",
+  "paths": "المسارات",
+  "storage": "التخزين",
+  "emulatorsPath": "مسار المحاكيات",
+  "romsPath": "مسار الرومات",
+  "mediaPath": "مسار الوسائط",
+  "biosPath": "مسار BIOS",
+  "tempPath": "المسار المؤقت",
+  "browse": "تصفح",
+  "apply": "تطبيق",
+  "reset": "إعادة تعيين",
+  "clear": "مسح",
+  "scan": "فحص",
+  "scanForRoms": "فحص الرومات",
+  "scanningRoms": "جارٍ فحص الرومات...",
+  "scanComplete": "اكتمل الفحص",
+  "romsFound": "تم العثور على {count} رومات",
+  "noNewRomsFound": "لم يتم العثور على رومات جديدة",
+  "launchEmulator": "تشغيل المحاكي",
+  "emulatorError": "خطأ في المحاكي",
+  "gamepadConnected": "عصا التحكم متصلة",
+  "gamepadDisconnected": "عصا التحكم غير متصلة",
+  "gamepadTest": "اختبار عصا التحكم",
+  "pressAnyButton": "اضغط أي زر للاختبار",
+  "buttonA": "A",
+  "buttonB": "B",
+  "buttonX": "X",
+  "buttonY": "Y",
+  "buttonStart": "Start",
+  "buttonSelect": "Select",
+  "dpadUp": "D-Pad أعلى",
+  "dpadDown": "D-Pad أسفل",
+  "dpadLeft": "D-Pad يسار",
+  "dpadRight": "D-Pad يمين",
+  "leftShoulder": "L1",
+  "rightShoulder": "R1",
+  "leftTrigger": "L2",
+  "rightTrigger": "R2",
+  "leftStick": "العصا اليسرى",
+  "rightStick": "العصا اليمنى",
+  "setupWizard": "معالج الإعداد",
+  "welcome": "مرحبا",
+  "welcomeMessage": "مرحبا بك في Forsaken Emulator",
+  "next": "التالي",
+  "previous": "السابق",
+  "finish": "إنهاء",
+  "skip": "تخطي",
+  "setupComplete": "اكتمل الإعداد",
+  "selectLanguage": "تحديد اللغة",
+  "selectEmulatorsPath": "تحديد مسار المحاكيات",
+  "selectRomsPath": "تحديد مسار الرومات",
+  "selectMediaPath": "تحديد مسار الوسائط",
+  "allSettingsConfigured": "تم تكوين جميع الإعدادات",
+  "darkTheme": "داكن",
+  "lightTheme": "فاتح",
+  "systemTheme": "النظام",
+  "about": "حول",
+  "checkForUpdates": "التحقق من التحديثات",
+  "noUpdatesAvailable": "لا توجد تحديثات متاحة",
+  "updateAvailable": "تحديث متاح",
+  "downloadingUpdate": "جارٍ تنزيل التحديث...",
+  "installingUpdate": "جارٍ تثبيت التحديث...",
+  "updateComplete": "اكتمل التحديث",
+  "updateFailed": "فشل التحديث",
+  "networkError": "خطأ في الشبكة",
+  "connectionError": "خطأ في الاتصال",
+  "timeoutError": "خطأ في المهلة",
+  "unknownError": "خطأ غير معروف",
+  "permissionDenied": "الإذن مرفوض",
+  "fileNotFound": "الملف غير موجود",
+  "directoryNotFound": "المجلد غير موجود",
+  "diskFull": "القرص ممتلئ",
+  "invalidPath": "مسار غير صالح",
+  "pathNotWritable": "المسار غير قابل للكتابة",
+  "romCorrupted": "قد يكون ملف الروم تالفا",
+  "zipError": "خطأ في أرشيف ZIP",
+  "extractionFailed": "فشل الاستخراج",
+  "checksumMismatch": "عدم تطابق المجموع الاختباري",
+  "biosCheckFailed": "فشل فحص BIOS",
+  "continueAnyway": "المتابعة على أي حال",
+  "reportIssue": "الإبلاغ عن مشكلة",
+  "copyToClipboard": "نسخ إلى الحافظة",
+  "copiedToClipboard": "تم النسخ إلى الحافظة",
+  "share": "مشاركة",
+  "hide": "إخفاء",
+  "show": "إظهار",
+  "toggleView": "تبديل العرض",
+  "gridView": "عرض شبكي",
+  "listView": "عرض قائمة",
+  "carouselView": "عرض دائري",
+  "sortBy": "ترتيب حسب",
+  "sortByName": "الاسم",
+  "sortByDate": "التاريخ",
+  "sortBySize": "الحجم",
+  "sortByRegion": "المنطقة",
+  "ascending": "تصاعدي",
+  "descending": "تنازلي",
+  "filter": "تصفية",
+  "filterByRegion": "تصفية حسب المنطقة",
+  "filterByGenre": "تصفية حسب النوع",
+  "filterByYear": "تصفية حسب السنة",
+  "clearFilters": "مسح الفلاتر",
+  "systemInfo": "معلومات النظام",
+  "cpu": "المعالج",
+  "memory": "الذاكرة",
+  "storageInfo": "التخزين",
+  "os": "نظام التشغيل",
+  "emulatorVersion": "إصدار المحاكي",
+  "totalRoms": "إجمالي الرومات",
+  "totalSize": "الحجم الإجمالي",
+  "freeSpace": "المساحة المتاحة",
+  "usedSpace": "المساحة المستخدمة",
+  "systemUtilities": "أدوات النظام",
+  "romVerificationResults": "نتائج التحقق من الرومات",
+  "totalRomFiles": "إجمالي ملفات الروم",
+  "emptyRomFiles": "ملفات روم فارغة",
+  "validRomFiles": "ملفات روم صالحة",
+  "romsDirectoryDoesNotExist": "مجلد الرومات غير موجود",
+  "gamelistCheckResults": "نتائج فحص قوائم الألعاب",
+  "totalPlatforms": "إجمالي المنصات",
+  "missingGamelists": "قوائم ألعاب مفقودة",
+  "configurationBackup": "نسخ احتياطي للتكوين",
+  "configurationBackedUp": "تم نسخ التكوين احتياطيا في:",
+  "errorBackingUp": "خطأ في نسخ التكوين احتياطيا:",
+  "romDatabase": "قاعدة بيانات الرومات",
+  "romDatabaseDownloaded": "تم تنزيل قاعدة بيانات الرومات بنجاح",
+  "failedDownloadRomDatabase": "فشل تنزيل قاعدة بيانات الرومات",
+  "romDatabaseCleared": "تم مسح قاعدة بيانات الرومات",
+  "failedClearDatabase": "فشل مسح قاعدة البيانات",
+  "downloadRomDatabase": "تنزيل قاعدة بيانات الرومات",
+  "clearRomDatabase": "مسح قاعدة بيانات الرومات",
+  "systemRequirements": "متطلبات النظام",
+  "failedToCheckSystem": "فشل فحص النظام",
+  "cleanedUpTempFiles": "تم تنظيف {deletedCount} ملفات روم مؤقتة",
+  "errorCleaningTempFiles": "خطأ في تنظيف الملفات المؤقتة:",
+  "errorVerifyingRomFiles": "خطأ في التحقق من ملفات الروم:",
+  "errorCheckingGamelists": "خطأ في فحص قوائم الألعاب:",
+  "cancelDownload": "إلغاء التنزيل",
+  "selectEmulator": "تحديد المحاكي",
+  "biosStatusDashboard": "لوحة حالة BIOS",
+  "webSettings": "إعدادات الويب",
+  "saveSettings": "حفظ الإعدادات",
+  "errorSavingSettings": "خطأ في حفظ الإعدادات:",
+  "romsCountItems": "{count} رومات",
+  "savedPermanently": "تم حفظه بشكل دائم",
+  "keptInTemporary": "تم الاحتفاظ به في التخزين المؤقت",
+  "tryAgain": "إعادة المحاولة",
+  "allDownloads": "اكتملت جميع التنزيلات",
+  "romSavedPermanently": "تم حفظ {name} بشكل دائم",
+  "undo": "تراجع",
+  "romKeptInTemporary": "تم الاحتفاظ بـ {name} في التخزين المؤقت",
+  "romsCountWithSize": "{count} رومات • {size}",
+  "whatYouCanTry": "ما يمكنك تجربته:",
+  "tips": "نصائح",
+  "helpNavigateItems": "التنقل بين العناصر",
+  "helpGamepadNavigation": "التنقل بعصا التحكم",
+  "helpQuickNavigation": "تنقل سريع (تخطي عدة عناصر)",
+  "helpGamepadPageNavigation": "تنقل الصفحات بعصا التحكم",
+  "helpGoToFirst": "الذهاب إلى العنصر الأول",
+  "helpGoToLast": "الذهاب إلى العنصر الأخير",
+  "helpJumpToLetter": "الانتقال إلى العنصر الذي يبدأ بتلك الحرف",
+  "helpSelectItem": "تحديد العنصر",
+  "helpGamepadSelect": "التحديد بعصا التحكم",
+  "helpGoBackCloseDialogs": "رجوع / إغلاق النوافذ",
+  "helpExitApplication": "الخروج من التطبيق",
+  "helpGamepadBackClose": "عصا التحكم رجوع / إغلاق النوافذ",
+  "helpToggleViewMode": "تبديل وضع العرض (شبكي/قائمي/دائري)",
+  "helpGamepadViewToggle": "تبديل العرض بعصا التحكم",
+  "helpRefreshView": "تحديث العرض الحالي",
+  "helpShowPlatformInfo": "عرض معلومات المنصة",
+  "helpActivateSearch": "تفعيل البحث",
+  "helpGamepadSearch": "البحث بعصا التحكم",
+  "helpShowHelpDialog": "عرض نافذة المساعدة هذه",
+  "helpGamepadHelp": "مساعدة عصا التحكم",
+  "tipUseKeyboardOrGamepad": "استخدم لوحة المفاتيح أو عصا التحكم للتنقل",
+  "tipAlphabeticalJump": "الالقفز الأبجدي يعمل في جميع أوضاع العرض",
+  "tipPressQuestionMark": "اضغط ? في أي وقت لرؤية هذه المساعدة",
+  "tipGamepadAlongside": "عصا التحكم يعمل junto مع عناصر تحكم لوحة المفاتيح",
+  "configurePathsDescription": "تكوين المسارات التي تستخدمها التطبيقات لتحديد موقع الرومات والوسائط والمحاكيات.",
+  "romListsAutoManaged": "قوائم الرومات الآن تُدار تلقائيا. قم بتنزيلها من الإعدادات > قاعدة بيانات الرومات.",
+  "romStorage": "تخزين الرومات",
+  "configureRomStorageDescription": "تكوين مكان تخزين الرومات التي تم تنزيلها بشكل مؤقت ودائم.",
+  "resetToDefaults": "إعادة تعيين للافتراضيات",
+  "mediaPathLabel": "مسار الوسائط",
+  "mediaPathHint": "المجلد الذي يحتوي على الوسائط (صور، مقاطع فيديو)",
+  "emulatorsPathLabel": "مسار المحاكيات",
+  "emulatorsPathHint": "المجلد الذي يحتوي على الملفات الثنائية للمحاكيات",
+  "gamelistPathAutomatic": "مسار قائمة الألعاب (تلقائي)",
+  "gamelistAutoDescription": "قوائم الألعاب الآن تُدار تلقائيا في مجلد بيانات التطبيق. وهذا يجعل التطبيق مستقلا بالكامل ويستعد لتوزيع قوائم الألعاب المستند إلى GitHub في المستقبل.",
+  "tempRomStorageLabel": "تخزين الرومات المؤقت (اختياري)",
+  "tempRomStorageDescription": "يتم تنزيل الرومات هنا أولا. يمكن ترقيتها إلى التخزين الدائم بعد اللعب.",
+  "permanentRomStorageLabel": "تخزين الرومات الدائم (اختياري)",
+  "permanentRomStorageDescription": "الرومات المحفوظة بشكل دائم مخزنة هنا. هذه لا يتم تنظيفها تلقائيا.",
+  "defaultAppSupportDir": "افتراضي: مجلد دعم التطبيق",
+  "currentPathDisplay": "الحالي: {path}",
+  "configurationFile": "ملف التكوين",
+  "source": "المصدر:",
+  "customConfigActive": "تكوين مخصص نشط",
+  "pathStructure": "هيكل المسارات",
+  "pathStructureDescription": "مسار الوسائط: MEDIA_PATH/المنصة/boxart|screenshots|videos/rom.png\nمسار قائمة الألعاب: ~/.local/share/com.example.emulator/gamelists/المنصة/gamelist.xml (تلقائي)\nمسار المحاكيات: EMULATORS_PATH/emulator_binary",
+  "errorCheckingSystem": "خطأ في فحص النظام",
+  "recheckR": "إعادة الفحص (R)",
+  "allRequiredToolsInstalled": "جميع الأدوات المطلوبة مثبتة",
+  "missingRequiredTools": "أدوات مطلوبة مفقودة",
+  "systemReadyToUse": "نظامك جاهز لاستخدام المحاكي",
+  "someRequiredToolsMissing": "بعض الأدوات المطلوبة مفقودة",
+  "requiredTools": "الأدوات المطلوبة",
+  "requiredToolsDescription": "هذه الأدوات مطلوبة لتنزيل واستخراج المحاكيات",
+  "installationInstructions": "تعليمات التثبيت",
+  "installed": "مثبت",
+  "missing": "مفقود",
+  "downloadEmulatorsAndGameLists": "تنزيل المحاكيات وقوائم الألعاب",
+  "quickActions": "إجراءات سريعة",
+  "downloadAll": "تنزيل الكل",
+  "byCategory": "حسب الفئة",
+  "downloadQueue": "قائمة انتظار التنزيل",
+  "noDownloadsInProgress": "لا توجد تنزيلات جارية",
+  "selectQuickActionToStart": "حدد إجراء سريع أعلاه لبدء التنزيل",
+  "categorySony": "Sony (PS1-PS4)",
+  "categoryNintendo": "Nintendo (GC, Wii, Switch)",
+  "categoryMicrosoft": "Microsoft (Xbox, Xbox 360)",
+  "categoryMultiPlatform": "متعدد المنصات (RetroArch)",
+  "categoryOtherEmulators": "محاكيات أخرى",
+  "categoryUtilities": "أدوات",
+  "confirmDownloadDescription": "تنزيل {count} محاكي(ات)؟\nالحجم المقدر: ~{size} MB\n\nقد يستغرق ذلك некотор الوقت حسب اتصالك بالإنترنت.",
+  "alreadyInstalled": "مثبت بالفعل",
+  "starting": "جارٍ البدء...",
+  "completed": "مكتمل",
+  "gameListsAlreadyDownloaded": "قوائم الألعاب موجودة بالفعل",
+  "redownload": "إعادة التنزيل",
+  "gameListsFromGitHub": "قوائم الألعاب (من GitHub)",
+  "downloaded": "تم التنزيل",
+  "cancelled": "ملغى",
+  "missingFor": "مفقود لـ:",
+  "noCustomConfigToBackup": "لا يوجد تكوين مخصص للنسخ الاحتياطي. استخدام القيم الافتراضية.",
+  "saveConfigurationBackup": "حفظ نسخ احتياطي للتكوين",
+  "refreshStatsR": "تحديث الإحصائيات (R)",
+  "systemStatistics": "إحصائيات النظام",
+  "romFiles": "ملفات الروم",
+  "maintenanceTools": "أدوات الصيانة",
+  "cleanupTemporaryRoms": "تنظيف الرومات المؤقتة",
+  "cleanupTemporaryRomsDescription": "إزالة ملفات الروم المؤقتة من مجلد النظام المؤقت",
+  "verifyRomFiles": "التحقق من ملفات الروم",
+  "verifyRomFilesDescription": "التحقق من أن جميع ملفات الروم موجودة وصالحة",
+  "checkMissingGamelists": "فحص قوائم الألعاب المفقودة",
+  "checkMissingGamelistsDescription": "العثور على المنصات التي تفتقر إلى ملف gamelist.xml",
+  "backupConfiguration": "نسخ احتياطي للتكوين",
+  "backupConfigurationDescription": "إنشاء نسخة احتياطية من config.json",
+  "downloadingRomDatabase": "جارٍ تنزيل قاعدة بيانات الرومات...",
+  "downloadMayTakeMinutes": "قد يستغرق ذلك بضع دقائق حسب اتصالك...",
+  "databaseStatus": "حالة قاعدة البيانات",
+  "notDownloaded": "غير موجود",
+  "aboutRomDatabase": "حول قاعدة بيانات الرومات",
+  "aboutRomDatabaseDescription": "تحتوي قاعدة بيانات الرومات على قوائم الرومات المتاحة منظمة حسب المنصة. يتم تنزيلها من مستودع romList الخاص بـ Forsaken على GitHub.",
+  "romDatabaseSource": "المصدر: github.com/ForsakenStation/romList",
+  "downloadRomDatabaseDescription": "سيؤدي هذا إلى تنزيل قوائم الرومات من مستودع romList الخاص بـ Forsaken على GitHub.",
+  "downloadRomDatabaseStats": "الحجم: ~7 MB\nالمنصات: 138\nإجمالي الرومات: ~240,000",
+  "downloadWillOverwrite": "ملاحظة: سيؤدي هذا إلى الكتابة فوق البيانات الموجودة.",
+  "clearRomDatabaseDescription": "سيؤدي هذا إلى حذف جميع قوائم الرومات التي تم تنزيلها وإعادة تعيين قاعدة البيانات إلى حالتها الأولية.",
+  "gamelistsStatus": "حالة قوائم الألعاب",
+  "gamelistsDownloaded": "تم التنزيل",
+  "gamelistsNotDownloaded": "غير موجود",
+  "aboutGamelists": "حول قوائم الألعاب",
+  "aboutGamelistsDescription": "تحتوي قوائم الألعاب على بيانات وصفية للألعاب (الأسماء والأوصاف والتقييمات) لكل منصة. يتم تنزيلها من مستودع gamelists الخاص بـ Forsaken على GitHub.",
+  "gamelistsSource": "المصدر: github.com/ForsakenStation/gamelists",
+  "downloadGamelists": "تنزيل قوائم الألعاب",
+  "downloadGamelistsDescription": "سيؤدي هذا إلى تنزيل ملفات gamelist.xml من مستودع gamelists الخاص بـ Forsaken على GitHub.",
+  "downloadGamelistsWillOverwrite": "ملاحظة: سيؤدي هذا إلى الكتابة فوق ملفات قوائم الألعاب الموجودة.",
+  "downloadingGamelists": "جارٍ تنزيل قوائم الألعاب...",
+  "gamelistsDownloadedSuccess": "تم تنزيل قوائم الألعاب بنجاح",
+  "failedDownloadGamelists": "فشل تنزيل قوائم الألعاب",
+  "clearGamelists": "مسح قوائم الألعاب",
+  "clearGamelistsDescription": "سيؤدي هذا إلى حذف جميع ملفات قوائم الألعاب التي تم تنزيلها.",
+  "gamelistsCleared": "تم مسح قوائم الألعاب",
+  "failedClearGamelists": "فشل مسح قوائم الألعاب",
+  "rebuildMediaCache": "إعادة بناء ذاكرة الوسائط المؤقتة",
+  "rebuildMediaCacheDescription": "فحص مجلدات الوسائط وتخزين المسارات في قوائم الألعاب للتحميل الأسرع",
+  "rebuildMediaCacheConfirmTitle": "إعادة بناء ذاكرة الوسائط المؤقتة؟",
+  "rebuildMediaCacheConfirmBody": "سيؤدي هذا إلى فحص جميع مجلدات الوسائط وتحديث ملفات gamelist.xml بمسارات الوسائط. قد يستغرق ذلك بعض الوقت للمجموعات الكبيرة.",
+  "rebuildMediaCacheProgress": "جارٍ إعادة بناء ذاكرة الوسائط المؤقتة...",
+  "rebuildMediaCacheProcessingPlatform": "معالجة {platform} ({current}/{total})",
+  "rebuildMediaCacheComplete": "تمت إعادة بناء ذاكرة الوسائط المؤقتة",
+  "rebuildMediaCacheSummary": "{platforms} منصات، {games} ألعاب تم فحصها، {updated} تم تحديثها، {paths} مسارات وسائط مخزنة",
+  "rebuildMediaCacheError": "فشل في إعادة بناء ذاكرة الوسائط المؤقتة",
+  "rebuildMediaCacheErrors": "حدثت {count} أخطاء أثناء إعادة البناء",
+  "@locale": "en",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "@retroGamingFrontend": {
+    "description": "Subtitle shown on initializing screen"
+  },
+  "@deleteRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleted": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@moveRomConfirm": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@saved": {
+    "placeholders": {
+      "fileName": {
+        "type": "String"
+      }
+    }
+  },
+  "@errorSavingRom": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@platformsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@romsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@cleanedUpTempFiles": {
+    "placeholders": {
+      "deletedCount": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountItems": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "@romSavedPermanently": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romKeptInTemporary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@romsCountWithSize": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@currentPathDisplay": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "@confirmDownloadDescription": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheProcessingPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheSummary": {
+    "placeholders": {
+      "platforms": {
+        "type": "String"
+      },
+      "games": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      },
+      "paths": {
+        "type": "String"
+      }
+    }
+  },
+  "@rebuildMediaCacheErrors": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  }
 }

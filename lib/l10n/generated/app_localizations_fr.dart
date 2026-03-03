@@ -12,7 +12,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appTitle => 'Forsaken Emulator';
 
   @override
-  String get retroGamingFrontend => 'Retro Gaming Frontend';
+  String get retroGamingFrontend => 'Frontend de Jeu Rétro';
 
   @override
   String get platforms => 'Plateformes';
@@ -24,23 +24,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settings => 'Paramètres';
 
   @override
-  String get settingsAndConfiguration => 'Settings & Configuration';
+  String get settingsAndConfiguration => 'Paramètres et Configuration';
 
   @override
-  String get aboutForsakenEmulator => 'About Forsaken Emulator';
+  String get aboutForsakenEmulator => 'À propos de Forsaken Emulator';
 
   @override
   String get version => 'Version';
 
   @override
   String get appDescription =>
-      'A modern multi-platform emulator frontend built with Flutter.';
+      'Un frontend d\'émulateur multi-plateforme moderne construit avec Flutter.';
 
   @override
-  String get emulators => 'Emulators';
+  String get emulators => 'Émulateurs';
 
   @override
-  String get ready => 'Ready';
+  String get ready => 'Prêt';
 
   @override
   String get back => 'Retour';
@@ -61,7 +61,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get error => 'Erreur';
 
   @override
-  String get initializationError => 'Initialization Error';
+  String get initializationError => 'Erreur d\'Initialisation';
 
   @override
   String get retry => 'Réessayer';
@@ -97,7 +97,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noPlatformsFound => 'Aucune plateforme trouvée';
 
   @override
-  String get checkRomsPath => 'Check your ROMS_PATH environment variable';
+  String get checkRomsPath => 'Vérifiez la variable d\'environnement ROMS_PATH';
 
   @override
   String get downloading => 'Téléchargement...';
@@ -118,7 +118,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get biosRequired => 'BIOS requis';
 
   @override
-  String get systemCheck => 'Vérification du système';
+  String get systemCheck => 'Vérification Système';
 
   @override
   String get language => 'Langue';
@@ -133,7 +133,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get help => 'Aide';
 
   @override
-  String get keyboardAndGamepadControls => 'Keyboard & Gamepad Controls';
+  String get keyboardAndGamepadControls => 'Contrôles Clavier et Manette';
 
   @override
   String get navigation => 'Navigation';
@@ -142,293 +142,304 @@ class AppLocalizationsFr extends AppLocalizations {
   String get actions => 'Actions';
 
   @override
-  String get viewControls => 'View Controls';
+  String get viewControls => 'Contrôles d\'Affichage';
 
   @override
-  String get gotIt => 'Got it!';
+  String get gotIt => 'Compris!';
 
   @override
   String get exit => 'Quitter';
 
   @override
-  String get exitApplication => 'Exit Application';
+  String get exitApplication => 'Quitter l\'Application';
 
   @override
   String get exitConfirm => 'Êtes-vous sûr de vouloir quitter?';
 
   @override
-  String get downloadManager => 'Download Manager';
+  String get downloadManager => 'Gestionnaire de Téléchargements';
 
   @override
-  String get clearCompleted => 'Clear Completed';
+  String get clearCompleted => 'Effacer Terminés';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => 'Sélectionner une Catégorie';
 
   @override
-  String get confirmDownload => 'Confirm Download';
+  String get confirmDownload => 'Confirmer le Téléchargement';
 
   @override
-  String get downloadGameLists => 'Download Game Lists';
+  String get downloadGameLists => 'Télécharger les Listes de Jeux';
 
   @override
   String get downloadGameListsDescription =>
-      'This will download ROM lists from GitHub.';
+      'Cela téléchargera les listes de ROMs depuis GitHub.';
 
   @override
-  String get gameListsDownloaded => 'Game lists downloaded!';
+  String get gameListsDownloaded => 'Listes de jeux téléchargées!';
 
   @override
-  String get romStorageManagement => 'ROM Storage Management';
+  String get romStorageManagement => 'Gestion du Stockage des ROMs';
 
   @override
-  String get deleteRom => 'Delete ROM?';
+  String get deleteRom => 'Supprimer la ROM?';
 
   @override
   String deleteRomConfirm(String fileName) {
-    return 'Delete $fileName?';
+    return 'Supprimer $fileName?';
   }
 
   @override
-  String get actionCannotBeUndone => 'This action cannot be undone.';
+  String get actionCannotBeUndone => 'Cette action ne peut pas être annulée.';
 
   @override
   String deleted(String fileName) {
-    return 'Deleted: $fileName';
+    return 'Supprimé: $fileName';
   }
 
   @override
-  String get savePermanently => 'Save Permanently?';
+  String get savePermanently => 'Enregistrer Permanemment?';
 
   @override
   String moveRomConfirm(String fileName) {
-    return 'Move $fileName to permanent storage?';
+    return 'Déplacer $fileName vers le stockage permanent?';
   }
 
   @override
   String saved(String fileName) {
-    return 'Saved: $fileName';
+    return 'Enregistré: $fileName';
   }
 
   @override
-  String get clearAll => 'Clear All?';
+  String get clearAll => 'Tout Effacer?';
 
   @override
-  String get clearAllConfirm => 'Delete all temporary ROMs?';
+  String get clearAllConfirm => 'Supprimer toutes les ROMs temporaires?';
 
   @override
-  String get allCleared => 'All temporary ROMs cleared';
+  String get allCleared => 'Toutes les ROMs temporaires effacées';
 
   @override
-  String get systemPathsConfiguration => 'System Paths Configuration';
+  String get systemPathsConfiguration => 'Configuration des Chemins Système';
 
   @override
-  String get migrateRoms => 'Migrate ROMs?';
+  String get migrateRoms => 'Migrer les ROMs?';
 
   @override
   String get migrateRomsDescription =>
-      'The permanent ROM storage path has changed from \$oldPath to \$newPath. Would you like to migrate existing ROMs to the new location?';
+      'Le chemin de stockage permanent des ROMs a changé de \$oldPath vers \$newPath. Voulez-vous migrer les ROMs existantes vers le nouvel emplacement?';
 
   @override
-  String get noKeepThem => 'No, keep them';
+  String get noKeepThem => 'Non, les garder';
 
   @override
-  String get yesMigrateRoms => 'Yes, migrate ROMs';
+  String get yesMigrateRoms => 'Oui, migrer les ROMs';
 
   @override
-  String get migratingRoms => 'Migrating ROMs...';
+  String get migratingRoms => 'Migration des ROMs...';
 
   @override
-  String get romMigrationFailed => 'Warning: ROM migration failed';
+  String get romMigrationFailed =>
+      'Avertissement: La migration des ROMs a échoué';
 
   @override
-  String get pathsSaved => 'Paths saved successfully';
+  String get pathsSaved => 'Chemins enregistrés avec succès';
 
   @override
-  String get errorSavingPaths => 'Error saving paths:';
+  String get errorSavingPaths =>
+      'Erreur lors de l\'enregistrement des chemins:';
 
   @override
-  String get resetConfiguration => 'Reset Configuration';
+  String get resetConfiguration => 'Réinitialiser la Configuration';
 
   @override
   String get resetConfigDescription =>
-      'This will reset all paths to their default values. Your ROMs and media files will not be affected.';
+      'Cela réinitialisera tous les chemins à leurs valeurs par défaut. Vos ROMs et fichiers médias ne seront pas affectés.';
 
   @override
-  String get configurationReset => 'Configuration reset to defaults';
+  String get configurationReset =>
+      'Configuration réinitialisée aux valeurs par défaut';
 
   @override
-  String get errorResettingConfiguration => 'Error resetting configuration:';
+  String get errorResettingConfiguration =>
+      'Erreur lors de la réinitialisation de la configuration:';
 
   @override
-  String get savePaths => 'Save Paths';
+  String get savePaths => 'Enregistrer les Chemins';
 
   @override
-  String get saving => 'Saving...';
+  String get saving => 'Enregistrement...';
 
   @override
-  String get emulatorManagement => 'Emulator Management';
+  String get emulatorManagement => 'Gestion des Émulateurs';
 
   @override
-  String get configurationReloaded => 'Configuration reloaded';
+  String get configurationReloaded => 'Configuration rechargée';
 
   @override
-  String get errorLoadingEmulators => 'Error loading emulators:';
+  String get errorLoadingEmulators =>
+      'Erreur lors du chargement des émulateurs:';
 
   @override
-  String get emulatorAdded => 'Emulator added successfully';
+  String get emulatorAdded => 'Émulateur ajouté avec succès';
 
   @override
-  String get errorAddingEmulator => 'Error adding emulator:';
+  String get errorAddingEmulator => 'Erreur lors de l\'ajout de l\'émulateur:';
 
   @override
-  String get emulatorUpdated => 'Emulator updated successfully';
+  String get emulatorUpdated => 'Émulateur mis à jour avec succès';
 
   @override
-  String get errorUpdatingEmulator => 'Error updating emulator:';
+  String get errorUpdatingEmulator =>
+      'Erreur lors de la mise à jour de l\'émulateur:';
 
   @override
-  String get deleteEmulator => 'Delete Emulator';
+  String get deleteEmulator => 'Supprimer l\'Émulateur';
 
   @override
-  String get emulatorDeleted => 'Emulator deleted';
+  String get emulatorDeleted => 'Émulateur supprimé';
 
   @override
-  String get errorDeletingEmulator => 'Error deleting emulator:';
+  String get errorDeletingEmulator =>
+      'Erreur lors de la suppression de l\'émulateur:';
 
   @override
-  String get configurationSource => 'Configuration Source';
+  String get configurationSource => 'Source de Configuration';
 
   @override
-  String get addEmulator => 'Add Emulator';
+  String get addEmulator => 'Ajouter un Émulateur';
 
   @override
-  String get systemNameRequired => 'System name is required';
+  String get systemNameRequired => 'Le nom du système est requis';
 
   @override
-  String get commandRequired => 'At least one command is required';
+  String get commandRequired => 'Au moins une commande est requise';
 
   @override
-  String get addCommand => 'Add Command';
+  String get addCommand => 'Ajouter une Commande';
 
   @override
-  String get acceptZipFiles => 'Accept ZIP files';
+  String get acceptZipFiles => 'Accepter les fichiers ZIP';
 
   @override
-  String get acceptZipSubtitle => 'Allow launching ROMs from ZIP archives';
+  String get acceptZipSubtitle =>
+      'Permettre le lancement des ROMs depuis des archives ZIP';
 
   @override
-  String get useForeverMode => 'Use Forever Mode';
+  String get useForeverMode => 'Utiliser le Mode Forever';
 
   @override
-  String get useForeverSubtitle => 'Keep emulator running';
+  String get useForeverSubtitle => 'Garder l\'émulateur en cours d\'exécution';
 
   @override
-  String get workInProgress => 'Work In Progress';
+  String get workInProgress => 'Travail en Cours';
 
   @override
-  String get wipSubtitle => 'Mark as not yet fully configured';
+  String get wipSubtitle => 'Marquer comme pas encore entièrement configuré';
 
   @override
-  String get biosFirmwareHelp => 'BIOS & Firmware Help';
+  String get biosFirmwareHelp => 'Aide BIOS et Firmware';
 
   @override
-  String get downloadMissingFiles => 'Download Missing Files';
+  String get downloadMissingFiles => 'Télécharger les Fichiers Manquants';
 
   @override
-  String get showOnlyMissing => 'Show only missing';
+  String get showOnlyMissing => 'Afficher seulement les manquants';
 
   @override
-  String get downloadAllMissingBios => 'Download All Missing BIOS';
+  String get downloadAllMissingBios => 'Télécharger Tous les BIOS Manquants';
 
   @override
-  String get configurationError => 'Configuration Error';
+  String get configurationError => 'Erreur de Configuration';
 
   @override
   String get configurationErrorDescription =>
-      'The application could not find the required configuration.\nPlease configure your paths in Settings > System Paths.';
+      'L\'application n\'a pas trouvé la configuration requise.\nVeuillez configurer vos chemins dans Paramètres > Chemins Système.';
 
   @override
   String get configurationRequired =>
-      'Required:\n- Media Path: directory containing media assets\n- Emulators Path: directory containing emulator binaries\n\nOptional:\n- ROM storage paths for temporary/permanent downloads';
+      'Requis:\n- Chemin Médias: répertoire contenant les assets médias\n- Chemin Émulateurs: répertoire contenant les binaires des émulateurs\n\nOptionnel:\n- Chemins de stockage des ROMs pour téléchargements temporaires/permanents';
 
   @override
   String get goToSettingsToConfigure =>
-      'Go to Settings > System Paths to configure';
+      'Aller à Paramètres > Chemins Système pour configurer';
 
   @override
-  String get noDownloadableBios => 'No downloadable BIOS files are missing';
+  String get noDownloadableBios => 'Aucun fichier BIOS téléchargeable manquant';
 
   @override
-  String get allDownloadsCompleted => 'All downloads completed successfully!';
+  String get allDownloadsCompleted =>
+      'Tous les téléchargements terminés avec succès!';
 
   @override
-  String get batchDownloadFailed => 'Batch download failed:';
+  String get batchDownloadFailed => 'Échec du téléchargement par lot:';
 
   @override
-  String get download => 'Download';
+  String get download => 'Télécharger';
 
   @override
-  String get downloadCancelled => 'Download cancelled';
+  String get downloadCancelled => 'Téléchargement annulé';
 
   @override
-  String get launched => 'Launched:';
+  String get launched => 'Lancé:';
 
   @override
-  String get failedToSave => 'Failed to save ROM permanently';
+  String get failedToSave => 'Échec de l\'enregistrement permanent de la ROM';
 
   @override
-  String get failedToSaveRom => 'Failed to save ROM permanently';
+  String get failedToSaveRom =>
+      'Échec de l\'enregistrement permanent de la ROM';
 
   @override
-  String get errorSaving => 'Error saving ROM:';
+  String get errorSaving => 'Erreur lors de l\'enregistrement de la ROM:';
 
   @override
   String errorSavingRom(String error) {
-    return 'Error saving ROM: $error';
+    return 'Erreur lors de l\'enregistrement de la ROM: $error';
   }
 
   @override
-  String get openFolder => 'Open Folder';
+  String get openFolder => 'Ouvrir le Dossier';
 
   @override
-  String get viewManual => 'View Manual';
+  String get viewManual => 'Voir le Manuel';
 
   @override
-  String get play => 'Play';
+  String get play => 'Jouer';
 
   @override
-  String get goBack => 'Go Back';
+  String get goBack => 'Retourner';
 
   @override
-  String get clearSearch => 'Clear Search';
+  String get clearSearch => 'Effacer la Recherche';
 
   @override
-  String get iUnderstand => 'I understand and agree to these terms';
+  String get iUnderstand => 'Je comprends et j\'accepte ces termes';
 
   @override
-  String get start => 'Start';
+  String get start => 'Démarrer';
 
   @override
-  String get debugMode => 'Debug Mode: ';
+  String get debugMode => 'Mode Débogage: ';
 
   @override
-  String get toggleDebugMode => 'Toggle Debug Mode';
+  String get toggleDebugMode => 'Basculer le Mode Débogage';
 
   @override
-  String get preparingDownload => 'Preparing download...';
+  String get preparingDownload => 'Préparation du téléchargement...';
 
   @override
-  String get noEmulatorsAvailable => 'No emulators available for this category';
+  String get noEmulatorsAvailable =>
+      'Aucun émulateur disponible pour cette catégorie';
 
   @override
-  String get failedToLaunch => 'Failed to launch web emulator:';
+  String get failedToLaunch => 'Échec du lancement de l\'émulateur web:';
 
   @override
-  String get platformInfo => 'Platform Info';
+  String get platformInfo => 'Info Plateforme';
 
   @override
-  String get emulatorPlatformInfo => 'EmulatorPlatform Info';
+  String get emulatorPlatformInfo => 'Info Plateforme Émulateur';
 
   @override
   String get favorites => 'Favoris';
@@ -456,132 +467,133 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get region => 'Region';
+  String get region => 'Région';
 
   @override
   String get genre => 'Genre';
 
   @override
-  String get year => 'Year';
+  String get year => 'Année';
 
   @override
-  String get publisher => 'Publisher';
+  String get publisher => 'Éditeur';
 
   @override
-  String get developer => 'Developer';
+  String get developer => 'Développeur';
 
   @override
-  String get playWithNetplay => 'Play with Netplay';
+  String get playWithNetplay => 'Jouer avec Netplay';
 
   @override
-  String get downloadBios => 'Download BIOS';
+  String get downloadBios => 'Télécharger BIOS';
 
   @override
-  String get viewDetails => 'View Details';
+  String get viewDetails => 'Voir les Détails';
 
   @override
-  String get addToFavorites => 'Add to Favorites';
+  String get addToFavorites => 'Ajouter aux Favoris';
 
   @override
-  String get removeFromFavorites => 'Remove from Favorites';
+  String get removeFromFavorites => 'Retirer des Favoris';
 
   @override
-  String get biosMissing => 'BIOS missing';
+  String get biosMissing => 'BIOS manquant';
 
   @override
-  String get biosPresent => 'BIOS present';
+  String get biosPresent => 'BIOS présent';
 
   @override
-  String get checkingBios => 'Checking BIOS...';
+  String get checkingBios => 'Vérification du BIOS...';
 
   @override
-  String get emulatorDownloading => 'Downloading emulator...';
+  String get emulatorDownloading => 'Téléchargement de l\'émulateur...';
 
   @override
-  String get emulatorDownloadComplete => 'Emulator downloaded';
+  String get emulatorDownloadComplete => 'Émulateur téléchargé';
 
   @override
-  String get emulatorDownloadFailed => 'Failed to download emulator';
+  String get emulatorDownloadFailed =>
+      'Échec du téléchargement de l\'émulateur';
 
   @override
-  String get installingEmulator => 'Installing emulator...';
+  String get installingEmulator => 'Installation de l\'émulateur...';
 
   @override
-  String get emulatorReady => 'Emulator ready';
+  String get emulatorReady => 'Émulateur prêt';
 
   @override
   String get configuration => 'Configuration';
 
   @override
-  String get paths => 'Paths';
+  String get paths => 'Chemins';
 
   @override
-  String get storage => 'Storage';
+  String get storage => 'Stockage';
 
   @override
-  String get emulatorsPath => 'Emulators Path';
+  String get emulatorsPath => 'Chemin des Émulateurs';
 
   @override
-  String get romsPath => 'ROMs Path';
+  String get romsPath => 'Chemin des ROMs';
 
   @override
-  String get mediaPath => 'Media Path';
+  String get mediaPath => 'Chemin des Médias';
 
   @override
-  String get biosPath => 'BIOS Path';
+  String get biosPath => 'Chemin du BIOS';
 
   @override
-  String get tempPath => 'Temporary Path';
+  String get tempPath => 'Chemin Temporaire';
 
   @override
-  String get browse => 'Browse';
+  String get browse => 'Parcourir';
 
   @override
-  String get apply => 'Apply';
+  String get apply => 'Appliquer';
 
   @override
-  String get reset => 'Reset';
+  String get reset => 'Réinitialiser';
 
   @override
-  String get clear => 'Clear';
+  String get clear => 'Effacer';
 
   @override
-  String get scan => 'Scan';
+  String get scan => 'Scanner';
 
   @override
-  String get scanForRoms => 'Scan for ROMs';
+  String get scanForRoms => 'Scanner les ROMs';
 
   @override
-  String get scanningRoms => 'Scanning ROMs...';
+  String get scanningRoms => 'Scan des ROMs...';
 
   @override
-  String get scanComplete => 'Scan complete';
+  String get scanComplete => 'Scan terminé';
 
   @override
   String romsFound(int count) {
-    return '$count ROMs found';
+    return '$count ROMs trouvées';
   }
 
   @override
-  String get noNewRomsFound => 'No new ROMs found';
+  String get noNewRomsFound => 'Aucune nouvelle ROM trouvée';
 
   @override
-  String get launchEmulator => 'Launch Emulator';
+  String get launchEmulator => 'Lancer l\'Émulateur';
 
   @override
-  String get emulatorError => 'Emulator Error';
+  String get emulatorError => 'Erreur d\'Émulateur';
 
   @override
-  String get gamepadConnected => 'Gamepad connected';
+  String get gamepadConnected => 'Manette connectée';
 
   @override
-  String get gamepadDisconnected => 'Gamepad disconnected';
+  String get gamepadDisconnected => 'Manette déconnectée';
 
   @override
-  String get gamepadTest => 'Gamepad Test';
+  String get gamepadTest => 'Test Manette';
 
   @override
-  String get pressAnyButton => 'Press any button to test';
+  String get pressAnyButton => 'Appuyez sur n\'importe quel bouton pour tester';
 
   @override
   String get buttonA => 'A';
@@ -602,16 +614,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get buttonSelect => 'Select';
 
   @override
-  String get dpadUp => 'D-Pad Up';
+  String get dpadUp => 'D-Pad Haut';
 
   @override
-  String get dpadDown => 'D-Pad Down';
+  String get dpadDown => 'D-Pad Bas';
 
   @override
-  String get dpadLeft => 'D-Pad Left';
+  String get dpadLeft => 'D-Pad Gauche';
 
   @override
-  String get dpadRight => 'D-Pad Right';
+  String get dpadRight => 'D-Pad Droite';
 
   @override
   String get leftShoulder => 'L1';
@@ -626,321 +638,330 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rightTrigger => 'R2';
 
   @override
-  String get leftStick => 'Left Stick';
+  String get leftStick => 'Stick Gauche';
 
   @override
-  String get rightStick => 'Right Stick';
+  String get rightStick => 'Stick Droit';
 
   @override
-  String get setupWizard => 'Setup Wizard';
+  String get setupWizard => 'Assistant de Configuration';
 
   @override
-  String get welcome => 'Welcome';
+  String get welcome => 'Bienvenue';
 
   @override
-  String get welcomeMessage => 'Welcome to Forsaken Emulator';
+  String get welcomeMessage => 'Bienvenue dans Forsaken Emulator';
 
   @override
-  String get next => 'Next';
+  String get next => 'Suivant';
 
   @override
-  String get previous => 'Previous';
+  String get previous => 'Précédent';
 
   @override
-  String get finish => 'Finish';
+  String get finish => 'Terminer';
 
   @override
-  String get skip => 'Skip';
+  String get skip => 'Passer';
 
   @override
-  String get setupComplete => 'Setup Complete';
+  String get setupComplete => 'Configuration Terminée';
 
   @override
-  String get selectLanguage => 'Select Language';
+  String get selectLanguage => 'Sélectionner la Langue';
 
   @override
-  String get selectEmulatorsPath => 'Select Emulators Path';
+  String get selectEmulatorsPath => 'Sélectionner le Chemin des Émulateurs';
 
   @override
-  String get selectRomsPath => 'Select ROMs Path';
+  String get selectRomsPath => 'Sélectionner le Chemin des ROMs';
 
   @override
-  String get selectMediaPath => 'Select Media Path';
+  String get selectMediaPath => 'Sélectionner le Chemin des Médias';
 
   @override
-  String get allSettingsConfigured => 'All settings configured';
+  String get allSettingsConfigured => 'Tous les paramètres configurés';
 
   @override
-  String get darkTheme => 'Dark';
+  String get darkTheme => 'Sombre';
 
   @override
-  String get lightTheme => 'Light';
+  String get lightTheme => 'Clair';
 
   @override
-  String get systemTheme => 'System';
+  String get systemTheme => 'Système';
 
   @override
-  String get about => 'About';
+  String get about => 'À propos';
 
   @override
-  String get checkForUpdates => 'Check for Updates';
+  String get checkForUpdates => 'Vérifier les Mises à Jour';
 
   @override
-  String get noUpdatesAvailable => 'No updates available';
+  String get noUpdatesAvailable => 'Aucune mise à jour disponible';
 
   @override
-  String get updateAvailable => 'Update available';
+  String get updateAvailable => 'Mise à jour disponible';
 
   @override
-  String get downloadingUpdate => 'Downloading update...';
+  String get downloadingUpdate => 'Téléchargement de la mise à jour...';
 
   @override
-  String get installingUpdate => 'Installing update...';
+  String get installingUpdate => 'Installation de la mise à jour...';
 
   @override
-  String get updateComplete => 'Update complete';
+  String get updateComplete => 'Mise à jour terminée';
 
   @override
-  String get updateFailed => 'Update failed';
+  String get updateFailed => 'Échec de la mise à jour';
 
   @override
-  String get networkError => 'Network error';
+  String get networkError => 'Erreur réseau';
 
   @override
-  String get connectionError => 'Connection error';
+  String get connectionError => 'Erreur de connexion';
 
   @override
-  String get timeoutError => 'Timeout error';
+  String get timeoutError => 'Erreur de délai';
 
   @override
-  String get unknownError => 'Unknown error';
+  String get unknownError => 'Erreur inconnue';
 
   @override
-  String get permissionDenied => 'Permission denied';
+  String get permissionDenied => 'Permission refusée';
 
   @override
-  String get fileNotFound => 'File not found';
+  String get fileNotFound => 'Fichier non trouvé';
 
   @override
-  String get directoryNotFound => 'Directory not found';
+  String get directoryNotFound => 'Répertoire non trouvé';
 
   @override
-  String get diskFull => 'Disk full';
+  String get diskFull => 'Disque plein';
 
   @override
-  String get invalidPath => 'Invalid path';
+  String get invalidPath => 'Chemin invalide';
 
   @override
-  String get pathNotWritable => 'Path not writable';
+  String get pathNotWritable => 'Chemin non inscriptible';
 
   @override
-  String get romCorrupted => 'ROM file may be corrupted';
+  String get romCorrupted => 'Le fichier ROM peut être corrompu';
 
   @override
-  String get zipError => 'ZIP archive error';
+  String get zipError => 'Erreur d\'archive ZIP';
 
   @override
-  String get extractionFailed => 'Extraction failed';
+  String get extractionFailed => 'Échec de l\'extraction';
 
   @override
-  String get checksumMismatch => 'Checksum mismatch';
+  String get checksumMismatch => 'Incompatibilité de somme de contrôle';
 
   @override
-  String get biosCheckFailed => 'BIOS check failed';
+  String get biosCheckFailed => 'Échec de la vérification du BIOS';
 
   @override
-  String get continueAnyway => 'Continue anyway';
+  String get continueAnyway => 'Continuer quand même';
 
   @override
-  String get reportIssue => 'Report Issue';
+  String get reportIssue => 'Signaler un Problème';
 
   @override
-  String get copyToClipboard => 'Copy to clipboard';
+  String get copyToClipboard => 'Copier dans le presse-papiers';
 
   @override
-  String get copiedToClipboard => 'Copied to clipboard';
+  String get copiedToClipboard => 'Copié dans le presse-papiers';
 
   @override
-  String get share => 'Share';
+  String get share => 'Partager';
 
   @override
-  String get hide => 'Hide';
+  String get hide => 'Masquer';
 
   @override
-  String get show => 'Show';
+  String get show => 'Afficher';
 
   @override
-  String get toggleView => 'Toggle View';
+  String get toggleView => 'Changer la Vue';
 
   @override
-  String get gridView => 'Grid View';
+  String get gridView => 'Vue en Grille';
 
   @override
-  String get listView => 'List View';
+  String get listView => 'Vue en Liste';
 
   @override
-  String get carouselView => 'Carousel View';
+  String get carouselView => 'Vue en Carrousel';
 
   @override
-  String get sortBy => 'Sort by';
+  String get sortBy => 'Trier par';
 
   @override
-  String get sortByName => 'Name';
+  String get sortByName => 'Nom';
 
   @override
   String get sortByDate => 'Date';
 
   @override
-  String get sortBySize => 'Size';
+  String get sortBySize => 'Taille';
 
   @override
-  String get sortByRegion => 'Region';
+  String get sortByRegion => 'Région';
 
   @override
-  String get ascending => 'Ascending';
+  String get ascending => 'Croissant';
 
   @override
-  String get descending => 'Descending';
+  String get descending => 'Décroissant';
 
   @override
-  String get filter => 'Filter';
+  String get filter => 'Filtrer';
 
   @override
-  String get filterByRegion => 'Filter by Region';
+  String get filterByRegion => 'Filtrer par Région';
 
   @override
-  String get filterByGenre => 'Filter by Genre';
+  String get filterByGenre => 'Filtrer par Genre';
 
   @override
-  String get filterByYear => 'Filter by Year';
+  String get filterByYear => 'Filtrer par Année';
 
   @override
-  String get clearFilters => 'Clear Filters';
+  String get clearFilters => 'Effacer les Filtres';
 
   @override
-  String get systemInfo => 'System Info';
+  String get systemInfo => 'Info Système';
 
   @override
   String get cpu => 'CPU';
 
   @override
-  String get memory => 'Memory';
+  String get memory => 'Mémoire';
 
   @override
-  String get storageInfo => 'Storage';
+  String get storageInfo => 'Stockage';
 
   @override
-  String get os => 'Operating System';
+  String get os => 'Système d\'Exploitation';
 
   @override
-  String get emulatorVersion => 'Emulator Version';
+  String get emulatorVersion => 'Version de l\'Émulateur';
 
   @override
   String get totalRoms => 'Total ROMs';
 
   @override
-  String get totalSize => 'Total Size';
+  String get totalSize => 'Taille Totale';
 
   @override
-  String get freeSpace => 'Free Space';
+  String get freeSpace => 'Espace Libre';
 
   @override
-  String get usedSpace => 'Used Space';
+  String get usedSpace => 'Espace Utilisé';
 
   @override
-  String get systemUtilities => 'System Utilities';
+  String get systemUtilities => 'Utilitaires Système';
 
   @override
-  String get romVerificationResults => 'ROM Verification Results';
+  String get romVerificationResults => 'Résultats de Vérification des ROMs';
 
   @override
-  String get totalRomFiles => 'Total ROM files';
+  String get totalRomFiles => 'Total fichiers ROM';
 
   @override
-  String get emptyRomFiles => 'Empty ROM files';
+  String get emptyRomFiles => 'Fichiers ROM vides';
 
   @override
-  String get validRomFiles => 'Valid ROM files';
+  String get validRomFiles => 'Fichiers ROM valides';
 
   @override
-  String get romsDirectoryDoesNotExist => 'ROMs directory does not exist';
+  String get romsDirectoryDoesNotExist =>
+      'Le répertoire des ROMs n\'existe pas';
 
   @override
-  String get gamelistCheckResults => 'Gamelist Check Results';
+  String get gamelistCheckResults => 'Résultats de Vérification des Gamelists';
 
   @override
-  String get totalPlatforms => 'Total platforms';
+  String get totalPlatforms => 'Total plateformes';
 
   @override
-  String get missingGamelists => 'Missing gamelists';
+  String get missingGamelists => 'Gamelists manquantes';
 
   @override
-  String get configurationBackup => 'Configuration Backup';
+  String get configurationBackup => 'Sauvegarde de Configuration';
 
   @override
-  String get configurationBackedUp => 'Configuration backed up to:';
+  String get configurationBackedUp => 'Configuration sauvegardée dans:';
 
   @override
-  String get errorBackingUp => 'Error backing up configuration:';
+  String get errorBackingUp =>
+      'Erreur lors de la sauvegarde de la configuration:';
 
   @override
-  String get romDatabase => 'ROM Database';
+  String get romDatabase => 'Base de Données ROMs';
 
   @override
-  String get romDatabaseDownloaded => 'ROM database downloaded successfully';
+  String get romDatabaseDownloaded =>
+      'Base de données ROMs téléchargée avec succès';
 
   @override
-  String get failedDownloadRomDatabase => 'Failed to download ROM database';
+  String get failedDownloadRomDatabase =>
+      'Échec du téléchargement de la base de données ROMs';
 
   @override
-  String get romDatabaseCleared => 'ROM database cleared';
+  String get romDatabaseCleared => 'Base de données ROMs effacée';
 
   @override
-  String get failedClearDatabase => 'Failed to clear database';
+  String get failedClearDatabase =>
+      'Échec de l\'effacement de la base de données';
 
   @override
-  String get downloadRomDatabase => 'Download ROM Database';
+  String get downloadRomDatabase => 'Télécharger la Base de Données ROMs';
 
   @override
-  String get clearRomDatabase => 'Clear ROM Database';
+  String get clearRomDatabase => 'Effacer la Base de Données ROMs';
 
   @override
-  String get systemRequirements => 'System Requirements';
+  String get systemRequirements => 'Exigences Système';
 
   @override
-  String get failedToCheckSystem => 'Failed to check system';
+  String get failedToCheckSystem => 'Échec de la vérification du système';
 
   @override
   String cleanedUpTempFiles(String deletedCount) {
-    return 'Cleaned up $deletedCount temporary ROM files';
+    return '$deletedCount fichiers ROM temporaires nettoyés';
   }
 
   @override
-  String get errorCleaningTempFiles => 'Error cleaning temp files:';
+  String get errorCleaningTempFiles =>
+      'Erreur lors du nettoyage des fichiers temporaires:';
 
   @override
-  String get errorVerifyingRomFiles => 'Error verifying ROM files:';
+  String get errorVerifyingRomFiles =>
+      'Erreur lors de la vérification des fichiers ROM:';
 
   @override
-  String get errorCheckingGamelists => 'Error checking gamelists:';
+  String get errorCheckingGamelists =>
+      'Erreur lors de la vérification des gamelists:';
 
   @override
-  String get cancelDownload => 'Cancel Download';
+  String get cancelDownload => 'Annuler le Téléchargement';
 
   @override
-  String get selectEmulator => 'Select Emulator';
+  String get selectEmulator => 'Sélectionner un Émulateur';
 
   @override
-  String get biosStatusDashboard => 'BIOS Status Dashboard';
+  String get biosStatusDashboard => 'Tableau de Bord État BIOS';
 
   @override
-  String get webSettings => 'Web Settings';
+  String get webSettings => 'Paramètres Web';
 
   @override
-  String get saveSettings => 'Save Settings';
+  String get saveSettings => 'Enregistrer les Paramètres';
 
   @override
-  String get errorSavingSettings => 'Error saving settings:';
+  String get errorSavingSettings =>
+      'Erreur lors de l\'enregistrement des paramètres:';
 
   @override
   String romsCountItems(String count) {
@@ -948,28 +969,28 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get savedPermanently => 'saved permanently';
+  String get savedPermanently => 'enregistré permanentemment';
 
   @override
-  String get keptInTemporary => 'kept in temporary storage';
+  String get keptInTemporary => 'gardé dans le stockage temporaire';
 
   @override
-  String get tryAgain => 'Try Again';
+  String get tryAgain => 'Réessayer';
 
   @override
-  String get allDownloads => 'All downloads completed';
+  String get allDownloads => 'Tous les téléchargements terminés';
 
   @override
   String romSavedPermanently(String name) {
-    return '$name saved permanently';
+    return '$name enregistré permanentemment';
   }
 
   @override
-  String get undo => 'Undo';
+  String get undo => 'Annuler';
 
   @override
   String romKeptInTemporary(String name) {
-    return '$name kept in temporary storage';
+    return '$name gardé dans le stockage temporaire';
   }
 
   @override
@@ -978,215 +999,227 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get whatYouCanTry => 'What you can try:';
+  String get whatYouCanTry => 'Ce que vous pouvez essayer:';
 
   @override
-  String get tips => 'Tips';
+  String get tips => 'Conseils';
 
   @override
-  String get helpNavigateItems => 'Navigate through items';
+  String get helpNavigateItems => 'Naviguer entre les éléments';
 
   @override
-  String get helpGamepadNavigation => 'Gamepad navigation';
+  String get helpGamepadNavigation => 'Navigation manette';
 
   @override
-  String get helpQuickNavigation => 'Quick navigation (jump multiple items)';
+  String get helpQuickNavigation =>
+      'Navigation rapide (sauter plusieurs éléments)';
 
   @override
-  String get helpGamepadPageNavigation => 'Gamepad page navigation';
+  String get helpGamepadPageNavigation => 'Navigation par pages manette';
 
   @override
-  String get helpGoToFirst => 'Go to first item';
+  String get helpGoToFirst => 'Aller au premier élément';
 
   @override
-  String get helpGoToLast => 'Go to last item';
+  String get helpGoToLast => 'Aller au dernier élément';
 
   @override
-  String get helpJumpToLetter => 'Jump to item starting with that letter';
+  String get helpJumpToLetter =>
+      'Sauter à l\'élément commençant par cette lettre';
 
   @override
-  String get helpSelectItem => 'Select item';
+  String get helpSelectItem => 'Sélectionner un élément';
 
   @override
-  String get helpGamepadSelect => 'Gamepad select';
+  String get helpGamepadSelect => 'Sélection manette';
 
   @override
-  String get helpGoBackCloseDialogs => 'Go back / Close dialogs';
+  String get helpGoBackCloseDialogs => 'Retour / Fermer les dialogues';
 
   @override
-  String get helpExitApplication => 'Exit application';
+  String get helpExitApplication => 'Quitter l\'application';
 
   @override
-  String get helpGamepadBackClose => 'Gamepad back / Close dialogs';
+  String get helpGamepadBackClose => 'Manette retour / Fermer les dialogues';
 
   @override
-  String get helpToggleViewMode => 'Toggle view mode (Grid/List/Carousel)';
+  String get helpToggleViewMode =>
+      'Basculer le mode d\'affichage (Grille/Liste/Carrousel)';
 
   @override
-  String get helpGamepadViewToggle => 'Gamepad view toggle';
+  String get helpGamepadViewToggle => 'Changer la vue avec la manette';
 
   @override
-  String get helpRefreshView => 'Refresh current view';
+  String get helpRefreshView => 'Actualiser la vue actuelle';
 
   @override
-  String get helpShowPlatformInfo => 'Show platform information';
+  String get helpShowPlatformInfo =>
+      'Afficher les informations de la plateforme';
 
   @override
-  String get helpActivateSearch => 'Activate search';
+  String get helpActivateSearch => 'Activer la recherche';
 
   @override
-  String get helpGamepadSearch => 'Gamepad search';
+  String get helpGamepadSearch => 'Recherche manette';
 
   @override
-  String get helpShowHelpDialog => 'Show this help dialog';
+  String get helpShowHelpDialog => 'Afficher ce dialogue d\'aide';
 
   @override
-  String get helpGamepadHelp => 'Gamepad help';
+  String get helpGamepadHelp => 'Aide manette';
 
   @override
   String get tipUseKeyboardOrGamepad =>
-      'Use keyboard or gamepad for navigation';
+      'Utilisez le clavier ou la manette pour naviguer';
 
   @override
-  String get tipAlphabeticalJump => 'Alphabetical jump works in all view modes';
+  String get tipAlphabeticalJump =>
+      'Le saut alphabétique fonctionne dans tous les modes d\'affichage';
 
   @override
-  String get tipPressQuestionMark => 'Press ? anytime to see this help';
+  String get tipPressQuestionMark =>
+      'Appuyez sur ? à tout moment pour voir cette aide';
 
   @override
-  String get tipGamepadAlongside => 'Gamepad works alongside keyboard controls';
+  String get tipGamepadAlongside =>
+      'La manette fonctionne avec les contrôles clavier';
 
   @override
   String get configurePathsDescription =>
-      'Configure the paths used by the application to locate ROMs, media, and emulators.';
+      'Configurez les chemins utilisés par l\'application pour localiser les ROMs, médias et émulateurs.';
 
   @override
   String get romListsAutoManaged =>
-      'ROM lists are now managed automatically. Download them from Settings > ROM Database.';
+      'Les listes de ROMs sont maintenant gérées automatiquement. Téléchargez-les depuis Paramètres > Base de Données ROMs.';
 
   @override
-  String get romStorage => 'ROM Storage';
+  String get romStorage => 'Stockage ROMs';
 
   @override
   String get configureRomStorageDescription =>
-      'Configure where downloaded ROMs are stored temporarily and permanently.';
+      'Configurez où les ROMs téléchargées sont stockées temporairement et permanentemment.';
 
   @override
-  String get resetToDefaults => 'Reset to defaults';
+  String get resetToDefaults => 'Réinitialiser aux valeurs par défaut';
 
   @override
-  String get mediaPathLabel => 'Media Path';
+  String get mediaPathLabel => 'Chemin des Médias';
 
   @override
-  String get mediaPathHint => 'Directory containing media (images, videos)';
+  String get mediaPathHint =>
+      'Répertoire contenant les médias (images, vidéos)';
 
   @override
-  String get emulatorsPathLabel => 'Emulators Path';
+  String get emulatorsPathLabel => 'Chemin des Émulateurs';
 
   @override
-  String get emulatorsPathHint => 'Directory containing emulator binaries';
+  String get emulatorsPathHint =>
+      'Répertoire contenant les binaires des émulateurs';
 
   @override
-  String get gamelistPathAutomatic => 'Gamelist Path (Automatic)';
+  String get gamelistPathAutomatic => 'Chemin Gamelist (Automatique)';
 
   @override
   String get gamelistAutoDescription =>
-      'Gamelists are now managed automatically in the app data directory. This makes the app fully independent and prepares for future GitHub-based gamelist distribution.';
+      'Les gamelists sont maintenant gérées automatiquement dans le répertoire de données de l\'application. Cela rend l\'application complètement indépendante et prépare la future distribution de gamelists depuis GitHub.';
 
   @override
-  String get tempRomStorageLabel => 'Temporary ROM Storage (Optional)';
+  String get tempRomStorageLabel => 'Stockage Temporaire des ROMs (Optionnel)';
 
   @override
   String get tempRomStorageDescription =>
-      'ROMs are downloaded here first. They can be promoted to permanent storage after playing.';
+      'Les ROMs sont téléchargées ici en premier. Elles peuvent être promues vers le stockage permanent après avoir joué.';
 
   @override
-  String get permanentRomStorageLabel => 'Permanent ROM Storage (Optional)';
+  String get permanentRomStorageLabel =>
+      'Stockage Permanent des ROMs (Optionnel)';
 
   @override
   String get permanentRomStorageDescription =>
-      'ROMs saved permanently are stored here. These are not cleaned up automatically.';
+      'Les ROMs enregistrées permanentemment sont stockées ici. Celles-ci ne sont pas nettoyées automatiquement.';
 
   @override
-  String get defaultAppSupportDir => 'Default: app support directory';
+  String get defaultAppSupportDir =>
+      'Par défaut: répertoire de support de l\'application';
 
   @override
   String currentPathDisplay(String path) {
-    return 'Current: $path';
+    return 'Actuel: $path';
   }
 
   @override
-  String get configurationFile => 'Configuration File';
+  String get configurationFile => 'Fichier de Configuration';
 
   @override
   String get source => 'Source:';
 
   @override
-  String get customConfigActive => 'Custom configuration active';
+  String get customConfigActive => 'Configuration personnalisée active';
 
   @override
-  String get pathStructure => 'Path Structure';
+  String get pathStructure => 'Structure des Chemins';
 
   @override
   String get pathStructureDescription =>
-      'Media Path: MEDIA_PATH/platform/boxart|screenshots|videos/rom.png\nGamelist Path: ~/.local/share/com.example.emulator/gamelists/platform/gamelist.xml (automatic)\nEmulators Path: EMULATORS_PATH/emulator_binary';
+      'Chemin Médias: MEDIA_PATH/plateforme/boxart|screenshots|videos/rom.png\nChemin Gamelist: ~/.local/share/com.example.emulator/gamelists/plateforme/gamelist.xml (automatique)\nChemin Émulateurs: EMULATORS_PATH/emulateur_binaire';
 
   @override
-  String get errorCheckingSystem => 'Error checking system';
+  String get errorCheckingSystem => 'Erreur lors de la vérification du système';
 
   @override
-  String get recheckR => 'Re-check (R)';
+  String get recheckR => 'Re-vérifier (R)';
 
   @override
-  String get allRequiredToolsInstalled => 'All Required Tools Installed';
+  String get allRequiredToolsInstalled => 'Tous les Outils Requis Installés';
 
   @override
-  String get missingRequiredTools => 'Missing Required Tools';
+  String get missingRequiredTools => 'Outils Requis Manquants';
 
   @override
-  String get systemReadyToUse => 'Your system is ready to use the emulator';
+  String get systemReadyToUse =>
+      'Votre système est prêt à utiliser l\'émulateur';
 
   @override
-  String get someRequiredToolsMissing => 'Some required tools are missing';
+  String get someRequiredToolsMissing => 'Certains outils requis manquent';
 
   @override
-  String get requiredTools => 'Required Tools';
+  String get requiredTools => 'Outils Requis';
 
   @override
   String get requiredToolsDescription =>
-      'These tools are required for downloading and extracting emulators';
+      'Ces outils sont nécessaires pour télécharger et extraire les émulateurs';
 
   @override
-  String get installationInstructions => 'Installation Instructions';
+  String get installationInstructions => 'Instructions d\'Installation';
 
   @override
-  String get installed => 'Installed';
+  String get installed => 'Installé';
 
   @override
-  String get missing => 'Missing';
+  String get missing => 'Manquant';
 
   @override
   String get downloadEmulatorsAndGameLists =>
-      'Download emulators and game lists';
+      'Télécharger les émulateurs et listes de jeux';
 
   @override
-  String get quickActions => 'Quick Actions';
+  String get quickActions => 'Actions Rapides';
 
   @override
-  String get downloadAll => 'Download All';
+  String get downloadAll => 'Tout Télécharger';
 
   @override
-  String get byCategory => 'By Category';
+  String get byCategory => 'Par Catégorie';
 
   @override
-  String get downloadQueue => 'Download Queue';
+  String get downloadQueue => 'File de Téléchargement';
 
   @override
-  String get noDownloadsInProgress => 'No downloads in progress';
+  String get noDownloadsInProgress => 'Aucun téléchargement en cours';
 
   @override
   String get selectQuickActionToStart =>
-      'Select a quick action above to start downloading';
+      'Sélectionnez une action rapide ci-dessus pour commencer à télécharger';
 
   @override
   String get categorySony => 'Sony (PS1-PS4)';
@@ -1198,199 +1231,201 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryMicrosoft => 'Microsoft (Xbox, Xbox 360)';
 
   @override
-  String get categoryMultiPlatform => 'Multi-Platform (RetroArch)';
+  String get categoryMultiPlatform => 'Multi-Platesforme (RetroArch)';
 
   @override
-  String get categoryOtherEmulators => 'Other Emulators';
+  String get categoryOtherEmulators => 'Autres Émulateurs';
 
   @override
-  String get categoryUtilities => 'Utilities';
+  String get categoryUtilities => 'Utilitaires';
 
   @override
   String confirmDownloadDescription(String count, String size) {
-    return 'Download $count emulator(s)?\nEstimated size: ~$size MB\n\nThis may take a while depending on your internet connection.';
+    return 'Télécharger $count émulateur(s)?\nTaille estimée: ~$size MB\n\nCela peut prendre un certain temps selon votre connexion internet.';
   }
 
   @override
-  String get alreadyInstalled => 'Already installed';
+  String get alreadyInstalled => 'Déjà installé';
 
   @override
-  String get starting => 'Starting...';
+  String get starting => 'Démarrage...';
 
   @override
-  String get completed => 'Completed';
+  String get completed => 'Terminé';
 
   @override
-  String get gameListsAlreadyDownloaded => 'Game lists already downloaded';
+  String get gameListsAlreadyDownloaded => 'Listes de jeux déjà téléchargées';
 
   @override
-  String get redownload => 'Re-Download';
+  String get redownload => 'Re-Télécharger';
 
   @override
-  String get gameListsFromGitHub => 'Game Lists (from GitHub)';
+  String get gameListsFromGitHub => 'Listes de Jeux (depuis GitHub)';
 
   @override
-  String get downloaded => 'Downloaded';
+  String get downloaded => 'Téléchargé';
 
   @override
-  String get cancelled => 'Cancelled';
+  String get cancelled => 'Annulé';
 
   @override
-  String get missingFor => 'Missing for:';
+  String get missingFor => 'Manquant pour:';
 
   @override
   String get noCustomConfigToBackup =>
-      'No custom configuration to backup. Using bundled defaults.';
+      'Aucune configuration personnalisée à sauvegarder. Utilisation des valeurs par défaut.';
 
   @override
-  String get saveConfigurationBackup => 'Save Configuration Backup';
+  String get saveConfigurationBackup => 'Sauvegarder la Configuration';
 
   @override
-  String get refreshStatsR => 'Refresh stats (R)';
+  String get refreshStatsR => 'Actualiser les statistiques (R)';
 
   @override
-  String get systemStatistics => 'System Statistics';
+  String get systemStatistics => 'Statistiques Système';
 
   @override
-  String get romFiles => 'ROM Files';
+  String get romFiles => 'Fichiers ROM';
 
   @override
-  String get maintenanceTools => 'Maintenance Tools';
+  String get maintenanceTools => 'Outils de Maintenance';
 
   @override
-  String get cleanupTemporaryRoms => 'Cleanup Temporary ROMs';
+  String get cleanupTemporaryRoms => 'Nettoyer les ROMs Temporaires';
 
   @override
   String get cleanupTemporaryRomsDescription =>
-      'Remove temporary ROM files from system temp directory';
+      'Supprimer les fichiers ROM temporaires du répertoire temporaire du système';
 
   @override
-  String get verifyRomFiles => 'Verify ROM Files';
+  String get verifyRomFiles => 'Vérifier les Fichiers ROM';
 
   @override
   String get verifyRomFilesDescription =>
-      'Check that all ROM files exist and are valid';
+      'Vérifier que tous les fichiers ROM existent et sont valides';
 
   @override
-  String get checkMissingGamelists => 'Check Missing Gamelists';
+  String get checkMissingGamelists => 'Vérifier les Gamelists Manquantes';
 
   @override
   String get checkMissingGamelistsDescription =>
-      'Find platforms missing gamelist.xml files';
+      'Trouver les plateformes sans fichier gamelist.xml';
 
   @override
-  String get backupConfiguration => 'Backup Configuration';
+  String get backupConfiguration => 'Sauvegarder la Configuration';
 
   @override
-  String get backupConfigurationDescription => 'Create a backup of config.json';
+  String get backupConfigurationDescription =>
+      'Créer une sauvegarde de config.json';
 
   @override
-  String get downloadingRomDatabase => 'Downloading ROM Database...';
+  String get downloadingRomDatabase =>
+      'Téléchargement de la Base de Données ROMs...';
 
   @override
   String get downloadMayTakeMinutes =>
-      'This may take a few minutes depending on your connection...';
+      'Cela peut prendre quelques minutes selon votre connexion...';
 
   @override
-  String get databaseStatus => 'Database Status';
+  String get databaseStatus => 'État de la Base de Données';
 
   @override
-  String get notDownloaded => 'Not Downloaded';
+  String get notDownloaded => 'Non Téléchargé';
 
   @override
-  String get aboutRomDatabase => 'About ROM Database';
+  String get aboutRomDatabase => 'À propos de la Base de Données ROMs';
 
   @override
   String get aboutRomDatabaseDescription =>
-      'The ROM database contains lists of available ROMs organized by platform. It is downloaded from the Forsaken romList repository on GitHub.';
+      'La base de données ROMs contient des listes de ROMs disponibles organisées par plateforme. Elle est téléchargée depuis le dépôt romList de Forsaken sur GitHub.';
 
   @override
   String get romDatabaseSource => 'Source: github.com/ForsakenStation/romList';
 
   @override
   String get downloadRomDatabaseDescription =>
-      'This will download ROM lists from the Forsaken romList repository on GitHub.';
+      'Cela téléchargera les listes ROMs depuis le dépôt romList de Forsaken sur GitHub.';
 
   @override
   String get downloadRomDatabaseStats =>
-      'Size: ~7 MB\nPlatforms: 138\nTotal ROMs: ~240,000';
+      'Taille: ~7 MB\nPlateformes: 138\nTotal ROMs: ~240,000';
 
   @override
   String get downloadWillOverwrite =>
-      'Note: This will overwrite existing data.';
+      'Note: Cela écrasera les données existantes.';
 
   @override
   String get clearRomDatabaseDescription =>
-      'This will delete all downloaded ROM lists and reset the database to its initial state.';
+      'Cela supprimera toutes les listes ROMs téléchargées et réinitialisera la base de données à son état initial.';
 
   @override
-  String get gamelistsStatus => 'Gamelists Status';
+  String get gamelistsStatus => 'État des Gamelists';
 
   @override
-  String get gamelistsDownloaded => 'Downloaded';
+  String get gamelistsDownloaded => 'Téléchargées';
 
   @override
-  String get gamelistsNotDownloaded => 'Not Downloaded';
+  String get gamelistsNotDownloaded => 'Non Téléchargées';
 
   @override
-  String get aboutGamelists => 'About Gamelists';
+  String get aboutGamelists => 'À propos des Gamelists';
 
   @override
   String get aboutGamelistsDescription =>
-      'Gamelists contain game metadata (names, descriptions, ratings) for each platform. They are downloaded from the Forsaken gamelists repository on GitHub.';
+      'Les gamelists contiennent les métadonnées des jeux (noms, descriptions, évaluations) pour chaque plateforme. Elles sont téléchargées depuis le dépôt gamelists de Forsaken sur GitHub.';
 
   @override
   String get gamelistsSource => 'Source: github.com/ForsakenStation/gamelists';
 
   @override
-  String get downloadGamelists => 'Download Gamelists';
+  String get downloadGamelists => 'Télécharger les Gamelists';
 
   @override
   String get downloadGamelistsDescription =>
-      'This will download gamelist.xml files from the Forsaken gamelists repository on GitHub.';
+      'Cela téléchargera les fichiers gamelist.xml depuis le dépôt gamelists de Forsaken sur GitHub.';
 
   @override
   String get downloadGamelistsWillOverwrite =>
-      'Note: This will overwrite existing gamelist files.';
+      'Note: Cela écrasera les fichiers gamelists existants.';
 
   @override
-  String get downloadingGamelists => 'Downloading Gamelists...';
+  String get downloadingGamelists => 'Téléchargement des Gamelists...';
 
   @override
-  String get gamelistsDownloadedSuccess => 'Gamelists downloaded successfully';
+  String get gamelistsDownloadedSuccess => 'Gamelists téléchargées avec succès';
 
   @override
-  String get failedDownloadGamelists => 'Failed to download gamelists';
+  String get failedDownloadGamelists => 'Échec du téléchargement des gamelists';
 
   @override
-  String get clearGamelists => 'Clear Gamelists';
+  String get clearGamelists => 'Effacer les Gamelists';
 
   @override
   String get clearGamelistsDescription =>
-      'This will delete all downloaded gamelist files.';
+      'Cela supprimera tous les fichiers gamelists téléchargés.';
 
   @override
-  String get gamelistsCleared => 'Gamelists cleared';
+  String get gamelistsCleared => 'Gamelists effacées';
 
   @override
-  String get failedClearGamelists => 'Failed to clear gamelists';
+  String get failedClearGamelists => 'Échec de l\'effacement des gamelists';
 
   @override
-  String get rebuildMediaCache => 'Rebuild Media Cache';
+  String get rebuildMediaCache => 'Reconstruire le Cache Médias';
 
   @override
   String get rebuildMediaCacheDescription =>
-      'Scan media directories and cache paths in gamelists for faster loading';
+      'Scanner les répertoires médias et mettre en cache les chemins dans les gamelists pour un chargement plus rapide';
 
   @override
-  String get rebuildMediaCacheConfirmTitle => 'Rebuild Media Cache?';
+  String get rebuildMediaCacheConfirmTitle => 'Reconstruire le Cache Médias?';
 
   @override
   String get rebuildMediaCacheConfirmBody =>
-      'This will scan all media directories and update gamelist.xml files with media paths. This may take a moment for large collections.';
+      'Cela scannera tous les répertoires médias et mettra à jour les fichiers gamelist.xml avec les chemins médias. Cela peut prendre un moment pour les grandes collections.';
 
   @override
-  String get rebuildMediaCacheProgress => 'Rebuilding media cache...';
+  String get rebuildMediaCacheProgress => 'Reconstruction du cache médias...';
 
   @override
   String rebuildMediaCacheProcessingPlatform(
@@ -1398,11 +1433,11 @@ class AppLocalizationsFr extends AppLocalizations {
     String current,
     String total,
   ) {
-    return 'Processing $platform ($current/$total)';
+    return 'Traitement de $platform ($current/$total)';
   }
 
   @override
-  String get rebuildMediaCacheComplete => 'Media Cache Rebuilt';
+  String get rebuildMediaCacheComplete => 'Cache Médias Reconstruit';
 
   @override
   String rebuildMediaCacheSummary(
@@ -1411,14 +1446,15 @@ class AppLocalizationsFr extends AppLocalizations {
     String updated,
     String paths,
   ) {
-    return '$platforms platforms, $games games scanned, $updated updated, $paths media paths cached';
+    return '$platforms plateformes, $games jeux scannés, $updated mis à jour, $paths chemins médias mis en cache';
   }
 
   @override
-  String get rebuildMediaCacheError => 'Failed to rebuild media cache';
+  String get rebuildMediaCacheError =>
+      'Échec de la reconstruction du cache médias';
 
   @override
   String rebuildMediaCacheErrors(String count) {
-    return '$count errors occurred during rebuild';
+    return '$count erreurs lors de la reconstruction';
   }
 }
