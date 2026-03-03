@@ -591,5 +591,115 @@
     "placeholders": {
       "count": {"type": "String"}
     }
-  }
+  },
+
+  "description": "Description",
+  "noDescriptionAvailable": "No description available for this ROM.",
+  "releaseDate": "Release Date",
+  "players": "Players",
+  "rating": "Rating",
+  "regions": "Regions",
+  "folderRomCount": "{count, plural, =1{{count} ROM} other{{count} ROMs}}",
+  "@folderRomCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "manualTitle": "{name} - Manual",
+  "@manualTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playInBrowser": "Play in Browser",
+
+  "downloadingPlatformBios": "Downloading {platformName} BIOS",
+  "@downloadingPlatformBios": {
+    "placeholders": {
+      "platformName": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadingAllMissingBios": "Downloading All Missing BIOS",
+  "biosFileLabel": "File: {filename}",
+  "@biosFileLabel": {
+    "placeholders": {
+      "filename": {
+        "type": "String"
+      }
+    }
+  },
+  "batchProgressLabel": "Progress: {completed}/{total} files",
+  "@batchProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "fileDetails": "File Details:",
+  "waiting": "Waiting...",
+  "verifying": "Verifying...",
+  "failed": "Failed",
+  "preparing": "Preparing...",
+  "downloadingFiles": "Downloading files...",
+  "someDownloadsFailed": "Some downloads failed",
+  "downloadsCancelled": "Downloads cancelled",
+
+  "calculating": "Calculating...",
+  "secondsRemaining": "{count, plural, =1{1 second} other{{count} seconds}}",
+  "@secondsRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesRemaining": "{count, plural, =1{1 minute} other{{count} minutes}}",
+  "@minutesRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursRemaining": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "@hoursRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadingAndLaunching": "Downloading & Launching...",
+  "launching": "Launching...",
+  "emulatorLabel": "Emulator: {name}",
+  "@emulatorLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "generalInformation": "General Information",
+  "manufacturer": "Manufacturer",
+  "releaseYear": "Release Year",
+  "generation": "Generation",
+  "technicalSpecifications": "Technical Specifications",
+  "resolution": "Resolution",
+  "colors": "Colors",
+
+  "notNow": "Not Now",
+  "saveRomPermanently": "Save ROM Permanently?",
+  "keepRomOfflineQuestion": "Would you like to keep this ROM downloaded for offline play?",
+  "deletedToSaveSpace": "If not, it will be deleted later to save space."
 }

@@ -114,16 +114,19 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog>
   }
 
   String _formatTimeRemaining(int remainingBytes, double bytesPerSecond) {
-    if (bytesPerSecond <= 0) return 'Calculating...';
+    if (bytesPerSecond <= 0) {
+      return AppLocalizations.of(context)!.calculating;
+    }
 
+    final l10n = AppLocalizations.of(context)!;
     final seconds = (remainingBytes / bytesPerSecond).ceil();
-    if (seconds < 60) return '$seconds seconds';
+    if (seconds < 60) return l10n.secondsRemaining(seconds);
     if (seconds < 3600) {
       final minutes = (seconds / 60).ceil();
-      return '$minutes minute${minutes > 1 ? 's' : ''}';
+      return l10n.minutesRemaining(minutes);
     }
     final hours = (seconds / 3600).ceil();
-    return '$hours hour${hours > 1 ? 's' : ''}';
+    return l10n.hoursRemaining(hours);
   }
 
   @override
@@ -245,7 +248,7 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog>
 
                 // Status text
                 Text(
-                  'Downloading & Launching...',
+                  AppLocalizations.of(context)!.downloadingAndLaunching,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ] else ...[
@@ -253,7 +256,7 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog>
                 const CircularProgressIndicator(),
                 const SizedBox(height: 16),
                 Text(
-                  'Launching...',
+                  AppLocalizations.of(context)!.launching,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ],
@@ -276,7 +279,9 @@ class LaunchProgressDialogState extends State<LaunchProgressDialog>
                     const Icon(Icons.videogame_asset, size: 16),
                     const SizedBox(width: 8),
                     Text(
-                      'Emulator: ${widget.command.name}',
+                      AppLocalizations.of(
+                        context,
+                      )!.emulatorLabel(widget.command.name),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],

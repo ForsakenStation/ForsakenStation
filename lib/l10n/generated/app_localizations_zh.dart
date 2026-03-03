@@ -1397,4 +1397,159 @@ class AppLocalizationsZh extends AppLocalizations {
   String rebuildMediaCacheErrors(String count) {
     return '重建过程中发生 $count 个错误';
   }
+
+  @override
+  String get description => '描述';
+
+  @override
+  String get noDescriptionAvailable => '此ROM没有可用的描述。';
+
+  @override
+  String get releaseDate => '发行日期';
+
+  @override
+  String get players => '玩家数';
+
+  @override
+  String get rating => '评分';
+
+  @override
+  String get regions => '地区';
+
+  @override
+  String folderRomCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个ROM',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String manualTitle(String name) {
+    return '$name - 手册';
+  }
+
+  @override
+  String get playInBrowser => '在浏览器中游玩';
+
+  @override
+  String downloadingPlatformBios(String platformName) {
+    return '正在下载 $platformName BIOS';
+  }
+
+  @override
+  String get downloadingAllMissingBios => '正在下载所有缺失的 BIOS';
+
+  @override
+  String biosFileLabel(String filename) {
+    return '文件：$filename';
+  }
+
+  @override
+  String batchProgressLabel(String completed, String total) {
+    return '进度：$completed/$total 个文件';
+  }
+
+  @override
+  String get fileDetails => '文件详情：';
+
+  @override
+  String get waiting => '等待中...';
+
+  @override
+  String get verifying => '验证中...';
+
+  @override
+  String get failed => '失败';
+
+  @override
+  String get preparing => '准备中...';
+
+  @override
+  String get downloadingFiles => '正在下载文件...';
+
+  @override
+  String get someDownloadsFailed => '部分下载失败';
+
+  @override
+  String get downloadsCancelled => '下载已取消';
+
+  @override
+  String get calculating => '计算中...';
+
+  @override
+  String secondsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count秒',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minutesRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count分钟',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count小时',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadingAndLaunching => '正在下载并启动...';
+
+  @override
+  String get launching => '正在启动...';
+
+  @override
+  String emulatorLabel(String name) {
+    return '模拟器：$name';
+  }
+
+  @override
+  String get generalInformation => '基本信息';
+
+  @override
+  String get manufacturer => '制造商';
+
+  @override
+  String get releaseYear => '发行年份';
+
+  @override
+  String get generation => '世代';
+
+  @override
+  String get technicalSpecifications => '技术规格';
+
+  @override
+  String get resolution => '分辨率';
+
+  @override
+  String get colors => '色彩';
+
+  @override
+  String get notNow => '暂不';
+
+  @override
+  String get saveRomPermanently => '永久保存 ROM？';
+
+  @override
+  String get keepRomOfflineQuestion => '您想保留已下载的 ROM 以便离线游玩吗？';
+
+  @override
+  String get deletedToSaveSpace => '否则，稍后将删除以节省空间。';
 }

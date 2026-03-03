@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../mixins/dialog_controls_mixin.dart';
 import '../../models/rom_item.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../common/placeholder_image.dart';
 import '../common/dialog_button_bar.dart';
 import '../common/gamepad_button_indicator.dart';
@@ -25,7 +26,7 @@ class _SaveRomDialogState extends State<SaveRomDialog>
   void initState() {
     super.initState();
 
-    // Build buttons
+    // Build buttons (using placeholder labels, updated in didChangeDependencies)
     _buttons = [
       DialogButton(
         label: 'Not Now',
@@ -57,6 +58,27 @@ class _SaveRomDialogState extends State<SaveRomDialog>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final l10n = AppLocalizations.of(context)!;
+    _buttons = [
+      DialogButton(
+        label: l10n.notNow,
+        icon: Icons.close,
+        gamepadButton: GamepadButton.b,
+        onPressed: () => Navigator.pop(context, false),
+      ),
+      DialogButton(
+        label: l10n.save,
+        icon: Icons.save,
+        primary: true,
+        gamepadButton: GamepadButton.a,
+        onPressed: () => Navigator.pop(context, true),
+      ),
+    ];
+  }
+
+  @override
   Widget build(BuildContext context) {
     return wrapWithKeyboardHandler(
       onEscape: () => Navigator.pop(context, false),
@@ -77,7 +99,7 @@ class _SaveRomDialogState extends State<SaveRomDialog>
 
               // Title
               Text(
-                'Save ROM Permanently?',
+                AppLocalizations.of(context)!.saveRomPermanently,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -133,13 +155,13 @@ class _SaveRomDialogState extends State<SaveRomDialog>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Would you like to keep this ROM downloaded for offline play?',
+                      AppLocalizations.of(context)!.keepRomOfflineQuestion,
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'If not, it will be deleted later to save space.',
+                      AppLocalizations.of(context)!.deletedToSaveSpace,
                       style: Theme.of(
                         context,
                       ).textTheme.bodySmall?.copyWith(color: Colors.grey),

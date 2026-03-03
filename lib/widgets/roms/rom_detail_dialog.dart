@@ -72,8 +72,13 @@ class _RomDetailDialogState extends State<RomDetailDialog>
     _hasManual =
         widget.media?.manualPath != null &&
         widget.media!.manualPath!.toLowerCase().endsWith('.pdf');
+  }
 
-    // Build buttons list
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Build buttons list (needs context for l10n)
     _buttons = _buildButtonsList();
 
     // Start dialog controls with navigation
@@ -91,16 +96,17 @@ class _RomDetailDialogState extends State<RomDetailDialog>
   }
 
   List<DialogButton> _buildButtonsList() {
+    final l10n = AppLocalizations.of(context)!;
     final buttons = <DialogButton>[];
 
     // Cancel button
-    buttons.add(DialogButton(label: 'Cancel', onPressed: _handleDismiss));
+    buttons.add(DialogButton(label: l10n.cancel, onPressed: _handleDismiss));
 
     // View Manual button (if manual exists)
     if (_hasManual) {
       buttons.add(
         DialogButton(
-          label: 'View Manual',
+          label: l10n.viewManual,
           icon: Icons.menu_book,
           onPressed: _viewManual,
         ),
@@ -111,7 +117,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
     if (kIsWeb && WebEmulatorLauncher.isAvailableForRom(widget.item)) {
       buttons.add(
         DialogButton(
-          label: 'Play in Browser',
+          label: l10n.playInBrowser,
           icon: Icons.web,
           onPressed: _playInBrowser,
         ),
@@ -121,7 +127,7 @@ class _RomDetailDialogState extends State<RomDetailDialog>
     // Play button (primary)
     buttons.add(
       DialogButton(
-        label: 'Play',
+        label: l10n.play,
         icon: Icons.gamepad,
         primary: true,
         gamepadButton: GamepadButton.a,
@@ -202,7 +208,9 @@ class _RomDetailDialogState extends State<RomDetailDialog>
       MaterialPageRoute(
         builder: (context) => PdfViewerScreen(
           pdfPath: widget.media!.manualPath!,
-          title: '${widget.item.displayName} - Manual',
+          title: AppLocalizations.of(
+            context,
+          )!.manualTitle(widget.item.displayName),
         ),
       ),
     ).then((_) {

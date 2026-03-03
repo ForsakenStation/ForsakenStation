@@ -1405,4 +1405,159 @@ class AppLocalizationsKo extends AppLocalizations {
   String rebuildMediaCacheErrors(String count) {
     return '재구축 중 $count개의 오류가 발생했습니다';
   }
+
+  @override
+  String get description => '설명';
+
+  @override
+  String get noDescriptionAvailable => '이 ROM에 대한 설명이 없습니다.';
+
+  @override
+  String get releaseDate => '출시일';
+
+  @override
+  String get players => '플레이어';
+
+  @override
+  String get rating => '평점';
+
+  @override
+  String get regions => '지역';
+
+  @override
+  String folderRomCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count개의 ROM',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String manualTitle(String name) {
+    return '$name - 매뉴얼';
+  }
+
+  @override
+  String get playInBrowser => '브라우저에서 플레이';
+
+  @override
+  String downloadingPlatformBios(String platformName) {
+    return '$platformName BIOS 다운로드 중';
+  }
+
+  @override
+  String get downloadingAllMissingBios => '누락된 모든 BIOS 다운로드 중';
+
+  @override
+  String biosFileLabel(String filename) {
+    return '파일: $filename';
+  }
+
+  @override
+  String batchProgressLabel(String completed, String total) {
+    return '진행: $completed/$total 파일';
+  }
+
+  @override
+  String get fileDetails => '파일 상세:';
+
+  @override
+  String get waiting => '대기 중...';
+
+  @override
+  String get verifying => '확인 중...';
+
+  @override
+  String get failed => '실패';
+
+  @override
+  String get preparing => '준비 중...';
+
+  @override
+  String get downloadingFiles => '파일 다운로드 중...';
+
+  @override
+  String get someDownloadsFailed => '일부 다운로드가 실패했습니다';
+
+  @override
+  String get downloadsCancelled => '다운로드가 취소되었습니다';
+
+  @override
+  String get calculating => '계산 중...';
+
+  @override
+  String secondsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count초',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minutesRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count분',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count시간',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadingAndLaunching => '다운로드 및 실행 중...';
+
+  @override
+  String get launching => '실행 중...';
+
+  @override
+  String emulatorLabel(String name) {
+    return '에뮬레이터: $name';
+  }
+
+  @override
+  String get generalInformation => '일반 정보';
+
+  @override
+  String get manufacturer => '제조사';
+
+  @override
+  String get releaseYear => '출시 연도';
+
+  @override
+  String get generation => '세대';
+
+  @override
+  String get technicalSpecifications => '기술 사양';
+
+  @override
+  String get resolution => '해상도';
+
+  @override
+  String get colors => '색상';
+
+  @override
+  String get notNow => '나중에';
+
+  @override
+  String get saveRomPermanently => 'ROM을 영구 저장하시겠습니까?';
+
+  @override
+  String get keepRomOfflineQuestion => '이 ROM을 다운로드 상태로 유지하여 오프라인에서 플레이하시겠습니까?';
+
+  @override
+  String get deletedToSaveSpace => '그렇지 않으면 나중에 공간 절약을 위해 삭제됩니다.';
 }

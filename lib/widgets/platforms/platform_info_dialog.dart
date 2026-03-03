@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../models/platform_info.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../common/navigable_dialog.dart';
 import '../common/dialog_button_bar.dart';
 import '../common/gamepad_button_indicator.dart';
@@ -46,6 +47,7 @@ class PlatformInfoDialog extends NavigableDialog {
   Widget buildContent(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,18 +75,18 @@ class PlatformInfoDialog extends NavigableDialog {
         const SizedBox(height: 24),
 
         // Basic Info
-        _buildInfoSection(context, 'General Information', [
-          _InfoItem('Manufacturer', platformInfo.manufacturer),
-          _InfoItem('Release Year', platformInfo.releaseYear.toString()),
-          _InfoItem('Generation', platformInfo.generationString),
+        _buildInfoSection(context, l10n.generalInformation, [
+          _InfoItem(l10n.manufacturer, platformInfo.manufacturer),
+          _InfoItem(l10n.releaseYear, platformInfo.releaseYear.toString()),
+          _InfoItem(l10n.generation, platformInfo.generationString),
         ]),
         const SizedBox(height: 16),
 
         // Technical Specs
-        _buildInfoSection(context, 'Technical Specifications', [
-          _InfoItem('CPU', platformInfo.cpu),
-          _InfoItem('Resolution', platformInfo.resolution),
-          _InfoItem('Colors', platformInfo.colors),
+        _buildInfoSection(context, l10n.technicalSpecifications, [
+          _InfoItem(l10n.cpu, platformInfo.cpu),
+          _InfoItem(l10n.resolution, platformInfo.resolution),
+          _InfoItem(l10n.colors, platformInfo.colors),
         ]),
       ],
     );
@@ -139,7 +141,7 @@ class PlatformInfoDialog extends NavigableDialog {
   List<DialogButton> buildButtons(BuildContext context) {
     return [
       DialogButton(
-        label: 'Close',
+        label: AppLocalizations.of(context)!.close,
         gamepadButton: GamepadButton.b,
         onPressed: () => Navigator.of(context).pop(),
       ),

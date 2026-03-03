@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../models/game_info.dart';
 import '../common/info_row.dart';
 
@@ -25,13 +26,15 @@ class RomInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Description
         InfoRow(
-          label: 'Description',
-          value: gameInfo?.desc ?? 'No description available for this ROM.',
+          label: l10n.description,
+          value: gameInfo?.desc ?? l10n.noDescriptionAvailable,
         ),
         SizedBox(height: rowSpacing),
 
@@ -41,14 +44,14 @@ class RomInfoSection extends StatelessWidget {
           children: [
             Expanded(
               child: InfoRow(
-                label: 'Release Date',
+                label: l10n.releaseDate,
                 value: gameInfo?.releaseDate?.toString().split(' ')[0] ?? '',
               ),
             ),
             SizedBox(width: columnGap),
             Expanded(
               child: InfoRow(
-                label: 'Developer',
+                label: l10n.developer,
                 value: gameInfo?.developer ?? '',
               ),
             ),
@@ -62,13 +65,13 @@ class RomInfoSection extends StatelessWidget {
           children: [
             Expanded(
               child: InfoRow(
-                label: 'Publisher',
+                label: l10n.publisher,
                 value: gameInfo?.publisher ?? '',
               ),
             ),
             SizedBox(width: columnGap),
             Expanded(
-              child: InfoRow(label: 'Genre', value: gameInfo?.genre ?? ''),
+              child: InfoRow(label: l10n.genre, value: gameInfo?.genre ?? ''),
             ),
           ],
         ),
@@ -80,14 +83,14 @@ class RomInfoSection extends StatelessWidget {
           children: [
             Expanded(
               child: InfoRow(
-                label: 'Players',
+                label: l10n.players,
                 value: gameInfo?.playersText ?? '',
               ),
             ),
             SizedBox(width: columnGap),
             Expanded(
               child: InfoRow(
-                label: 'Rating',
+                label: l10n.rating,
                 value: gameInfo?.ratingPercentage ?? '--',
               ),
             ),

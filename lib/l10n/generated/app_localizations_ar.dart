@@ -1428,4 +1428,165 @@ class AppLocalizationsAr extends AppLocalizations {
   String rebuildMediaCacheErrors(String count) {
     return 'حدثت $count أخطاء أثناء إعادة البناء';
   }
+
+  @override
+  String get description => 'الوصف';
+
+  @override
+  String get noDescriptionAvailable => 'لا يوجد وصف متاح لهذه الروم.';
+
+  @override
+  String get releaseDate => 'تاريخ الإصدار';
+
+  @override
+  String get players => 'اللاعبون';
+
+  @override
+  String get rating => 'التقييم';
+
+  @override
+  String get regions => 'المناطق';
+
+  @override
+  String folderRomCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count روم',
+      one: '$count روم',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String manualTitle(String name) {
+    return '$name - الدليل';
+  }
+
+  @override
+  String get playInBrowser => 'تشغيل في المتصفح';
+
+  @override
+  String downloadingPlatformBios(String platformName) {
+    return 'جارٍ تنزيل BIOS لـ $platformName';
+  }
+
+  @override
+  String get downloadingAllMissingBios => 'جارٍ تنزيل جميع ملفات BIOS المفقودة';
+
+  @override
+  String biosFileLabel(String filename) {
+    return 'ملف: $filename';
+  }
+
+  @override
+  String batchProgressLabel(String completed, String total) {
+    return 'التقدم: $completed/$total ملفات';
+  }
+
+  @override
+  String get fileDetails => 'تفاصيل الملف:';
+
+  @override
+  String get waiting => 'انتظار...';
+
+  @override
+  String get verifying => 'جارٍ التحقق...';
+
+  @override
+  String get failed => 'فشل';
+
+  @override
+  String get preparing => 'جارٍ التحضير...';
+
+  @override
+  String get downloadingFiles => 'جارٍ تنزيل الملفات...';
+
+  @override
+  String get someDownloadsFailed => 'فشلت بعض التنزيلات';
+
+  @override
+  String get downloadsCancelled => 'تم إلغاء التنزيلات';
+
+  @override
+  String get calculating => 'جارٍ الحساب...';
+
+  @override
+  String secondsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ثوانٍ',
+      one: 'ثانية واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minutesRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count دقائق',
+      one: 'دقيقة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ساعات',
+      one: 'ساعة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadingAndLaunching => 'جارٍ التنزيل والتشغيل...';
+
+  @override
+  String get launching => 'جارٍ التشغيل...';
+
+  @override
+  String emulatorLabel(String name) {
+    return 'المحاكي: $name';
+  }
+
+  @override
+  String get generalInformation => 'معلومات عامة';
+
+  @override
+  String get manufacturer => 'الشركة المصنعة';
+
+  @override
+  String get releaseYear => 'سنة الإصدار';
+
+  @override
+  String get generation => 'الجيل';
+
+  @override
+  String get technicalSpecifications => 'المواصفات التقنية';
+
+  @override
+  String get resolution => 'الدقة';
+
+  @override
+  String get colors => 'الألوان';
+
+  @override
+  String get notNow => 'ليس الآن';
+
+  @override
+  String get saveRomPermanently => 'حفظ الروم بشكل دائم؟';
+
+  @override
+  String get keepRomOfflineQuestion =>
+      'هل تريد الاحتفاظ بهذه الروم المحملة للعب بدون اتصال؟';
+
+  @override
+  String get deletedToSaveSpace =>
+      'إذا لم يكن كذلك، سيتم حذفها لاحقاً لتوفير المساحة.';
 }

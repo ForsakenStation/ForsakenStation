@@ -25,11 +25,12 @@ class BiosDownloadDialog extends StatefulWidget {
     required Future<bool> Function(void Function(DownloadProgress))
     downloadFunction,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     return showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (context) => BiosDownloadDialog(
-        title: 'Downloading $platformName BIOS',
+        title: l10n.downloadingPlatformBios(platformName),
         filesToDownload: filesToDownload,
         downloadFunction: (onProgress) =>
             downloadFunction((progress) => onProgress(progress)),
@@ -48,11 +49,12 @@ class BiosDownloadDialog extends StatefulWidget {
       allFiles.addAll(files);
     }
 
+    final l10n = AppLocalizations.of(context)!;
     return showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (context) => BiosDownloadDialog(
-        title: 'Downloading All Missing BIOS',
+        title: l10n.downloadingAllMissingBios,
         filesToDownload: allFiles,
         downloadFunction: (onProgress) =>
             downloadFunction((progress) => onProgress(progress)),
@@ -91,7 +93,7 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
                         Exception(progress.errorMessage),
                       )
                     : BiosDownloadError.fromException(
-                        Exception('Download failed'),
+                        Exception(AppLocalizations.of(context)!.downloadFailed),
                       );
               } else if (progress.status == DownloadStatus.cancelled) {
                 _isCancelled = true;
@@ -106,7 +108,9 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
                         Exception(progress.errorMessage),
                       )
                     : BiosDownloadError.fromException(
-                        Exception('Batch download failed'),
+                        Exception(
+                          AppLocalizations.of(context)!.batchDownloadFailed,
+                        ),
                       );
               } else if (progress.status == BatchDownloadStatus.cancelled) {
                 _isCancelled = true;
@@ -224,11 +228,12 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
   }
 
   Widget _buildSingleProgress(DownloadProgress progress) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'File: ${progress.filename}',
+          l10n.biosFileLabel(progress.filename),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
@@ -254,11 +259,15 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
   }
 
   Widget _buildBatchProgress(BatchDownloadProgress batchProgress) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Progress: ${batchProgress.completedFiles}/${batchProgress.totalFiles} files',
+          l10n.batchProgressLabel(
+            batchProgress.completedFiles.toString(),
+            batchProgress.totalFiles.toString(),
+          ),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
@@ -277,9 +286,9 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
 
         if (batchProgress.fileProgresses.isNotEmpty) ...[
           const SizedBox(height: 16),
-          const Text(
-            'File Details:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+          Text(
+            l10n.fileDetails,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
           ),
           const SizedBox(height: 8),
           SizedBox(
@@ -325,34 +334,36 @@ class _BiosDownloadDialogState extends State<BiosDownloadDialog> {
   }
 
   String _getStatusText(DownloadStatus status) {
+    final l10n = AppLocalizations.of(context)!;
     switch (status) {
       case DownloadStatus.pending:
-        return 'Waiting...';
+        return l10n.waiting;
       case DownloadStatus.downloading:
-        return 'Downloading...';
+        return l10n.downloading;
       case DownloadStatus.verifying:
-        return 'Verifying...';
+        return l10n.verifying;
       case DownloadStatus.completed:
-        return 'Completed';
+        return l10n.completed;
       case DownloadStatus.failed:
-        return 'Failed';
+        return l10n.failed;
       case DownloadStatus.cancelled:
-        return 'Cancelled';
+        return l10n.cancelled;
     }
   }
 
   String _getBatchStatusText(BatchDownloadStatus status) {
+    final l10n = AppLocalizations.of(context)!;
     switch (status) {
       case BatchDownloadStatus.pending:
-        return 'Preparing...';
+        return l10n.preparing;
       case BatchDownloadStatus.downloading:
-        return 'Downloading files...';
+        return l10n.downloadingFiles;
       case BatchDownloadStatus.completed:
-        return 'All downloads completed';
+        return l10n.allDownloadsCompleted;
       case BatchDownloadStatus.failed:
-        return 'Some downloads failed';
+        return l10n.someDownloadsFailed;
       case BatchDownloadStatus.cancelled:
-        return 'Downloads cancelled';
+        return l10n.downloadsCancelled;
     }
   }
 

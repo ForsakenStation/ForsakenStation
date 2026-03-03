@@ -108,7 +108,9 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                 const SizedBox(height: 16),
                 if (widget.item.romCount != null) ...[
                   Text(
-                    '${widget.item.romCount} ROM${widget.item.romCount == 1 ? '' : 's'}',
+                    AppLocalizations.of(
+                      context,
+                    )!.folderRomCount(widget.item.romCount!),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
@@ -209,7 +211,7 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Language',
+                            AppLocalizations.of(context)!.language,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
@@ -231,7 +233,7 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Regions',
+                            AppLocalizations.of(context)!.regions,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
@@ -261,7 +263,9 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                           MaterialPageRoute(
                             builder: (context) => PdfViewerScreen(
                               pdfPath: widget.media!.manual!.path,
-                              title: '${widget.item.displayName} - Manual',
+                              title: AppLocalizations.of(
+                                context,
+                              )!.manualTitle(widget.item.displayName),
                             ),
                           ),
                         );

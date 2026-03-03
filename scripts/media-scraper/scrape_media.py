@@ -111,7 +111,7 @@ MEDIA_TYPES = {
 PLATFORM_IDS = {
     "famicom": 3,
     "superfamicom": 4,
-    "arcadia": 84,
+    "archimedes": 84,
     "3do": 29,
     "aamber pegasus": 83,
     "acclaim": 166,

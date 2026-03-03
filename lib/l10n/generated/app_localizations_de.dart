@@ -1443,4 +1443,166 @@ class AppLocalizationsDe extends AppLocalizations {
   String rebuildMediaCacheErrors(String count) {
     return '$count Fehler während der Neu-Erstellung aufgetreten';
   }
+
+  @override
+  String get description => 'Beschreibung';
+
+  @override
+  String get noDescriptionAvailable =>
+      'Keine Beschreibung für dieses ROM verfügbar.';
+
+  @override
+  String get releaseDate => 'Veröffentlichungsdatum';
+
+  @override
+  String get players => 'Spieler';
+
+  @override
+  String get rating => 'Bewertung';
+
+  @override
+  String get regions => 'Regionen';
+
+  @override
+  String folderRomCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ROMs',
+      one: '$count ROM',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String manualTitle(String name) {
+    return '$name - Handbuch';
+  }
+
+  @override
+  String get playInBrowser => 'Im Browser spielen';
+
+  @override
+  String downloadingPlatformBios(String platformName) {
+    return '$platformName-BIOS wird heruntergeladen';
+  }
+
+  @override
+  String get downloadingAllMissingBios => 'Alle fehlenden BIOS herunterladen';
+
+  @override
+  String biosFileLabel(String filename) {
+    return 'Datei: $filename';
+  }
+
+  @override
+  String batchProgressLabel(String completed, String total) {
+    return 'Fortschritt: $completed/$total Dateien';
+  }
+
+  @override
+  String get fileDetails => 'Dateidetails:';
+
+  @override
+  String get waiting => 'Warten...';
+
+  @override
+  String get verifying => 'Überprüfen...';
+
+  @override
+  String get failed => 'Fehlgeschlagen';
+
+  @override
+  String get preparing => 'Vorbereiten...';
+
+  @override
+  String get downloadingFiles => 'Dateien werden heruntergeladen...';
+
+  @override
+  String get someDownloadsFailed => 'Einige Downloads sind fehlgeschlagen';
+
+  @override
+  String get downloadsCancelled => 'Downloads abgebrochen';
+
+  @override
+  String get calculating => 'Berechne...';
+
+  @override
+  String secondsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Sekunden',
+      one: '1 Sekunde',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minutesRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Minuten',
+      one: '1 Minute',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Stunden',
+      one: '1 Stunde',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadingAndLaunching => 'Herunterladen & Starten...';
+
+  @override
+  String get launching => 'Starten...';
+
+  @override
+  String emulatorLabel(String name) {
+    return 'Emulator: $name';
+  }
+
+  @override
+  String get generalInformation => 'Allgemeine Informationen';
+
+  @override
+  String get manufacturer => 'Hersteller';
+
+  @override
+  String get releaseYear => 'Erscheinungsjahr';
+
+  @override
+  String get generation => 'Generation';
+
+  @override
+  String get technicalSpecifications => 'Technische Spezifikationen';
+
+  @override
+  String get resolution => 'Auflösung';
+
+  @override
+  String get colors => 'Farben';
+
+  @override
+  String get notNow => 'Nicht jetzt';
+
+  @override
+  String get saveRomPermanently => 'ROM dauerhaft speichern?';
+
+  @override
+  String get keepRomOfflineQuestion =>
+      'Möchtest du dieses ROM heruntergeladen behalten, um offline zu spielen?';
+
+  @override
+  String get deletedToSaveSpace =>
+      'Andernfalls wird es später gelöscht, um Speicherplatz zu sparen.';
 }

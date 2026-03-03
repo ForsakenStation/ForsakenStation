@@ -2800,6 +2800,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} errors occurred during rebuild'**
   String rebuildMediaCacheErrors(String count);
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @noDescriptionAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No description available for this ROM.'**
+  String get noDescriptionAvailable;
+
+  /// No description provided for @releaseDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Release Date'**
+  String get releaseDate;
+
+  /// No description provided for @players.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get players;
+
+  /// No description provided for @rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
+
+  /// No description provided for @regions.
+  ///
+  /// In en, this message translates to:
+  /// **'Regions'**
+  String get regions;
+
+  /// No description provided for @folderRomCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{count} ROM} other{{count} ROMs}}'**
+  String folderRomCount(int count);
+
+  /// No description provided for @manualTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} - Manual'**
+  String manualTitle(String name);
+
+  /// No description provided for @playInBrowser.
+  ///
+  /// In en, this message translates to:
+  /// **'Play in Browser'**
+  String get playInBrowser;
+
+  /// No description provided for @downloadingPlatformBios.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading {platformName} BIOS'**
+  String downloadingPlatformBios(String platformName);
+
+  /// No description provided for @downloadingAllMissingBios.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading All Missing BIOS'**
+  String get downloadingAllMissingBios;
+
+  /// No description provided for @biosFileLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'File: {filename}'**
+  String biosFileLabel(String filename);
+
+  /// No description provided for @batchProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress: {completed}/{total} files'**
+  String batchProgressLabel(String completed, String total);
+
+  /// No description provided for @fileDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'File Details:'**
+  String get fileDetails;
+
+  /// No description provided for @waiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting...'**
+  String get waiting;
+
+  /// No description provided for @verifying.
+  ///
+  /// In en, this message translates to:
+  /// **'Verifying...'**
+  String get verifying;
+
+  /// No description provided for @failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
+
+  /// No description provided for @preparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing...'**
+  String get preparing;
+
+  /// No description provided for @downloadingFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading files...'**
+  String get downloadingFiles;
+
+  /// No description provided for @someDownloadsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Some downloads failed'**
+  String get someDownloadsFailed;
+
+  /// No description provided for @downloadsCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads cancelled'**
+  String get downloadsCancelled;
+
+  /// No description provided for @calculating.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating...'**
+  String get calculating;
+
+  /// No description provided for @secondsRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 second} other{{count} seconds}}'**
+  String secondsRemaining(int count);
+
+  /// No description provided for @minutesRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute} other{{count} minutes}}'**
+  String minutesRemaining(int count);
+
+  /// No description provided for @hoursRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
+  String hoursRemaining(int count);
+
+  /// No description provided for @downloadingAndLaunching.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading & Launching...'**
+  String get downloadingAndLaunching;
+
+  /// No description provided for @launching.
+  ///
+  /// In en, this message translates to:
+  /// **'Launching...'**
+  String get launching;
+
+  /// No description provided for @emulatorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Emulator: {name}'**
+  String emulatorLabel(String name);
+
+  /// No description provided for @generalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'General Information'**
+  String get generalInformation;
+
+  /// No description provided for @manufacturer.
+  ///
+  /// In en, this message translates to:
+  /// **'Manufacturer'**
+  String get manufacturer;
+
+  /// No description provided for @releaseYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Release Year'**
+  String get releaseYear;
+
+  /// No description provided for @generation.
+  ///
+  /// In en, this message translates to:
+  /// **'Generation'**
+  String get generation;
+
+  /// No description provided for @technicalSpecifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Technical Specifications'**
+  String get technicalSpecifications;
+
+  /// No description provided for @resolution.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolution'**
+  String get resolution;
+
+  /// No description provided for @colors.
+  ///
+  /// In en, this message translates to:
+  /// **'Colors'**
+  String get colors;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Now'**
+  String get notNow;
+
+  /// No description provided for @saveRomPermanently.
+  ///
+  /// In en, this message translates to:
+  /// **'Save ROM Permanently?'**
+  String get saveRomPermanently;
+
+  /// No description provided for @keepRomOfflineQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to keep this ROM downloaded for offline play?'**
+  String get keepRomOfflineQuestion;
+
+  /// No description provided for @deletedToSaveSpace.
+  ///
+  /// In en, this message translates to:
+  /// **'If not, it will be deleted later to save space.'**
+  String get deletedToSaveSpace;
 }
 
 class _AppLocalizationsDelegate

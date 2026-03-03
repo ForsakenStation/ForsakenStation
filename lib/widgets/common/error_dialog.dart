@@ -50,7 +50,7 @@ class _ErrorDialogState extends State<ErrorDialog>
   void initState() {
     super.initState();
 
-    // Build buttons list
+    // Build buttons list (using placeholder, updated in didChangeDependencies)
     _buttons = [
       DialogButton(
         label: 'OK',
@@ -71,6 +71,19 @@ class _ErrorDialogState extends State<ErrorDialog>
       onConfirm: _handleConfirm,
       layout: ButtonLayout.horizontal,
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _buttons = [
+      DialogButton(
+        label: AppLocalizations.of(context)!.ok,
+        primary: true,
+        gamepadButton: GamepadButton.a,
+        onPressed: _handleClose,
+      ),
+    ];
   }
 
   void _handleClose() {

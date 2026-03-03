@@ -1440,4 +1440,166 @@ class AppLocalizationsEu extends AppLocalizations {
   String rebuildMediaCacheErrors(String count) {
     return '$count akats gertatu da berrizeratzean';
   }
+
+  @override
+  String get description => 'Deskribapena';
+
+  @override
+  String get noDescriptionAvailable => 'Ez dago deskribapenik ROM honentzat.';
+
+  @override
+  String get releaseDate => 'Kaleratze data';
+
+  @override
+  String get players => 'Jokalariak';
+
+  @override
+  String get rating => 'Balorazioa';
+
+  @override
+  String get regions => 'Eskualdeak';
+
+  @override
+  String folderRomCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ROM',
+      one: '$count ROM',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String manualTitle(String name) {
+    return '$name - Eskuliburua';
+  }
+
+  @override
+  String get playInBrowser => 'Nabigatzailean jokatu';
+
+  @override
+  String downloadingPlatformBios(String platformName) {
+    return '$platformName BIOS deskargatzen';
+  }
+
+  @override
+  String get downloadingAllMissingBios =>
+      'Falta diren BIOS guztiak deskargatzen';
+
+  @override
+  String biosFileLabel(String filename) {
+    return 'Fitxategia: $filename';
+  }
+
+  @override
+  String batchProgressLabel(String completed, String total) {
+    return 'Aurrerapena: $completed/$total fitxategi';
+  }
+
+  @override
+  String get fileDetails => 'Fitxategiaren xehetasunak:';
+
+  @override
+  String get waiting => 'Itxaroten...';
+
+  @override
+  String get verifying => 'Egiaztatzen...';
+
+  @override
+  String get failed => 'Huts egin du';
+
+  @override
+  String get preparing => 'Prestatzen...';
+
+  @override
+  String get downloadingFiles => 'Fitxategiak deskargatzen...';
+
+  @override
+  String get someDownloadsFailed => 'Deskarga batzuek huts egin dute';
+
+  @override
+  String get downloadsCancelled => 'Deskargak bertan behera utzi dira';
+
+  @override
+  String get calculating => 'Kalkulatzen...';
+
+  @override
+  String secondsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count segundo',
+      one: 'segundo 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minutesRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutu',
+      one: 'minutu 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ordu',
+      one: 'ordu 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadingAndLaunching => 'Deskargatzen eta abiarazten...';
+
+  @override
+  String get launching => 'Abiarazten...';
+
+  @override
+  String emulatorLabel(String name) {
+    return 'Emuladorea: $name';
+  }
+
+  @override
+  String get generalInformation => 'Informazio orokorra';
+
+  @override
+  String get manufacturer => 'Fabrikatzailea';
+
+  @override
+  String get releaseYear => 'Argitalpen urtea';
+
+  @override
+  String get generation => 'Belaunaldia';
+
+  @override
+  String get technicalSpecifications => 'Zehaztapen teknikoak';
+
+  @override
+  String get resolution => 'Bereizmena';
+
+  @override
+  String get colors => 'Koloreak';
+
+  @override
+  String get notNow => 'Orain ez';
+
+  @override
+  String get saveRomPermanently => 'ROM betirako gorde?';
+
+  @override
+  String get keepRomOfflineQuestion =>
+      'ROM hau deskargatuta mantendu nahi duzu lineaz kanpo jokatzeko?';
+
+  @override
+  String get deletedToSaveSpace =>
+      'Bestela, geroago ezabatuko da tokia aurrezteko.';
 }

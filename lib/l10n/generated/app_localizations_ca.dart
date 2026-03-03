@@ -1443,4 +1443,167 @@ class AppLocalizationsCa extends AppLocalizations {
   String rebuildMediaCacheErrors(String count) {
     return '$count errors van ocórrer durant la reconstrucció';
   }
+
+  @override
+  String get description => 'Descripció';
+
+  @override
+  String get noDescriptionAvailable =>
+      'No hi ha descripció disponible per a aquesta ROM.';
+
+  @override
+  String get releaseDate => 'Data de llançament';
+
+  @override
+  String get players => 'Jugadors';
+
+  @override
+  String get rating => 'Valoració';
+
+  @override
+  String get regions => 'Regions';
+
+  @override
+  String folderRomCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ROMs',
+      one: '$count ROM',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String manualTitle(String name) {
+    return '$name - Manual';
+  }
+
+  @override
+  String get playInBrowser => 'Jugar al navegador';
+
+  @override
+  String downloadingPlatformBios(String platformName) {
+    return 'Descarregant BIOS de $platformName';
+  }
+
+  @override
+  String get downloadingAllMissingBios =>
+      'Descarregant totes les BIOS que falten';
+
+  @override
+  String biosFileLabel(String filename) {
+    return 'Fitxer: $filename';
+  }
+
+  @override
+  String batchProgressLabel(String completed, String total) {
+    return 'Progrés: $completed/$total fitxers';
+  }
+
+  @override
+  String get fileDetails => 'Detalls del fitxer:';
+
+  @override
+  String get waiting => 'Esperant...';
+
+  @override
+  String get verifying => 'Verificant...';
+
+  @override
+  String get failed => 'Fallat';
+
+  @override
+  String get preparing => 'Preparant...';
+
+  @override
+  String get downloadingFiles => 'Descarregant fitxers...';
+
+  @override
+  String get someDownloadsFailed => 'Algunes descàrregues han fallat';
+
+  @override
+  String get downloadsCancelled => 'Descàrregues cancel·lades';
+
+  @override
+  String get calculating => 'Calculant...';
+
+  @override
+  String secondsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count segons',
+      one: '1 segon',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minutesRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuts',
+      one: '1 minut',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hores',
+      one: '1 hora',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get downloadingAndLaunching => 'Descarregant i llançant...';
+
+  @override
+  String get launching => 'Llançant...';
+
+  @override
+  String emulatorLabel(String name) {
+    return 'Emulador: $name';
+  }
+
+  @override
+  String get generalInformation => 'Informació general';
+
+  @override
+  String get manufacturer => 'Fabricant';
+
+  @override
+  String get releaseYear => 'Any de llançament';
+
+  @override
+  String get generation => 'Generació';
+
+  @override
+  String get technicalSpecifications => 'Especificacions tècniques';
+
+  @override
+  String get resolution => 'Resolució';
+
+  @override
+  String get colors => 'Colors';
+
+  @override
+  String get notNow => 'Ara no';
+
+  @override
+  String get saveRomPermanently => 'Desar ROM permanentment?';
+
+  @override
+  String get keepRomOfflineQuestion =>
+      'Vols conservar aquesta ROM descarregada per jugar sense connexió?';
+
+  @override
+  String get deletedToSaveSpace =>
+      'Si no, s\'eliminarà més tard per estalviar espai.';
 }
