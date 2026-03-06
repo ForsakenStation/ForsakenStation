@@ -248,14 +248,14 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
             ),
             ControlsBottomBar(
               actions: [
-                const BottomBarAction(
-                  label: 'Back',
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.back,
                   keyboardKey: 'ESC',
                   gamepadButton: 'B',
                 ),
                 if (isConnected)
-                  const BottomBarAction(
-                    label: 'Exit',
+                  BottomBarAction(
+                    label: AppLocalizations.of(context)!.exit,
                     keyboardKey: 'Start+Select',
                     gamepadButton: 'Start+Select',
                   ),
@@ -275,12 +275,12 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
           Icon(Icons.gamepad, size: 100, color: Colors.grey.shade700),
           const SizedBox(height: 20),
           Text(
-            'No gamepad connected',
+            AppLocalizations.of(context)!.noGamepadConnected,
             style: TextStyle(fontSize: 24, color: Colors.grey.shade500),
           ),
           const SizedBox(height: 10),
           Text(
-            'Connect a gamepad and press any button',
+            AppLocalizations.of(context)!.connectGamepadPrompt,
             style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
           ),
         ],
@@ -297,9 +297,9 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
           children: [
             const Icon(Icons.check_circle, color: Colors.green, size: 28),
             const SizedBox(width: 12),
-            const Text(
-              'Gamepad Connected',
-              style: TextStyle(fontSize: 16, color: Colors.white),
+            Text(
+              AppLocalizations.of(context)!.gamepadConnected,
+              style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
           ],
         ),
@@ -318,7 +318,7 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                _lastAction ?? 'Press any button to test (actions disabled)',
+                _lastAction ?? AppLocalizations.of(context)!.pressButtonToTest,
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.white,
@@ -340,9 +340,9 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Button Function Tests',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.buttonFunctionTests,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Expanded(
@@ -350,55 +350,55 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
                 child: Column(
                   children: [
                     _buildTestButton(
-                      'A (Select)',
+                      AppLocalizations.of(context)!.gamepadASelect,
                       _gamepadService.isButtonPressed(GamepadService.buttonA),
                     ),
                     _buildTestButton(
-                      'B (Back)',
+                      AppLocalizations.of(context)!.gamepadBBack,
                       _gamepadService.isButtonPressed(GamepadService.buttonB),
                     ),
                     _buildTestButton(
-                      'X (Search)',
+                      AppLocalizations.of(context)!.gamepadXSearch,
                       _gamepadService.isButtonPressed(GamepadService.buttonX),
                     ),
                     _buildTestButton(
-                      'Y (Help)',
+                      AppLocalizations.of(context)!.gamepadYHelp,
                       _gamepadService.isButtonPressed(GamepadService.buttonY),
                     ),
                     _buildTestButton(
-                      'LB (Page Down)',
+                      AppLocalizations.of(context)!.gamepadLBPageDown,
                       _gamepadService.isButtonPressed(GamepadService.buttonLB),
                     ),
                     _buildTestButton(
-                      'RB (Page Up)',
+                      AppLocalizations.of(context)!.gamepadRBPageUp,
                       _gamepadService.isButtonPressed(GamepadService.buttonRB),
                     ),
                     _buildTestButton(
-                      'Start (Menu)',
+                      AppLocalizations.of(context)!.gamepadStartMenu,
                       _gamepadService.isButtonPressed(
                         GamepadService.buttonStart,
                       ),
                     ),
                     _buildTestButton(
-                      'Select (Settings)',
+                      AppLocalizations.of(context)!.gamepadSelectSettings,
                       _gamepadService.isButtonPressed(
                         GamepadService.buttonSelect,
                       ),
                     ),
                     _buildTestButton(
-                      'LS Click',
+                      AppLocalizations.of(context)!.gamepadLSClick,
                       _gamepadService.isButtonPressed(GamepadService.buttonLS),
                     ),
                     _buildTestButton(
-                      'RS Click (View)',
+                      AppLocalizations.of(context)!.gamepadRSView,
                       _gamepadService.isButtonPressed(GamepadService.buttonRS),
                     ),
                     _buildTestButton(
-                      'LT (Trigger)',
+                      AppLocalizations.of(context)!.gamepadLTTrigger,
                       _gamepadService.getAxisValue(GamepadService.axisLT) > 0.5,
                     ),
                     _buildTestButton(
-                      'RT (Trigger)',
+                      AppLocalizations.of(context)!.gamepadRTTrigger,
                       _gamepadService.getAxisValue(GamepadService.axisRT) > 0.5,
                     ),
                   ],
@@ -454,16 +454,16 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Raw Button States',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.rawButtonStates,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Expanded(
               child: SingleChildScrollView(
                 child: _buttonStates.isEmpty
                     ? Text(
-                        'No buttons pressed',
+                        AppLocalizations.of(context)!.noButtonsPressed,
                         style: TextStyle(
                           color: Colors.grey.shade500,
                           fontSize: 13,
@@ -506,16 +506,19 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Axis Values',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Text(
+                AppLocalizations.of(context)!.axisValues,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Expanded(
                 child: SingleChildScrollView(
                   child: _axisValues.isEmpty
                       ? Text(
-                          'No axis movement',
+                          AppLocalizations.of(context)!.noAxisMovement,
                           style: TextStyle(
                             color: Colors.grey.shade500,
                             fontSize: 13,
@@ -599,9 +602,9 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'D-Pad + Left Stick',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.dpadLeftStick,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Expanded(
@@ -649,9 +652,9 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Right Stick',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.rightStick,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Expanded(

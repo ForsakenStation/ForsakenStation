@@ -585,7 +585,9 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'No information available for ${selectedEmulatorPlatform.displayName}',
+            AppLocalizations.of(
+              context,
+            )!.noInfoAvailable(selectedEmulatorPlatform.displayName),
           ),
         ),
       );
@@ -708,7 +710,7 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                   IconButton(
                     icon: const Icon(Icons.info_outline),
                     onPressed: _showEmulatorPlatformInfo,
-                    tooltip: 'EmulatorPlatform Info (I)',
+                    tooltip: AppLocalizations.of(context)!.platformInfoTooltip,
                   ),
                 IconButton(
                   icon: Icon(
@@ -764,33 +766,34 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
   /// Get bottom bar actions based on current view mode
   List<BottomBarAction> _getBottomBarActions() {
+    final l10n = AppLocalizations.of(context)!;
     return [
-      const BottomBarAction(
-        label: 'Select',
+      BottomBarAction(
+        label: l10n.select,
         keyboardKey: 'Enter',
         gamepadButton: 'A',
         icon: Icons.check,
       ),
-      const BottomBarAction(
-        label: 'Info',
+      BottomBarAction(
+        label: l10n.info,
         keyboardKey: 'I',
         gamepadButton: 'Y',
         icon: Icons.info_outline,
       ),
-      const BottomBarAction(
-        label: 'View',
+      BottomBarAction(
+        label: l10n.view,
         keyboardKey: 'V',
         gamepadButton: 'R3',
         icon: Icons.view_carousel,
       ),
-      const BottomBarAction(
-        label: 'Refresh',
+      BottomBarAction(
+        label: l10n.refresh,
         keyboardKey: 'R',
         gamepadButton: 'X',
         icon: Icons.refresh,
       ),
-      const BottomBarAction(
-        label: 'Settings',
+      BottomBarAction(
+        label: l10n.settings,
         keyboardKey: 'Tab',
         gamepadButton: 'Start',
         icon: Icons.settings,
@@ -965,9 +968,9 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                     color: Colors.black54,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Text(
-                    'Use arrow keys or swipe to navigate',
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                  child: Text(
+                    AppLocalizations.of(context)!.navigationHint,
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
                   ),
                 ),
               ),
@@ -1069,7 +1072,9 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        '${platform.romCount} ROMs',
+                        AppLocalizations.of(
+                          context,
+                        )!.folderRomCount(platform.romCount),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(

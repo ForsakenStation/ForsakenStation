@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../models/rom_tags.dart';
 
 /// Widget that displays ROM tags as colored badges
@@ -23,18 +24,19 @@ class RomTagBadges extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final l10n = AppLocalizations.of(context)!;
     return Wrap(
       spacing: spacing,
       runSpacing: spacing,
       children: romTags!.tags.map((tag) {
-        return _buildTagBadge(tag);
+        return _buildTagBadge(tag, l10n);
       }).toList(),
     );
   }
 
-  Widget _buildTagBadge(RomTag tag) {
+  Widget _buildTagBadge(RomTag tag, AppLocalizations l10n) {
     return Tooltip(
-      message: _getTagDescription(tag),
+      message: _getTagDescription(tag, l10n),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         decoration: BoxDecoration(
@@ -61,42 +63,42 @@ class RomTagBadges extends StatelessWidget {
     );
   }
 
-  String _getTagDescription(RomTag tag) {
+  String _getTagDescription(RomTag tag, AppLocalizations l10n) {
     switch (tag.type) {
       case RomTagType.quality:
         if (tag.text == 'Verified') {
-          return 'Verified good dump - confirmed working';
+          return l10n.tagVerifiedGoodDump;
         } else if (tag.text == 'Bad Dump') {
-          return 'Bad dump - may not work correctly';
+          return l10n.tagBadDump;
         } else if (tag.text == 'Alternate') {
-          return 'Alternate version';
+          return l10n.tagAlternateVersion;
         } else if (tag.text == 'Overdump') {
-          return 'Overdump - contains extra data';
+          return l10n.tagOverdump;
         }
         break;
 
       case RomTagType.modification:
         if (tag.text == 'Hack') {
-          return 'Modified/hacked ROM';
+          return l10n.tagModifiedHacked;
         } else if (tag.text == 'Translation') {
-          return 'Fan translation';
+          return l10n.tagFanTranslation;
         } else if (tag.text == 'Pirate') {
-          return 'Pirate/bootleg version';
+          return l10n.tagPirateBootleg;
         } else if (tag.text == 'Fixed') {
-          return 'Fixed version';
+          return l10n.tagFixedVersion;
         } else if (tag.text == 'Trainer') {
-          return 'Includes cheat trainer';
+          return l10n.tagCheatTrainer;
         }
         break;
 
       case RomTagType.version:
-        return 'Version: ${tag.text}';
+        return l10n.tagVersion(tag.text);
 
       case RomTagType.special:
-        return 'Special release: ${tag.text}';
+        return l10n.tagSpecialRelease(tag.text);
 
       case RomTagType.media:
-        return 'Media info: ${tag.text}';
+        return l10n.tagMediaInfo(tag.text);
 
       case RomTagType.other:
         return tag.text;

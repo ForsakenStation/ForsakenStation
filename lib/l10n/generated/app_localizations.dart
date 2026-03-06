@@ -332,10 +332,10 @@ abstract class AppLocalizations {
   /// **'ROM not found'**
   String get romNotFound;
 
-  /// No description provided for @biosRequired.
+  /// Label for required BIOS files
   ///
   /// In en, this message translates to:
-  /// **'BIOS required'**
+  /// **'REQUIRED'**
   String get biosRequired;
 
   /// No description provided for @systemCheck.
@@ -1034,10 +1034,10 @@ abstract class AppLocalizations {
   /// **'Remove from Favorites'**
   String get removeFromFavorites;
 
-  /// No description provided for @biosMissing.
+  /// Label for missing BIOS status in summary
   ///
   /// In en, this message translates to:
-  /// **'BIOS missing'**
+  /// **'Missing'**
   String get biosMissing;
 
   /// No description provided for @biosPresent.
@@ -1202,10 +1202,10 @@ abstract class AppLocalizations {
   /// **'Emulator Error'**
   String get emulatorError;
 
-  /// No description provided for @gamepadConnected.
+  /// Status message when gamepad is connected
   ///
   /// In en, this message translates to:
-  /// **'Gamepad connected'**
+  /// **'Gamepad Connected'**
   String get gamepadConnected;
 
   /// No description provided for @gamepadDisconnected.
@@ -1316,7 +1316,7 @@ abstract class AppLocalizations {
   /// **'Left Stick'**
   String get leftStick;
 
-  /// No description provided for @rightStick.
+  /// Header for right stick test section
   ///
   /// In en, this message translates to:
   /// **'Right Stick'**
@@ -3034,6 +3034,1454 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'If not, it will be deleted later to save space.'**
   String get deletedToSaveSpace;
+
+  /// Label for view toggle action in bottom bar
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view;
+
+  /// Label for media action in bottom bar
+  ///
+  /// In en, this message translates to:
+  /// **'Media'**
+  String get media;
+
+  /// Label for navigate action in bottom bar
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate'**
+  String get navigate;
+
+  /// Label for info action in bottom bar
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
+  /// Label for toggle filter action
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle Filter'**
+  String get toggleFilter;
+
+  /// Tooltip for theme selector button
+  ///
+  /// In en, this message translates to:
+  /// **'Change theme'**
+  String get changeTheme;
+
+  /// Label for keyboard input mode
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard'**
+  String get keyboard;
+
+  /// Label for gamepad input mode
+  ///
+  /// In en, this message translates to:
+  /// **'Gamepad'**
+  String get gamepad;
+
+  /// Tooltip for hiding virtual keyboard
+  ///
+  /// In en, this message translates to:
+  /// **'Hide keyboard'**
+  String get hideKeyboard;
+
+  /// Label for game manual media type
+  ///
+  /// In en, this message translates to:
+  /// **'Game Manual'**
+  String get gameManual;
+
+  /// Label for PDF document type
+  ///
+  /// In en, this message translates to:
+  /// **'PDF Document'**
+  String get pdfDocument;
+
+  /// Short label for manual
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get manual;
+
+  /// Label for video media type
+  ///
+  /// In en, this message translates to:
+  /// **'Video'**
+  String get video;
+
+  /// Tooltip for zoom out button
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom Out'**
+  String get zoomOut;
+
+  /// Tooltip for zoom in button
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom In'**
+  String get zoomIn;
+
+  /// Page counter display in document viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Page {current} / {total}'**
+  String pageCounter(String current, String total);
+
+  /// Label for zoom control hint
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom'**
+  String get zoom;
+
+  /// Label for first/last page navigation hint
+  ///
+  /// In en, this message translates to:
+  /// **'First/Last'**
+  String get firstLast;
+
+  /// Label for scroll control hint
+  ///
+  /// In en, this message translates to:
+  /// **'Scroll'**
+  String get scroll;
+
+  /// Status text shown while video is loading
+  ///
+  /// In en, this message translates to:
+  /// **'Loading video...'**
+  String get loadingVideo;
+
+  /// Tooltip for play/pause button
+  ///
+  /// In en, this message translates to:
+  /// **'Play/Pause'**
+  String get playPause;
+
+  /// Navigation hint shown in carousel/platform views
+  ///
+  /// In en, this message translates to:
+  /// **'Use arrow keys or swipe to navigate'**
+  String get useArrowKeysToNavigate;
+
+  /// Hint text in ROM search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search ROMs...'**
+  String get searchRomsHint;
+
+  /// Tooltip for cancel search button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Search'**
+  String get cancelSearch;
+
+  /// Tooltip for virtual keyboard toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Virtual Keyboard'**
+  String get virtualKeyboard;
+
+  /// Title for empty ROM list state
+  ///
+  /// In en, this message translates to:
+  /// **'No ROMs available'**
+  String get noRomsAvailable;
+
+  /// Description shown when no ROMs found for a platform
+  ///
+  /// In en, this message translates to:
+  /// **'No ROM files were found for this platform. ROM files should be placed as .txt files containing download URLs in the platform directory.'**
+  String get noRomsForPlatformMessage;
+
+  /// Title when search has no results
+  ///
+  /// In en, this message translates to:
+  /// **'No matching ROMs'**
+  String get noMatchingRoms;
+
+  /// Suggestion when search has no results
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search term'**
+  String get tryDifferentSearch;
+
+  /// Tooltip for save to permanent storage button
+  ///
+  /// In en, this message translates to:
+  /// **'Save to permanent storage'**
+  String get saveToPermanentStorage;
+
+  /// Label for temporary storage section
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary'**
+  String get temporary;
+
+  /// Label for permanent storage section
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent'**
+  String get permanent;
+
+  /// Short label for temporary path
+  ///
+  /// In en, this message translates to:
+  /// **'Temp'**
+  String get tempPathLabel;
+
+  /// Short label for permanent/forever path
+  ///
+  /// In en, this message translates to:
+  /// **'Forever'**
+  String get foreverPathLabel;
+
+  /// Title for storage overview section
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Overview'**
+  String get storageOverview;
+
+  /// Tooltip for clear temporary storage button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear temporary storage'**
+  String get clearTemporaryStorage;
+
+  /// Display count of files
+  ///
+  /// In en, this message translates to:
+  /// **'{count} files'**
+  String filesCount(String count);
+
+  /// Display a labeled path
+  ///
+  /// In en, this message translates to:
+  /// **'{label} path: {path}'**
+  String pathDisplay(String label, String path);
+
+  /// Fallback text for unknown values
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// Tooltip for verified good ROM dump tag
+  ///
+  /// In en, this message translates to:
+  /// **'Verified good dump - confirmed working'**
+  String get tagVerifiedGoodDump;
+
+  /// Tooltip for bad ROM dump tag
+  ///
+  /// In en, this message translates to:
+  /// **'Bad dump - may not work correctly'**
+  String get tagBadDump;
+
+  /// Tooltip for alternate version ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Alternate version'**
+  String get tagAlternateVersion;
+
+  /// Tooltip for overdump ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Overdump - contains extra data'**
+  String get tagOverdump;
+
+  /// Tooltip for modified/hacked ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Modified/hacked ROM'**
+  String get tagModifiedHacked;
+
+  /// Tooltip for fan translation ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Fan translation'**
+  String get tagFanTranslation;
+
+  /// Tooltip for pirate/bootleg ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Pirate/bootleg version'**
+  String get tagPirateBootleg;
+
+  /// Tooltip for fixed version ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed version'**
+  String get tagFixedVersion;
+
+  /// Tooltip for cheat trainer ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Includes cheat trainer'**
+  String get tagCheatTrainer;
+
+  /// Tooltip for version ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Version: {text}'**
+  String tagVersion(String text);
+
+  /// Tooltip for special release ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Special release: {text}'**
+  String tagSpecialRelease(String text);
+
+  /// Tooltip for media info ROM tag
+  ///
+  /// In en, this message translates to:
+  /// **'Media info: {text}'**
+  String tagMediaInfo(String text);
+
+  /// Error when no emulator is configured for a platform
+  ///
+  /// In en, this message translates to:
+  /// **'No emulator configured for {displayName}.\n\nPlease add configuration for \"{platform}\" in:\n{configPath}'**
+  String noEmulatorConfigured(
+    String displayName,
+    String platform,
+    String configPath,
+  );
+
+  /// Error when no emulator command is available for launching
+  ///
+  /// In en, this message translates to:
+  /// **'No emulator command available'**
+  String get noEmulatorCommandAvailable;
+
+  /// Error when trying to launch a ROM for an unsupported platform in web
+  ///
+  /// In en, this message translates to:
+  /// **'Platform \"{platform}\" is not yet supported in web browser.\n\nSupported platforms: {supportedPlatforms}'**
+  String platformNotSupportedWeb(String platform, String supportedPlatforms);
+
+  /// Error when web emulator fails to launch
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to launch web emulator: {error}'**
+  String failedToLaunchWebEmulator(String error);
+
+  /// Error dialog message when ROM launch fails with troubleshooting tips
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to launch ROM.\n\nCheck that:\n• Emulator is installed correctly\n• ROM file is valid\n• Configuration is correct\n\nError: {error}'**
+  String failedToLaunchRom(String error);
+
+  /// Error message when an exception occurs during ROM launch
+  ///
+  /// In en, this message translates to:
+  /// **'Error launching ROM: {error}'**
+  String errorLaunchingRom(String error);
+
+  /// Message when no platform info is available
+  ///
+  /// In en, this message translates to:
+  /// **'No information available for {platformName}'**
+  String noInfoAvailable(String platformName);
+
+  /// Tooltip for platform info button with keyboard shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'Platform Info (I)'**
+  String get platformInfoTooltip;
+
+  /// Navigation hint shown in carousel views
+  ///
+  /// In en, this message translates to:
+  /// **'Use arrow keys or swipe to navigate'**
+  String get navigationHint;
+
+  /// Empty state title when no games are available
+  ///
+  /// In en, this message translates to:
+  /// **'No games found'**
+  String get noGamesFound;
+
+  /// Empty state title when search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'No games found for search'**
+  String get noGamesFoundForSearch;
+
+  /// Suggestion when search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search term or clear the filter'**
+  String get tryDifferentSearchOrClear;
+
+  /// Suggestion when no games are found
+  ///
+  /// In en, this message translates to:
+  /// **'Check your storage settings or download some ROMs'**
+  String get checkStorageOrDownload;
+
+  /// Hint text in games search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search games...'**
+  String get searchGamesHint;
+
+  /// Header title on the settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Forsaken Emulator Configuration'**
+  String get settingsHeaderTitle;
+
+  /// Header subtitle on the settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Configure emulators, paths, and download content'**
+  String get settingsHeaderSubtitle;
+
+  /// Description for emulator management settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Add, edit, and configure emulator commands'**
+  String get emulatorManagementDesc;
+
+  /// System paths settings category title
+  ///
+  /// In en, this message translates to:
+  /// **'System Paths'**
+  String get systemPaths;
+
+  /// Description for system paths settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Configure ROMs, media, and emulator paths'**
+  String get systemPathsDesc;
+
+  /// Description for ROM database settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Download and manage ROM lists from GitHub'**
+  String get romDatabaseDesc;
+
+  /// Description for ROM storage settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Manage downloaded ROMs, storage, and temp files cleanup'**
+  String get romStorageDesc;
+
+  /// Description for download manager settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Download emulators, ROMs lists, and game data'**
+  String get downloadManagerDesc;
+
+  /// Description for system requirements settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Check required tools and dependencies'**
+  String get systemRequirementsDesc;
+
+  /// Gamepad test and debug settings category title
+  ///
+  /// In en, this message translates to:
+  /// **'Gamepad Test & Debug'**
+  String get gamepadTestDebug;
+
+  /// Description for gamepad test and debug settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Test gamepad buttons, axes, and troubleshoot issues'**
+  String get gamepadTestDebugDesc;
+
+  /// Description for BIOS and firmware help settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Check BIOS files and firmware requirements'**
+  String get biosFirmwareHelpDesc;
+
+  /// Description for web settings category
+  ///
+  /// In en, this message translates to:
+  /// **'CORS proxy and web platform configuration'**
+  String get webSettingsDesc;
+
+  /// Description for setup wizard settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Re-run the initial setup wizard'**
+  String get setupWizardDesc;
+
+  /// Description for language settings category
+  ///
+  /// In en, this message translates to:
+  /// **'Select application language'**
+  String get languageDesc;
+
+  /// About and debug settings category title
+  ///
+  /// In en, this message translates to:
+  /// **'About & Debug'**
+  String get aboutDebug;
+
+  /// Description for about and debug settings category
+  ///
+  /// In en, this message translates to:
+  /// **'App information and debug settings'**
+  String get aboutDebugDesc;
+
+  /// Title for legal disclaimer section in about dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Disclaimer'**
+  String get legalDisclaimer;
+
+  /// Credit text for ROM database source
+  ///
+  /// In en, this message translates to:
+  /// **'ROM lists are originally sourced from the AndroidRoms repository by Arley4d:'**
+  String get romDatabaseCredits;
+
+  /// Thanks text for ROM database source
+  ///
+  /// In en, this message translates to:
+  /// **'Special thanks to the AndroidRoms project for maintaining comprehensive ROM databases for preservation purposes.'**
+  String get romDatabaseThanks;
+
+  /// Section title for BIOS files in about dialog
+  ///
+  /// In en, this message translates to:
+  /// **'BIOS Files'**
+  String get biosFilesSection;
+
+  /// Credit text for BIOS files source
+  ///
+  /// In en, this message translates to:
+  /// **'BIOS files are sourced from the retroarch_system repository by Abdess:'**
+  String get biosFilesCredits;
+
+  /// Thanks text for BIOS files source
+  ///
+  /// In en, this message translates to:
+  /// **'This repository contains system files and BIOS required by various emulation platforms. Special thanks to the maintainers for preserving these essential files.'**
+  String get biosFilesThanks;
+
+  /// Credit text for Amiga capsimg library
+  ///
+  /// In en, this message translates to:
+  /// **'Amiga copy protection support provided by the capsimg library:'**
+  String get amigaCopyProtection;
+
+  /// Thanks text for capsimg library
+  ///
+  /// In en, this message translates to:
+  /// **'Special thanks to rsn8887 for maintaining the capsimg library that enables IPF (copy-protected) disk image support for Amiga emulation.'**
+  String get amigaCopyProtectionThanks;
+
+  /// Credit text for additional BIOS files
+  ///
+  /// In en, this message translates to:
+  /// **'Additional BIOS files provided by the RetroPieBios project:'**
+  String get additionalBiosFiles;
+
+  /// Thanks text for RetroPieBios project
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks to PIBSAS/RetroPieBios for providing additional BIOS variants and regional files that enhance compatibility across different systems and regions.'**
+  String get additionalBiosThanks;
+
+  /// Status text for enabled state
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get enabled;
+
+  /// Status text for disabled state
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// Validation error when disclaimer is not accepted in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'You must accept the disclaimer to continue.'**
+  String get disclaimerRequired;
+
+  /// Validation error when emulators path is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Emulators directory path is required.'**
+  String get emulatorsPathRequired;
+
+  /// Validation error when emulator config path is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Emulator config file path is required.'**
+  String get emulatorConfigPathRequired;
+
+  /// Validation error when media path is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Media path is required.'**
+  String get mediaPathRequired;
+
+  /// Validation error when temporary ROM path is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary ROM storage path is required.'**
+  String get tempRomPathRequired;
+
+  /// Validation error when permanent ROM path is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent ROM storage path is required.'**
+  String get permanentRomPathRequired;
+
+  /// Step counter in setup wizard bottom bar
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} / {total}'**
+  String wizardStepCounter(int current, int total);
+
+  /// Title for emulator configuration step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Emulator Configuration'**
+  String get emulatorConfiguration;
+
+  /// Description for emulator configuration step
+  ///
+  /// In en, this message translates to:
+  /// **'Set the paths where your emulators are installed. You can change these later in Settings > System Paths.'**
+  String get emulatorConfigStepDesc;
+
+  /// Label for emulators directory path field
+  ///
+  /// In en, this message translates to:
+  /// **'Emulators Directory'**
+  String get emulatorsDirectory;
+
+  /// Hint for emulators directory path field
+  ///
+  /// In en, this message translates to:
+  /// **'Path to emulator binaries'**
+  String get pathToEmulatorBinaries;
+
+  /// Label for emulator config file path field
+  ///
+  /// In en, this message translates to:
+  /// **'Emulator Config File'**
+  String get emulatorConfigFile;
+
+  /// Hint for emulator config file path field
+  ///
+  /// In en, this message translates to:
+  /// **'Path to emulator configuration JSON'**
+  String get pathToEmulatorConfig;
+
+  /// Title for storage paths step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Paths'**
+  String get storagePaths;
+
+  /// Description for storage paths step
+  ///
+  /// In en, this message translates to:
+  /// **'Configure where media assets and ROM files are stored. You can change these later in Settings > System Paths.'**
+  String get storagePathsStepDesc;
+
+  /// Hint for media path field in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Box art, screenshots, and videos'**
+  String get wizardMediaPathHint;
+
+  /// Label for temporary ROM storage path field
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary ROM Storage'**
+  String get temporaryRomStorage;
+
+  /// Hint for temporary ROM storage path field
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded ROMs for single play sessions'**
+  String get temporaryRomStorageHint;
+
+  /// Label for permanent ROM storage path field
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent ROM Storage'**
+  String get permanentRomStorage;
+
+  /// Hint for permanent ROM storage path field
+  ///
+  /// In en, this message translates to:
+  /// **'ROMs saved for offline play'**
+  String get permanentRomStorageHint;
+
+  /// Title for the ready step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re All Set!'**
+  String get allSet;
+
+  /// Subtitle for the ready step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Forsaken Emulator is ready to use.'**
+  String get wizardEmulatorReady;
+
+  /// Note about changing settings later in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'You can change any of these settings later from the Settings screen.'**
+  String get changeSettingsLater;
+
+  /// Title for configuration summary card in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Configuration Summary'**
+  String get configurationSummary;
+
+  /// Summary label for emulators path
+  ///
+  /// In en, this message translates to:
+  /// **'Emulators'**
+  String get summaryEmulators;
+
+  /// Summary label for media path
+  ///
+  /// In en, this message translates to:
+  /// **'Media'**
+  String get summaryMedia;
+
+  /// Summary label for temporary ROMs path
+  ///
+  /// In en, this message translates to:
+  /// **'Temp ROMs'**
+  String get summaryTempRoms;
+
+  /// Summary label for saved ROMs path
+  ///
+  /// In en, this message translates to:
+  /// **'Saved ROMs'**
+  String get summarySavedRoms;
+
+  /// Placeholder shown when a path value is empty
+  ///
+  /// In en, this message translates to:
+  /// **'(default)'**
+  String get defaultValue;
+
+  /// Page indicator in PDF viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Page {current} of {total}'**
+  String pdfPageIndicator(int current, int total);
+
+  /// Tooltip for zoom out button in PDF viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom out (-)'**
+  String get pdfZoomOut;
+
+  /// Tooltip for zoom in button in PDF viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom in (+)'**
+  String get pdfZoomIn;
+
+  /// Tooltip for reset zoom button in PDF viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Reset zoom (0)'**
+  String get pdfResetZoom;
+
+  /// Tooltip for first page button in PDF viewer
+  ///
+  /// In en, this message translates to:
+  /// **'First page (Home)'**
+  String get pdfFirstPage;
+
+  /// Tooltip for previous page button in PDF viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Previous page (←/PgUp)'**
+  String get pdfPreviousPage;
+
+  /// Tooltip for next page button in PDF viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Next page (→/PgDn)'**
+  String get pdfNextPage;
+
+  /// Tooltip for last page button in PDF viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Last page (End)'**
+  String get pdfLastPage;
+
+  /// Error message when PDF file is not found
+  ///
+  /// In en, this message translates to:
+  /// **'PDF file not found'**
+  String get pdfFileNotFound;
+
+  /// Confirmation message for deleting an emulator
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the emulator configuration for {system}?'**
+  String confirmDeleteEmulator(String system);
+
+  /// Number of commands configured for an emulator
+  ///
+  /// In en, this message translates to:
+  /// **'{count,plural, =1{1 command configured} other{{count} commands configured}}'**
+  String commandsConfigured(int count);
+
+  /// Shown when no command is configured for an emulator
+  ///
+  /// In en, this message translates to:
+  /// **'No command'**
+  String get noCommand;
+
+  /// Tooltip for reload configuration button
+  ///
+  /// In en, this message translates to:
+  /// **'Reload Configuration (R)'**
+  String get reloadConfigTooltip;
+
+  /// Tooltip for configuration info button
+  ///
+  /// In en, this message translates to:
+  /// **'Configuration Info'**
+  String get configurationInfo;
+
+  /// Label for config file location
+  ///
+  /// In en, this message translates to:
+  /// **'Config location:'**
+  String get configLocation;
+
+  /// Shows that local overrides exist
+  ///
+  /// In en, this message translates to:
+  /// **'Has local overrides: Yes'**
+  String get hasLocalOverridesYes;
+
+  /// Shows that no local overrides exist
+  ///
+  /// In en, this message translates to:
+  /// **'Has local overrides: No'**
+  String get hasLocalOverridesNo;
+
+  /// Note about changes being saved to device storage
+  ///
+  /// In en, this message translates to:
+  /// **'Your changes are saved to device storage.'**
+  String get changesSavedToDevice;
+
+  /// Note about using bundled config
+  ///
+  /// In en, this message translates to:
+  /// **'Using bundled config. Edit to create local overrides.'**
+  String get usingBundledConfig;
+
+  /// Empty state title when no emulators are configured
+  ///
+  /// In en, this message translates to:
+  /// **'No emulators configured'**
+  String get noEmulatorsConfigured;
+
+  /// Empty state subtitle when no emulators are configured
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first emulator to get started'**
+  String get addFirstEmulator;
+
+  /// Generic edit action label
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// Title for edit emulator dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Emulator'**
+  String get editEmulator;
+
+  /// Label for system/platform name field
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get system;
+
+  /// Hint text for system name input
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., nes, snes, ps1'**
+  String get systemHint;
+
+  /// Section header for emulator commands
+  ///
+  /// In en, this message translates to:
+  /// **'Commands'**
+  String get commands;
+
+  /// Label for a numbered command entry
+  ///
+  /// In en, this message translates to:
+  /// **'Command {number}'**
+  String commandNumber(int number);
+
+  /// Hint text for command input
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., ../retroarch.AppImage -f -L core.so'**
+  String get commandHint;
+
+  /// Generic remove action label
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// Section header for options
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get options;
+
+  /// Text shown while BIOS files are being downloaded
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading...'**
+  String get biosDownloading;
+
+  /// Download button text showing required and optional file counts
+  ///
+  /// In en, this message translates to:
+  /// **'Download {requiredCount} required + {optionalCount} extras'**
+  String downloadRequiredAndExtras(int requiredCount, int optionalCount);
+
+  /// Download button text showing required file count
+  ///
+  /// In en, this message translates to:
+  /// **'Download {requiredCount} required files'**
+  String downloadRequiredFiles(int requiredCount);
+
+  /// Download button text showing optional file count
+  ///
+  /// In en, this message translates to:
+  /// **'Download {optionalCount} optional extras'**
+  String downloadOptionalExtras(int optionalCount);
+
+  /// Generic download files button text
+  ///
+  /// In en, this message translates to:
+  /// **'Download files'**
+  String get downloadFiles;
+
+  /// Confirmation message for batch BIOS download
+  ///
+  /// In en, this message translates to:
+  /// **'This will download {totalFiles} BIOS files for {platformCount} platforms:'**
+  String batchDownloadConfirmation(int totalFiles, int platformCount);
+
+  /// Note about the source of BIOS file downloads
+  ///
+  /// In en, this message translates to:
+  /// **'Files will be downloaded from the retroarch_system repository.'**
+  String get downloadSourceNote;
+
+  /// Label for optional BIOS files
+  ///
+  /// In en, this message translates to:
+  /// **'OPTIONAL'**
+  String get biosOptional;
+
+  /// Status showing how many BIOS files were found
+  ///
+  /// In en, this message translates to:
+  /// **'{foundCount}/{totalCount} files found'**
+  String biosFilesFound(int foundCount, int totalCount);
+
+  /// Text showing number of optional extras available for download
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} optional extras available'**
+  String optionalExtrasAvailable(int count);
+
+  /// Header for BIOS file locations list
+  ///
+  /// In en, this message translates to:
+  /// **'Locations:'**
+  String get biosLocations;
+
+  /// Text indicating BIOS files can be downloaded
+  ///
+  /// In en, this message translates to:
+  /// **'Available for download from multiple sources'**
+  String get availableForDownload;
+
+  /// Summary section header
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get summary;
+
+  /// Label for complete BIOS status in summary
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get biosComplete;
+
+  /// Label for partial BIOS status in summary
+  ///
+  /// In en, this message translates to:
+  /// **'Partial'**
+  String get biosPartial;
+
+  /// Label for files count in BIOS summary
+  ///
+  /// In en, this message translates to:
+  /// **'Files'**
+  String get biosFiles;
+
+  /// Label for downloadable count in BIOS summary
+  ///
+  /// In en, this message translates to:
+  /// **'Downloadable'**
+  String get biosDownloadable;
+
+  /// Tooltip for refresh button with keyboard shortcut
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh (F5)'**
+  String get refreshF5Tooltip;
+
+  /// Message when all BIOS files are present
+  ///
+  /// In en, this message translates to:
+  /// **'All BIOS files found!'**
+  String get allBiosFilesFound;
+
+  /// Message when no BIOS requirements are found
+  ///
+  /// In en, this message translates to:
+  /// **'No BIOS requirements found'**
+  String get noBiosRequirements;
+
+  /// Counter text showing number of platforms
+  ///
+  /// In en, this message translates to:
+  /// **'{count} platforms'**
+  String platformCount(int count);
+
+  /// Error message when BIOS status loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load BIOS status: {error}'**
+  String failedToLoadBiosStatus(String error);
+
+  /// Tooltip for refresh status button
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Status'**
+  String get refreshStatus;
+
+  /// Counter showing completed platforms
+  ///
+  /// In en, this message translates to:
+  /// **'{complete}/{total} platforms complete'**
+  String platformsCompleteCount(int complete, int total);
+
+  /// Header for platform status section
+  ///
+  /// In en, this message translates to:
+  /// **'Platform Status'**
+  String get platformStatusHeader;
+
+  /// Status showing files present and verified count
+  ///
+  /// In en, this message translates to:
+  /// **'{presentFiles}/{totalFiles} files ({verifiedFiles} verified)'**
+  String filesVerifiedStatus(
+    int presentFiles,
+    int totalFiles,
+    int verifiedFiles,
+  );
+
+  /// Header for BIOS collection overview card
+  ///
+  /// In en, this message translates to:
+  /// **'BIOS Collection Overview'**
+  String get biosCollectionOverview;
+
+  /// Label for verified files count in BIOS dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get biosVerified;
+
+  /// Placeholder message for unimplemented download feature
+  ///
+  /// In en, this message translates to:
+  /// **'Download functionality for {platformName} - Coming soon!'**
+  String downloadComingSoon(String platformName);
+
+  /// Message when no gamepad is detected
+  ///
+  /// In en, this message translates to:
+  /// **'No gamepad connected'**
+  String get noGamepadConnected;
+
+  /// Instruction to connect a gamepad
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a gamepad and press any button'**
+  String get connectGamepadPrompt;
+
+  /// Prompt to press gamepad buttons in test mode
+  ///
+  /// In en, this message translates to:
+  /// **'Press any button to test (actions disabled)'**
+  String get pressButtonToTest;
+
+  /// Header for button function test section
+  ///
+  /// In en, this message translates to:
+  /// **'Button Function Tests'**
+  String get buttonFunctionTests;
+
+  /// Gamepad A button label with function
+  ///
+  /// In en, this message translates to:
+  /// **'A (Select)'**
+  String get gamepadASelect;
+
+  /// Gamepad B button label with function
+  ///
+  /// In en, this message translates to:
+  /// **'B (Back)'**
+  String get gamepadBBack;
+
+  /// Gamepad X button label with function
+  ///
+  /// In en, this message translates to:
+  /// **'X (Search)'**
+  String get gamepadXSearch;
+
+  /// Gamepad Y button label with function
+  ///
+  /// In en, this message translates to:
+  /// **'Y (Help)'**
+  String get gamepadYHelp;
+
+  /// Gamepad LB button label with function
+  ///
+  /// In en, this message translates to:
+  /// **'LB (Page Down)'**
+  String get gamepadLBPageDown;
+
+  /// Gamepad RB button label with function
+  ///
+  /// In en, this message translates to:
+  /// **'RB (Page Up)'**
+  String get gamepadRBPageUp;
+
+  /// Gamepad Start button label with function
+  ///
+  /// In en, this message translates to:
+  /// **'Start (Menu)'**
+  String get gamepadStartMenu;
+
+  /// Gamepad Select button label with function
+  ///
+  /// In en, this message translates to:
+  /// **'Select (Settings)'**
+  String get gamepadSelectSettings;
+
+  /// Gamepad left stick click label
+  ///
+  /// In en, this message translates to:
+  /// **'LS Click'**
+  String get gamepadLSClick;
+
+  /// Gamepad right stick click label with function
+  ///
+  /// In en, this message translates to:
+  /// **'RS Click (View)'**
+  String get gamepadRSView;
+
+  /// Gamepad left trigger label
+  ///
+  /// In en, this message translates to:
+  /// **'LT (Trigger)'**
+  String get gamepadLTTrigger;
+
+  /// Gamepad right trigger label
+  ///
+  /// In en, this message translates to:
+  /// **'RT (Trigger)'**
+  String get gamepadRTTrigger;
+
+  /// Header for raw button state display section
+  ///
+  /// In en, this message translates to:
+  /// **'Raw Button States'**
+  String get rawButtonStates;
+
+  /// Message when no gamepad buttons are pressed
+  ///
+  /// In en, this message translates to:
+  /// **'No buttons pressed'**
+  String get noButtonsPressed;
+
+  /// Header for axis values display section
+  ///
+  /// In en, this message translates to:
+  /// **'Axis Values'**
+  String get axisValues;
+
+  /// Message when no axis movement detected
+  ///
+  /// In en, this message translates to:
+  /// **'No axis movement'**
+  String get noAxisMovement;
+
+  /// Header for D-pad and left stick test section
+  ///
+  /// In en, this message translates to:
+  /// **'D-Pad + Left Stick'**
+  String get dpadLeftStick;
+
+  /// Subtitle description for web settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Configure settings specific to the web platform'**
+  String get webSettingsDescription;
+
+  /// Info card title explaining CORS proxy necessity
+  ///
+  /// In en, this message translates to:
+  /// **'Why is a CORS proxy needed?'**
+  String get corsProxyWhyNeeded;
+
+  /// Detailed explanation of why CORS proxy is needed
+  ///
+  /// In en, this message translates to:
+  /// **'Browsers block ROM downloads from external servers due to CORS security restrictions. A CORS proxy relays the request from a server you control, adding the necessary headers.\n\nForsaken includes a Cloudflare Worker you can deploy for free (100k requests/day). See the tools/cors-proxy-worker/ directory for setup instructions.'**
+  String get corsProxyExplanation;
+
+  /// Label for CORS proxy URL input field
+  ///
+  /// In en, this message translates to:
+  /// **'CORS Proxy URL'**
+  String get corsProxyUrl;
+
+  /// Helper text for CORS proxy URL field
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to disable CORS proxy (ROMs from servers without CORS will fail)'**
+  String get corsProxyHelperText;
+
+  /// Status text while testing proxy connection
+  ///
+  /// In en, this message translates to:
+  /// **'Testing proxy...'**
+  String get testingProxy;
+
+  /// Button label to test CORS proxy connection
+  ///
+  /// In en, this message translates to:
+  /// **'Test Proxy Connection'**
+  String get testProxyConnection;
+
+  /// Error when testing proxy with no URL set
+  ///
+  /// In en, this message translates to:
+  /// **'No proxy URL configured'**
+  String get noProxyUrlConfigured;
+
+  /// Success message when proxy test passes
+  ///
+  /// In en, this message translates to:
+  /// **'Proxy is working (HTTP {statusCode})'**
+  String proxyWorking(int statusCode);
+
+  /// Error message when proxy returns non-200 status
+  ///
+  /// In en, this message translates to:
+  /// **'Proxy returned HTTP {statusCode}'**
+  String proxyReturnedHttp(int statusCode);
+
+  /// Error message when proxy connection times out
+  ///
+  /// In en, this message translates to:
+  /// **'Connection timed out'**
+  String get connectionTimedOut;
+
+  /// Success snackbar message after saving CORS proxy settings
+  ///
+  /// In en, this message translates to:
+  /// **'CORS proxy settings saved. Takes effect immediately for new ROM launches.'**
+  String get corsProxySettingsSaved;
+
+  /// Header for quick deployment instructions card
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Deploy'**
+  String get quickDeploy;
+
+  /// Step-by-step deployment instructions for CORS proxy worker
+  ///
+  /// In en, this message translates to:
+  /// **'1. Sign up at dash.cloudflare.com (free)\n2. Install Wrangler: npm install -g wrangler\n3. Login: wrangler login\n4. cd tools/cors-proxy-worker\n5. npx wrangler deploy\n6. Paste the worker URL above'**
+  String get corsProxyDeploySteps;
+
+  /// Section header for permanently saved ROMs
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent Storage'**
+  String get permanentStorage;
+
+  /// Section header for temporarily downloaded ROMs
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary Storage'**
+  String get temporaryStorage;
+
+  /// Empty state message when no ROMs have been downloaded
+  ///
+  /// In en, this message translates to:
+  /// **'No downloaded ROMs'**
+  String get noDownloadedRoms;
+
+  /// Error message for BIOS download network failure
+  ///
+  /// In en, this message translates to:
+  /// **'Network connection failed'**
+  String get biosErrorNetworkMessage;
+
+  /// Recovery suggestions for network errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Check your internet connection\nTry again in a few moments\nVerify DNS settings\nTry using a VPN if access is restricted'**
+  String get biosErrorNetworkSuggestions;
+
+  /// Error message when BIOS file is not found (HTTP 404)
+  ///
+  /// In en, this message translates to:
+  /// **'File not found on server'**
+  String get biosErrorFileNotFoundMessage;
+
+  /// Recovery suggestions for file not found errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'The BIOS file may have been moved or renamed\nTry downloading from an alternative source\nCheck if the file exists in a different branch/repository\nReport this issue if problem persists'**
+  String get biosErrorFileNotFoundSuggestions;
+
+  /// Error message when server denies access (HTTP 403)
+  ///
+  /// In en, this message translates to:
+  /// **'Access denied by server'**
+  String get biosErrorAccessDeniedMessage;
+
+  /// Recovery suggestions for access denied errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Server may be blocking downloads\nTry again later - server may be temporarily restricted\nUse VPN if access is region-restricted\nCheck if authentication is required'**
+  String get biosErrorAccessDeniedSuggestions;
+
+  /// Error message when server rate limits requests (HTTP 429)
+  ///
+  /// In en, this message translates to:
+  /// **'Rate limit exceeded'**
+  String get biosErrorRateLimitedMessage;
+
+  /// Recovery suggestions for rate limit errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Wait a few minutes before trying again\nReduce number of simultaneous downloads\nServer is protecting against excessive requests'**
+  String get biosErrorRateLimitedSuggestions;
+
+  /// Error message when BIOS file checksum does not match
+  ///
+  /// In en, this message translates to:
+  /// **'File integrity verification failed'**
+  String get biosErrorChecksumMessage;
+
+  /// Recovery suggestions for checksum mismatch errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'File may be corrupted during download\nTry downloading again\nCheck if file was updated on server\nVerify your internet connection stability'**
+  String get biosErrorChecksumSuggestions;
+
+  /// Error message when BIOS file size does not match expected
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected file size'**
+  String get biosErrorSizeMismatchMessage;
+
+  /// Recovery suggestions for file size mismatch errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'File may be different version than expected\nDownload may be incomplete\nTry downloading again\nCheck available disk space'**
+  String get biosErrorSizeMismatchSuggestions;
+
+  /// Error message for disk/storage related failures
+  ///
+  /// In en, this message translates to:
+  /// **'Storage error'**
+  String get biosErrorStorageMessage;
+
+  /// Recovery suggestions for storage errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Free up disk space\nCheck file permissions\nEnsure destination directory is writable\nTry downloading to a different location'**
+  String get biosErrorStorageSuggestions;
+
+  /// Error message when BIOS download times out
+  ///
+  /// In en, this message translates to:
+  /// **'Download timeout'**
+  String get biosErrorTimeoutMessage;
+
+  /// Recovery suggestions for timeout errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Internet connection may be slow\nServer may be overloaded\nTry again with a stable connection\nCheck if firewall is blocking the connection'**
+  String get biosErrorTimeoutSuggestions;
+
+  /// Error message when BIOS archive extraction fails
+  ///
+  /// In en, this message translates to:
+  /// **'Archive extraction failed'**
+  String get biosErrorArchiveMessage;
+
+  /// Recovery suggestions for archive extraction errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded archive may be corrupted\nTry downloading the file again\nCheck if correct extraction tool is available\nVerify file is a valid archive format'**
+  String get biosErrorArchiveSuggestions;
+
+  /// Generic error message for unclassified BIOS download failures
+  ///
+  /// In en, this message translates to:
+  /// **'Download failed'**
+  String get biosErrorUnknownMessage;
+
+  /// Recovery suggestions for unknown/generic errors (newline-separated)
+  ///
+  /// In en, this message translates to:
+  /// **'Try downloading again\nCheck your internet connection\nVerify the file is still available\nContact support if problem persists'**
+  String get biosErrorUnknownSuggestions;
 }
 
 class _AppLocalizationsDelegate

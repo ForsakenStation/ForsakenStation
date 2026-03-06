@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/generated/app_localizations.dart';
 import '../../providers/theme_provider.dart';
 
 /// A widget that allows users to select the theme mode (light, dark, or system)
@@ -10,10 +11,11 @@ class ThemeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return PopupMenuButton<ThemeMode>(
       icon: Icon(_getIconForThemeMode(themeProvider.themeMode)),
-      tooltip: 'Change theme',
+      tooltip: l10n.changeTheme,
       onSelected: (ThemeMode mode) {
         themeProvider.setThemeMode(mode);
       },
@@ -30,7 +32,7 @@ class ThemeSelector extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                'Light',
+                l10n.lightTheme,
                 style: TextStyle(
                   fontWeight: themeProvider.themeMode == ThemeMode.light
                       ? FontWeight.bold
@@ -52,7 +54,7 @@ class ThemeSelector extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                'Dark',
+                l10n.darkTheme,
                 style: TextStyle(
                   fontWeight: themeProvider.themeMode == ThemeMode.dark
                       ? FontWeight.bold
@@ -74,7 +76,7 @@ class ThemeSelector extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                'System',
+                l10n.systemTheme,
                 style: TextStyle(
                   fontWeight: themeProvider.themeMode == ThemeMode.system
                       ? FontWeight.bold

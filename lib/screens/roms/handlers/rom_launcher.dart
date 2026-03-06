@@ -60,11 +60,14 @@ class RomLauncher {
     if (!context.mounted) return false;
 
     if (config == null || config.commands.isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       _showErrorDialog(
         context,
-        'No emulator configured for $actualDisplayName.\n\n'
-        'Please add configuration for "$actualPlatform" in:\n'
-        '${ConfigService.instance.emulatorsConfigPath}',
+        l10n.noEmulatorConfigured(
+          actualDisplayName,
+          actualPlatform,
+          ConfigService.instance.emulatorsConfigPath,
+        ),
       );
       return false;
     }
@@ -82,7 +85,10 @@ class RomLauncher {
     }
 
     if (selectedCommand == null) {
-      _showErrorDialog(context, 'No emulator command available');
+      _showErrorDialog(
+        context,
+        AppLocalizations.of(context)!.noEmulatorCommandAvailable,
+      );
       return false;
     }
 
@@ -111,10 +117,13 @@ class RomLauncher {
     // Check if platform is supported
     if (!WebEmulatorLauncher.isAvailableForRom(item)) {
       final platform = item.platform ?? platformName;
+      final l10n = AppLocalizations.of(context)!;
       _showErrorDialog(
         context,
-        'Platform "$platform" is not yet supported in web browser.\n\n'
-        'Supported platforms: ${WebEmulatorLauncher.getSupportedPlatforms().join(", ")}',
+        l10n.platformNotSupportedWeb(
+          platform,
+          WebEmulatorLauncher.getSupportedPlatforms().join(', '),
+        ),
       );
       return false;
     }
@@ -126,7 +135,10 @@ class RomLauncher {
       return success;
     } catch (e) {
       if (!context.mounted) return false;
-      _showErrorDialog(context, 'Failed to launch web emulator: $e');
+      _showErrorDialog(
+        context,
+        AppLocalizations.of(context)!.failedToLaunchWebEmulator(e.toString()),
+      );
       requestFocus();
       return false;
     }
@@ -234,12 +246,9 @@ class RomLauncher {
       } else if (!wasCancelled) {
         _showErrorDialog(
           context,
-          'Failed to launch ROM.\n\n'
-          'Check that:\n'
-          '• Emulator is installed correctly\n'
-          '• ROM file is valid\n'
-          '• Configuration is correct\n\n'
-          'Error: ${result.error ?? "Unknown error"}',
+          AppLocalizations.of(context)!.failedToLaunchRom(
+            result.error ?? AppLocalizations.of(context)!.unknown,
+          ),
         );
       }
 
@@ -249,7 +258,10 @@ class RomLauncher {
       if (!context.mounted) return false;
       if (!wasCancelled) {
         Navigator.pop(context); // Close loading dialog
-        _showErrorDialog(context, 'Error launching ROM: $e');
+        _showErrorDialog(
+          context,
+          AppLocalizations.of(context)!.errorLaunchingRom(e.toString()),
+        );
       }
       requestFocus();
       return false;

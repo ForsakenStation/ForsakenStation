@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// A simple virtual keyboard for text input on console-like devices
 class VirtualKeyboard extends StatefulWidget {
@@ -132,7 +133,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
               IconButton(
                 icon: const Icon(Icons.keyboard_hide),
                 onPressed: widget.onClose,
-                tooltip: 'Hide keyboard',
+                tooltip: AppLocalizations.of(context)!.hideKeyboard,
               ),
             ],
           ),

@@ -115,7 +115,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get romNotFound => 'ROM não encontrada';
 
   @override
-  String get biosRequired => 'BIOS necessário';
+  String get biosRequired => 'OBRIGATÓRIO';
 
   @override
   String get systemCheck => 'Verificação do Sistema';
@@ -488,7 +488,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get removeFromFavorites => 'Remover dos Favoritos';
 
   @override
-  String get biosMissing => 'BIOS faltante';
+  String get biosMissing => 'Em falta';
 
   @override
   String get biosPresent => 'BIOS present';
@@ -574,7 +574,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get emulatorError => 'Erro do Emulador';
 
   @override
-  String get gamepadConnected => 'Gamepad conectado';
+  String get gamepadConnected => 'Controle conectado';
 
   @override
   String get gamepadDisconnected => 'Gamepad desconectado';
@@ -631,7 +631,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get leftStick => 'Stick Esquerdo';
 
   @override
-  String get rightStick => 'Stick Direito';
+  String get rightStick => 'Stick direito';
 
   @override
   String get setupWizard => 'Assistente de Configuração';
@@ -1595,4 +1595,857 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get deletedToSaveSpace =>
       'Caso contrário, será eliminada mais tarde para poupar espaço.';
+
+  @override
+  String get view => 'Visualizar';
+
+  @override
+  String get media => 'Mídia';
+
+  @override
+  String get navigate => 'Navegar';
+
+  @override
+  String get info => 'Info';
+
+  @override
+  String get toggleFilter => 'Alternar filtro';
+
+  @override
+  String get changeTheme => 'Mudar tema';
+
+  @override
+  String get keyboard => 'Teclado';
+
+  @override
+  String get gamepad => 'Gamepad';
+
+  @override
+  String get hideKeyboard => 'Ocultar teclado';
+
+  @override
+  String get gameManual => 'Manual do Jogo';
+
+  @override
+  String get pdfDocument => 'Documento PDF';
+
+  @override
+  String get manual => 'Manual';
+
+  @override
+  String get video => 'Vídeo';
+
+  @override
+  String get zoomOut => 'Diminuir zoom';
+
+  @override
+  String get zoomIn => 'Aumentar zoom';
+
+  @override
+  String pageCounter(String current, String total) {
+    return 'Página $current / $total';
+  }
+
+  @override
+  String get zoom => 'Zoom';
+
+  @override
+  String get firstLast => 'Primeiro/Último';
+
+  @override
+  String get scroll => 'Rolar';
+
+  @override
+  String get loadingVideo => 'Carregando vídeo...';
+
+  @override
+  String get playPause => 'Reproduzir/Pausar';
+
+  @override
+  String get useArrowKeysToNavigate =>
+      'Use as setas do teclado ou deslize para navegar';
+
+  @override
+  String get searchRomsHint => 'Pesquisar ROMs...';
+
+  @override
+  String get cancelSearch => 'Cancelar Pesquisa';
+
+  @override
+  String get virtualKeyboard => 'Teclado Virtual';
+
+  @override
+  String get noRomsAvailable => 'Nenhuma ROM disponível';
+
+  @override
+  String get noRomsForPlatformMessage =>
+      'Nenhum ficheiro ROM encontrado para esta plataforma. Os ficheiros ROM devem ser colocados como ficheiros .txt contendo URLs de download no diretório da plataforma.';
+
+  @override
+  String get noMatchingRoms => 'Nenhuma ROM correspondente';
+
+  @override
+  String get tryDifferentSearch => 'Tente um termo de pesquisa diferente';
+
+  @override
+  String get saveToPermanentStorage => 'Guardar no armazenamento permanente';
+
+  @override
+  String get temporary => 'Temporário';
+
+  @override
+  String get permanent => 'Permanente';
+
+  @override
+  String get tempPathLabel => 'Temp';
+
+  @override
+  String get foreverPathLabel => 'Forever';
+
+  @override
+  String get storageOverview => 'Visão Geral do Armazenamento';
+
+  @override
+  String get clearTemporaryStorage => 'Limpar armazenamento temporário';
+
+  @override
+  String filesCount(String count) {
+    return '$count ficheiros';
+  }
+
+  @override
+  String pathDisplay(String label, String path) {
+    return 'Caminho $label: $path';
+  }
+
+  @override
+  String get unknown => 'Desconhecido';
+
+  @override
+  String get tagVerifiedGoodDump =>
+      'Dump verificado e correto - funcionamento confirmado';
+
+  @override
+  String get tagBadDump => 'Dump incorreto - pode não funcionar corretamente';
+
+  @override
+  String get tagAlternateVersion => 'Versão alternativa';
+
+  @override
+  String get tagOverdump => 'Overdump - contém dados adicionais';
+
+  @override
+  String get tagModifiedHacked => 'ROM modificada/hackeada';
+
+  @override
+  String get tagFanTranslation => 'Tradução de fãs';
+
+  @override
+  String get tagPirateBootleg => 'Versão pirata/bootleg';
+
+  @override
+  String get tagFixedVersion => 'Versão corrigida';
+
+  @override
+  String get tagCheatTrainer => 'Inclui trainer de batota';
+
+  @override
+  String tagVersion(String text) {
+    return 'Versão: $text';
+  }
+
+  @override
+  String tagSpecialRelease(String text) {
+    return 'Lançamento especial: $text';
+  }
+
+  @override
+  String tagMediaInfo(String text) {
+    return 'Info de mídia: $text';
+  }
+
+  @override
+  String noEmulatorConfigured(
+    String displayName,
+    String platform,
+    String configPath,
+  ) {
+    return 'Nenhum emulador configurado para $displayName.\n\nAdicione a configuração para \"$platform\" em:\n$configPath';
+  }
+
+  @override
+  String get noEmulatorCommandAvailable =>
+      'Nenhum comando de emulador disponível';
+
+  @override
+  String platformNotSupportedWeb(String platform, String supportedPlatforms) {
+    return 'A plataforma \"$platform\" ainda não é compatível com o navegador web.\n\nPlataformas compatíveis: $supportedPlatforms';
+  }
+
+  @override
+  String failedToLaunchWebEmulator(String error) {
+    return 'Falha ao iniciar o emulador web: $error';
+  }
+
+  @override
+  String failedToLaunchRom(String error) {
+    return 'Falha ao iniciar a ROM.\n\nVerifique se:\n• O emulador está instalado corretamente\n• O arquivo ROM é válido\n• A configuração está correta\n\nErro: $error';
+  }
+
+  @override
+  String errorLaunchingRom(String error) {
+    return 'Erro ao iniciar a ROM: $error';
+  }
+
+  @override
+  String noInfoAvailable(String platformName) {
+    return 'Nenhuma informação disponível para $platformName';
+  }
+
+  @override
+  String get platformInfoTooltip => 'Info da plataforma (I)';
+
+  @override
+  String get navigationHint => 'Use as teclas de seta ou deslize para navegar';
+
+  @override
+  String get noGamesFound => 'Nenhum jogo encontrado';
+
+  @override
+  String get noGamesFoundForSearch => 'Nenhum jogo encontrado para a pesquisa';
+
+  @override
+  String get tryDifferentSearchOrClear =>
+      'Tente um termo de pesquisa diferente ou limpe o filtro';
+
+  @override
+  String get checkStorageOrDownload =>
+      'Verifique as configurações de armazenamento ou descarregue algumas ROMs';
+
+  @override
+  String get searchGamesHint => 'Pesquisar jogos...';
+
+  @override
+  String get settingsHeaderTitle => 'Configuração do Emulador Forsaken';
+
+  @override
+  String get settingsHeaderSubtitle =>
+      'Configurar emuladores, caminhos e baixar conteúdo';
+
+  @override
+  String get emulatorManagementDesc =>
+      'Adicionar, editar e configurar comandos de emuladores';
+
+  @override
+  String get systemPaths => 'Caminhos do sistema';
+
+  @override
+  String get systemPathsDesc =>
+      'Configurar caminhos de ROMs, mídia e emuladores';
+
+  @override
+  String get romDatabaseDesc => 'Baixar e gerenciar listas de ROMs do GitHub';
+
+  @override
+  String get romStorageDesc =>
+      'Gerenciar ROMs baixadas, armazenamento e limpeza de arquivos temporários';
+
+  @override
+  String get downloadManagerDesc =>
+      'Baixar emuladores, listas de ROMs e dados de jogos';
+
+  @override
+  String get systemRequirementsDesc =>
+      'Verificar ferramentas e dependências necessárias';
+
+  @override
+  String get gamepadTestDebug => 'Teste e depuração do controle';
+
+  @override
+  String get gamepadTestDebugDesc =>
+      'Testar botões do controle, eixos e solucionar problemas';
+
+  @override
+  String get biosFirmwareHelpDesc =>
+      'Verificar arquivos BIOS e requisitos de firmware';
+
+  @override
+  String get webSettingsDesc => 'Proxy CORS e configuração da plataforma web';
+
+  @override
+  String get setupWizardDesc =>
+      'Reexecutar o assistente de configuração inicial';
+
+  @override
+  String get languageDesc => 'Selecionar idioma do aplicativo';
+
+  @override
+  String get aboutDebug => 'Sobre e depuração';
+
+  @override
+  String get aboutDebugDesc =>
+      'Informações do aplicativo e configurações de depuração';
+
+  @override
+  String get legalDisclaimer => 'Aviso legal';
+
+  @override
+  String get romDatabaseCredits =>
+      'As listas de ROMs são originalmente do repositório AndroidRoms de Arley4d:';
+
+  @override
+  String get romDatabaseThanks =>
+      'Agradecimento especial ao projeto AndroidRoms por manter bancos de dados abrangentes de ROMs para fins de preservação.';
+
+  @override
+  String get biosFilesSection => 'Arquivos BIOS';
+
+  @override
+  String get biosFilesCredits =>
+      'Os arquivos BIOS são do repositório retroarch_system de Abdess:';
+
+  @override
+  String get biosFilesThanks =>
+      'Este repositório contém arquivos de sistema e BIOS necessários para várias plataformas de emulação. Agradecimento especial aos mantenedores por preservar esses arquivos essenciais.';
+
+  @override
+  String get amigaCopyProtection =>
+      'Suporte à proteção contra cópia do Amiga fornecido pela biblioteca capsimg:';
+
+  @override
+  String get amigaCopyProtectionThanks =>
+      'Agradecimento especial a rsn8887 por manter a biblioteca capsimg que permite o suporte a imagens de disco IPF (protegidas contra cópia) para emulação do Amiga.';
+
+  @override
+  String get additionalBiosFiles =>
+      'Arquivos BIOS adicionais fornecidos pelo projeto RetroPieBios:';
+
+  @override
+  String get additionalBiosThanks =>
+      'Obrigado ao PIBSAS/RetroPieBios por fornecer variantes adicionais de BIOS e arquivos regionais que melhoram a compatibilidade entre diferentes sistemas e regiões.';
+
+  @override
+  String get enabled => 'Ativado';
+
+  @override
+  String get disabled => 'Desativado';
+
+  @override
+  String get disclaimerRequired =>
+      'Você deve aceitar o aviso de isenção de responsabilidade para continuar.';
+
+  @override
+  String get emulatorsPathRequired =>
+      'O caminho do diretório de emuladores é obrigatório.';
+
+  @override
+  String get emulatorConfigPathRequired =>
+      'O caminho do arquivo de configuração do emulador é obrigatório.';
+
+  @override
+  String get mediaPathRequired => 'O caminho de mídia é obrigatório.';
+
+  @override
+  String get tempRomPathRequired =>
+      'O caminho do armazenamento temporário de ROMs é obrigatório.';
+
+  @override
+  String get permanentRomPathRequired =>
+      'O caminho do armazenamento permanente de ROMs é obrigatório.';
+
+  @override
+  String wizardStepCounter(int current, int total) {
+    return 'Passo $current / $total';
+  }
+
+  @override
+  String get emulatorConfiguration => 'Configuração do emulador';
+
+  @override
+  String get emulatorConfigStepDesc =>
+      'Defina os caminhos onde seus emuladores estão instalados. Você pode alterá-los depois em Configurações > Caminhos do sistema.';
+
+  @override
+  String get emulatorsDirectory => 'Diretório de emuladores';
+
+  @override
+  String get pathToEmulatorBinaries =>
+      'Caminho para os binários dos emuladores';
+
+  @override
+  String get emulatorConfigFile => 'Arquivo de configuração do emulador';
+
+  @override
+  String get pathToEmulatorConfig =>
+      'Caminho para o JSON de configuração do emulador';
+
+  @override
+  String get storagePaths => 'Caminhos de armazenamento';
+
+  @override
+  String get storagePathsStepDesc =>
+      'Configure onde os recursos de mídia e arquivos ROM são armazenados. Você pode alterá-los depois em Configurações > Caminhos do sistema.';
+
+  @override
+  String get wizardMediaPathHint => 'Capas, capturas de tela e vídeos';
+
+  @override
+  String get temporaryRomStorage => 'Armazenamento temporário de ROMs';
+
+  @override
+  String get temporaryRomStorageHint =>
+      'ROMs baixadas para sessões de jogo únicas';
+
+  @override
+  String get permanentRomStorage => 'Armazenamento permanente de ROMs';
+
+  @override
+  String get permanentRomStorageHint => 'ROMs salvas para jogar offline';
+
+  @override
+  String get allSet => 'Tudo pronto!';
+
+  @override
+  String get wizardEmulatorReady =>
+      'O emulador Forsaken está pronto para usar.';
+
+  @override
+  String get changeSettingsLater =>
+      'Você pode alterar essas configurações depois na tela de Configurações.';
+
+  @override
+  String get configurationSummary => 'Resumo da configuração';
+
+  @override
+  String get summaryEmulators => 'Emuladores';
+
+  @override
+  String get summaryMedia => 'Mídia';
+
+  @override
+  String get summaryTempRoms => 'ROMs temporárias';
+
+  @override
+  String get summarySavedRoms => 'ROMs salvas';
+
+  @override
+  String get defaultValue => '(padrão)';
+
+  @override
+  String pdfPageIndicator(int current, int total) {
+    return 'Página $current de $total';
+  }
+
+  @override
+  String get pdfZoomOut => 'Diminuir zoom (-)';
+
+  @override
+  String get pdfZoomIn => 'Aumentar zoom (+)';
+
+  @override
+  String get pdfResetZoom => 'Redefinir zoom (0)';
+
+  @override
+  String get pdfFirstPage => 'Primeira página (Home)';
+
+  @override
+  String get pdfPreviousPage => 'Página anterior (←/PgUp)';
+
+  @override
+  String get pdfNextPage => 'Próxima página (→/PgDn)';
+
+  @override
+  String get pdfLastPage => 'Última página (End)';
+
+  @override
+  String get pdfFileNotFound => 'Arquivo PDF não encontrado';
+
+  @override
+  String confirmDeleteEmulator(String system) {
+    return 'Tem certeza de que deseja excluir a configuração do emulador para $system?';
+  }
+
+  @override
+  String commandsConfigured(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count comandos configurados',
+      one: '1 comando configurado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noCommand => 'Sem comando';
+
+  @override
+  String get reloadConfigTooltip => 'Recarregar configuração (R)';
+
+  @override
+  String get configurationInfo => 'Informações de configuração';
+
+  @override
+  String get configLocation => 'Local da configuração:';
+
+  @override
+  String get hasLocalOverridesYes => 'Tem substituições locais: Sim';
+
+  @override
+  String get hasLocalOverridesNo => 'Tem substituições locais: Não';
+
+  @override
+  String get changesSavedToDevice =>
+      'Suas alterações são salvas no armazenamento do dispositivo.';
+
+  @override
+  String get usingBundledConfig =>
+      'Usando configuração incluída. Edite para criar substituições locais.';
+
+  @override
+  String get noEmulatorsConfigured => 'Nenhum emulador configurado';
+
+  @override
+  String get addFirstEmulator => 'Adicione seu primeiro emulador para começar';
+
+  @override
+  String get edit => 'Editar';
+
+  @override
+  String get editEmulator => 'Editar emulador';
+
+  @override
+  String get system => 'Sistema';
+
+  @override
+  String get systemHint => 'e.g., nes, snes, ps1';
+
+  @override
+  String get commands => 'Comandos';
+
+  @override
+  String commandNumber(int number) {
+    return 'Comando $number';
+  }
+
+  @override
+  String get commandHint => 'e.g., ../retroarch.AppImage -f -L core.so';
+
+  @override
+  String get remove => 'Remover';
+
+  @override
+  String get options => 'Opções';
+
+  @override
+  String get biosDownloading => 'A descarregar...';
+
+  @override
+  String downloadRequiredAndExtras(int requiredCount, int optionalCount) {
+    return 'Descarregar $requiredCount obrigatórios + $optionalCount extras';
+  }
+
+  @override
+  String downloadRequiredFiles(int requiredCount) {
+    return 'Descarregar $requiredCount ficheiros obrigatórios';
+  }
+
+  @override
+  String downloadOptionalExtras(int optionalCount) {
+    return 'Descarregar $optionalCount extras opcionais';
+  }
+
+  @override
+  String get downloadFiles => 'Descarregar ficheiros';
+
+  @override
+  String batchDownloadConfirmation(int totalFiles, int platformCount) {
+    return 'Serão descarregados $totalFiles ficheiros BIOS para $platformCount plataformas:';
+  }
+
+  @override
+  String get downloadSourceNote =>
+      'Os ficheiros serão descarregados do repositório retroarch_system.';
+
+  @override
+  String get biosOptional => 'OPCIONAL';
+
+  @override
+  String biosFilesFound(int foundCount, int totalCount) {
+    return '$foundCount/$totalCount ficheiros encontrados';
+  }
+
+  @override
+  String optionalExtrasAvailable(int count) {
+    return '+$count extras opcionais disponíveis';
+  }
+
+  @override
+  String get biosLocations => 'Localizações:';
+
+  @override
+  String get availableForDownload =>
+      'Disponível para download de múltiplas fontes';
+
+  @override
+  String get summary => 'Resumo';
+
+  @override
+  String get biosComplete => 'Completo';
+
+  @override
+  String get biosPartial => 'Parcial';
+
+  @override
+  String get biosFiles => 'Ficheiros';
+
+  @override
+  String get biosDownloadable => 'Descarregável';
+
+  @override
+  String get refreshF5Tooltip => 'Atualizar (F5)';
+
+  @override
+  String get allBiosFilesFound => 'Todos os ficheiros BIOS encontrados!';
+
+  @override
+  String get noBiosRequirements => 'Nenhum requisito de BIOS encontrado';
+
+  @override
+  String platformCount(int count) {
+    return '$count plataformas';
+  }
+
+  @override
+  String failedToLoadBiosStatus(String error) {
+    return 'Falha ao carregar o estado do BIOS: $error';
+  }
+
+  @override
+  String get refreshStatus => 'Atualizar estado';
+
+  @override
+  String platformsCompleteCount(int complete, int total) {
+    return '$complete/$total plataformas completas';
+  }
+
+  @override
+  String get platformStatusHeader => 'Estado das plataformas';
+
+  @override
+  String filesVerifiedStatus(
+    int presentFiles,
+    int totalFiles,
+    int verifiedFiles,
+  ) {
+    return '$presentFiles/$totalFiles ficheiros ($verifiedFiles verificados)';
+  }
+
+  @override
+  String get biosCollectionOverview => 'Visão geral da coleção BIOS';
+
+  @override
+  String get biosVerified => 'Verificado';
+
+  @override
+  String downloadComingSoon(String platformName) {
+    return 'Funcionalidade de download para $platformName - Em breve!';
+  }
+
+  @override
+  String get noGamepadConnected => 'Nenhum controle conectado';
+
+  @override
+  String get connectGamepadPrompt =>
+      'Conecte um controle e pressione qualquer botão';
+
+  @override
+  String get pressButtonToTest =>
+      'Pressione qualquer botão para testar (ações desativadas)';
+
+  @override
+  String get buttonFunctionTests => 'Testes de funções dos botões';
+
+  @override
+  String get gamepadASelect => 'A (Selecionar)';
+
+  @override
+  String get gamepadBBack => 'B (Voltar)';
+
+  @override
+  String get gamepadXSearch => 'X (Buscar)';
+
+  @override
+  String get gamepadYHelp => 'Y (Ajuda)';
+
+  @override
+  String get gamepadLBPageDown => 'LB (Página abaixo)';
+
+  @override
+  String get gamepadRBPageUp => 'RB (Página acima)';
+
+  @override
+  String get gamepadStartMenu => 'Start (Menu)';
+
+  @override
+  String get gamepadSelectSettings => 'Select (Configurações)';
+
+  @override
+  String get gamepadLSClick => 'LS Clique';
+
+  @override
+  String get gamepadRSView => 'RS Clique (Visualizar)';
+
+  @override
+  String get gamepadLTTrigger => 'LT (Gatilho)';
+
+  @override
+  String get gamepadRTTrigger => 'RT (Gatilho)';
+
+  @override
+  String get rawButtonStates => 'Estados brutos dos botões';
+
+  @override
+  String get noButtonsPressed => 'Nenhum botão pressionado';
+
+  @override
+  String get axisValues => 'Valores dos eixos';
+
+  @override
+  String get noAxisMovement => 'Sem movimento de eixos';
+
+  @override
+  String get dpadLeftStick => 'D-Pad + Stick esquerdo';
+
+  @override
+  String get webSettingsDescription =>
+      'Configurar definições específicas da plataforma web';
+
+  @override
+  String get corsProxyWhyNeeded => 'Por que é necessário um proxy CORS?';
+
+  @override
+  String get corsProxyExplanation =>
+      'Os navegadores bloqueiam downloads de ROM de servidores externos devido a restrições de segurança CORS. Um proxy CORS retransmite a solicitação de um servidor que você controla, adicionando os cabeçalhos necessários.\n\nForsaken inclui um Cloudflare Worker que você pode implantar gratuitamente (100k solicitações/dia). Consulte o diretório tools/cors-proxy-worker/ para instruções de configuração.';
+
+  @override
+  String get corsProxyUrl => 'URL do proxy CORS';
+
+  @override
+  String get corsProxyHelperText =>
+      'Deixe vazio para desativar o proxy CORS (ROMs de servidores sem CORS falharão)';
+
+  @override
+  String get testingProxy => 'Testando proxy...';
+
+  @override
+  String get testProxyConnection => 'Testar conexão do proxy';
+
+  @override
+  String get noProxyUrlConfigured => 'Nenhuma URL de proxy configurada';
+
+  @override
+  String proxyWorking(int statusCode) {
+    return 'O proxy está funcionando (HTTP $statusCode)';
+  }
+
+  @override
+  String proxyReturnedHttp(int statusCode) {
+    return 'O proxy retornou HTTP $statusCode';
+  }
+
+  @override
+  String get connectionTimedOut => 'Conexão expirou';
+
+  @override
+  String get corsProxySettingsSaved =>
+      'Configurações do proxy CORS salvas. Aplica-se imediatamente para novos lançamentos de ROM.';
+
+  @override
+  String get quickDeploy => 'Implantação rápida';
+
+  @override
+  String get corsProxyDeploySteps =>
+      '1. Cadastre-se em dash.cloudflare.com (gratuito)\n2. Instale o Wrangler: npm install -g wrangler\n3. Login: wrangler login\n4. cd tools/cors-proxy-worker\n5. npx wrangler deploy\n6. Cole a URL do worker acima';
+
+  @override
+  String get permanentStorage => 'Armazenamento permanente';
+
+  @override
+  String get temporaryStorage => 'Armazenamento temporário';
+
+  @override
+  String get noDownloadedRoms => 'Nenhuma ROM baixada';
+
+  @override
+  String get biosErrorNetworkMessage => 'Falha na conexão de rede';
+
+  @override
+  String get biosErrorNetworkSuggestions =>
+      'Verifique sua conexão com a internet\nTente novamente em alguns instantes\nVerifique as configurações de DNS\nTente usar uma VPN se o acesso for restrito';
+
+  @override
+  String get biosErrorFileNotFoundMessage =>
+      'Arquivo não encontrado no servidor';
+
+  @override
+  String get biosErrorFileNotFoundSuggestions =>
+      'O arquivo BIOS pode ter sido movido ou renomeado\nTente baixar de uma fonte alternativa\nVerifique se o arquivo existe em outra branch/repositório\nReporte este problema se ele persistir';
+
+  @override
+  String get biosErrorAccessDeniedMessage => 'Acesso negado pelo servidor';
+
+  @override
+  String get biosErrorAccessDeniedSuggestions =>
+      'O servidor pode estar bloqueando downloads\nTente novamente mais tarde - o servidor pode estar temporariamente restrito\nUse VPN se o acesso for restrito por região\nVerifique se é necessária autenticação';
+
+  @override
+  String get biosErrorRateLimitedMessage => 'Limite de requisições excedido';
+
+  @override
+  String get biosErrorRateLimitedSuggestions =>
+      'Aguarde alguns minutos antes de tentar novamente\nReduza o número de downloads simultâneos\nO servidor está se protegendo contra requisições excessivas';
+
+  @override
+  String get biosErrorChecksumMessage =>
+      'Falha na verificação de integridade do arquivo';
+
+  @override
+  String get biosErrorChecksumSuggestions =>
+      'O arquivo pode ter sido corrompido durante o download\nTente baixar novamente\nVerifique se o arquivo foi atualizado no servidor\nVerifique a estabilidade da sua conexão';
+
+  @override
+  String get biosErrorSizeMismatchMessage => 'Tamanho de arquivo inesperado';
+
+  @override
+  String get biosErrorSizeMismatchSuggestions =>
+      'O arquivo pode ser uma versão diferente da esperada\nO download pode estar incompleto\nTente baixar novamente\nVerifique o espaço disponível em disco';
+
+  @override
+  String get biosErrorStorageMessage => 'Erro de armazenamento';
+
+  @override
+  String get biosErrorStorageSuggestions =>
+      'Libere espaço em disco\nVerifique as permissões de arquivo\nCertifique-se de que o diretório de destino é gravável\nTente baixar em outro local';
+
+  @override
+  String get biosErrorTimeoutMessage => 'Tempo limite de download excedido';
+
+  @override
+  String get biosErrorTimeoutSuggestions =>
+      'A conexão de internet pode estar lenta\nO servidor pode estar sobrecarregado\nTente novamente com uma conexão estável\nVerifique se o firewall está bloqueando a conexão';
+
+  @override
+  String get biosErrorArchiveMessage => 'Falha na extração do arquivo';
+
+  @override
+  String get biosErrorArchiveSuggestions =>
+      'O arquivo baixado pode estar corrompido\nTente baixar o arquivo novamente\nVerifique se a ferramenta de extração correta está disponível\nVerifique se o arquivo é um formato de arquivo válido';
+
+  @override
+  String get biosErrorUnknownMessage => 'Falha no download';
+
+  @override
+  String get biosErrorUnknownSuggestions =>
+      'Tente baixar novamente\nVerifique sua conexão com a internet\nVerifique se o arquivo ainda está disponível\nEntre em contato com o suporte se o problema persistir';
 }

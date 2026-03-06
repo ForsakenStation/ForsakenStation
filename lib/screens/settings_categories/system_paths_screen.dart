@@ -816,19 +816,19 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
           ),
         ),
         bottomNavigationBar: ControlsBottomBar(
-          actions: const [
+          actions: [
             BottomBarAction(
-              label: 'Back',
+              label: AppLocalizations.of(context)!.back,
               keyboardKey: 'ESC',
               gamepadButton: 'B',
             ),
             BottomBarAction(
-              label: 'Navigate',
+              label: AppLocalizations.of(context)!.navigate,
               keyboardKey: '↑↓',
               gamepadButton: 'D-pad',
             ),
             BottomBarAction(
-              label: 'Select',
+              label: AppLocalizations.of(context)!.select,
               keyboardKey: 'Enter',
               gamepadButton: 'A',
             ),
@@ -890,7 +890,7 @@ class _PathField extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.folder_open),
                   onPressed: onBrowse,
-                  tooltip: 'Browse',
+                  tooltip: AppLocalizations.of(context)!.browse,
                   style: IconButton.styleFrom(
                     backgroundColor: isSelected
                         ? theme.colorScheme.primary

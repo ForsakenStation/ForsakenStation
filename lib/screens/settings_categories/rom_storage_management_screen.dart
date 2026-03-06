@@ -295,12 +295,12 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
           DialogButtonBar(
             buttons: [
               DialogButton(
-                label: 'Cancel',
+                label: AppLocalizations.of(context)!.cancel,
                 onPressed: () => Navigator.pop(context, false),
                 gamepadButton: GamepadButton.b,
               ),
               DialogButton(
-                label: 'Delete',
+                label: AppLocalizations.of(context)!.delete,
                 onPressed: () => Navigator.pop(context, true),
                 primary: true,
                 gamepadButton: GamepadButton.a,
@@ -342,12 +342,12 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
           DialogButtonBar(
             buttons: [
               DialogButton(
-                label: 'Cancel',
+                label: AppLocalizations.of(context)!.cancel,
                 onPressed: () => Navigator.pop(context, false),
                 gamepadButton: GamepadButton.b,
               ),
               DialogButton(
-                label: 'Save',
+                label: AppLocalizations.of(context)!.save,
                 onPressed: () => Navigator.pop(context, true),
                 primary: true,
                 gamepadButton: GamepadButton.a,
@@ -383,12 +383,12 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
           DialogButtonBar(
             buttons: [
               DialogButton(
-                label: 'Cancel',
+                label: AppLocalizations.of(context)!.cancel,
                 onPressed: () => Navigator.pop(context, false),
                 gamepadButton: GamepadButton.b,
               ),
               DialogButton(
-                label: 'Clear',
+                label: AppLocalizations.of(context)!.clear,
                 onPressed: () => Navigator.pop(context, true),
                 primary: true,
                 gamepadButton: GamepadButton.a,
@@ -440,12 +440,16 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
                         ),
                         const SizedBox(height: 24),
                         if (_controller.foreverRoms.isNotEmpty) ...[
-                          _buildSectionHeader('Permanent Storage'),
+                          _buildSectionHeader(
+                            AppLocalizations.of(context)!.permanentStorage,
+                          ),
                           ..._buildPlatformList(_controller.foreverRoms, true),
                           const SizedBox(height: 16),
                         ],
                         if (_controller.tempRoms.isNotEmpty) ...[
-                          _buildSectionHeader('Temporary Storage'),
+                          _buildSectionHeader(
+                            AppLocalizations.of(context)!.temporaryStorage,
+                          ),
                           ..._buildPlatformList(_controller.tempRoms, false),
                         ],
                         if (_controller.foreverRoms.isEmpty &&
@@ -551,16 +555,16 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
   }
 
   Widget _buildEmptyState() {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(48),
+        padding: const EdgeInsets.all(48),
         child: Column(
           children: [
-            Icon(Icons.folder_open, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
+            const Icon(Icons.folder_open, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
             Text(
-              'No downloaded ROMs',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
+              AppLocalizations.of(context)!.noDownloadedRoms,
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
             ),
           ],
         ),
@@ -570,10 +574,14 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
 
   Widget _buildBottomBar() {
     return ControlsBottomBar(
-      actions: const [
-        BottomBarAction(label: 'Back', keyboardKey: 'ESC', gamepadButton: 'B'),
+      actions: [
         BottomBarAction(
-          label: 'Navigate',
+          label: AppLocalizations.of(context)!.back,
+          keyboardKey: 'ESC',
+          gamepadButton: 'B',
+        ),
+        BottomBarAction(
+          label: AppLocalizations.of(context)!.navigate,
           keyboardKey: '↑↓',
           gamepadButton: 'D-pad',
         ),

@@ -115,7 +115,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get romNotFound => 'ROM no trobada';
 
   @override
-  String get biosRequired => 'BIOS requerit';
+  String get biosRequired => 'OBLIGATORI';
 
   @override
   String get systemCheck => 'Comprovació del Sistema';
@@ -490,7 +490,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get removeFromFavorites => 'Treure de Favorits';
 
   @override
-  String get biosMissing => 'BIOS faltant';
+  String get biosMissing => 'Absent';
 
   @override
   String get biosPresent => 'BIOS present';
@@ -576,7 +576,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get emulatorError => 'Error de l\'Emulador';
 
   @override
-  String get gamepadConnected => 'Mando connectat';
+  String get gamepadConnected => 'Comandament connectat';
 
   @override
   String get gamepadDisconnected => 'Mando desconnectat';
@@ -633,7 +633,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get leftStick => 'Stick Esquerre';
 
   @override
-  String get rightStick => 'Stick Dret';
+  String get rightStick => 'Stick dret';
 
   @override
   String get setupWizard => 'Assistent de Configuració';
@@ -1606,4 +1606,859 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get deletedToSaveSpace =>
       'Si no, s\'eliminarà més tard per estalviar espai.';
+
+  @override
+  String get view => 'Veure';
+
+  @override
+  String get media => 'Mitjans';
+
+  @override
+  String get navigate => 'Navegar';
+
+  @override
+  String get info => 'Info';
+
+  @override
+  String get toggleFilter => 'Alternar filtre';
+
+  @override
+  String get changeTheme => 'Canviar tema';
+
+  @override
+  String get keyboard => 'Teclat';
+
+  @override
+  String get gamepad => 'Mando';
+
+  @override
+  String get hideKeyboard => 'Amagar teclat';
+
+  @override
+  String get gameManual => 'Manual del Joc';
+
+  @override
+  String get pdfDocument => 'Document PDF';
+
+  @override
+  String get manual => 'Manual';
+
+  @override
+  String get video => 'Vídeo';
+
+  @override
+  String get zoomOut => 'Allunyar';
+
+  @override
+  String get zoomIn => 'Apropar';
+
+  @override
+  String pageCounter(String current, String total) {
+    return 'Pàgina $current / $total';
+  }
+
+  @override
+  String get zoom => 'Zoom';
+
+  @override
+  String get firstLast => 'Primer/Últim';
+
+  @override
+  String get scroll => 'Desplaçar';
+
+  @override
+  String get loadingVideo => 'Carregant vídeo...';
+
+  @override
+  String get playPause => 'Reproduir/Pausar';
+
+  @override
+  String get useArrowKeysToNavigate =>
+      'Usa les tecles de direcció o fes lliscar per navegar';
+
+  @override
+  String get searchRomsHint => 'Buscar ROMs...';
+
+  @override
+  String get cancelSearch => 'Cancel·lar Cerca';
+
+  @override
+  String get virtualKeyboard => 'Teclat Virtual';
+
+  @override
+  String get noRomsAvailable => 'No hi ha ROMs disponibles';
+
+  @override
+  String get noRomsForPlatformMessage =>
+      'No s\'han trobat fitxers ROM per a aquesta plataforma. Els fitxers ROM s\'han de col·locar com a fitxers .txt que continguin URLs de descàrrega al directori de la plataforma.';
+
+  @override
+  String get noMatchingRoms => 'No hi ha ROMs coincidents';
+
+  @override
+  String get tryDifferentSearch => 'Prova amb un terme de cerca diferent';
+
+  @override
+  String get saveToPermanentStorage => 'Guardar a l\'emmagatzematge permanent';
+
+  @override
+  String get temporary => 'Temporal';
+
+  @override
+  String get permanent => 'Permanent';
+
+  @override
+  String get tempPathLabel => 'Temp';
+
+  @override
+  String get foreverPathLabel => 'Forever';
+
+  @override
+  String get storageOverview => 'Resum d\'Emmagatzematge';
+
+  @override
+  String get clearTemporaryStorage => 'Netejar emmagatzematge temporal';
+
+  @override
+  String filesCount(String count) {
+    return '$count fitxers';
+  }
+
+  @override
+  String pathDisplay(String label, String path) {
+    return 'Ruta de $label: $path';
+  }
+
+  @override
+  String get unknown => 'Desconegut';
+
+  @override
+  String get tagVerifiedGoodDump =>
+      'Volcament verificat i correcte - funcionament confirmat';
+
+  @override
+  String get tagBadDump =>
+      'Volcament defectuós - pot no funcionar correctament';
+
+  @override
+  String get tagAlternateVersion => 'Versió alternativa';
+
+  @override
+  String get tagOverdump => 'Sobrebolcament - conté dades addicionals';
+
+  @override
+  String get tagModifiedHacked => 'ROM modificada/hackejada';
+
+  @override
+  String get tagFanTranslation => 'Traducció de fans';
+
+  @override
+  String get tagPirateBootleg => 'Versió pirata/bootleg';
+
+  @override
+  String get tagFixedVersion => 'Versió corregida';
+
+  @override
+  String get tagCheatTrainer => 'Inclou trainer de trucs';
+
+  @override
+  String tagVersion(String text) {
+    return 'Versió: $text';
+  }
+
+  @override
+  String tagSpecialRelease(String text) {
+    return 'Llançament especial: $text';
+  }
+
+  @override
+  String tagMediaInfo(String text) {
+    return 'Info de mitjans: $text';
+  }
+
+  @override
+  String noEmulatorConfigured(
+    String displayName,
+    String platform,
+    String configPath,
+  ) {
+    return 'No hi ha cap emulador configurat per a $displayName.\n\nSi us plau, afegiu la configuració per a \"$platform\" a:\n$configPath';
+  }
+
+  @override
+  String get noEmulatorCommandAvailable =>
+      'No hi ha cap ordre d\'emulador disponible';
+
+  @override
+  String platformNotSupportedWeb(String platform, String supportedPlatforms) {
+    return 'La plataforma \"$platform\" encara no és compatible amb el navegador web.\n\nPlataformes compatibles: $supportedPlatforms';
+  }
+
+  @override
+  String failedToLaunchWebEmulator(String error) {
+    return 'No s\'ha pogut iniciar l\'emulador web: $error';
+  }
+
+  @override
+  String failedToLaunchRom(String error) {
+    return 'No s\'ha pogut iniciar la ROM.\n\nComproveu que:\n• L\'emulador està instal·lat correctament\n• El fitxer ROM és vàlid\n• La configuració és correcta\n\nError: $error';
+  }
+
+  @override
+  String errorLaunchingRom(String error) {
+    return 'Error en iniciar la ROM: $error';
+  }
+
+  @override
+  String noInfoAvailable(String platformName) {
+    return 'No hi ha informació disponible per a $platformName';
+  }
+
+  @override
+  String get platformInfoTooltip => 'Info de la plataforma (I)';
+
+  @override
+  String get navigationHint =>
+      'Utilitza les tecles de fletxa o llisca per navegar';
+
+  @override
+  String get noGamesFound => 'No s\'han trobat jocs';
+
+  @override
+  String get noGamesFoundForSearch => 'No s\'han trobat jocs per a la cerca';
+
+  @override
+  String get tryDifferentSearchOrClear =>
+      'Prova amb un altre terme de cerca o esborra el filtre';
+
+  @override
+  String get checkStorageOrDownload =>
+      'Comprova la configuració d\'emmagatzematge o descarrega algunes ROMs';
+
+  @override
+  String get searchGamesHint => 'Cercar jocs...';
+
+  @override
+  String get settingsHeaderTitle => 'Configuració de l\'Emulador Forsaken';
+
+  @override
+  String get settingsHeaderSubtitle =>
+      'Configurar emuladors, rutes i descarregar contingut';
+
+  @override
+  String get emulatorManagementDesc =>
+      'Afegir, editar i configurar ordres d\'emuladors';
+
+  @override
+  String get systemPaths => 'Rutes del sistema';
+
+  @override
+  String get systemPathsDesc => 'Configurar rutes de ROMs, mitjans i emuladors';
+
+  @override
+  String get romDatabaseDesc =>
+      'Descarregar i gestionar llistes de ROMs des de GitHub';
+
+  @override
+  String get romStorageDesc =>
+      'Gestionar ROMs descarregades, emmagatzematge i neteja de fitxers temporals';
+
+  @override
+  String get downloadManagerDesc =>
+      'Descarregar emuladors, llistes de ROMs i dades de jocs';
+
+  @override
+  String get systemRequirementsDesc =>
+      'Comprovar eines i dependències requerides';
+
+  @override
+  String get gamepadTestDebug => 'Prova i depuració del comandament';
+
+  @override
+  String get gamepadTestDebugDesc =>
+      'Provar botons del comandament, eixos i resoldre problemes';
+
+  @override
+  String get biosFirmwareHelpDesc =>
+      'Comprovar fitxers BIOS i requisits de firmware';
+
+  @override
+  String get webSettingsDesc => 'Proxy CORS i configuració de plataforma web';
+
+  @override
+  String get setupWizardDesc =>
+      'Tornar a executar l\'assistent de configuració inicial';
+
+  @override
+  String get languageDesc => 'Seleccionar l\'idioma de l\'aplicació';
+
+  @override
+  String get aboutDebug => 'Quant a i depuració';
+
+  @override
+  String get aboutDebugDesc =>
+      'Informació de l\'aplicació i configuració de depuració';
+
+  @override
+  String get legalDisclaimer => 'Avís legal';
+
+  @override
+  String get romDatabaseCredits =>
+      'Les llistes de ROMs provenen originalment del repositori AndroidRoms d\'Arley4d:';
+
+  @override
+  String get romDatabaseThanks =>
+      'Agraïment especial al projecte AndroidRoms per mantenir bases de dades completes de ROMs amb finalitats de preservació.';
+
+  @override
+  String get biosFilesSection => 'Fitxers BIOS';
+
+  @override
+  String get biosFilesCredits =>
+      'Els fitxers BIOS provenen del repositori retroarch_system d\'Abdess:';
+
+  @override
+  String get biosFilesThanks =>
+      'Aquest repositori conté fitxers de sistema i BIOS requerits per diverses plataformes d\'emulació. Agraïment especial als mantenidors per preservar aquests fitxers essencials.';
+
+  @override
+  String get amigaCopyProtection =>
+      'Suport de protecció contra còpia d\'Amiga proporcionat per la biblioteca capsimg:';
+
+  @override
+  String get amigaCopyProtectionThanks =>
+      'Agraïment especial a rsn8887 per mantenir la biblioteca capsimg que permet el suport d\'imatges de disc IPF (protegides contra còpia) per a emulació d\'Amiga.';
+
+  @override
+  String get additionalBiosFiles =>
+      'Fitxers BIOS addicionals proporcionats pel projecte RetroPieBios:';
+
+  @override
+  String get additionalBiosThanks =>
+      'Gràcies a PIBSAS/RetroPieBios per proporcionar variants addicionals de BIOS i fitxers regionals que milloren la compatibilitat entre diferents sistemes i regions.';
+
+  @override
+  String get enabled => 'Activat';
+
+  @override
+  String get disabled => 'Desactivat';
+
+  @override
+  String get disclaimerRequired =>
+      'Heu d\'acceptar l\'avís legal per continuar.';
+
+  @override
+  String get emulatorsPathRequired =>
+      'La ruta del directori d\'emuladors és obligatòria.';
+
+  @override
+  String get emulatorConfigPathRequired =>
+      'La ruta del fitxer de configuració de l\'emulador és obligatòria.';
+
+  @override
+  String get mediaPathRequired => 'La ruta dels mitjans és obligatòria.';
+
+  @override
+  String get tempRomPathRequired =>
+      'La ruta d\'emmagatzematge temporal de ROMs és obligatòria.';
+
+  @override
+  String get permanentRomPathRequired =>
+      'La ruta d\'emmagatzematge permanent de ROMs és obligatòria.';
+
+  @override
+  String wizardStepCounter(int current, int total) {
+    return 'Pas $current / $total';
+  }
+
+  @override
+  String get emulatorConfiguration => 'Configuració de l\'emulador';
+
+  @override
+  String get emulatorConfigStepDesc =>
+      'Establiu les rutes on estan instal·lats els emuladors. Podeu canviar-les més tard a Configuració > Rutes del sistema.';
+
+  @override
+  String get emulatorsDirectory => 'Directori d\'emuladors';
+
+  @override
+  String get pathToEmulatorBinaries => 'Ruta als binaris de l\'emulador';
+
+  @override
+  String get emulatorConfigFile => 'Fitxer de configuració de l\'emulador';
+
+  @override
+  String get pathToEmulatorConfig =>
+      'Ruta al JSON de configuració de l\'emulador';
+
+  @override
+  String get storagePaths => 'Rutes d\'emmagatzematge';
+
+  @override
+  String get storagePathsStepDesc =>
+      'Configureu on s\'emmagatzemen els recursos multimèdia i els fitxers ROM. Podeu canviar-les més tard a Configuració > Rutes del sistema.';
+
+  @override
+  String get wizardMediaPathHint => 'Caràtules, captures de pantalla i vídeos';
+
+  @override
+  String get temporaryRomStorage => 'Emmagatzematge temporal de ROMs';
+
+  @override
+  String get temporaryRomStorageHint =>
+      'ROMs descarregades per a sessions de joc úniques';
+
+  @override
+  String get permanentRomStorage => 'Emmagatzematge permanent de ROMs';
+
+  @override
+  String get permanentRomStorageHint => 'ROMs desades per jugar sense connexió';
+
+  @override
+  String get allSet => 'Tot llest!';
+
+  @override
+  String get wizardEmulatorReady =>
+      'L\'emulador Forsaken està llest per utilitzar.';
+
+  @override
+  String get changeSettingsLater =>
+      'Podeu canviar qualsevol d\'aquestes configuracions més tard des de la pantalla de Configuració.';
+
+  @override
+  String get configurationSummary => 'Resum de configuració';
+
+  @override
+  String get summaryEmulators => 'Emuladors';
+
+  @override
+  String get summaryMedia => 'Mitjans';
+
+  @override
+  String get summaryTempRoms => 'ROMs temporals';
+
+  @override
+  String get summarySavedRoms => 'ROMs desades';
+
+  @override
+  String get defaultValue => '(predeterminat)';
+
+  @override
+  String pdfPageIndicator(int current, int total) {
+    return 'Pàgina $current de $total';
+  }
+
+  @override
+  String get pdfZoomOut => 'Reduir zoom (-)';
+
+  @override
+  String get pdfZoomIn => 'Ampliar zoom (+)';
+
+  @override
+  String get pdfResetZoom => 'Restablir zoom (0)';
+
+  @override
+  String get pdfFirstPage => 'Primera pàgina (Home)';
+
+  @override
+  String get pdfPreviousPage => 'Pàgina anterior (←/PgUp)';
+
+  @override
+  String get pdfNextPage => 'Pàgina següent (→/PgDn)';
+
+  @override
+  String get pdfLastPage => 'Última pàgina (End)';
+
+  @override
+  String get pdfFileNotFound => 'Fitxer PDF no trobat';
+
+  @override
+  String confirmDeleteEmulator(String system) {
+    return 'Esteu segur que voleu eliminar la configuració de l\'emulador per a $system?';
+  }
+
+  @override
+  String commandsConfigured(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count comandes configurades',
+      one: '1 comanda configurada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noCommand => 'Cap comanda';
+
+  @override
+  String get reloadConfigTooltip => 'Recarregar configuració (R)';
+
+  @override
+  String get configurationInfo => 'Informació de configuració';
+
+  @override
+  String get configLocation => 'Ubicació de la configuració:';
+
+  @override
+  String get hasLocalOverridesYes => 'Té substitucions locals: Sí';
+
+  @override
+  String get hasLocalOverridesNo => 'Té substitucions locals: No';
+
+  @override
+  String get changesSavedToDevice =>
+      'Els canvis es desen a l\'emmagatzematge del dispositiu.';
+
+  @override
+  String get usingBundledConfig =>
+      'Usant configuració inclosa. Editeu per crear substitucions locals.';
+
+  @override
+  String get noEmulatorsConfigured => 'No hi ha emuladors configurats';
+
+  @override
+  String get addFirstEmulator =>
+      'Afegiu el vostre primer emulador per començar';
+
+  @override
+  String get edit => 'Editar';
+
+  @override
+  String get editEmulator => 'Editar emulador';
+
+  @override
+  String get system => 'Sistema';
+
+  @override
+  String get systemHint => 'e.g., nes, snes, ps1';
+
+  @override
+  String get commands => 'Comandes';
+
+  @override
+  String commandNumber(int number) {
+    return 'Comanda $number';
+  }
+
+  @override
+  String get commandHint => 'e.g., ../retroarch.AppImage -f -L core.so';
+
+  @override
+  String get remove => 'Eliminar';
+
+  @override
+  String get options => 'Opcions';
+
+  @override
+  String get biosDownloading => 'Descarregant...';
+
+  @override
+  String downloadRequiredAndExtras(int requiredCount, int optionalCount) {
+    return 'Descarregar $requiredCount obligatoris + $optionalCount extres';
+  }
+
+  @override
+  String downloadRequiredFiles(int requiredCount) {
+    return 'Descarregar $requiredCount fitxers obligatoris';
+  }
+
+  @override
+  String downloadOptionalExtras(int optionalCount) {
+    return 'Descarregar $optionalCount extres opcionals';
+  }
+
+  @override
+  String get downloadFiles => 'Descarregar fitxers';
+
+  @override
+  String batchDownloadConfirmation(int totalFiles, int platformCount) {
+    return 'Es descarregaran $totalFiles fitxers BIOS per a $platformCount plataformes:';
+  }
+
+  @override
+  String get downloadSourceNote =>
+      'Els fitxers es descarregaran del repositori retroarch_system.';
+
+  @override
+  String get biosOptional => 'OPCIONAL';
+
+  @override
+  String biosFilesFound(int foundCount, int totalCount) {
+    return '$foundCount/$totalCount fitxers trobats';
+  }
+
+  @override
+  String optionalExtrasAvailable(int count) {
+    return '+$count extres opcionals disponibles';
+  }
+
+  @override
+  String get biosLocations => 'Ubicacions:';
+
+  @override
+  String get availableForDownload =>
+      'Disponible per descarregar de múltiples fonts';
+
+  @override
+  String get summary => 'Resum';
+
+  @override
+  String get biosComplete => 'Complet';
+
+  @override
+  String get biosPartial => 'Parcial';
+
+  @override
+  String get biosFiles => 'Fitxers';
+
+  @override
+  String get biosDownloadable => 'Descarregable';
+
+  @override
+  String get refreshF5Tooltip => 'Actualitzar (F5)';
+
+  @override
+  String get allBiosFilesFound => 'Tots els fitxers BIOS trobats!';
+
+  @override
+  String get noBiosRequirements => 'No s\'han trobat requisits de BIOS';
+
+  @override
+  String platformCount(int count) {
+    return '$count plataformes';
+  }
+
+  @override
+  String failedToLoadBiosStatus(String error) {
+    return 'Error en carregar l\'estat de BIOS: $error';
+  }
+
+  @override
+  String get refreshStatus => 'Actualitzar estat';
+
+  @override
+  String platformsCompleteCount(int complete, int total) {
+    return '$complete/$total plataformes completes';
+  }
+
+  @override
+  String get platformStatusHeader => 'Estat de les plataformes';
+
+  @override
+  String filesVerifiedStatus(
+    int presentFiles,
+    int totalFiles,
+    int verifiedFiles,
+  ) {
+    return '$presentFiles/$totalFiles fitxers ($verifiedFiles verificats)';
+  }
+
+  @override
+  String get biosCollectionOverview => 'Resum de la col·lecció BIOS';
+
+  @override
+  String get biosVerified => 'Verificat';
+
+  @override
+  String downloadComingSoon(String platformName) {
+    return 'Funcionalitat de descàrrega per a $platformName - Properament!';
+  }
+
+  @override
+  String get noGamepadConnected => 'Cap comandament connectat';
+
+  @override
+  String get connectGamepadPrompt =>
+      'Connecta un comandament i prem qualsevol botó';
+
+  @override
+  String get pressButtonToTest =>
+      'Prem qualsevol botó per provar (accions desactivades)';
+
+  @override
+  String get buttonFunctionTests => 'Proves de funcions de botons';
+
+  @override
+  String get gamepadASelect => 'A (Seleccionar)';
+
+  @override
+  String get gamepadBBack => 'B (Enrere)';
+
+  @override
+  String get gamepadXSearch => 'X (Cercar)';
+
+  @override
+  String get gamepadYHelp => 'Y (Ajuda)';
+
+  @override
+  String get gamepadLBPageDown => 'LB (Pàgina avall)';
+
+  @override
+  String get gamepadRBPageUp => 'RB (Pàgina amunt)';
+
+  @override
+  String get gamepadStartMenu => 'Start (Menú)';
+
+  @override
+  String get gamepadSelectSettings => 'Select (Configuració)';
+
+  @override
+  String get gamepadLSClick => 'LS Clic';
+
+  @override
+  String get gamepadRSView => 'RS Clic (Vista)';
+
+  @override
+  String get gamepadLTTrigger => 'LT (Gallet)';
+
+  @override
+  String get gamepadRTTrigger => 'RT (Gallet)';
+
+  @override
+  String get rawButtonStates => 'Estats dels botons sense processar';
+
+  @override
+  String get noButtonsPressed => 'Cap botó premut';
+
+  @override
+  String get axisValues => 'Valors dels eixos';
+
+  @override
+  String get noAxisMovement => 'Sense moviment d\'eixos';
+
+  @override
+  String get dpadLeftStick => 'D-Pad + Stick esquerre';
+
+  @override
+  String get webSettingsDescription =>
+      'Configura els ajustos específics de la plataforma web';
+
+  @override
+  String get corsProxyWhyNeeded => 'Per què cal un proxy CORS?';
+
+  @override
+  String get corsProxyExplanation =>
+      'Els navegadors bloquegen les descàrregues de ROM des de servidors externs a causa de les restriccions de seguretat CORS. Un proxy CORS retransmet la sol·licitud des d\'un servidor que controles, afegint les capçaleres necessàries.\n\nForsaken inclou un Cloudflare Worker que pots desplegar gratuïtament (100k sol·licituds/dia). Consulta el directori tools/cors-proxy-worker/ per a instruccions de configuració.';
+
+  @override
+  String get corsProxyUrl => 'URL del proxy CORS';
+
+  @override
+  String get corsProxyHelperText =>
+      'Deixa buit per desactivar el proxy CORS (les ROM de servidors sense CORS fallaran)';
+
+  @override
+  String get testingProxy => 'Provant el proxy...';
+
+  @override
+  String get testProxyConnection => 'Prova la connexió del proxy';
+
+  @override
+  String get noProxyUrlConfigured => 'No hi ha URL de proxy configurada';
+
+  @override
+  String proxyWorking(int statusCode) {
+    return 'El proxy funciona (HTTP $statusCode)';
+  }
+
+  @override
+  String proxyReturnedHttp(int statusCode) {
+    return 'El proxy ha retornat HTTP $statusCode';
+  }
+
+  @override
+  String get connectionTimedOut => 'S\'ha esgotat el temps de connexió';
+
+  @override
+  String get corsProxySettingsSaved =>
+      'Configuració del proxy CORS desada. S\'aplica immediatament per a nous llançaments de ROM.';
+
+  @override
+  String get quickDeploy => 'Desplegament ràpid';
+
+  @override
+  String get corsProxyDeploySteps =>
+      '1. Registra\'t a dash.cloudflare.com (gratuït)\n2. Instal·la Wrangler: npm install -g wrangler\n3. Inicia sessió: wrangler login\n4. cd tools/cors-proxy-worker\n5. npx wrangler deploy\n6. Enganxa la URL del worker a dalt';
+
+  @override
+  String get permanentStorage => 'Emmagatzematge permanent';
+
+  @override
+  String get temporaryStorage => 'Emmagatzematge temporal';
+
+  @override
+  String get noDownloadedRoms => 'No hi ha ROM descarregades';
+
+  @override
+  String get biosErrorNetworkMessage => 'Ha fallat la connexió de xarxa';
+
+  @override
+  String get biosErrorNetworkSuggestions =>
+      'Comproveu la vostra connexió a Internet\nTorneu a provar d\'aquí a uns moments\nVerifiqueu la configuració de DNS\nProveu d\'utilitzar una VPN si l\'accés està restringit';
+
+  @override
+  String get biosErrorFileNotFoundMessage => 'Fitxer no trobat al servidor';
+
+  @override
+  String get biosErrorFileNotFoundSuggestions =>
+      'El fitxer BIOS pot haver estat mogut o reanomenat\nProveu de descarregar des d\'una font alternativa\nComproveu si el fitxer existeix en una branca/repositori diferent\nInformeu d\'aquest problema si persisteix';
+
+  @override
+  String get biosErrorAccessDeniedMessage => 'Accés denegat pel servidor';
+
+  @override
+  String get biosErrorAccessDeniedSuggestions =>
+      'El servidor pot estar bloquejant les descàrregues\nTorneu a provar més tard - el servidor pot estar temporalment restringit\nUtilitzeu una VPN si l\'accés està restringit per regió\nComproveu si cal autenticació';
+
+  @override
+  String get biosErrorRateLimitedMessage =>
+      'S\'ha excedit el límit de peticions';
+
+  @override
+  String get biosErrorRateLimitedSuggestions =>
+      'Espereu uns minuts abans de tornar a provar\nReducïu el nombre de descàrregues simultànies\nEl servidor es protegeix contra peticions excessives';
+
+  @override
+  String get biosErrorChecksumMessage =>
+      'Ha fallat la verificació d\'integritat del fitxer';
+
+  @override
+  String get biosErrorChecksumSuggestions =>
+      'El fitxer pot haver-se corromput durant la descàrrega\nProveu de descarregar de nou\nComproveu si el fitxer s\'ha actualitzat al servidor\nVerifiqueu l\'estabilitat de la vostra connexió a Internet';
+
+  @override
+  String get biosErrorSizeMismatchMessage => 'Mida del fitxer inesperada';
+
+  @override
+  String get biosErrorSizeMismatchSuggestions =>
+      'El fitxer pot ser una versió diferent de l\'esperada\nLa descàrrega pot estar incompleta\nProveu de descarregar de nou\nComproveu l\'espai disponible al disc';
+
+  @override
+  String get biosErrorStorageMessage => 'Error d\'emmagatzematge';
+
+  @override
+  String get biosErrorStorageSuggestions =>
+      'Allibereu espai al disc\nComproveu els permisos dels fitxers\nAssegureu-vos que el directori de destinació permet l\'escriptura\nProveu de descarregar en una ubicació diferent';
+
+  @override
+  String get biosErrorTimeoutMessage => 'Temps d\'espera de descàrrega esgotat';
+
+  @override
+  String get biosErrorTimeoutSuggestions =>
+      'La connexió a Internet pot ser lenta\nEl servidor pot estar sobrecarregat\nTorneu a provar amb una connexió estable\nComproveu si el tallafoc bloqueja la connexió';
+
+  @override
+  String get biosErrorArchiveMessage => 'Ha fallat l\'extracció de l\'arxiu';
+
+  @override
+  String get biosErrorArchiveSuggestions =>
+      'L\'arxiu descarregat pot estar corromput\nProveu de descarregar el fitxer de nou\nComproveu si l\'eina d\'extracció correcta està disponible\nVerifiqueu que el fitxer té un format d\'arxiu vàlid';
+
+  @override
+  String get biosErrorUnknownMessage => 'Ha fallat la descàrrega';
+
+  @override
+  String get biosErrorUnknownSuggestions =>
+      'Proveu de descarregar de nou\nComproveu la vostra connexió a Internet\nVerifiqueu que el fitxer encara està disponible\nContacteu amb el suport si el problema persisteix';
 }

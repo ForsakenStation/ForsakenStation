@@ -800,6 +800,7 @@ class _RomsScreenState extends State<RomsScreen> {
 
                 ControlsBottomBar(
                   actions: RomsScreenBottomBarActions.getActions(
+                    context: context,
                     isListView: _viewMode == ScreenViewMode.list,
                     isAtRoot:
                         _pathHistory.isEmpty && _currentSubdirectory == null,

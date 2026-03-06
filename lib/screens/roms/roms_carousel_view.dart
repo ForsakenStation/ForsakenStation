@@ -261,9 +261,9 @@ class RomsCarouselView extends StatelessWidget {
                     color: Colors.black54,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Text(
-                    'Use arrow keys or swipe to navigate',
-                    style: TextStyle(color: Colors.white70, fontSize: 11),
+                  child: Text(
+                    AppLocalizations.of(context)!.navigationHint,
+                    style: const TextStyle(color: Colors.white70, fontSize: 11),
                   ),
                 ),
               ),

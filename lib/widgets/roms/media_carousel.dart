@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../models/media.dart';
 import '../../services/debug_service.dart';
 import '../../screens/pdf_viewer_screen.dart';
@@ -215,6 +216,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
   }
 
   Widget _buildManualPreview(Media media) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 60),
       child: Stack(
@@ -238,9 +240,9 @@ class _MediaCarouselState extends State<MediaCarousel> {
                     color: Colors.red.shade400,
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Game Manual',
-                    style: TextStyle(
+                  Text(
+                    l10n.gameManual,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -248,7 +250,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'PDF Document',
+                    l10n.pdfDocument,
                     style: TextStyle(color: Colors.grey[400], fontSize: 14),
                   ),
                 ],
@@ -287,9 +289,9 @@ class _MediaCarouselState extends State<MediaCarousel> {
                 color: Colors.black54,
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Text(
-                'Manual',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+              child: Text(
+                l10n.manual,
+                style: const TextStyle(color: Colors.white, fontSize: 12),
               ),
             ),
           ),
@@ -307,7 +309,9 @@ class _MediaCarouselState extends State<MediaCarousel> {
       MaterialPageRoute(
         builder: (context) => PdfViewerScreen(
           pdfPath: media.path,
-          title: '${widget.media.romName} - Manual',
+          title: AppLocalizations.of(
+            context,
+          )!.manualTitle(widget.media.romName),
         ),
       ),
     ).then((_) {
@@ -362,6 +366,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
   }
 
   Widget _buildVideoPreview(Media media) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 60,
@@ -394,9 +399,9 @@ class _MediaCarouselState extends State<MediaCarousel> {
                 color: Colors.black54,
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Text(
-                'Video',
-                style: TextStyle(color: Colors.white, fontSize: 12),
+              child: Text(
+                l10n.video,
+                style: const TextStyle(color: Colors.white, fontSize: 12),
               ),
             ),
           ),

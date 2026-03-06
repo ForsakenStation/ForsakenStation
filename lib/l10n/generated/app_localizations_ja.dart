@@ -114,7 +114,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get romNotFound => 'ROMが見つかりません';
 
   @override
-  String get biosRequired => 'BIOSが必要';
+  String get biosRequired => '必須';
 
   @override
   String get systemCheck => 'システムチェック';
@@ -483,7 +483,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get removeFromFavorites => 'お気に入りから削除';
 
   @override
-  String get biosMissing => 'BIOSが欠落';
+  String get biosMissing => '不足';
 
   @override
   String get biosPresent => 'BIOSが存在';
@@ -1562,4 +1562,820 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get deletedToSaveSpace => 'そうでなければ、後で容量を節約するために削除されます。';
+
+  @override
+  String get view => '表示';
+
+  @override
+  String get media => 'メディア';
+
+  @override
+  String get navigate => 'ナビゲート';
+
+  @override
+  String get info => '情報';
+
+  @override
+  String get toggleFilter => 'フィルター切替';
+
+  @override
+  String get changeTheme => 'テーマ変更';
+
+  @override
+  String get keyboard => 'キーボード';
+
+  @override
+  String get gamepad => 'ゲームパッド';
+
+  @override
+  String get hideKeyboard => 'キーボードを隠す';
+
+  @override
+  String get gameManual => 'ゲームマニュアル';
+
+  @override
+  String get pdfDocument => 'PDFドキュメント';
+
+  @override
+  String get manual => 'マニュアル';
+
+  @override
+  String get video => 'ビデオ';
+
+  @override
+  String get zoomOut => '縮小';
+
+  @override
+  String get zoomIn => '拡大';
+
+  @override
+  String pageCounter(String current, String total) {
+    return 'ページ $current / $total';
+  }
+
+  @override
+  String get zoom => 'ズーム';
+
+  @override
+  String get firstLast => '最初/最後';
+
+  @override
+  String get scroll => 'スクロール';
+
+  @override
+  String get loadingVideo => '動画を読み込み中...';
+
+  @override
+  String get playPause => '再生/一時停止';
+
+  @override
+  String get useArrowKeysToNavigate => '矢印キーまたはスワイプで操作してください';
+
+  @override
+  String get searchRomsHint => 'ROMを検索...';
+
+  @override
+  String get cancelSearch => '検索をキャンセル';
+
+  @override
+  String get virtualKeyboard => '仮想キーボード';
+
+  @override
+  String get noRomsAvailable => '利用可能なROMがありません';
+
+  @override
+  String get noRomsForPlatformMessage =>
+      'このプラットフォームのROMファイルが見つかりません。ROMファイルはダウンロードURLを含む.txtファイルとしてプラットフォームディレクトリに配置する必要があります。';
+
+  @override
+  String get noMatchingRoms => '一致するROMがありません';
+
+  @override
+  String get tryDifferentSearch => '別の検索語をお試しください';
+
+  @override
+  String get saveToPermanentStorage => '永続ストレージに保存';
+
+  @override
+  String get temporary => '一時';
+
+  @override
+  String get permanent => '永続';
+
+  @override
+  String get tempPathLabel => '一時';
+
+  @override
+  String get foreverPathLabel => '永続';
+
+  @override
+  String get storageOverview => 'ストレージ概要';
+
+  @override
+  String get clearTemporaryStorage => '一時ストレージをクリア';
+
+  @override
+  String filesCount(String count) {
+    return '$count ファイル';
+  }
+
+  @override
+  String pathDisplay(String label, String path) {
+    return '$labelパス: $path';
+  }
+
+  @override
+  String get unknown => '不明';
+
+  @override
+  String get tagVerifiedGoodDump => '検証済みの正常なダンプ - 動作確認済み';
+
+  @override
+  String get tagBadDump => '不良ダンプ - 正常に動作しない可能性があります';
+
+  @override
+  String get tagAlternateVersion => '代替バージョン';
+
+  @override
+  String get tagOverdump => 'オーバーダンプ - 余分なデータを含みます';
+
+  @override
+  String get tagModifiedHacked => '改造/ハックされたROM';
+
+  @override
+  String get tagFanTranslation => 'ファン翻訳';
+
+  @override
+  String get tagPirateBootleg => '海賊版/ブートレグ版';
+
+  @override
+  String get tagFixedVersion => '修正バージョン';
+
+  @override
+  String get tagCheatTrainer => 'チートトレーナー付き';
+
+  @override
+  String tagVersion(String text) {
+    return 'バージョン: $text';
+  }
+
+  @override
+  String tagSpecialRelease(String text) {
+    return '特別リリース: $text';
+  }
+
+  @override
+  String tagMediaInfo(String text) {
+    return 'メディア情報: $text';
+  }
+
+  @override
+  String noEmulatorConfigured(
+    String displayName,
+    String platform,
+    String configPath,
+  ) {
+    return '$displayName用のエミュレーターが設定されていません。\n\n\"$platform\"の設定を以下に追加してください:\n$configPath';
+  }
+
+  @override
+  String get noEmulatorCommandAvailable => '利用可能なエミュレーターコマンドがありません';
+
+  @override
+  String platformNotSupportedWeb(String platform, String supportedPlatforms) {
+    return 'プラットフォーム「$platform」はまだWebブラウザでサポートされていません。\n\nサポートされているプラットフォーム: $supportedPlatforms';
+  }
+
+  @override
+  String failedToLaunchWebEmulator(String error) {
+    return 'Webエミュレーターの起動に失敗しました: $error';
+  }
+
+  @override
+  String failedToLaunchRom(String error) {
+    return 'ROMの起動に失敗しました。\n\n以下を確認してください:\n• エミュレーターが正しくインストールされていること\n• ROMファイルが有効であること\n• 設定が正しいこと\n\nエラー: $error';
+  }
+
+  @override
+  String errorLaunchingRom(String error) {
+    return 'ROM起動エラー: $error';
+  }
+
+  @override
+  String noInfoAvailable(String platformName) {
+    return '$platformNameの情報はありません';
+  }
+
+  @override
+  String get platformInfoTooltip => 'プラットフォーム情報 (I)';
+
+  @override
+  String get navigationHint => '矢印キーまたはスワイプで移動';
+
+  @override
+  String get noGamesFound => 'ゲームが見つかりません';
+
+  @override
+  String get noGamesFoundForSearch => '検索に一致するゲームが見つかりません';
+
+  @override
+  String get tryDifferentSearchOrClear => '別の検索語を試すか、フィルターをクリアしてください';
+
+  @override
+  String get checkStorageOrDownload => 'ストレージ設定を確認するか、ROMをダウンロードしてください';
+
+  @override
+  String get searchGamesHint => 'ゲームを検索...';
+
+  @override
+  String get settingsHeaderTitle => 'Forsakenエミュレーター設定';
+
+  @override
+  String get settingsHeaderSubtitle => 'エミュレーター、パス設定、コンテンツのダウンロード';
+
+  @override
+  String get emulatorManagementDesc => 'エミュレーターコマンドの追加、編集、設定';
+
+  @override
+  String get systemPaths => 'システムパス';
+
+  @override
+  String get systemPathsDesc => 'ROM、メディア、エミュレーターのパスを設定';
+
+  @override
+  String get romDatabaseDesc => 'GitHubからROMリストをダウンロードして管理';
+
+  @override
+  String get romStorageDesc => 'ダウンロードしたROM、ストレージ、一時ファイルのクリーンアップを管理';
+
+  @override
+  String get downloadManagerDesc => 'エミュレーター、ROMリスト、ゲームデータのダウンロード';
+
+  @override
+  String get systemRequirementsDesc => '必要なツールと依存関係を確認';
+
+  @override
+  String get gamepadTestDebug => 'ゲームパッドテストとデバッグ';
+
+  @override
+  String get gamepadTestDebugDesc => 'ゲームパッドのボタン、軸のテストと問題のトラブルシューティング';
+
+  @override
+  String get biosFirmwareHelpDesc => 'BIOSファイルとファームウェア要件の確認';
+
+  @override
+  String get webSettingsDesc => 'CORSプロキシとWebプラットフォーム設定';
+
+  @override
+  String get setupWizardDesc => '初期セットアップウィザードを再実行';
+
+  @override
+  String get languageDesc => 'アプリケーション言語を選択';
+
+  @override
+  String get aboutDebug => '情報とデバッグ';
+
+  @override
+  String get aboutDebugDesc => 'アプリ情報とデバッグ設定';
+
+  @override
+  String get legalDisclaimer => '法的免責事項';
+
+  @override
+  String get romDatabaseCredits => 'ROMリストはArley4dのAndroidRomsリポジトリから提供されています：';
+
+  @override
+  String get romDatabaseThanks =>
+      '保存目的で包括的なROMデータベースを維持しているAndroidRomsプロジェクトに特別な感謝を。';
+
+  @override
+  String get biosFilesSection => 'BIOSファイル';
+
+  @override
+  String get biosFilesCredits =>
+      'BIOSファイルはAbdessのretrorch_systemリポジトリから提供されています：';
+
+  @override
+  String get biosFilesThanks =>
+      'このリポジトリには、さまざまなエミュレーションプラットフォームに必要なシステムファイルとBIOSが含まれています。これらの重要なファイルを保存してくれたメンテナーに特別な感謝を。';
+
+  @override
+  String get amigaCopyProtection => 'Amigaのコピープロテクションサポートはcapsimgライブラリにより提供：';
+
+  @override
+  String get amigaCopyProtectionThanks =>
+      'Amigaエミュレーション用のIPF（コピープロテクト）ディスクイメージサポートを可能にするcapsimgライブラリを維持しているrsn8887に特別な感謝を。';
+
+  @override
+  String get additionalBiosFiles => '追加のBIOSファイルはRetroPieBiosプロジェクトにより提供：';
+
+  @override
+  String get additionalBiosThanks =>
+      '異なるシステムとリージョン間の互換性を向上させる追加のBIOSバリアントとリージョナルファイルを提供してくれたPIBSAS/RetroPieBiosに感謝。';
+
+  @override
+  String get enabled => '有効';
+
+  @override
+  String get disabled => '無効';
+
+  @override
+  String get disclaimerRequired => '続行するには免責事項に同意する必要があります。';
+
+  @override
+  String get emulatorsPathRequired => 'エミュレーターディレクトリのパスが必要です。';
+
+  @override
+  String get emulatorConfigPathRequired => 'エミュレーター設定ファイルのパスが必要です。';
+
+  @override
+  String get mediaPathRequired => 'メディアパスが必要です。';
+
+  @override
+  String get tempRomPathRequired => '一時ROMストレージのパスが必要です。';
+
+  @override
+  String get permanentRomPathRequired => '永続ROMストレージのパスが必要です。';
+
+  @override
+  String wizardStepCounter(int current, int total) {
+    return 'ステップ $current / $total';
+  }
+
+  @override
+  String get emulatorConfiguration => 'エミュレーター設定';
+
+  @override
+  String get emulatorConfigStepDesc =>
+      'エミュレーターがインストールされているパスを設定してください。後から設定 > システムパスで変更できます。';
+
+  @override
+  String get emulatorsDirectory => 'エミュレーターディレクトリ';
+
+  @override
+  String get pathToEmulatorBinaries => 'エミュレーターバイナリのパス';
+
+  @override
+  String get emulatorConfigFile => 'エミュレーター設定ファイル';
+
+  @override
+  String get pathToEmulatorConfig => 'エミュレーター設定JSONのパス';
+
+  @override
+  String get storagePaths => 'ストレージパス';
+
+  @override
+  String get storagePathsStepDesc =>
+      'メディアアセットとROMファイルの保存場所を設定してください。後から設定 > システムパスで変更できます。';
+
+  @override
+  String get wizardMediaPathHint => 'ボックスアート、スクリーンショット、動画';
+
+  @override
+  String get temporaryRomStorage => '一時ROMストレージ';
+
+  @override
+  String get temporaryRomStorageHint => '単一プレイセッション用にダウンロードされたROM';
+
+  @override
+  String get permanentRomStorage => '永続ROMストレージ';
+
+  @override
+  String get permanentRomStorageHint => 'オフラインプレイ用に保存されたROM';
+
+  @override
+  String get allSet => '準備完了！';
+
+  @override
+  String get wizardEmulatorReady => 'Forsakenエミュレーターの使用準備ができました。';
+
+  @override
+  String get changeSettingsLater => 'これらの設定は後から設定画面で変更できます。';
+
+  @override
+  String get configurationSummary => '設定概要';
+
+  @override
+  String get summaryEmulators => 'エミュレーター';
+
+  @override
+  String get summaryMedia => 'メディア';
+
+  @override
+  String get summaryTempRoms => '一時ROM';
+
+  @override
+  String get summarySavedRoms => '保存済みROM';
+
+  @override
+  String get defaultValue => '（デフォルト）';
+
+  @override
+  String pdfPageIndicator(int current, int total) {
+    return '$totalページ中$currentページ';
+  }
+
+  @override
+  String get pdfZoomOut => '縮小 (-)';
+
+  @override
+  String get pdfZoomIn => '拡大 (+)';
+
+  @override
+  String get pdfResetZoom => 'ズームリセット (0)';
+
+  @override
+  String get pdfFirstPage => '最初のページ (Home)';
+
+  @override
+  String get pdfPreviousPage => '前のページ (←/PgUp)';
+
+  @override
+  String get pdfNextPage => '次のページ (→/PgDn)';
+
+  @override
+  String get pdfLastPage => '最後のページ (End)';
+
+  @override
+  String get pdfFileNotFound => 'PDFファイルが見つかりません';
+
+  @override
+  String confirmDeleteEmulator(String system) {
+    return '$systemのエミュレーター設定を削除してもよろしいですか？';
+  }
+
+  @override
+  String commandsConfigured(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count個のコマンド設定済み',
+      one: '1個のコマンド設定済み',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noCommand => 'コマンドなし';
+
+  @override
+  String get reloadConfigTooltip => '設定を再読み込み (R)';
+
+  @override
+  String get configurationInfo => '設定情報';
+
+  @override
+  String get configLocation => '設定ファイルの場所：';
+
+  @override
+  String get hasLocalOverridesYes => 'ローカル上書き：あり';
+
+  @override
+  String get hasLocalOverridesNo => 'ローカル上書き：なし';
+
+  @override
+  String get changesSavedToDevice => '変更はデバイスストレージに保存されます。';
+
+  @override
+  String get usingBundledConfig => 'バンドル設定を使用中。編集してローカル上書きを作成できます。';
+
+  @override
+  String get noEmulatorsConfigured => 'エミュレーターが設定されていません';
+
+  @override
+  String get addFirstEmulator => '最初のエミュレーターを追加して始めましょう';
+
+  @override
+  String get edit => '編集';
+
+  @override
+  String get editEmulator => 'エミュレーターを編集';
+
+  @override
+  String get system => 'システム';
+
+  @override
+  String get systemHint => 'e.g., nes, snes, ps1';
+
+  @override
+  String get commands => 'コマンド';
+
+  @override
+  String commandNumber(int number) {
+    return 'コマンド $number';
+  }
+
+  @override
+  String get commandHint => 'e.g., ../retroarch.AppImage -f -L core.so';
+
+  @override
+  String get remove => '削除';
+
+  @override
+  String get options => 'オプション';
+
+  @override
+  String get biosDownloading => 'ダウンロード中...';
+
+  @override
+  String downloadRequiredAndExtras(int requiredCount, int optionalCount) {
+    return '必須$requiredCount件 + オプション$optionalCount件をダウンロード';
+  }
+
+  @override
+  String downloadRequiredFiles(int requiredCount) {
+    return '必須ファイル$requiredCount件をダウンロード';
+  }
+
+  @override
+  String downloadOptionalExtras(int optionalCount) {
+    return 'オプション$optionalCount件をダウンロード';
+  }
+
+  @override
+  String get downloadFiles => 'ファイルをダウンロード';
+
+  @override
+  String batchDownloadConfirmation(int totalFiles, int platformCount) {
+    return '$platformCountプラットフォームの$totalFiles個のBIOSファイルをダウンロードします：';
+  }
+
+  @override
+  String get downloadSourceNote => 'ファイルはretroarch_systemリポジトリからダウンロードされます。';
+
+  @override
+  String get biosOptional => 'オプション';
+
+  @override
+  String biosFilesFound(int foundCount, int totalCount) {
+    return '$foundCount/$totalCountファイル検出';
+  }
+
+  @override
+  String optionalExtrasAvailable(int count) {
+    return '+$count件のオプション追加ファイルが利用可能';
+  }
+
+  @override
+  String get biosLocations => '場所：';
+
+  @override
+  String get availableForDownload => '複数のソースからダウンロード可能';
+
+  @override
+  String get summary => '概要';
+
+  @override
+  String get biosComplete => '完了';
+
+  @override
+  String get biosPartial => '一部';
+
+  @override
+  String get biosFiles => 'ファイル';
+
+  @override
+  String get biosDownloadable => 'ダウンロード可能';
+
+  @override
+  String get refreshF5Tooltip => '更新 (F5)';
+
+  @override
+  String get allBiosFilesFound => 'すべてのBIOSファイルが見つかりました！';
+
+  @override
+  String get noBiosRequirements => 'BIOS要件が見つかりません';
+
+  @override
+  String platformCount(int count) {
+    return '$countプラットフォーム';
+  }
+
+  @override
+  String failedToLoadBiosStatus(String error) {
+    return 'BIOSステータスの読み込みに失敗しました：$error';
+  }
+
+  @override
+  String get refreshStatus => 'ステータスを更新';
+
+  @override
+  String platformsCompleteCount(int complete, int total) {
+    return '$complete/$totalプラットフォーム完了';
+  }
+
+  @override
+  String get platformStatusHeader => 'プラットフォーム状態';
+
+  @override
+  String filesVerifiedStatus(
+    int presentFiles,
+    int totalFiles,
+    int verifiedFiles,
+  ) {
+    return '$presentFiles/$totalFilesファイル（$verifiedFiles件検証済み）';
+  }
+
+  @override
+  String get biosCollectionOverview => 'BIOSコレクション概要';
+
+  @override
+  String get biosVerified => '検証済み';
+
+  @override
+  String downloadComingSoon(String platformName) {
+    return '$platformNameのダウンロード機能 - 近日公開！';
+  }
+
+  @override
+  String get noGamepadConnected => 'ゲームパッドが接続されていません';
+
+  @override
+  String get connectGamepadPrompt => 'ゲームパッドを接続してボタンを押してください';
+
+  @override
+  String get pressButtonToTest => 'ボタンを押してテスト（アクション無効）';
+
+  @override
+  String get buttonFunctionTests => 'ボタン機能テスト';
+
+  @override
+  String get gamepadASelect => 'A（選択）';
+
+  @override
+  String get gamepadBBack => 'B（戻る）';
+
+  @override
+  String get gamepadXSearch => 'X（検索）';
+
+  @override
+  String get gamepadYHelp => 'Y（ヘルプ）';
+
+  @override
+  String get gamepadLBPageDown => 'LB（ページダウン）';
+
+  @override
+  String get gamepadRBPageUp => 'RB（ページアップ）';
+
+  @override
+  String get gamepadStartMenu => 'Start（メニュー）';
+
+  @override
+  String get gamepadSelectSettings => 'Select（設定）';
+
+  @override
+  String get gamepadLSClick => 'LS クリック';
+
+  @override
+  String get gamepadRSView => 'RS クリック（表示）';
+
+  @override
+  String get gamepadLTTrigger => 'LT（トリガー）';
+
+  @override
+  String get gamepadRTTrigger => 'RT（トリガー）';
+
+  @override
+  String get rawButtonStates => 'ボタン生データ';
+
+  @override
+  String get noButtonsPressed => 'ボタンが押されていません';
+
+  @override
+  String get axisValues => '軸の値';
+
+  @override
+  String get noAxisMovement => '軸の動きなし';
+
+  @override
+  String get dpadLeftStick => 'D-Pad + 左スティック';
+
+  @override
+  String get webSettingsDescription => 'Webプラットフォーム固有の設定を構成';
+
+  @override
+  String get corsProxyWhyNeeded => 'CORSプロキシが必要な理由';
+
+  @override
+  String get corsProxyExplanation =>
+      'ブラウザはCORSセキュリティ制限により外部サーバーからのROMダウンロードをブロックします。CORSプロキシは、あなたが管理するサーバーからリクエストを中継し、必要なヘッダーを追加します。\n\nForsakenには無料でデプロイできるCloudflare Workerが含まれています（1日10万リクエスト）。設定手順はtools/cors-proxy-worker/ディレクトリを参照してください。';
+
+  @override
+  String get corsProxyUrl => 'CORSプロキシURL';
+
+  @override
+  String get corsProxyHelperText =>
+      'CORSプロキシを無効にするには空のままにしてください（CORSなしのサーバーからのROMは失敗します）';
+
+  @override
+  String get testingProxy => 'プロキシをテスト中...';
+
+  @override
+  String get testProxyConnection => 'プロキシ接続テスト';
+
+  @override
+  String get noProxyUrlConfigured => 'プロキシURLが設定されていません';
+
+  @override
+  String proxyWorking(int statusCode) {
+    return 'プロキシは動作中（HTTP $statusCode）';
+  }
+
+  @override
+  String proxyReturnedHttp(int statusCode) {
+    return 'プロキシがHTTP $statusCodeを返しました';
+  }
+
+  @override
+  String get connectionTimedOut => '接続がタイムアウトしました';
+
+  @override
+  String get corsProxySettingsSaved =>
+      'CORSプロキシ設定が保存されました。新しいROM起動時にすぐに反映されます。';
+
+  @override
+  String get quickDeploy => 'クイックデプロイ';
+
+  @override
+  String get corsProxyDeploySteps =>
+      '1. dash.cloudflare.comでサインアップ（無料）\n2. Wranglerをインストール: npm install -g wrangler\n3. ログイン: wrangler login\n4. cd tools/cors-proxy-worker\n5. npx wrangler deploy\n6. 上にWorker URLを貼り付け';
+
+  @override
+  String get permanentStorage => '永続ストレージ';
+
+  @override
+  String get temporaryStorage => '一時ストレージ';
+
+  @override
+  String get noDownloadedRoms => 'ダウンロード済みROMはありません';
+
+  @override
+  String get biosErrorNetworkMessage => 'ネットワーク接続に失敗しました';
+
+  @override
+  String get biosErrorNetworkSuggestions =>
+      'インターネット接続を確認してください\n数分後にもう一度お試しください\nDNS設定を確認してください\nアクセスが制限されている場合はVPNを使用してください';
+
+  @override
+  String get biosErrorFileNotFoundMessage => 'サーバーにファイルが見つかりません';
+
+  @override
+  String get biosErrorFileNotFoundSuggestions =>
+      'BIOSファイルが移動または名前変更された可能性があります\n別のソースからダウンロードしてみてください\nファイルが別のブランチ/リポジトリに存在するか確認してください\n問題が続く場合は報告してください';
+
+  @override
+  String get biosErrorAccessDeniedMessage => 'サーバーによりアクセスが拒否されました';
+
+  @override
+  String get biosErrorAccessDeniedSuggestions =>
+      'サーバーがダウンロードをブロックしている可能性があります\n後でもう一度お試しください - サーバーが一時的に制限されている場合があります\n地域制限がある場合はVPNを使用してください\n認証が必要か確認してください';
+
+  @override
+  String get biosErrorRateLimitedMessage => 'レート制限を超過しました';
+
+  @override
+  String get biosErrorRateLimitedSuggestions =>
+      '数分待ってからもう一度お試しください\n同時ダウンロード数を減らしてください\nサーバーは過剰なリクエストから保護しています';
+
+  @override
+  String get biosErrorChecksumMessage => 'ファイル整合性の検証に失敗しました';
+
+  @override
+  String get biosErrorChecksumSuggestions =>
+      'ダウンロード中にファイルが破損した可能性があります\nもう一度ダウンロードしてみてください\nサーバー上でファイルが更新されたか確認してください\nインターネット接続の安定性を確認してください';
+
+  @override
+  String get biosErrorSizeMismatchMessage => '予期しないファイルサイズです';
+
+  @override
+  String get biosErrorSizeMismatchSuggestions =>
+      'ファイルが期待と異なるバージョンの可能性があります\nダウンロードが不完全な可能性があります\nもう一度ダウンロードしてみてください\n利用可能なディスク容量を確認してください';
+
+  @override
+  String get biosErrorStorageMessage => 'ストレージエラー';
+
+  @override
+  String get biosErrorStorageSuggestions =>
+      'ディスク容量を解放してください\nファイルの権限を確認してください\n保存先ディレクトリが書き込み可能であることを確認してください\n別の場所にダウンロードしてみてください';
+
+  @override
+  String get biosErrorTimeoutMessage => 'ダウンロードタイムアウト';
+
+  @override
+  String get biosErrorTimeoutSuggestions =>
+      'インターネット接続が遅い可能性があります\nサーバーが過負荷の可能性があります\n安定した接続で再試行してください\nファイアウォールが接続をブロックしていないか確認してください';
+
+  @override
+  String get biosErrorArchiveMessage => 'アーカイブの展開に失敗しました';
+
+  @override
+  String get biosErrorArchiveSuggestions =>
+      'ダウンロードしたアーカイブが破損している可能性があります\nファイルをもう一度ダウンロードしてみてください\n正しい展開ツールが利用可能か確認してください\nファイルが有効なアーカイブ形式であることを確認してください';
+
+  @override
+  String get biosErrorUnknownMessage => 'ダウンロードに失敗しました';
+
+  @override
+  String get biosErrorUnknownSuggestions =>
+      'もう一度ダウンロードしてみてください\nインターネット接続を確認してください\nファイルがまだ利用可能であることを確認してください\n問題が続く場合はサポートに連絡してください';
 }

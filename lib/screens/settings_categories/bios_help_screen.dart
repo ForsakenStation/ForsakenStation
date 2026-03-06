@@ -237,7 +237,10 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'This will download $totalFiles BIOS files for ${missingByPlatform.length} platforms:',
+                    AppLocalizations.of(context)!.batchDownloadConfirmation(
+                      totalFiles,
+                      missingByPlatform.length,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   for (final entry in missingByPlatform.entries) ...[
@@ -260,9 +263,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                     const SizedBox(height: 8),
                   ],
                   const SizedBox(height: 8),
-                  const Text(
-                    'Files will be downloaded from the retroarch_system repository.',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  Text(
+                    AppLocalizations.of(context)!.downloadSourceNote,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
               ),
@@ -389,22 +392,26 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   }
 
   /// Builds download button text based on requirement status
-  String _buildDownloadButtonText(BiosRequirement requirement) {
+  String _buildDownloadButtonText(
+    BiosRequirement requirement,
+    BuildContext context,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
     if (_downloadingPlatforms[requirement.platform] == true) {
-      return 'Downloading...';
+      return l10n.biosDownloading;
     }
 
     final requiredCount = requirement.downloadableMissingCount;
     final optionalCount = requirement.downloadableMissingOptionalCount;
 
     if (requiredCount > 0 && optionalCount > 0) {
-      return 'Download $requiredCount required + $optionalCount extras';
+      return l10n.downloadRequiredAndExtras(requiredCount, optionalCount);
     } else if (requiredCount > 0) {
-      return 'Download $requiredCount required files';
+      return l10n.downloadRequiredFiles(requiredCount);
     } else if (optionalCount > 0) {
-      return 'Download $optionalCount optional extras';
+      return l10n.downloadOptionalExtras(optionalCount);
     } else {
-      return 'Download files';
+      return l10n.downloadFiles;
     }
   }
 
@@ -437,9 +444,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
-                    'REQUIRED',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.biosRequired,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
@@ -456,9 +463,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
-                    'OPTIONAL',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.biosOptional,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
@@ -473,14 +480,19 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${requirement.foundCount}/${requirement.totalCount} files found',
+                  AppLocalizations.of(context)!.biosFilesFound(
+                    requirement.foundCount,
+                    requirement.totalCount,
+                  ),
                   style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                 ),
                 // Show optional files info if available
                 if (requirement.hasDownloadableMissingOptional) ...[
                   const SizedBox(height: 2),
                   Text(
-                    '+${requirement.downloadableMissingOptionalCount} optional extras available',
+                    AppLocalizations.of(context)!.optionalExtrasAvailable(
+                      requirement.downloadableMissingOptionalCount,
+                    ),
                     style: TextStyle(fontSize: 12, color: Colors.blue[600]),
                   ),
                 ],
@@ -503,8 +515,8 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
 
                   // Locations
                   Text(
-                    'Locations:',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.biosLocations,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
                       color: Colors.white,
@@ -575,7 +587,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Available for download from multiple sources',
+                            AppLocalizations.of(context)!.availableForDownload,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.purple[700],
@@ -603,7 +615,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                                 ),
                               )
                             : const Icon(Icons.download, size: 16),
-                        label: Text(_buildDownloadButtonText(requirement)),
+                        label: Text(
+                          _buildDownloadButtonText(requirement, context),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple,
                           foregroundColor: Colors.white,
@@ -642,9 +656,12 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
             children: [
               const Icon(Icons.analytics_outlined, size: 20),
               const SizedBox(width: 8),
-              const Text(
-                'Summary',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              Text(
+                AppLocalizations.of(context)!.summary,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
               const Spacer(),
               if (downloadableCount > 0)
@@ -671,28 +688,28 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildSummaryStat(
-                'Complete',
+                AppLocalizations.of(context)!.biosComplete,
                 '${stats['platformsComplete']}',
                 Colors.green,
               ),
               _buildSummaryStat(
-                'Partial',
+                AppLocalizations.of(context)!.biosPartial,
                 '${stats['platformsPartial']}',
                 Colors.orange,
               ),
               _buildSummaryStat(
-                'Missing',
+                AppLocalizations.of(context)!.biosMissing,
                 '${stats['platformsMissing']}',
                 Colors.red,
               ),
               _buildSummaryStat(
-                'Files',
+                AppLocalizations.of(context)!.biosFiles,
                 '${stats['foundFiles']}/${stats['totalFiles']}',
                 Colors.blue,
               ),
               if (downloadableCount > 0)
                 _buildSummaryStat(
-                  'Downloadable',
+                  AppLocalizations.of(context)!.biosDownloadable,
                   '$downloadableCount',
                   Colors.purple,
                 ),
@@ -731,7 +748,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _isLoading ? null : _loadBiosData,
-              tooltip: 'Refresh (F5)',
+              tooltip: AppLocalizations.of(context)!.refreshF5Tooltip,
             ),
           ],
         ),
@@ -769,8 +786,12 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                                 const SizedBox(height: 16),
                                 Text(
                                   _showOnlyMissing
-                                      ? 'All BIOS files found!'
-                                      : 'No BIOS requirements found',
+                                      ? AppLocalizations.of(
+                                          context,
+                                        )!.allBiosFilesFound
+                                      : AppLocalizations.of(
+                                          context,
+                                        )!.noBiosRequirements,
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey[600],
@@ -793,33 +814,35 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                   // Bottom controls bar
                   ControlsBottomBar(
                     actions: [
-                      const BottomBarAction(
-                        label: 'Back',
+                      BottomBarAction(
+                        label: AppLocalizations.of(context)!.back,
                         keyboardKey: 'ESC',
                         gamepadButton: 'B',
                       ),
-                      const BottomBarAction(
-                        label: 'Toggle Filter',
+                      BottomBarAction(
+                        label: AppLocalizations.of(context)!.toggleFilter,
                         keyboardKey: 'Enter',
                         gamepadButton: 'A',
                       ),
-                      const BottomBarAction(
-                        label: 'Refresh',
+                      BottomBarAction(
+                        label: AppLocalizations.of(context)!.refresh,
                         keyboardKey: 'F5',
                         gamepadButton: 'Start',
                       ),
                       if (_allRequirements.any(
                         (req) => req.canDownload && req.hasDownloadableMissing,
                       ))
-                        const BottomBarAction(
-                          label: 'Download All',
+                        BottomBarAction(
+                          label: AppLocalizations.of(context)!.downloadAll,
                           keyboardKey: 'D',
                           gamepadButton: 'Y',
                         ),
                     ],
                     counterText: _filteredRequirements.isEmpty
                         ? null
-                        : '${_filteredRequirements.length} platforms',
+                        : AppLocalizations.of(
+                            context,
+                          )!.platformCount(_filteredRequirements.length),
                   ),
                 ],
               ),

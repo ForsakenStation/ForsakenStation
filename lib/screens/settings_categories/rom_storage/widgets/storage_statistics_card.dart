@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../utils/format_utils.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class StorageStatisticsCard extends StatelessWidget {
   final Map<String, dynamic> stats;
@@ -13,56 +14,69 @@ class StorageStatisticsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
+            _buildHeader(context, l10n),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: _buildStatItem(
                     context,
-                    'Temporary',
+                    l10n.temporary,
                     Icons.access_time,
                     stats['tempCount'] ?? 0,
                     stats['tempSize'] ?? 0,
                     Colors.orange,
+                    l10n,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildStatItem(
                     context,
-                    'Permanent',
+                    l10n.permanent,
                     Icons.cloud_done,
                     stats['foreverCount'] ?? 0,
                     stats['foreverSize'] ?? 0,
                     Colors.green,
+                    l10n,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            _buildPathInfo(context, 'Temp', stats['tempPath']),
-            _buildPathInfo(context, 'Forever', stats['foreverPath']),
+            _buildPathInfo(
+              context,
+              l10n.tempPathLabel,
+              stats['tempPath'],
+              l10n,
+            ),
+            _buildPathInfo(
+              context,
+              l10n.foreverPathLabel,
+              stats['foreverPath'],
+              l10n,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
     return Row(
       children: [
         Icon(Icons.storage, color: Theme.of(context).colorScheme.primary),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
-            'Storage Overview',
+            l10n.storageOverview,
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -72,7 +86,7 @@ class StorageStatisticsCard extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.cleaning_services, size: 20),
             onPressed: onClearTemp,
-            tooltip: 'Clear temporary storage',
+            tooltip: l10n.clearTemporaryStorage,
           ),
       ],
     );
@@ -85,6 +99,7 @@ class StorageStatisticsCard extends StatelessWidget {
     int count,
     int bytes,
     Color color,
+    AppLocalizations l10n,
   ) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -112,7 +127,7 @@ class StorageStatisticsCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '$count files',
+            l10n.filesCount(count.toString()),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Text(
@@ -124,9 +139,14 @@ class StorageStatisticsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPathInfo(BuildContext context, String label, String? path) {
+  Widget _buildPathInfo(
+    BuildContext context,
+    String label,
+    String? path,
+    AppLocalizations l10n,
+  ) {
     return Text(
-      '$label path: ${path ?? 'Unknown'}',
+      l10n.pathDisplay(label, path ?? l10n.unknown),
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
         fontFamily: 'monospace',
         color: Colors.grey[600],

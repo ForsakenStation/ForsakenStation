@@ -246,14 +246,14 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
                     ),
             ),
             ControlsBottomBar(
-              actions: const [
+              actions: [
                 BottomBarAction(
-                  label: 'Back',
+                  label: AppLocalizations.of(context)!.back,
                   keyboardKey: 'ESC',
                   gamepadButton: 'B',
                 ),
                 BottomBarAction(
-                  label: 'Refresh',
+                  label: AppLocalizations.of(context)!.refresh,
                   keyboardKey: 'R',
                   gamepadButton: 'Start',
                 ),

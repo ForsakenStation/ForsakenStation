@@ -135,9 +135,10 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
 
   /// Validates the current step. Returns null if valid, or an error message.
   String? _validateCurrentStep() {
+    final l10n = AppLocalizations.of(context)!;
     if (_currentStep == 0) {
       if (!_disclaimerAccepted) {
-        return 'You must accept the disclaimer to continue.';
+        return l10n.disclaimerRequired;
       }
       return null;
     }
@@ -146,23 +147,23 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
     if (!kIsWeb) {
       if (_currentStep == 1) {
         if (_emulatorsPathController.text.trim().isEmpty) {
-          return 'Emulators directory path is required.';
+          return l10n.emulatorsPathRequired;
         }
         if (_emulatorsConfigPathController.text.trim().isEmpty) {
-          return 'Emulator config file path is required.';
+          return l10n.emulatorConfigPathRequired;
         }
         return null;
       }
 
       if (_currentStep == 2) {
         if (_mediaPathController.text.trim().isEmpty) {
-          return 'Media path is required.';
+          return l10n.mediaPathRequired;
         }
         if (_romTempPathController.text.trim().isEmpty) {
-          return 'Temporary ROM storage path is required.';
+          return l10n.tempRomPathRequired;
         }
         if (_romForeverPathController.text.trim().isEmpty) {
-          return 'Permanent ROM storage path is required.';
+          return l10n.permanentRomPathRequired;
         }
         return null;
       }
@@ -348,7 +349,9 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
                     gamepadButton: 'A',
                   ),
               ],
-              counterText: 'Step ${_currentStep + 1} / $_totalSteps',
+              counterText: AppLocalizations.of(
+                context,
+              )!.wizardStepCounter(_currentStep + 1, _totalSteps),
             ),
           ],
         ),
@@ -527,6 +530,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
 
   Widget _buildEmulatorsStep() {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
@@ -538,29 +542,28 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
             children: [
               const SizedBox(height: 16),
               Text(
-                'Emulator Configuration',
+                l10n.emulatorConfiguration,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Set the paths where your emulators are installed. '
-                'You can change these later in Settings > System Paths.',
+                l10n.emulatorConfigStepDesc,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 32),
               _buildPathField(
-                label: 'Emulators Directory',
-                hint: 'Path to emulator binaries',
+                label: l10n.emulatorsDirectory,
+                hint: l10n.pathToEmulatorBinaries,
                 controller: _emulatorsPathController,
               ),
               const SizedBox(height: 20),
               _buildPathField(
-                label: 'Emulator Config File',
-                hint: 'Path to emulator configuration JSON',
+                label: l10n.emulatorConfigFile,
+                hint: l10n.pathToEmulatorConfig,
                 controller: _emulatorsConfigPathController,
               ),
             ],
@@ -576,6 +579,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
 
   Widget _buildStorageStep() {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
@@ -587,35 +591,34 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
             children: [
               const SizedBox(height: 16),
               Text(
-                'Storage Paths',
+                l10n.storagePaths,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Configure where media assets and ROM files are stored. '
-                'You can change these later in Settings > System Paths.',
+                l10n.storagePathsStepDesc,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 32),
               _buildPathField(
-                label: 'Media Path',
-                hint: 'Box art, screenshots, and videos',
+                label: l10n.mediaPath,
+                hint: l10n.wizardMediaPathHint,
                 controller: _mediaPathController,
               ),
               const SizedBox(height: 20),
               _buildPathField(
-                label: 'Temporary ROM Storage',
-                hint: 'Downloaded ROMs for single play sessions',
+                label: l10n.temporaryRomStorage,
+                hint: l10n.temporaryRomStorageHint,
                 controller: _romTempPathController,
               ),
               const SizedBox(height: 20),
               _buildPathField(
-                label: 'Permanent ROM Storage',
-                hint: 'ROMs saved for offline play',
+                label: l10n.permanentRomStorage,
+                hint: l10n.permanentRomStorageHint,
                 controller: _romForeverPathController,
               ),
             ],
@@ -631,6 +634,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
 
   Widget _buildReadyStep() {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(32),
@@ -648,7 +652,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
               ),
               const SizedBox(height: 24),
               Text(
-                'You\'re All Set!',
+                l10n.allSet,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -656,7 +660,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
               ),
               const SizedBox(height: 16),
               Text(
-                'Forsaken Emulator is ready to use.',
+                l10n.wizardEmulatorReady,
                 style: theme.textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
@@ -667,8 +671,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
                 const SizedBox(height: 24),
               ],
               Text(
-                'You can change any of these settings later from the '
-                'Settings screen.',
+                l10n.changeSettingsLater,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
@@ -678,7 +681,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
               FilledButton.icon(
                 onPressed: _finishSetup,
                 icon: const Icon(Icons.arrow_forward),
-                label: Text(AppLocalizations.of(context)!.start),
+                label: Text(l10n.start),
               ),
             ],
           ),
@@ -688,6 +691,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
   }
 
   Widget _buildSummaryCard(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -695,16 +699,22 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Configuration Summary',
+              l10n.configurationSummary,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const Divider(),
-            _buildSummaryRow('Emulators', _emulatorsPathController.text),
-            _buildSummaryRow('Media', _mediaPathController.text),
-            _buildSummaryRow('Temp ROMs', _romTempPathController.text),
-            _buildSummaryRow('Saved ROMs', _romForeverPathController.text),
+            _buildSummaryRow(
+              l10n.summaryEmulators,
+              _emulatorsPathController.text,
+            ),
+            _buildSummaryRow(l10n.summaryMedia, _mediaPathController.text),
+            _buildSummaryRow(l10n.summaryTempRoms, _romTempPathController.text),
+            _buildSummaryRow(
+              l10n.summarySavedRoms,
+              _romForeverPathController.text,
+            ),
           ],
         ),
       ),
@@ -730,7 +740,9 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
           ),
           Expanded(
             child: Text(
-              value.isEmpty ? '(default)' : value,
+              value.isEmpty
+                  ? AppLocalizations.of(context)!.defaultValue
+                  : value,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontFamily: 'monospace',
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
@@ -792,7 +804,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
             IconButton.filled(
               onPressed: () => _pickDirectory(controller),
               icon: const Icon(Icons.folder_open),
-              tooltip: 'Browse',
+              tooltip: AppLocalizations.of(context)!.browse,
             ),
           ],
         ),

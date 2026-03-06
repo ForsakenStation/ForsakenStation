@@ -139,7 +139,7 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
     final proxyUrl = _corsProxyController.text.trim();
     if (proxyUrl.isEmpty) {
       setState(() {
-        _testResult = 'No proxy URL configured';
+        _testResult = AppLocalizations.of(context)!.noProxyUrlConfigured;
         _testSuccess = false;
       });
       return;
@@ -164,12 +164,16 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
       if (mounted) {
         if (response.statusCode == 200) {
           setState(() {
-            _testResult = 'Proxy is working (HTTP ${response.statusCode})';
+            _testResult = AppLocalizations.of(
+              context,
+            )!.proxyWorking(response.statusCode);
             _testSuccess = true;
           });
         } else {
           setState(() {
-            _testResult = 'Proxy returned HTTP ${response.statusCode}';
+            _testResult = AppLocalizations.of(
+              context,
+            )!.proxyReturnedHttp(response.statusCode);
             _testSuccess = false;
           });
         }
@@ -177,7 +181,7 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
     } on TimeoutException {
       if (mounted) {
         setState(() {
-          _testResult = 'Connection timed out';
+          _testResult = AppLocalizations.of(context)!.connectionTimedOut;
           _testSuccess = false;
         });
       }
@@ -220,10 +224,8 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'CORS proxy settings saved. Takes effect immediately for new ROM launches.',
-            ),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.corsProxySettingsSaved),
           ),
         );
       }
@@ -262,9 +264,9 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
               Expanded(
                 child: ListView(
                   children: [
-                    const Text(
-                      'Configure settings specific to the web platform',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    Text(
+                      AppLocalizations.of(context)!.webSettingsDescription,
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const SizedBox(height: 24),
 
@@ -286,7 +288,9 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Why is a CORS proxy needed?',
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.corsProxyWhyNeeded,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -295,10 +299,9 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    'Browsers block ROM downloads from external servers due to CORS security restrictions. '
-                                    'A CORS proxy relays the request from a server you control, adding the necessary headers.\n\n'
-                                    'Forsaken includes a Cloudflare Worker you can deploy for free (100k requests/day). '
-                                    'See the tools/cors-proxy-worker/ directory for setup instructions.',
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.corsProxyExplanation,
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: Colors.blue.shade900,
@@ -325,19 +328,20 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'CORS Proxy URL',
+                              AppLocalizations.of(context)!.corsProxyUrl,
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
                             TextField(
                               controller: _corsProxyController,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 hintText:
                                     'https://your-worker.your-subdomain.workers.dev/',
-                                border: OutlineInputBorder(),
-                                helperText:
-                                    'Leave empty to disable CORS proxy (ROMs from servers without CORS will fail)',
+                                border: const OutlineInputBorder(),
+                                helperText: AppLocalizations.of(
+                                  context,
+                                )!.corsProxyHelperText,
                                 helperMaxLines: 2,
                               ),
                               keyboardType: TextInputType.url,
@@ -375,8 +379,12 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
                                   Expanded(
                                     child: Text(
                                       _isTesting
-                                          ? 'Testing proxy...'
-                                          : 'Test Proxy Connection',
+                                          ? AppLocalizations.of(
+                                              context,
+                                            )!.testingProxy
+                                          : AppLocalizations.of(
+                                              context,
+                                            )!.testProxyConnection,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.titleMedium,
@@ -443,7 +451,7 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Quick Deploy',
+                                  AppLocalizations.of(context)!.quickDeploy,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -454,12 +462,9 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              '1. Sign up at dash.cloudflare.com (free)\n'
-                              '2. Install Wrangler: npm install -g wrangler\n'
-                              '3. Login: wrangler login\n'
-                              '4. cd tools/cors-proxy-worker\n'
-                              '5. npx wrangler deploy\n'
-                              '6. Paste the worker URL above',
+                              AppLocalizations.of(
+                                context,
+                              )!.corsProxyDeploySteps,
                               style: TextStyle(
                                 fontSize: 13,
                                 fontFamily: 'monospace',
@@ -523,19 +528,19 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
           ),
         ),
         bottomNavigationBar: ControlsBottomBar(
-          actions: const [
+          actions: [
             BottomBarAction(
-              label: 'Back',
+              label: AppLocalizations.of(context)!.back,
               keyboardKey: 'ESC',
               gamepadButton: 'B',
             ),
             BottomBarAction(
-              label: 'Navigate',
+              label: AppLocalizations.of(context)!.navigate,
               keyboardKey: '\u2191\u2193',
               gamepadButton: 'D-pad',
             ),
             BottomBarAction(
-              label: 'Select',
+              label: AppLocalizations.of(context)!.select,
               keyboardKey: 'Enter',
               gamepadButton: 'A',
             ),

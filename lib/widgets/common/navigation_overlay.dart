@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Navigation help overlay that shows keyboard and gamepad controls
 class NavigationOverlay extends StatefulWidget {
@@ -146,7 +147,7 @@ class _NavigationOverlayState extends State<NavigationOverlay>
                             children: [
                               Expanded(
                                 child: _buildTabButton(
-                                  'Keyboard',
+                                  AppLocalizations.of(context)!.keyboard,
                                   Icons.keyboard,
                                   _showKeyboard,
                                   () => setState(() => _showKeyboard = true),
@@ -155,7 +156,7 @@ class _NavigationOverlayState extends State<NavigationOverlay>
                               const SizedBox(width: 8),
                               Expanded(
                                 child: _buildTabButton(
-                                  'Gamepad',
+                                  AppLocalizations.of(context)!.gamepad,
                                   Icons.sports_esports,
                                   !_showKeyboard,
                                   () => setState(() => _showKeyboard = false),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/emulator_platform.dart';
 import '../../utils/platform_icons.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../common/smart_svg.dart';
 
 /// Card widget for displaying a platform in grid view
@@ -149,7 +150,9 @@ class _PlatformCardState extends State<PlatformCard> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '${widget.platform.romCount} ROMs',
+                            AppLocalizations.of(
+                              context,
+                            )!.folderRomCount(widget.platform.romCount),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   color: Colors.white70,

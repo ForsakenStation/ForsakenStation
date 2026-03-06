@@ -701,5 +701,1158 @@
   "notNow": "Not Now",
   "saveRomPermanently": "Save ROM Permanently?",
   "keepRomOfflineQuestion": "Would you like to keep this ROM downloaded for offline play?",
-  "deletedToSaveSpace": "If not, it will be deleted later to save space."
+  "deletedToSaveSpace": "If not, it will be deleted later to save space.",
+
+  "view": "View",
+  "@view": {
+    "description": "Label for view toggle action in bottom bar"
+  },
+  "media": "Media",
+  "@media": {
+    "description": "Label for media action in bottom bar"
+  },
+  "navigate": "Navigate",
+  "@navigate": {
+    "description": "Label for navigate action in bottom bar"
+  },
+  "info": "Info",
+  "@info": {
+    "description": "Label for info action in bottom bar"
+  },
+  "toggleFilter": "Toggle Filter",
+  "@toggleFilter": {
+    "description": "Label for toggle filter action in bottom bar"
+  },
+  "changeTheme": "Change theme",
+  "@changeTheme": {
+    "description": "Tooltip for theme selector button"
+  },
+  "keyboard": "Keyboard",
+  "@keyboard": {
+    "description": "Label for keyboard input mode"
+  },
+  "gamepad": "Gamepad",
+  "@gamepad": {
+    "description": "Label for gamepad input mode"
+  },
+  "hideKeyboard": "Hide keyboard",
+  "@hideKeyboard": {
+    "description": "Tooltip for hiding virtual keyboard"
+  },
+  "gameManual": "Game Manual",
+  "@gameManual": {
+    "description": "Label for game manual media type"
+  },
+  "pdfDocument": "PDF Document",
+  "@pdfDocument": {
+    "description": "Label for PDF document type"
+  },
+  "manual": "Manual",
+  "@manual": {
+    "description": "Short label for manual"
+  },
+  "video": "Video",
+  "@video": {
+    "description": "Label for video media type"
+  },
+  "zoomOut": "Zoom Out",
+  "@zoomOut": {
+    "description": "Tooltip for zoom out button"
+  },
+  "zoomIn": "Zoom In",
+  "@zoomIn": {
+    "description": "Tooltip for zoom in button"
+  },
+  "pageCounter": "Page {current} / {total}",
+  "@pageCounter": {
+    "description": "Page counter display in document viewer",
+    "placeholders": {
+      "current": {"type": "String"},
+      "total": {"type": "String"}
+    }
+  },
+  "zoom": "Zoom",
+  "@zoom": {
+    "description": "Label for zoom control hint"
+  },
+  "firstLast": "First/Last",
+  "@firstLast": {
+    "description": "Label for first/last page navigation hint"
+  },
+  "scroll": "Scroll",
+  "@scroll": {
+    "description": "Label for scroll control hint"
+  },
+  "loadingVideo": "Loading video...",
+  "@loadingVideo": {
+    "description": "Status text shown while video is loading"
+  },
+  "playPause": "Play/Pause",
+  "@playPause": {
+    "description": "Tooltip for play/pause button"
+  },
+  "useArrowKeysToNavigate": "Use arrow keys or swipe to navigate",
+  "@useArrowKeysToNavigate": {
+    "description": "Navigation hint shown in carousel/platform views"
+  },
+  "searchRomsHint": "Search ROMs...",
+  "@searchRomsHint": {
+    "description": "Hint text in ROM search field"
+  },
+  "cancelSearch": "Cancel Search",
+  "@cancelSearch": {
+    "description": "Tooltip for cancel search button"
+  },
+  "virtualKeyboard": "Virtual Keyboard",
+  "@virtualKeyboard": {
+    "description": "Tooltip for virtual keyboard toggle"
+  },
+  "noRomsAvailable": "No ROMs available",
+  "@noRomsAvailable": {
+    "description": "Title for empty ROM list state"
+  },
+  "noRomsForPlatformMessage": "No ROM files were found for this platform. ROM files should be placed as .txt files containing download URLs in the platform directory.",
+  "@noRomsForPlatformMessage": {
+    "description": "Description shown when no ROMs found for a platform"
+  },
+  "noMatchingRoms": "No matching ROMs",
+  "@noMatchingRoms": {
+    "description": "Title when search has no results"
+  },
+  "tryDifferentSearch": "Try a different search term",
+  "@tryDifferentSearch": {
+    "description": "Suggestion when search has no results"
+  },
+  "saveToPermanentStorage": "Save to permanent storage",
+  "@saveToPermanentStorage": {
+    "description": "Tooltip for save to permanent storage button"
+  },
+  "temporary": "Temporary",
+  "@temporary": {
+    "description": "Label for temporary storage section"
+  },
+  "permanent": "Permanent",
+  "@permanent": {
+    "description": "Label for permanent storage section"
+  },
+  "tempPathLabel": "Temp",
+  "@tempPathLabel": {
+    "description": "Short label for temporary path"
+  },
+  "foreverPathLabel": "Forever",
+  "@foreverPathLabel": {
+    "description": "Short label for permanent/forever path"
+  },
+  "storageOverview": "Storage Overview",
+  "@storageOverview": {
+    "description": "Title for storage overview section"
+  },
+  "clearTemporaryStorage": "Clear temporary storage",
+  "@clearTemporaryStorage": {
+    "description": "Tooltip for clear temporary storage button"
+  },
+  "filesCount": "{count} files",
+  "@filesCount": {
+    "description": "Display count of files",
+    "placeholders": {
+      "count": {"type": "String"}
+    }
+  },
+  "pathDisplay": "{label} path: {path}",
+  "@pathDisplay": {
+    "description": "Display a labeled path",
+    "placeholders": {
+      "label": {"type": "String"},
+      "path": {"type": "String"}
+    }
+  },
+  "unknown": "Unknown",
+  "@unknown": {
+    "description": "Fallback text for unknown values"
+  },
+  "tagVerifiedGoodDump": "Verified good dump - confirmed working",
+  "@tagVerifiedGoodDump": {
+    "description": "Tooltip for verified good ROM dump tag"
+  },
+  "tagBadDump": "Bad dump - may not work correctly",
+  "@tagBadDump": {
+    "description": "Tooltip for bad ROM dump tag"
+  },
+  "tagAlternateVersion": "Alternate version",
+  "@tagAlternateVersion": {
+    "description": "Tooltip for alternate version ROM tag"
+  },
+  "tagOverdump": "Overdump - contains extra data",
+  "@tagOverdump": {
+    "description": "Tooltip for overdump ROM tag"
+  },
+  "tagModifiedHacked": "Modified/hacked ROM",
+  "@tagModifiedHacked": {
+    "description": "Tooltip for modified/hacked ROM tag"
+  },
+  "tagFanTranslation": "Fan translation",
+  "@tagFanTranslation": {
+    "description": "Tooltip for fan translation ROM tag"
+  },
+  "tagPirateBootleg": "Pirate/bootleg version",
+  "@tagPirateBootleg": {
+    "description": "Tooltip for pirate/bootleg ROM tag"
+  },
+  "tagFixedVersion": "Fixed version",
+  "@tagFixedVersion": {
+    "description": "Tooltip for fixed version ROM tag"
+  },
+  "tagCheatTrainer": "Includes cheat trainer",
+  "@tagCheatTrainer": {
+    "description": "Tooltip for cheat trainer ROM tag"
+  },
+  "tagVersion": "Version: {text}",
+  "@tagVersion": {
+    "description": "Tooltip for version ROM tag",
+    "placeholders": {
+      "text": {"type": "String"}
+    }
+  },
+  "tagSpecialRelease": "Special release: {text}",
+  "@tagSpecialRelease": {
+    "description": "Tooltip for special release ROM tag",
+    "placeholders": {
+      "text": {"type": "String"}
+    }
+  },
+  "tagMediaInfo": "Media info: {text}",
+  "@tagMediaInfo": {
+    "description": "Tooltip for media info ROM tag",
+    "placeholders": {
+      "text": {"type": "String"}
+    }
+  },
+  "noEmulatorConfigured": "No emulator configured for {platform}.\n\nCheck your emulators configuration file.",
+  "@noEmulatorConfigured": {
+    "description": "Error when no emulator is configured for a platform",
+    "placeholders": {
+      "platform": {"type": "String"}
+    }
+  },
+  "noEmulatorCommandAvailable": "No emulator command available",
+  "@noEmulatorCommandAvailable": {
+    "description": "Error when emulator has no command configured"
+  },
+  "platformNotSupportedWeb": "Platform \"{platform}\" is not yet supported in the web emulator.\n\nSupported platforms: NES, SNES, GB, GBC, GBA, Genesis/MD, SMS, GG, A26",
+  "@platformNotSupportedWeb": {
+    "description": "Error when platform is not supported in web emulator",
+    "placeholders": {
+      "platform": {"type": "String"}
+    }
+  },
+  "failedToLaunchWebEmulator": "Failed to launch web emulator: {error}",
+  "@failedToLaunchWebEmulator": {
+    "description": "Error when web emulator fails to launch",
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "failedToLaunchRom": "Failed to launch ROM.\n\nCheck that:\n- The emulator is installed at the configured path\n- The ROM file is valid\n- You have permission to execute the emulator\n\nEmulator: {emulator}",
+  "@failedToLaunchRom": {
+    "description": "Detailed error when ROM launch fails",
+    "placeholders": {
+      "emulator": {"type": "String"}
+    }
+  },
+  "errorLaunchingRom": "Error launching ROM: {error}",
+  "@errorLaunchingRom": {
+    "description": "Generic error when ROM launch fails",
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "noInfoAvailable": "No information available for {platformName}",
+  "@noInfoAvailable": {
+    "description": "Message when no platform info is available",
+    "placeholders": {
+      "platformName": {"type": "String"}
+    }
+  },
+  "platformInfoTooltip": "Platform Info (I)",
+  "@platformInfoTooltip": {
+    "description": "Tooltip for platform info button with keyboard shortcut"
+  },
+  "navigationHint": "Use arrow keys or swipe to navigate",
+  "@navigationHint": {
+    "description": "Navigation hint shown in carousel views"
+  },
+  "noGamesFound": "No games found",
+  "@noGamesFound": {
+    "description": "Empty state title when no games are available"
+  },
+  "noGamesFoundForSearch": "No games found for search",
+  "@noGamesFoundForSearch": {
+    "description": "Empty state title when search returns no results"
+  },
+  "tryDifferentSearchOrClear": "Try a different search term or clear the filter",
+  "@tryDifferentSearchOrClear": {
+    "description": "Suggestion when search returns no results"
+  },
+  "checkStorageOrDownload": "Check your storage settings or download some ROMs",
+  "@checkStorageOrDownload": {
+    "description": "Suggestion when no games are found"
+  },
+  "searchGamesHint": "Search games...",
+  "@searchGamesHint": {
+    "description": "Hint text in games search field"
+  },
+  "settingsHeaderTitle": "Forsaken Emulator Configuration",
+  "@settingsHeaderTitle": {
+    "description": "Header title on the settings screen"
+  },
+  "settingsHeaderSubtitle": "Configure emulators, paths, and download content",
+  "@settingsHeaderSubtitle": {
+    "description": "Header subtitle on the settings screen"
+  },
+  "emulatorManagementDesc": "Add, edit, and configure emulator commands",
+  "@emulatorManagementDesc": {
+    "description": "Description for emulator management settings category"
+  },
+  "systemPaths": "System Paths",
+  "@systemPaths": {
+    "description": "System paths settings category title"
+  },
+  "systemPathsDesc": "Configure ROMs, media, and emulator paths",
+  "@systemPathsDesc": {
+    "description": "Description for system paths settings category"
+  },
+  "romDatabaseDesc": "Download and manage ROM lists from GitHub",
+  "@romDatabaseDesc": {
+    "description": "Description for ROM database settings category"
+  },
+  "romStorageDesc": "Manage downloaded ROMs, storage, and temp files cleanup",
+  "@romStorageDesc": {
+    "description": "Description for ROM storage settings category"
+  },
+  "downloadManagerDesc": "Download emulators, ROMs lists, and game data",
+  "@downloadManagerDesc": {
+    "description": "Description for download manager settings category"
+  },
+  "systemRequirementsDesc": "Check required tools and dependencies",
+  "@systemRequirementsDesc": {
+    "description": "Description for system requirements settings category"
+  },
+  "gamepadTestDebug": "Gamepad Test & Debug",
+  "@gamepadTestDebug": {
+    "description": "Gamepad test and debug settings category title"
+  },
+  "gamepadTestDebugDesc": "Test gamepad buttons, axes, and troubleshoot issues",
+  "@gamepadTestDebugDesc": {
+    "description": "Description for gamepad test and debug settings category"
+  },
+  "biosFirmwareHelpDesc": "Check BIOS files and firmware requirements",
+  "@biosFirmwareHelpDesc": {
+    "description": "Description for BIOS and firmware help settings category"
+  },
+  "webSettingsDesc": "CORS proxy and web platform configuration",
+  "@webSettingsDesc": {
+    "description": "Description for web settings category"
+  },
+  "setupWizardDesc": "Re-run the initial setup wizard",
+  "@setupWizardDesc": {
+    "description": "Description for setup wizard settings category"
+  },
+  "languageDesc": "Select application language",
+  "@languageDesc": {
+    "description": "Description for language settings category"
+  },
+  "aboutDebug": "About & Debug",
+  "@aboutDebug": {
+    "description": "About and debug settings category title"
+  },
+  "aboutDebugDesc": "App information and debug settings",
+  "@aboutDebugDesc": {
+    "description": "Description for about and debug settings category"
+  },
+  "legalDisclaimer": "Legal Disclaimer",
+  "@legalDisclaimer": {
+    "description": "Title for legal disclaimer section in about dialog"
+  },
+  "romDatabaseCredits": "ROM lists are originally sourced from the AndroidRoms repository by Arley4d:",
+  "@romDatabaseCredits": {
+    "description": "Credit text for ROM database source"
+  },
+  "romDatabaseThanks": "Special thanks to the AndroidRoms project for maintaining comprehensive ROM databases for preservation purposes.",
+  "@romDatabaseThanks": {
+    "description": "Thanks text for ROM database source"
+  },
+  "biosFilesSection": "BIOS Files",
+  "@biosFilesSection": {
+    "description": "Section title for BIOS files in about dialog"
+  },
+  "biosFilesCredits": "BIOS files are sourced from the retroarch_system repository by Abdess:",
+  "@biosFilesCredits": {
+    "description": "Credit text for BIOS files source"
+  },
+  "biosFilesThanks": "This repository contains system files and BIOS required by various emulation platforms. Special thanks to the maintainers for preserving these essential files.",
+  "@biosFilesThanks": {
+    "description": "Thanks text for BIOS files source"
+  },
+  "amigaCopyProtection": "Amiga copy protection support provided by the capsimg library:",
+  "@amigaCopyProtection": {
+    "description": "Credit text for Amiga capsimg library"
+  },
+  "amigaCopyProtectionThanks": "Special thanks to rsn8887 for maintaining the capsimg library that enables IPF (copy-protected) disk image support for Amiga emulation.",
+  "@amigaCopyProtectionThanks": {
+    "description": "Thanks text for capsimg library"
+  },
+  "additionalBiosFiles": "Additional BIOS files provided by the RetroPieBios project:",
+  "@additionalBiosFiles": {
+    "description": "Credit text for additional BIOS files"
+  },
+  "additionalBiosThanks": "Thanks to PIBSAS/RetroPieBios for providing additional BIOS variants and regional files that enhance compatibility across different systems and regions.",
+  "@additionalBiosThanks": {
+    "description": "Thanks text for RetroPieBios project"
+  },
+  "enabled": "Enabled",
+  "@enabled": {
+    "description": "Status text for enabled state"
+  },
+  "disabled": "Disabled",
+  "@disabled": {
+    "description": "Status text for disabled state"
+  },
+  "disclaimerRequired": "You must accept the disclaimer to continue.",
+  "@disclaimerRequired": {
+    "description": "Validation error when disclaimer is not accepted in setup wizard"
+  },
+  "emulatorsPathRequired": "Emulators directory path is required.",
+  "@emulatorsPathRequired": {
+    "description": "Validation error when emulators path is empty"
+  },
+  "emulatorConfigPathRequired": "Emulator config file path is required.",
+  "@emulatorConfigPathRequired": {
+    "description": "Validation error when emulator config path is empty"
+  },
+  "mediaPathRequired": "Media path is required.",
+  "@mediaPathRequired": {
+    "description": "Validation error when media path is empty"
+  },
+  "tempRomPathRequired": "Temporary ROM storage path is required.",
+  "@tempRomPathRequired": {
+    "description": "Validation error when temporary ROM path is empty"
+  },
+  "permanentRomPathRequired": "Permanent ROM storage path is required.",
+  "@permanentRomPathRequired": {
+    "description": "Validation error when permanent ROM path is empty"
+  },
+  "wizardStepCounter": "Step {current} / {total}",
+  "@wizardStepCounter": {
+    "description": "Step counter in setup wizard bottom bar",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "emulatorConfiguration": "Emulator Configuration",
+  "@emulatorConfiguration": {
+    "description": "Title for emulator configuration step in setup wizard"
+  },
+  "emulatorConfigStepDesc": "Set the paths where your emulators are installed. You can change these later in Settings > System Paths.",
+  "@emulatorConfigStepDesc": {
+    "description": "Description for emulator configuration step"
+  },
+  "emulatorsDirectory": "Emulators Directory",
+  "@emulatorsDirectory": {
+    "description": "Label for emulators directory path field"
+  },
+  "pathToEmulatorBinaries": "Path to emulator binaries",
+  "@pathToEmulatorBinaries": {
+    "description": "Hint for emulators directory path field"
+  },
+  "emulatorConfigFile": "Emulator Config File",
+  "@emulatorConfigFile": {
+    "description": "Label for emulator config file path field"
+  },
+  "pathToEmulatorConfig": "Path to emulator configuration JSON",
+  "@pathToEmulatorConfig": {
+    "description": "Hint for emulator config file path field"
+  },
+  "storagePaths": "Storage Paths",
+  "@storagePaths": {
+    "description": "Title for storage paths step in setup wizard"
+  },
+  "storagePathsStepDesc": "Configure where media assets and ROM files are stored. You can change these later in Settings > System Paths.",
+  "@storagePathsStepDesc": {
+    "description": "Description for storage paths step"
+  },
+  "wizardMediaPathHint": "Box art, screenshots, and videos",
+  "@wizardMediaPathHint": {
+    "description": "Hint for media path field in setup wizard"
+  },
+  "temporaryRomStorage": "Temporary ROM Storage",
+  "@temporaryRomStorage": {
+    "description": "Label for temporary ROM storage path field"
+  },
+  "temporaryRomStorageHint": "Downloaded ROMs for single play sessions",
+  "@temporaryRomStorageHint": {
+    "description": "Hint for temporary ROM storage path field"
+  },
+  "permanentRomStorage": "Permanent ROM Storage",
+  "@permanentRomStorage": {
+    "description": "Label for permanent ROM storage path field"
+  },
+  "permanentRomStorageHint": "ROMs saved for offline play",
+  "@permanentRomStorageHint": {
+    "description": "Hint for permanent ROM storage path field"
+  },
+  "allSet": "You're All Set!",
+  "@allSet": {
+    "description": "Title for the ready step in setup wizard"
+  },
+  "wizardEmulatorReady": "Forsaken Emulator is ready to use.",
+  "@wizardEmulatorReady": {
+    "description": "Subtitle for the ready step in setup wizard"
+  },
+  "changeSettingsLater": "You can change any of these settings later from the Settings screen.",
+  "@changeSettingsLater": {
+    "description": "Note about changing settings later in setup wizard"
+  },
+  "configurationSummary": "Configuration Summary",
+  "@configurationSummary": {
+    "description": "Title for configuration summary card in setup wizard"
+  },
+  "summaryEmulators": "Emulators",
+  "@summaryEmulators": {
+    "description": "Summary label for emulators path"
+  },
+  "summaryMedia": "Media",
+  "@summaryMedia": {
+    "description": "Summary label for media path"
+  },
+  "summaryTempRoms": "Temp ROMs",
+  "@summaryTempRoms": {
+    "description": "Summary label for temporary ROMs path"
+  },
+  "summarySavedRoms": "Saved ROMs",
+  "@summarySavedRoms": {
+    "description": "Summary label for saved ROMs path"
+  },
+  "defaultValue": "(default)",
+  "@defaultValue": {
+    "description": "Placeholder shown when a path value is empty"
+  },
+
+  "pdfPageIndicator": "Page {current} of {total}",
+  "@pdfPageIndicator": {
+    "description": "Page indicator in PDF viewer",
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "pdfZoomOut": "Zoom out (-)",
+  "@pdfZoomOut": {
+    "description": "Tooltip for zoom out button in PDF viewer"
+  },
+  "pdfZoomIn": "Zoom in (+)",
+  "@pdfZoomIn": {
+    "description": "Tooltip for zoom in button in PDF viewer"
+  },
+  "pdfResetZoom": "Reset zoom (0)",
+  "@pdfResetZoom": {
+    "description": "Tooltip for reset zoom button in PDF viewer"
+  },
+  "pdfFirstPage": "First page (Home)",
+  "@pdfFirstPage": {
+    "description": "Tooltip for first page button in PDF viewer"
+  },
+  "pdfPreviousPage": "Previous page (←/PgUp)",
+  "@pdfPreviousPage": {
+    "description": "Tooltip for previous page button in PDF viewer"
+  },
+  "pdfNextPage": "Next page (→/PgDn)",
+  "@pdfNextPage": {
+    "description": "Tooltip for next page button in PDF viewer"
+  },
+  "pdfLastPage": "Last page (End)",
+  "@pdfLastPage": {
+    "description": "Tooltip for last page button in PDF viewer"
+  },
+  "pdfFileNotFound": "PDF file not found",
+  "@pdfFileNotFound": {
+    "description": "Error message when PDF file is not found"
+  },
+
+  "confirmDeleteEmulator": "Are you sure you want to delete the emulator configuration for {system}?",
+  "@confirmDeleteEmulator": {
+    "description": "Confirmation message for deleting an emulator",
+    "placeholders": {
+      "system": { "type": "String" }
+    }
+  },
+  "commandsConfigured": "{count,plural, =1{1 command configured} other{{count} commands configured}}",
+  "@commandsConfigured": {
+    "description": "Number of commands configured for an emulator",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "noCommand": "No command",
+  "@noCommand": {
+    "description": "Shown when no command is configured for an emulator"
+  },
+  "reloadConfigTooltip": "Reload Configuration (R)",
+  "@reloadConfigTooltip": {
+    "description": "Tooltip for reload configuration button"
+  },
+  "configurationInfo": "Configuration Info",
+  "@configurationInfo": {
+    "description": "Tooltip for configuration info button"
+  },
+  "configLocation": "Config location:",
+  "@configLocation": {
+    "description": "Label for config file location"
+  },
+  "hasLocalOverridesYes": "Has local overrides: Yes",
+  "@hasLocalOverridesYes": {
+    "description": "Shows that local overrides exist"
+  },
+  "hasLocalOverridesNo": "Has local overrides: No",
+  "@hasLocalOverridesNo": {
+    "description": "Shows that no local overrides exist"
+  },
+  "changesSavedToDevice": "Your changes are saved to device storage.",
+  "@changesSavedToDevice": {
+    "description": "Note about changes being saved to device storage"
+  },
+  "usingBundledConfig": "Using bundled config. Edit to create local overrides.",
+  "@usingBundledConfig": {
+    "description": "Note about using bundled config"
+  },
+  "noEmulatorsConfigured": "No emulators configured",
+  "@noEmulatorsConfigured": {
+    "description": "Empty state title when no emulators are configured"
+  },
+  "addFirstEmulator": "Add your first emulator to get started",
+  "@addFirstEmulator": {
+    "description": "Empty state subtitle when no emulators are configured"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Generic edit action label"
+  },
+  "editEmulator": "Edit Emulator",
+  "@editEmulator": {
+    "description": "Title for edit emulator dialog"
+  },
+  "system": "System",
+  "@system": {
+    "description": "Label for system/platform name field"
+  },
+  "systemHint": "e.g., nes, snes, ps1",
+  "@systemHint": {
+    "description": "Hint text for system name input"
+  },
+  "commands": "Commands",
+  "@commands": {
+    "description": "Section header for emulator commands"
+  },
+  "commandNumber": "Command {number}",
+  "@commandNumber": {
+    "description": "Label for a numbered command entry",
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "commandHint": "e.g., ../retroarch.AppImage -f -L core.so",
+  "@commandHint": {
+    "description": "Hint text for command input"
+  },
+  "remove": "Remove",
+  "@remove": {
+    "description": "Generic remove action label"
+  },
+  "options": "Options",
+  "@options": {
+    "description": "Section header for options"
+  },
+  "biosDownloading": "Downloading...",
+  "@biosDownloading": {
+    "description": "Text shown while BIOS files are being downloaded"
+  },
+  "downloadRequiredAndExtras": "Download {requiredCount} required + {optionalCount} extras",
+  "@downloadRequiredAndExtras": {
+    "description": "Download button text showing required and optional file counts",
+    "placeholders": {
+      "requiredCount": { "type": "int" },
+      "optionalCount": { "type": "int" }
+    }
+  },
+  "downloadRequiredFiles": "Download {requiredCount} required files",
+  "@downloadRequiredFiles": {
+    "description": "Download button text showing required file count",
+    "placeholders": {
+      "requiredCount": { "type": "int" }
+    }
+  },
+  "downloadOptionalExtras": "Download {optionalCount} optional extras",
+  "@downloadOptionalExtras": {
+    "description": "Download button text showing optional file count",
+    "placeholders": {
+      "optionalCount": { "type": "int" }
+    }
+  },
+  "downloadFiles": "Download files",
+  "@downloadFiles": {
+    "description": "Generic download files button text"
+  },
+  "batchDownloadConfirmation": "This will download {totalFiles} BIOS files for {platformCount} platforms:",
+  "@batchDownloadConfirmation": {
+    "description": "Confirmation message for batch BIOS download",
+    "placeholders": {
+      "totalFiles": { "type": "int" },
+      "platformCount": { "type": "int" }
+    }
+  },
+  "downloadSourceNote": "Files will be downloaded from the retroarch_system repository.",
+  "@downloadSourceNote": {
+    "description": "Note about the source of BIOS file downloads"
+  },
+  "biosRequired": "REQUIRED",
+  "@biosRequired": {
+    "description": "Label for required BIOS files"
+  },
+  "biosOptional": "OPTIONAL",
+  "@biosOptional": {
+    "description": "Label for optional BIOS files"
+  },
+  "biosFilesFound": "{foundCount}/{totalCount} files found",
+  "@biosFilesFound": {
+    "description": "Status showing how many BIOS files were found",
+    "placeholders": {
+      "foundCount": { "type": "int" },
+      "totalCount": { "type": "int" }
+    }
+  },
+  "optionalExtrasAvailable": "+{count} optional extras available",
+  "@optionalExtrasAvailable": {
+    "description": "Text showing number of optional extras available for download",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "biosLocations": "Locations:",
+  "@biosLocations": {
+    "description": "Header for BIOS file locations list"
+  },
+  "availableForDownload": "Available for download from multiple sources",
+  "@availableForDownload": {
+    "description": "Text indicating BIOS files can be downloaded"
+  },
+  "summary": "Summary",
+  "@summary": {
+    "description": "Summary section header"
+  },
+  "biosComplete": "Complete",
+  "@biosComplete": {
+    "description": "Label for complete BIOS status in summary"
+  },
+  "biosPartial": "Partial",
+  "@biosPartial": {
+    "description": "Label for partial BIOS status in summary"
+  },
+  "biosMissing": "Missing",
+  "@biosMissing": {
+    "description": "Label for missing BIOS status in summary"
+  },
+  "biosFiles": "Files",
+  "@biosFiles": {
+    "description": "Label for files count in BIOS summary"
+  },
+  "biosDownloadable": "Downloadable",
+  "@biosDownloadable": {
+    "description": "Label for downloadable count in BIOS summary"
+  },
+  "refreshF5Tooltip": "Refresh (F5)",
+  "@refreshF5Tooltip": {
+    "description": "Tooltip for refresh button with keyboard shortcut"
+  },
+  "allBiosFilesFound": "All BIOS files found!",
+  "@allBiosFilesFound": {
+    "description": "Message when all BIOS files are present"
+  },
+  "noBiosRequirements": "No BIOS requirements found",
+  "@noBiosRequirements": {
+    "description": "Message when no BIOS requirements are found"
+  },
+  "toggleFilter": "Toggle Filter",
+  "@toggleFilter": {
+    "description": "Label for toggle filter action"
+  },
+  "platformCount": "{count} platforms",
+  "@platformCount": {
+    "description": "Counter text showing number of platforms",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "failedToLoadBiosStatus": "Failed to load BIOS status: {error}",
+  "@failedToLoadBiosStatus": {
+    "description": "Error message when BIOS status loading fails",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "refreshStatus": "Refresh Status",
+  "@refreshStatus": {
+    "description": "Tooltip for refresh status button"
+  },
+  "platformsCompleteCount": "{complete}/{total} platforms complete",
+  "@platformsCompleteCount": {
+    "description": "Counter showing completed platforms",
+    "placeholders": {
+      "complete": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "platformStatusHeader": "Platform Status",
+  "@platformStatusHeader": {
+    "description": "Header for platform status section"
+  },
+  "filesVerifiedStatus": "{presentFiles}/{totalFiles} files ({verifiedFiles} verified)",
+  "@filesVerifiedStatus": {
+    "description": "Status showing files present and verified count",
+    "placeholders": {
+      "presentFiles": { "type": "int" },
+      "totalFiles": { "type": "int" },
+      "verifiedFiles": { "type": "int" }
+    }
+  },
+  "biosCollectionOverview": "BIOS Collection Overview",
+  "@biosCollectionOverview": {
+    "description": "Header for BIOS collection overview card"
+  },
+  "biosVerified": "Verified",
+  "@biosVerified": {
+    "description": "Label for verified files count in BIOS dashboard"
+  },
+  "downloadComingSoon": "Download functionality for {platformName} - Coming soon!",
+  "@downloadComingSoon": {
+    "description": "Placeholder message for unimplemented download feature",
+    "placeholders": {
+      "platformName": { "type": "String" }
+    }
+  },
+  "noGamepadConnected": "No gamepad connected",
+  "@noGamepadConnected": {
+    "description": "Message when no gamepad is detected"
+  },
+  "connectGamepadPrompt": "Connect a gamepad and press any button",
+  "@connectGamepadPrompt": {
+    "description": "Instruction to connect a gamepad"
+  },
+  "gamepadConnected": "Gamepad Connected",
+  "@gamepadConnected": {
+    "description": "Status message when gamepad is connected"
+  },
+  "pressButtonToTest": "Press any button to test (actions disabled)",
+  "@pressButtonToTest": {
+    "description": "Prompt to press gamepad buttons in test mode"
+  },
+  "buttonFunctionTests": "Button Function Tests",
+  "@buttonFunctionTests": {
+    "description": "Header for button function test section"
+  },
+  "gamepadASelect": "A (Select)",
+  "@gamepadASelect": {
+    "description": "Gamepad A button label with function"
+  },
+  "gamepadBBack": "B (Back)",
+  "@gamepadBBack": {
+    "description": "Gamepad B button label with function"
+  },
+  "gamepadXSearch": "X (Search)",
+  "@gamepadXSearch": {
+    "description": "Gamepad X button label with function"
+  },
+  "gamepadYHelp": "Y (Help)",
+  "@gamepadYHelp": {
+    "description": "Gamepad Y button label with function"
+  },
+  "gamepadLBPageDown": "LB (Page Down)",
+  "@gamepadLBPageDown": {
+    "description": "Gamepad LB button label with function"
+  },
+  "gamepadRBPageUp": "RB (Page Up)",
+  "@gamepadRBPageUp": {
+    "description": "Gamepad RB button label with function"
+  },
+  "gamepadStartMenu": "Start (Menu)",
+  "@gamepadStartMenu": {
+    "description": "Gamepad Start button label with function"
+  },
+  "gamepadSelectSettings": "Select (Settings)",
+  "@gamepadSelectSettings": {
+    "description": "Gamepad Select button label with function"
+  },
+  "gamepadLSClick": "LS Click",
+  "@gamepadLSClick": {
+    "description": "Gamepad left stick click label"
+  },
+  "gamepadRSView": "RS Click (View)",
+  "@gamepadRSView": {
+    "description": "Gamepad right stick click label with function"
+  },
+  "gamepadLTTrigger": "LT (Trigger)",
+  "@gamepadLTTrigger": {
+    "description": "Gamepad left trigger label"
+  },
+  "gamepadRTTrigger": "RT (Trigger)",
+  "@gamepadRTTrigger": {
+    "description": "Gamepad right trigger label"
+  },
+  "rawButtonStates": "Raw Button States",
+  "@rawButtonStates": {
+    "description": "Header for raw button state display section"
+  },
+  "noButtonsPressed": "No buttons pressed",
+  "@noButtonsPressed": {
+    "description": "Message when no gamepad buttons are pressed"
+  },
+  "axisValues": "Axis Values",
+  "@axisValues": {
+    "description": "Header for axis values display section"
+  },
+  "noAxisMovement": "No axis movement",
+  "@noAxisMovement": {
+    "description": "Message when no axis movement detected"
+  },
+  "dpadLeftStick": "D-Pad + Left Stick",
+  "@dpadLeftStick": {
+    "description": "Header for D-pad and left stick test section"
+  },
+  "rightStick": "Right Stick",
+  "@rightStick": {
+    "description": "Header for right stick test section"
+  },
+  "webSettingsDescription": "Configure settings specific to the web platform",
+  "@webSettingsDescription": {
+    "description": "Subtitle description for web settings screen"
+  },
+  "corsProxyWhyNeeded": "Why is a CORS proxy needed?",
+  "@corsProxyWhyNeeded": {
+    "description": "Info card title explaining CORS proxy necessity"
+  },
+  "corsProxyExplanation": "Browsers block ROM downloads from external servers due to CORS security restrictions. A CORS proxy relays the request from a server you control, adding the necessary headers.\n\nForsaken includes a Cloudflare Worker you can deploy for free (100k requests/day). See the tools/cors-proxy-worker/ directory for setup instructions.",
+  "@corsProxyExplanation": {
+    "description": "Detailed explanation of why CORS proxy is needed"
+  },
+  "corsProxyUrl": "CORS Proxy URL",
+  "@corsProxyUrl": {
+    "description": "Label for CORS proxy URL input field"
+  },
+  "corsProxyHelperText": "Leave empty to disable CORS proxy (ROMs from servers without CORS will fail)",
+  "@corsProxyHelperText": {
+    "description": "Helper text for CORS proxy URL field"
+  },
+  "testingProxy": "Testing proxy...",
+  "@testingProxy": {
+    "description": "Status text while testing proxy connection"
+  },
+  "testProxyConnection": "Test Proxy Connection",
+  "@testProxyConnection": {
+    "description": "Button label to test CORS proxy connection"
+  },
+  "noProxyUrlConfigured": "No proxy URL configured",
+  "@noProxyUrlConfigured": {
+    "description": "Error when testing proxy with no URL set"
+  },
+  "proxyWorking": "Proxy is working (HTTP {statusCode})",
+  "@proxyWorking": {
+    "description": "Success message when proxy test passes",
+    "placeholders": {
+      "statusCode": { "type": "int" }
+    }
+  },
+  "proxyReturnedHttp": "Proxy returned HTTP {statusCode}",
+  "@proxyReturnedHttp": {
+    "description": "Error message when proxy returns non-200 status",
+    "placeholders": {
+      "statusCode": { "type": "int" }
+    }
+  },
+  "connectionTimedOut": "Connection timed out",
+  "@connectionTimedOut": {
+    "description": "Error message when proxy connection times out"
+  },
+  "corsProxySettingsSaved": "CORS proxy settings saved. Takes effect immediately for new ROM launches.",
+  "@corsProxySettingsSaved": {
+    "description": "Success snackbar message after saving CORS proxy settings"
+  },
+  "quickDeploy": "Quick Deploy",
+  "@quickDeploy": {
+    "description": "Header for quick deployment instructions card"
+  },
+  "corsProxyDeploySteps": "1. Sign up at dash.cloudflare.com (free)\n2. Install Wrangler: npm install -g wrangler\n3. Login: wrangler login\n4. cd tools/cors-proxy-worker\n5. npx wrangler deploy\n6. Paste the worker URL above",
+  "@corsProxyDeploySteps": {
+    "description": "Step-by-step deployment instructions for CORS proxy worker"
+  },
+  "permanentStorage": "Permanent Storage",
+  "@permanentStorage": {
+    "description": "Section header for permanently saved ROMs"
+  },
+  "temporaryStorage": "Temporary Storage",
+  "@temporaryStorage": {
+    "description": "Section header for temporarily downloaded ROMs"
+  },
+  "noDownloadedRoms": "No downloaded ROMs",
+  "@noDownloadedRoms": {
+    "description": "Empty state message when no ROMs have been downloaded"
+  },
+  "noEmulatorConfigured": "No emulator configured for {displayName}.\n\nPlease add configuration for \"{platform}\" in:\n{configPath}",
+  "@noEmulatorConfigured": {
+    "description": "Error when no emulator is configured for a platform",
+    "placeholders": {
+      "displayName": {
+        "type": "String",
+        "example": "Super Nintendo"
+      },
+      "platform": {
+        "type": "String",
+        "example": "snes"
+      },
+      "configPath": {
+        "type": "String",
+        "example": "/path/to/emulators.json"
+      }
+    }
+  },
+  "noEmulatorCommandAvailable": "No emulator command available",
+  "@noEmulatorCommandAvailable": {
+    "description": "Error when no emulator command is available for launching"
+  },
+  "platformNotSupportedWeb": "Platform \"{platform}\" is not yet supported in web browser.\n\nSupported platforms: {supportedPlatforms}",
+  "@platformNotSupportedWeb": {
+    "description": "Error when trying to launch a ROM for an unsupported platform in web",
+    "placeholders": {
+      "platform": {
+        "type": "String",
+        "example": "n64"
+      },
+      "supportedPlatforms": {
+        "type": "String",
+        "example": "snes, nes, genesis"
+      }
+    }
+  },
+  "failedToLaunchWebEmulator": "Failed to launch web emulator: {error}",
+  "@failedToLaunchWebEmulator": {
+    "description": "Error when web emulator fails to launch",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "failedToLaunchRom": "Failed to launch ROM.\n\nCheck that:\n• Emulator is installed correctly\n• ROM file is valid\n• Configuration is correct\n\nError: {error}",
+  "@failedToLaunchRom": {
+    "description": "Error dialog message when ROM launch fails with troubleshooting tips",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Process exited with code 1"
+      }
+    }
+  },
+  "errorLaunchingRom": "Error launching ROM: {error}",
+  "@errorLaunchingRom": {
+    "description": "Error message when an exception occurs during ROM launch",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "FileNotFoundException"
+      }
+    }
+  },
+  "biosErrorNetworkMessage": "Network connection failed",
+  "@biosErrorNetworkMessage": {
+    "description": "Error message for BIOS download network failure"
+  },
+  "biosErrorNetworkSuggestions": "Check your internet connection\nTry again in a few moments\nVerify DNS settings\nTry using a VPN if access is restricted",
+  "@biosErrorNetworkSuggestions": {
+    "description": "Recovery suggestions for network errors (newline-separated)"
+  },
+  "biosErrorFileNotFoundMessage": "File not found on server",
+  "@biosErrorFileNotFoundMessage": {
+    "description": "Error message when BIOS file is not found (HTTP 404)"
+  },
+  "biosErrorFileNotFoundSuggestions": "The BIOS file may have been moved or renamed\nTry downloading from an alternative source\nCheck if the file exists in a different branch/repository\nReport this issue if problem persists",
+  "@biosErrorFileNotFoundSuggestions": {
+    "description": "Recovery suggestions for file not found errors (newline-separated)"
+  },
+  "biosErrorAccessDeniedMessage": "Access denied by server",
+  "@biosErrorAccessDeniedMessage": {
+    "description": "Error message when server denies access (HTTP 403)"
+  },
+  "biosErrorAccessDeniedSuggestions": "Server may be blocking downloads\nTry again later - server may be temporarily restricted\nUse VPN if access is region-restricted\nCheck if authentication is required",
+  "@biosErrorAccessDeniedSuggestions": {
+    "description": "Recovery suggestions for access denied errors (newline-separated)"
+  },
+  "biosErrorRateLimitedMessage": "Rate limit exceeded",
+  "@biosErrorRateLimitedMessage": {
+    "description": "Error message when server rate limits requests (HTTP 429)"
+  },
+  "biosErrorRateLimitedSuggestions": "Wait a few minutes before trying again\nReduce number of simultaneous downloads\nServer is protecting against excessive requests",
+  "@biosErrorRateLimitedSuggestions": {
+    "description": "Recovery suggestions for rate limit errors (newline-separated)"
+  },
+  "biosErrorChecksumMessage": "File integrity verification failed",
+  "@biosErrorChecksumMessage": {
+    "description": "Error message when BIOS file checksum does not match"
+  },
+  "biosErrorChecksumSuggestions": "File may be corrupted during download\nTry downloading again\nCheck if file was updated on server\nVerify your internet connection stability",
+  "@biosErrorChecksumSuggestions": {
+    "description": "Recovery suggestions for checksum mismatch errors (newline-separated)"
+  },
+  "biosErrorSizeMismatchMessage": "Unexpected file size",
+  "@biosErrorSizeMismatchMessage": {
+    "description": "Error message when BIOS file size does not match expected"
+  },
+  "biosErrorSizeMismatchSuggestions": "File may be different version than expected\nDownload may be incomplete\nTry downloading again\nCheck available disk space",
+  "@biosErrorSizeMismatchSuggestions": {
+    "description": "Recovery suggestions for file size mismatch errors (newline-separated)"
+  },
+  "biosErrorStorageMessage": "Storage error",
+  "@biosErrorStorageMessage": {
+    "description": "Error message for disk/storage related failures"
+  },
+  "biosErrorStorageSuggestions": "Free up disk space\nCheck file permissions\nEnsure destination directory is writable\nTry downloading to a different location",
+  "@biosErrorStorageSuggestions": {
+    "description": "Recovery suggestions for storage errors (newline-separated)"
+  },
+  "biosErrorTimeoutMessage": "Download timeout",
+  "@biosErrorTimeoutMessage": {
+    "description": "Error message when BIOS download times out"
+  },
+  "biosErrorTimeoutSuggestions": "Internet connection may be slow\nServer may be overloaded\nTry again with a stable connection\nCheck if firewall is blocking the connection",
+  "@biosErrorTimeoutSuggestions": {
+    "description": "Recovery suggestions for timeout errors (newline-separated)"
+  },
+  "biosErrorArchiveMessage": "Archive extraction failed",
+  "@biosErrorArchiveMessage": {
+    "description": "Error message when BIOS archive extraction fails"
+  },
+  "biosErrorArchiveSuggestions": "Downloaded archive may be corrupted\nTry downloading the file again\nCheck if correct extraction tool is available\nVerify file is a valid archive format",
+  "@biosErrorArchiveSuggestions": {
+    "description": "Recovery suggestions for archive extraction errors (newline-separated)"
+  },
+  "biosErrorUnknownMessage": "Download failed",
+  "@biosErrorUnknownMessage": {
+    "description": "Generic error message for unclassified BIOS download failures"
+  },
+  "biosErrorUnknownSuggestions": "Try downloading again\nCheck your internet connection\nVerify the file is still available\nContact support if problem persists",
+  "@biosErrorUnknownSuggestions": {
+    "description": "Recovery suggestions for unknown/generic errors (newline-separated)"
+  }
 }

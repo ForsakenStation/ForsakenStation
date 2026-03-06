@@ -274,13 +274,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Focus(
       focusNode: _focusNode,
       autofocus: true,
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.settingsAndConfiguration),
+          title: Text(l10n.settingsAndConfiguration),
           centerTitle: true,
         ),
         body: ListView(
@@ -302,14 +303,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Forsaken Emulator Configuration',
+                      l10n.settingsHeaderTitle,
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Configure emulators, paths, and download content',
+                      l10n.settingsHeaderSubtitle,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(
                           context,
@@ -328,8 +329,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: 0,
               icon: Icons.videogame_asset,
-              title: 'Emulator Management',
-              description: 'Add, edit, and configure emulator commands',
+              title: l10n.emulatorManagement,
+              description: l10n.emulatorManagementDesc,
               onTap: () => _navigateToCategory(0),
             ),
             const SizedBox(height: 12),
@@ -338,8 +339,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: 1,
               icon: Icons.folder,
-              title: 'System Paths',
-              description: 'Configure ROMs, media, and emulator paths',
+              title: l10n.systemPaths,
+              description: l10n.systemPathsDesc,
               onTap: () => _navigateToCategory(1),
             ),
             const SizedBox(height: 12),
@@ -348,8 +349,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: 2,
               icon: Icons.storage,
-              title: 'ROM Database',
-              description: 'Download and manage ROM lists from GitHub',
+              title: l10n.romDatabase,
+              description: l10n.romDatabaseDesc,
               onTap: () => _navigateToCategory(2),
             ),
             const SizedBox(height: 12),
@@ -358,9 +359,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: 3,
               icon: Icons.folder_special,
-              title: 'ROM Storage',
-              description:
-                  'Manage downloaded ROMs, storage, and temp files cleanup',
+              title: l10n.romStorage,
+              description: l10n.romStorageDesc,
               onTap: () => _navigateToCategory(3),
             ),
             const SizedBox(height: 12),
@@ -369,8 +369,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: 4,
               icon: Icons.download,
-              title: 'Download Manager',
-              description: 'Download emulators, ROMs lists, and game data',
+              title: l10n.downloadManager,
+              description: l10n.downloadManagerDesc,
               onTap: () => _navigateToCategory(4),
             ),
             const SizedBox(height: 12),
@@ -379,8 +379,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: 5,
               icon: Icons.check_circle_outline,
-              title: 'System Requirements',
-              description: 'Check required tools and dependencies',
+              title: l10n.systemRequirements,
+              description: l10n.systemRequirementsDesc,
               onTap: () => _navigateToCategory(5),
             ),
             const SizedBox(height: 12),
@@ -389,9 +389,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: 6,
               icon: Icons.gamepad,
-              title: 'Gamepad Test & Debug',
-              description:
-                  'Test gamepad buttons, axes, and troubleshoot issues',
+              title: l10n.gamepadTestDebug,
+              description: l10n.gamepadTestDebugDesc,
               onTap: () => _navigateToCategory(6),
             ),
             const SizedBox(height: 12),
@@ -400,8 +399,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: 7,
               icon: Icons.memory,
-              title: 'BIOS & Firmware Help',
-              description: 'Check BIOS files and firmware requirements',
+              title: l10n.biosFirmwareHelp,
+              description: l10n.biosFirmwareHelpDesc,
               onTap: () => _navigateToCategory(7),
             ),
             const SizedBox(height: 12),
@@ -412,8 +411,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 context,
                 index: 8,
                 icon: Icons.language,
-                title: 'Web Settings',
-                description: 'CORS proxy and web platform configuration',
+                title: l10n.webSettings,
+                description: l10n.webSettingsDesc,
                 onTap: () => _navigateToCategory(8),
               ),
               const SizedBox(height: 12),
@@ -423,8 +422,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: kIsWeb ? 10 : 9,
               icon: Icons.auto_fix_high,
-              title: 'Setup Wizard',
-              description: 'Re-run the initial setup wizard',
+              title: l10n.setupWizard,
+              description: l10n.setupWizardDesc,
               onTap: () => _navigateToCategory(kIsWeb ? 10 : 9),
             ),
             const SizedBox(height: 12),
@@ -433,8 +432,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: kIsWeb ? 11 : 10,
               icon: Icons.language,
-              title: 'Language',
-              description: 'Select application language',
+              title: l10n.language,
+              description: l10n.languageDesc,
               onTap: () => _navigateToCategory(kIsWeb ? 11 : 10),
             ),
             const SizedBox(height: 12),
@@ -443,8 +442,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context,
               index: kIsWeb ? 12 : 11,
               icon: Icons.info_outline,
-              title: 'About & Debug',
-              description: 'App information and debug settings',
+              title: l10n.aboutDebug,
+              description: l10n.aboutDebugDesc,
               onTap: () => _showAboutDialog(context),
             ),
           ],
@@ -553,13 +552,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 data: Theme.of(
                   context,
                 ).copyWith(dividerColor: Colors.transparent),
-                child: const ExpansionTile(
+                child: ExpansionTile(
                   tilePadding: EdgeInsets.zero,
                   title: Text(
-                    'Legal Disclaimer',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    l10n.legalDisclaimer,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  children: [
+                  children: const [
                     Padding(
                       padding: EdgeInsets.only(bottom: 8.0),
                       child: Text(
@@ -573,14 +572,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 8),
               const Divider(),
               const SizedBox(height: 16),
-              const Text(
-                'ROM Database',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                l10n.romDatabase,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'ROM lists are original sourced from the AndroidRoms repository by Arley4d:',
-                style: TextStyle(fontSize: 13),
+              Text(
+                l10n.romDatabaseCredits,
+                style: const TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 8),
               const SelectableText(
@@ -592,22 +591,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Special thanks to the AndroidRoms project for maintaining comprehensive ROM databases for preservation purposes.',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+              Text(
+                l10n.romDatabaseThanks,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 16),
               const Divider(),
               const SizedBox(height: 16),
-              const Text(
-                'BIOS Files',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                l10n.biosFilesSection,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'BIOS files are sourced from the retroarch_system repository by Abdess:',
-                style: TextStyle(fontSize: 13),
-              ),
+              Text(l10n.biosFilesCredits, style: const TextStyle(fontSize: 13)),
               const SizedBox(height: 8),
               const SelectableText(
                 'https://github.com/Abdess/retroarch_system',
@@ -618,14 +614,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'This repository contains system files and BIOS required by various emulation platforms. Special thanks to the maintainers for preserving these essential files.',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+              Text(
+                l10n.biosFilesThanks,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 12),
-              const Text(
-                'Amiga copy protection support provided by the capsimg library:',
-                style: TextStyle(fontSize: 13),
+              Text(
+                l10n.amigaCopyProtection,
+                style: const TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 8),
               const SelectableText(
@@ -637,14 +633,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Special thanks to rsn8887 for maintaining the capsimg library that enables IPF (copy-protected) disk image support for Amiga emulation.',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+              Text(
+                l10n.amigaCopyProtectionThanks,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 12),
-              const Text(
-                'Additional BIOS files provided by the RetroPieBios project:',
-                style: TextStyle(fontSize: 13),
+              Text(
+                l10n.additionalBiosFiles,
+                style: const TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 8),
               const SelectableText(
@@ -656,20 +652,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Thanks to PIBSAS/RetroPieBios for providing additional BIOS variants and regional files that enhance compatibility across different systems and regions.',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+              Text(
+                l10n.additionalBiosThanks,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 16),
               const Divider(),
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text(AppLocalizations.of(context)!.debugMode),
+                  Text(l10n.debugMode),
                   Text(
                     DebugService.instance.isDebugEnabled
-                        ? 'Enabled'
-                        : 'Disabled',
+                        ? l10n.enabled
+                        : l10n.disabled,
                     style: TextStyle(
                       color: DebugService.instance.isDebugEnabled
                           ? Colors.green
@@ -686,7 +682,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Navigator.pop(context);
                   _showAboutDialog(context);
                 },
-                child: Text(AppLocalizations.of(context)!.toggleDebugMode),
+                child: Text(l10n.toggleDebugMode),
               ),
             ],
           ),
@@ -695,7 +691,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           DialogButtonBar(
             buttons: [
               DialogButton(
-                label: 'Close',
+                label: l10n.close,
                 onPressed: () => Navigator.pop(context),
                 primary: true,
                 gamepadButton: GamepadButton.b,

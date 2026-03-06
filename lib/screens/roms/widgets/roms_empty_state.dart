@@ -13,6 +13,7 @@ class RomsEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -24,7 +25,7 @@ class RomsEmptyState extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            isSearchMode ? 'No games found for search' : 'No games found',
+            isSearchMode ? l10n.noGamesFoundForSearch : l10n.noGamesFound,
             style: TextStyle(
               fontSize: 20,
               color: Colors.grey[400],
@@ -34,8 +35,8 @@ class RomsEmptyState extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             isSearchMode
-                ? 'Try a different search term or clear the filter'
-                : 'Check your storage settings or download some ROMs',
+                ? l10n.tryDifferentSearchOrClear
+                : l10n.checkStorageOrDownload,
             style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
           if (isSearchMode) ...[
@@ -43,7 +44,7 @@ class RomsEmptyState extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onClearSearch,
               icon: const Icon(Icons.clear_all),
-              label: Text(AppLocalizations.of(context)!.clearSearch),
+              label: Text(l10n.clearSearch),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.cyan[900],
                 foregroundColor: Colors.white,

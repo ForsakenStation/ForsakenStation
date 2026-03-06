@@ -171,18 +171,18 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.deleteEmulator),
         content: Text(
-          'Are you sure you want to delete the emulator configuration for $system?',
+          AppLocalizations.of(context)!.confirmDeleteEmulator(system),
         ),
         actions: [
           DialogButtonBar(
             buttons: [
               DialogButton(
-                label: 'Cancel',
+                label: AppLocalizations.of(context)!.cancel,
                 onPressed: () => Navigator.pop(context),
                 gamepadButton: GamepadButton.b,
               ),
               DialogButton(
-                label: 'Delete',
+                label: AppLocalizations.of(context)!.delete,
                 onPressed: () async {
                   Navigator.pop(context);
                   try {
@@ -224,9 +224,9 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
       return command.length > 80 ? '${command.substring(0, 80)}...' : command;
     } else if (command is List) {
       final count = command.length;
-      return '$count command${count == 1 ? '' : 's'} configured';
+      return AppLocalizations.of(context)!.commandsConfigured(count);
     }
-    return 'No command';
+    return AppLocalizations.of(context)!.noCommand;
   }
 
   @override
@@ -242,13 +242,13 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             // Reload button
             IconButton(
               icon: const Icon(Icons.refresh),
-              tooltip: 'Reload Configuration (R)',
+              tooltip: AppLocalizations.of(context)!.reloadConfigTooltip,
               onPressed: _isLoading ? null : _loadEmulators,
             ),
             // Info button showing config source
             IconButton(
               icon: const Icon(Icons.info_outline),
-              tooltip: 'Configuration Info',
+              tooltip: AppLocalizations.of(context)!.configurationInfo,
               onPressed: () {
                 showDialog(
                   context: context,
@@ -261,25 +261,37 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Config location:',
+                          AppLocalizations.of(context)!.configLocation,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(_configService.configPath),
                         const SizedBox(height: 16),
                         Text(
-                          'Has local overrides: ${_configService.hasLocalOverrides ? 'Yes' : 'No'}',
+                          _configService.hasLocalOverrides
+                              ? AppLocalizations.of(
+                                  context,
+                                )!.hasLocalOverridesYes
+                              : AppLocalizations.of(
+                                  context,
+                                )!.hasLocalOverridesNo,
                         ),
                         if (_configService.hasLocalOverrides) ...[
                           const SizedBox(height: 8),
-                          const Text(
-                            'Your changes are saved to device storage.',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          Text(
+                            AppLocalizations.of(context)!.changesSavedToDevice,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
                           ),
                         ] else ...[
                           const SizedBox(height: 8),
-                          const Text(
-                            'Using bundled config. Edit to create local overrides.',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          Text(
+                            AppLocalizations.of(context)!.usingBundledConfig,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
                           ),
                         ],
                       ],
@@ -288,7 +300,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                       DialogButtonBar(
                         buttons: [
                           DialogButton(
-                            label: 'OK',
+                            label: AppLocalizations.of(context)!.ok,
                             onPressed: () => Navigator.pop(context),
                             primary: true,
                             gamepadButton: GamepadButton.b,
@@ -318,14 +330,17 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                             color: Colors.grey,
                           ),
                           const SizedBox(height: 16),
-                          const Text(
-                            'No emulators configured',
-                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                          Text(
+                            AppLocalizations.of(context)!.noEmulatorsConfigured,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey,
+                            ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Add your first emulator to get started',
-                            style: TextStyle(color: Colors.grey),
+                          Text(
+                            AppLocalizations.of(context)!.addFirstEmulator,
+                            style: const TextStyle(color: Colors.grey),
                           ),
                           const SizedBox(height: 24),
                           ElevatedButton.icon(
@@ -407,7 +422,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                                 IconButton(
                                   icon: const Icon(Icons.edit),
                                   onPressed: () => _editEmulator(emulator),
-                                  tooltip: 'Edit',
+                                  tooltip: AppLocalizations.of(context)!.edit,
                                 ),
                                 IconButton(
                                   icon: Icon(
@@ -415,7 +430,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                                     color: Colors.red[300],
                                   ),
                                   onPressed: () => _deleteEmulator(system),
-                                  tooltip: 'Delete',
+                                  tooltip: AppLocalizations.of(context)!.delete,
                                 ),
                               ],
                             ),
@@ -426,14 +441,14 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                     ),
             ),
             ControlsBottomBar(
-              actions: const [
+              actions: [
                 BottomBarAction(
-                  label: 'Back',
+                  label: AppLocalizations.of(context)!.back,
                   keyboardKey: 'ESC',
                   gamepadButton: 'B',
                 ),
                 BottomBarAction(
-                  label: 'Refresh',
+                  label: AppLocalizations.of(context)!.refresh,
                   keyboardKey: 'R',
                   gamepadButton: 'Start',
                 ),
@@ -595,7 +610,11 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.emulator == null ? 'Add Emulator' : 'Edit Emulator'),
+      title: Text(
+        widget.emulator == null
+            ? AppLocalizations.of(context)!.addEmulator
+            : AppLocalizations.of(context)!.editEmulator,
+      ),
       content: SizedBox(
         width: 600,
         child: SingleChildScrollView(
@@ -605,9 +624,9 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
             children: [
               TextField(
                 controller: _systemController,
-                decoration: const InputDecoration(
-                  labelText: 'System',
-                  hintText: 'e.g., nes, snes, ps1',
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.system,
+                  hintText: AppLocalizations.of(context)!.systemHint,
                 ),
                 enabled: widget.emulator == null,
               ),
@@ -617,9 +636,12 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Commands',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  Text(
+                    AppLocalizations.of(context)!.commands,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   TextButton.icon(
                     onPressed: _addCommand,
@@ -644,9 +666,12 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
                           child: TextField(
                             controller: controller,
                             decoration: InputDecoration(
-                              labelText: 'Command ${index + 1}',
-                              hintText:
-                                  'e.g., ../retroarch.AppImage -f -L core.so',
+                              labelText: AppLocalizations.of(
+                                context,
+                              )!.commandNumber(index + 1),
+                              hintText: AppLocalizations.of(
+                                context,
+                              )!.commandHint,
                               isDense: true,
                             ),
                             maxLines: 2,
@@ -657,7 +682,7 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () => _removeCommand(index),
-                            tooltip: 'Remove',
+                            tooltip: AppLocalizations.of(context)!.remove,
                           ),
                         ],
                       ],
@@ -671,9 +696,12 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
               const SizedBox(height: 16),
 
               // Options
-              const Text(
-                'Options',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Text(
+                AppLocalizations.of(context)!.options,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
 

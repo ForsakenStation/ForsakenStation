@@ -129,7 +129,7 @@ class _LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
 
   String _getLocaleDisplayName(Locale? locale) {
     if (locale == null) {
-      return 'System default';
+      return AppLocalizations.of(context)!.systemDefault;
     }
     return LocaleService.getLocaleName(locale.languageCode);
   }
@@ -236,14 +236,14 @@ class _LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
               ),
             ),
             ControlsBottomBar(
-              actions: const [
+              actions: [
                 BottomBarAction(
-                  label: 'Back',
+                  label: AppLocalizations.of(context)!.back,
                   keyboardKey: 'ESC',
                   gamepadButton: 'B',
                 ),
                 BottomBarAction(
-                  label: 'Select',
+                  label: AppLocalizations.of(context)!.select,
                   keyboardKey: 'Enter',
                   gamepadButton: 'A',
                 ),

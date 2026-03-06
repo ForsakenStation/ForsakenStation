@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'fullscreen_viewer_controller.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/gamepad_service.dart';
 
 class FullScreenViewerControls extends StatelessWidget {
@@ -23,16 +24,17 @@ class FullScreenViewerControls extends StatelessWidget {
     if (!controller.showControls) return const SizedBox.shrink();
 
     final hasMultiple = controller.items.length > 1;
+    final l10n = AppLocalizations.of(context)!;
 
     return Stack(
       children: [
-        _buildTopBar(context),
-        if (hasMultiple) ...[_buildNavigationArrows(), _buildBottomHints()],
+        _buildTopBar(context, l10n),
+        if (hasMultiple) ...[_buildNavigationArrows(), _buildBottomHints(l10n)],
       ],
     );
   }
 
-  Widget _buildTopBar(BuildContext context) {
+  Widget _buildTopBar(BuildContext context, AppLocalizations l10n) {
     return Positioned(
       top: 0,
       left: 0,
@@ -52,10 +54,10 @@ class FullScreenViewerControls extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.close, color: Colors.white),
                 onPressed: onBack,
-                tooltip: 'Close',
+                tooltip: l10n.close,
               ),
               const SizedBox(width: 8),
-              _buildCloseHint(),
+              _buildCloseHint(l10n),
               const SizedBox(width: 16),
               if (controller.items.isNotEmpty) _buildTitleSection(),
             ],
@@ -65,7 +67,7 @@ class FullScreenViewerControls extends StatelessWidget {
     );
   }
 
-  Widget _buildCloseHint() {
+  Widget _buildCloseHint(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -82,9 +84,9 @@ class FullScreenViewerControls extends StatelessWidget {
             _buildGamepadHint('Ⓑ'),
           ],
           const SizedBox(width: 8),
-          const Text(
-            'Close',
-            style: TextStyle(color: Colors.white, fontSize: 12),
+          Text(
+            l10n.close,
+            style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         ],
       ),
@@ -188,7 +190,7 @@ class FullScreenViewerControls extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomHints() {
+  Widget _buildBottomHints(AppLocalizations l10n) {
     return Positioned(
       bottom: 0,
       left: 0,
@@ -207,14 +209,14 @@ class FullScreenViewerControls extends StatelessWidget {
           children: [
             _buildHintButton(
               Icons.arrow_back,
-              'Previous',
+              l10n.previous,
               controller.currentIndex > 0,
               onPrevious,
             ),
             const SizedBox(width: 32),
             _buildHintButton(
               Icons.arrow_forward,
-              'Next',
+              l10n.next,
               controller.currentIndex < controller.items.length - 1,
               onNext,
             ),

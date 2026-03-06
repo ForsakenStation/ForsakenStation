@@ -115,7 +115,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get romNotFound => 'الروم غير موجود';
 
   @override
-  String get biosRequired => 'BIOS مطلوب';
+  String get biosRequired => 'مطلوب';
 
   @override
   String get systemCheck => 'فحص النظام';
@@ -488,7 +488,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get removeFromFavorites => 'إزالة من المفضلة';
 
   @override
-  String get biosMissing => 'BIOS مفقود';
+  String get biosMissing => 'مفقود';
 
   @override
   String get biosPresent => 'BIOS موجود';
@@ -574,7 +574,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emulatorError => 'خطأ في المحاكي';
 
   @override
-  String get gamepadConnected => 'عصا التحكم متصلة';
+  String get gamepadConnected => 'وحدة التحكم متصلة';
 
   @override
   String get gamepadDisconnected => 'عصا التحكم غير متصلة';
@@ -1589,4 +1589,832 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get deletedToSaveSpace =>
       'إذا لم يكن كذلك، سيتم حذفها لاحقاً لتوفير المساحة.';
+
+  @override
+  String get view => 'عرض';
+
+  @override
+  String get media => 'وسائط';
+
+  @override
+  String get navigate => 'تنقل';
+
+  @override
+  String get info => 'معلومات';
+
+  @override
+  String get toggleFilter => 'تبديل الفلتر';
+
+  @override
+  String get changeTheme => 'تغيير السمة';
+
+  @override
+  String get keyboard => 'لوحة المفاتيح';
+
+  @override
+  String get gamepad => 'عصا التحكم';
+
+  @override
+  String get hideKeyboard => 'إخفاء لوحة المفاتيح';
+
+  @override
+  String get gameManual => 'دليل اللعبة';
+
+  @override
+  String get pdfDocument => 'مستند PDF';
+
+  @override
+  String get manual => 'الدليل';
+
+  @override
+  String get video => 'فيديو';
+
+  @override
+  String get zoomOut => 'تصغير';
+
+  @override
+  String get zoomIn => 'تكبير';
+
+  @override
+  String pageCounter(String current, String total) {
+    return 'صفحة $current / $total';
+  }
+
+  @override
+  String get zoom => 'تكبير/تصغير';
+
+  @override
+  String get firstLast => 'الأول/الأخير';
+
+  @override
+  String get scroll => 'تمرير';
+
+  @override
+  String get loadingVideo => 'جارٍ تحميل الفيديو...';
+
+  @override
+  String get playPause => 'تشغيل/إيقاف';
+
+  @override
+  String get useArrowKeysToNavigate => 'استخدم مفاتيح الأسهم أو اسحب للتنقل';
+
+  @override
+  String get searchRomsHint => 'البحث عن رومات...';
+
+  @override
+  String get cancelSearch => 'إلغاء البحث';
+
+  @override
+  String get virtualKeyboard => 'لوحة مفاتيح افتراضية';
+
+  @override
+  String get noRomsAvailable => 'لا توجد رومات متاحة';
+
+  @override
+  String get noRomsForPlatformMessage =>
+      'لم يتم العثور على ملفات روم لهذه المنصة. يجب وضع ملفات الروم كملفات .txt تحتوي على روابط التنزيل في مجلد المنصة.';
+
+  @override
+  String get noMatchingRoms => 'لا توجد رومات مطابقة';
+
+  @override
+  String get tryDifferentSearch => 'جرب مصطلح بحث مختلف';
+
+  @override
+  String get saveToPermanentStorage => 'حفظ في التخزين الدائم';
+
+  @override
+  String get temporary => 'مؤقت';
+
+  @override
+  String get permanent => 'دائم';
+
+  @override
+  String get tempPathLabel => 'مؤقت';
+
+  @override
+  String get foreverPathLabel => 'دائم';
+
+  @override
+  String get storageOverview => 'نظرة عامة على التخزين';
+
+  @override
+  String get clearTemporaryStorage => 'مسح التخزين المؤقت';
+
+  @override
+  String filesCount(String count) {
+    return '$count ملفات';
+  }
+
+  @override
+  String pathDisplay(String label, String path) {
+    return 'مسار $label: $path';
+  }
+
+  @override
+  String get unknown => 'غير معروف';
+
+  @override
+  String get tagVerifiedGoodDump => 'نسخة موثقة وصحيحة - تعمل بشكل مؤكد';
+
+  @override
+  String get tagBadDump => 'نسخة سيئة - قد لا تعمل بشكل صحيح';
+
+  @override
+  String get tagAlternateVersion => 'إصدار بديل';
+
+  @override
+  String get tagOverdump => 'نسخة زائدة - تحتوي على بيانات إضافية';
+
+  @override
+  String get tagModifiedHacked => 'روم معدل/مخترق';
+
+  @override
+  String get tagFanTranslation => 'ترجمة معجبين';
+
+  @override
+  String get tagPirateBootleg => 'إصدار مقرصن/مزيف';
+
+  @override
+  String get tagFixedVersion => 'إصدار مصحح';
+
+  @override
+  String get tagCheatTrainer => 'يتضمن مدرب غش';
+
+  @override
+  String tagVersion(String text) {
+    return 'الإصدار: $text';
+  }
+
+  @override
+  String tagSpecialRelease(String text) {
+    return 'إصدار خاص: $text';
+  }
+
+  @override
+  String tagMediaInfo(String text) {
+    return 'معلومات الوسائط: $text';
+  }
+
+  @override
+  String noEmulatorConfigured(
+    String displayName,
+    String platform,
+    String configPath,
+  ) {
+    return 'لم يتم إعداد محاكي لـ $displayName.\n\nالرجاء إضافة إعداد لـ \"$platform\" في:\n$configPath';
+  }
+
+  @override
+  String get noEmulatorCommandAvailable => 'لا يوجد أمر محاكي متاح';
+
+  @override
+  String platformNotSupportedWeb(String platform, String supportedPlatforms) {
+    return 'المنصة \"$platform\" غير مدعومة بعد في متصفح الويب.\n\nالمنصات المدعومة: $supportedPlatforms';
+  }
+
+  @override
+  String failedToLaunchWebEmulator(String error) {
+    return 'فشل في تشغيل محاكي الويب: $error';
+  }
+
+  @override
+  String failedToLaunchRom(String error) {
+    return 'فشل في تشغيل ROM.\n\nتحقق من:\n• أن المحاكي مثبت بشكل صحيح\n• أن ملف ROM صالح\n• أن الإعدادات صحيحة\n\nالخطأ: $error';
+  }
+
+  @override
+  String errorLaunchingRom(String error) {
+    return 'خطأ في تشغيل ROM: $error';
+  }
+
+  @override
+  String noInfoAvailable(String platformName) {
+    return 'لا تتوفر معلومات عن $platformName';
+  }
+
+  @override
+  String get platformInfoTooltip => 'معلومات المنصة (I)';
+
+  @override
+  String get navigationHint => 'استخدم مفاتيح الأسهم أو اسحب للتنقل';
+
+  @override
+  String get noGamesFound => 'لم يتم العثور على ألعاب';
+
+  @override
+  String get noGamesFoundForSearch => 'لم يتم العثور على ألعاب للبحث';
+
+  @override
+  String get tryDifferentSearchOrClear => 'جرّب مصطلح بحث مختلف أو امسح الفلتر';
+
+  @override
+  String get checkStorageOrDownload =>
+      'تحقق من إعدادات التخزين أو حمّل بعض الرومات';
+
+  @override
+  String get searchGamesHint => 'البحث عن ألعاب...';
+
+  @override
+  String get settingsHeaderTitle => 'تكوين محاكي Forsaken';
+
+  @override
+  String get settingsHeaderSubtitle =>
+      'تكوين المحاكيات والمسارات وتنزيل المحتوى';
+
+  @override
+  String get emulatorManagementDesc => 'إضافة وتحرير وتكوين أوامر المحاكيات';
+
+  @override
+  String get systemPaths => 'مسارات النظام';
+
+  @override
+  String get systemPathsDesc => 'تكوين مسارات ROMs والوسائط والمحاكيات';
+
+  @override
+  String get romDatabaseDesc => 'تنزيل وإدارة قوائم ROMs من GitHub';
+
+  @override
+  String get romStorageDesc =>
+      'إدارة ROMs المحملة والتخزين وتنظيف الملفات المؤقتة';
+
+  @override
+  String get downloadManagerDesc =>
+      'تنزيل المحاكيات وقوائم ROMs وبيانات الألعاب';
+
+  @override
+  String get systemRequirementsDesc => 'التحقق من الأدوات والتبعيات المطلوبة';
+
+  @override
+  String get gamepadTestDebug => 'اختبار وتصحيح وحدة التحكم';
+
+  @override
+  String get gamepadTestDebugDesc =>
+      'اختبار أزرار وحدة التحكم والمحاور وحل المشكلات';
+
+  @override
+  String get biosFirmwareHelpDesc =>
+      'التحقق من ملفات BIOS ومتطلبات البرنامج الثابت';
+
+  @override
+  String get webSettingsDesc => 'وكيل CORS وتكوين منصة الويب';
+
+  @override
+  String get setupWizardDesc => 'إعادة تشغيل معالج الإعداد الأولي';
+
+  @override
+  String get languageDesc => 'اختيار لغة التطبيق';
+
+  @override
+  String get aboutDebug => 'حول والتصحيح';
+
+  @override
+  String get aboutDebugDesc => 'معلومات التطبيق وإعدادات التصحيح';
+
+  @override
+  String get legalDisclaimer => 'إخلاء المسؤولية القانونية';
+
+  @override
+  String get romDatabaseCredits =>
+      'قوائم ROMs مصدرها الأصلي مستودع AndroidRoms بواسطة Arley4d:';
+
+  @override
+  String get romDatabaseThanks =>
+      'شكر خاص لمشروع AndroidRoms للحفاظ على قواعد بيانات شاملة للـ ROMs لأغراض الحفظ.';
+
+  @override
+  String get biosFilesSection => 'ملفات BIOS';
+
+  @override
+  String get biosFilesCredits =>
+      'ملفات BIOS مصدرها مستودع retroarch_system بواسطة Abdess:';
+
+  @override
+  String get biosFilesThanks =>
+      'يحتوي هذا المستودع على ملفات النظام و BIOS المطلوبة من منصات المحاكاة المختلفة. شكر خاص للقائمين على الصيانة لحفظ هذه الملفات الأساسية.';
+
+  @override
+  String get amigaCopyProtection =>
+      'دعم حماية النسخ لـ Amiga مقدم من مكتبة capsimg:';
+
+  @override
+  String get amigaCopyProtectionThanks =>
+      'شكر خاص لـ rsn8887 لصيانة مكتبة capsimg التي تتيح دعم صور الأقراص IPF (المحمية ضد النسخ) لمحاكاة Amiga.';
+
+  @override
+  String get additionalBiosFiles =>
+      'ملفات BIOS إضافية مقدمة من مشروع RetroPieBios:';
+
+  @override
+  String get additionalBiosThanks =>
+      'شكراً لـ PIBSAS/RetroPieBios لتوفير متغيرات BIOS إضافية وملفات إقليمية تعزز التوافق عبر الأنظمة والمناطق المختلفة.';
+
+  @override
+  String get enabled => 'مفعّل';
+
+  @override
+  String get disabled => 'معطّل';
+
+  @override
+  String get disclaimerRequired => 'يجب قبول إخلاء المسؤولية للمتابعة.';
+
+  @override
+  String get emulatorsPathRequired => 'مسار دليل المحاكيات مطلوب.';
+
+  @override
+  String get emulatorConfigPathRequired => 'مسار ملف تكوين المحاكي مطلوب.';
+
+  @override
+  String get mediaPathRequired => 'مسار الوسائط مطلوب.';
+
+  @override
+  String get tempRomPathRequired => 'مسار تخزين ROM المؤقت مطلوب.';
+
+  @override
+  String get permanentRomPathRequired => 'مسار تخزين ROM الدائم مطلوب.';
+
+  @override
+  String wizardStepCounter(int current, int total) {
+    return 'الخطوة $current / $total';
+  }
+
+  @override
+  String get emulatorConfiguration => 'تكوين المحاكي';
+
+  @override
+  String get emulatorConfigStepDesc =>
+      'حدد المسارات التي تم تثبيت المحاكيات فيها. يمكنك تغييرها لاحقاً في الإعدادات > مسارات النظام.';
+
+  @override
+  String get emulatorsDirectory => 'دليل المحاكيات';
+
+  @override
+  String get pathToEmulatorBinaries => 'المسار إلى ملفات المحاكي التنفيذية';
+
+  @override
+  String get emulatorConfigFile => 'ملف تكوين المحاكي';
+
+  @override
+  String get pathToEmulatorConfig => 'المسار إلى JSON تكوين المحاكي';
+
+  @override
+  String get storagePaths => 'مسارات التخزين';
+
+  @override
+  String get storagePathsStepDesc =>
+      'حدد أين يتم تخزين أصول الوسائط وملفات ROM. يمكنك تغييرها لاحقاً في الإعدادات > مسارات النظام.';
+
+  @override
+  String get wizardMediaPathHint => 'أغلفة الألعاب ولقطات الشاشة والفيديوهات';
+
+  @override
+  String get temporaryRomStorage => 'تخزين ROM المؤقت';
+
+  @override
+  String get temporaryRomStorageHint => 'ROMs محملة لجلسات لعب فردية';
+
+  @override
+  String get permanentRomStorage => 'تخزين ROM الدائم';
+
+  @override
+  String get permanentRomStorageHint => 'ROMs محفوظة للعب بدون اتصال';
+
+  @override
+  String get allSet => 'كل شيء جاهز!';
+
+  @override
+  String get wizardEmulatorReady => 'محاكي Forsaken جاهز للاستخدام.';
+
+  @override
+  String get changeSettingsLater =>
+      'يمكنك تغيير أي من هذه الإعدادات لاحقاً من شاشة الإعدادات.';
+
+  @override
+  String get configurationSummary => 'ملخص التكوين';
+
+  @override
+  String get summaryEmulators => 'المحاكيات';
+
+  @override
+  String get summaryMedia => 'الوسائط';
+
+  @override
+  String get summaryTempRoms => 'ROMs مؤقتة';
+
+  @override
+  String get summarySavedRoms => 'ROMs محفوظة';
+
+  @override
+  String get defaultValue => '(افتراضي)';
+
+  @override
+  String pdfPageIndicator(int current, int total) {
+    return 'الصفحة $current من $total';
+  }
+
+  @override
+  String get pdfZoomOut => 'تصغير (-)';
+
+  @override
+  String get pdfZoomIn => 'تكبير (+)';
+
+  @override
+  String get pdfResetZoom => 'إعادة تعيين التكبير (0)';
+
+  @override
+  String get pdfFirstPage => 'الصفحة الأولى (Home)';
+
+  @override
+  String get pdfPreviousPage => 'الصفحة السابقة (←/PgUp)';
+
+  @override
+  String get pdfNextPage => 'الصفحة التالية (→/PgDn)';
+
+  @override
+  String get pdfLastPage => 'الصفحة الأخيرة (End)';
+
+  @override
+  String get pdfFileNotFound => 'ملف PDF غير موجود';
+
+  @override
+  String confirmDeleteEmulator(String system) {
+    return 'هل أنت متأكد من حذف تكوين المحاكي لـ $system؟';
+  }
+
+  @override
+  String commandsConfigured(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count أوامر مكوّنة',
+      one: 'أمر واحد مكوّن',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noCommand => 'لا يوجد أمر';
+
+  @override
+  String get reloadConfigTooltip => 'إعادة تحميل التكوين (R)';
+
+  @override
+  String get configurationInfo => 'معلومات التكوين';
+
+  @override
+  String get configLocation => 'موقع التكوين:';
+
+  @override
+  String get hasLocalOverridesYes => 'تجاوزات محلية: نعم';
+
+  @override
+  String get hasLocalOverridesNo => 'تجاوزات محلية: لا';
+
+  @override
+  String get changesSavedToDevice => 'يتم حفظ تغييراتك في تخزين الجهاز.';
+
+  @override
+  String get usingBundledConfig =>
+      'استخدام التكوين المرفق. حرّر لإنشاء تجاوزات محلية.';
+
+  @override
+  String get noEmulatorsConfigured => 'لا توجد محاكيات مكوّنة';
+
+  @override
+  String get addFirstEmulator => 'أضف أول محاكي للبدء';
+
+  @override
+  String get edit => 'تحرير';
+
+  @override
+  String get editEmulator => 'تحرير المحاكي';
+
+  @override
+  String get system => 'النظام';
+
+  @override
+  String get systemHint => 'e.g., nes, snes, ps1';
+
+  @override
+  String get commands => 'الأوامر';
+
+  @override
+  String commandNumber(int number) {
+    return 'الأمر $number';
+  }
+
+  @override
+  String get commandHint => 'e.g., ../retroarch.AppImage -f -L core.so';
+
+  @override
+  String get remove => 'إزالة';
+
+  @override
+  String get options => 'الخيارات';
+
+  @override
+  String get biosDownloading => 'جارٍ التنزيل...';
+
+  @override
+  String downloadRequiredAndExtras(int requiredCount, int optionalCount) {
+    return 'تنزيل $requiredCount مطلوبة + $optionalCount إضافية';
+  }
+
+  @override
+  String downloadRequiredFiles(int requiredCount) {
+    return 'تنزيل $requiredCount ملفات مطلوبة';
+  }
+
+  @override
+  String downloadOptionalExtras(int optionalCount) {
+    return 'تنزيل $optionalCount إضافية اختيارية';
+  }
+
+  @override
+  String get downloadFiles => 'تنزيل الملفات';
+
+  @override
+  String batchDownloadConfirmation(int totalFiles, int platformCount) {
+    return 'سيتم تنزيل $totalFiles ملف BIOS لـ $platformCount منصات:';
+  }
+
+  @override
+  String get downloadSourceNote =>
+      'سيتم تنزيل الملفات من مستودع retroarch_system.';
+
+  @override
+  String get biosOptional => 'اختياري';
+
+  @override
+  String biosFilesFound(int foundCount, int totalCount) {
+    return '$foundCount/$totalCount ملفات موجودة';
+  }
+
+  @override
+  String optionalExtrasAvailable(int count) {
+    return '+$count إضافية اختيارية متاحة';
+  }
+
+  @override
+  String get biosLocations => 'المواقع:';
+
+  @override
+  String get availableForDownload => 'متاح للتنزيل من مصادر متعددة';
+
+  @override
+  String get summary => 'ملخص';
+
+  @override
+  String get biosComplete => 'مكتمل';
+
+  @override
+  String get biosPartial => 'جزئي';
+
+  @override
+  String get biosFiles => 'الملفات';
+
+  @override
+  String get biosDownloadable => 'قابل للتنزيل';
+
+  @override
+  String get refreshF5Tooltip => 'تحديث (F5)';
+
+  @override
+  String get allBiosFilesFound => 'تم العثور على جميع ملفات BIOS!';
+
+  @override
+  String get noBiosRequirements => 'لم يتم العثور على متطلبات BIOS';
+
+  @override
+  String platformCount(int count) {
+    return '$count منصات';
+  }
+
+  @override
+  String failedToLoadBiosStatus(String error) {
+    return 'فشل تحميل حالة BIOS: $error';
+  }
+
+  @override
+  String get refreshStatus => 'تحديث الحالة';
+
+  @override
+  String platformsCompleteCount(int complete, int total) {
+    return '$complete/$total منصات مكتملة';
+  }
+
+  @override
+  String get platformStatusHeader => 'حالة المنصات';
+
+  @override
+  String filesVerifiedStatus(
+    int presentFiles,
+    int totalFiles,
+    int verifiedFiles,
+  ) {
+    return '$presentFiles/$totalFiles ملفات ($verifiedFiles تم التحقق)';
+  }
+
+  @override
+  String get biosCollectionOverview => 'نظرة عامة على مجموعة BIOS';
+
+  @override
+  String get biosVerified => 'تم التحقق';
+
+  @override
+  String downloadComingSoon(String platformName) {
+    return 'وظيفة التنزيل لـ $platformName - قريباً!';
+  }
+
+  @override
+  String get noGamepadConnected => 'لا توجد وحدة تحكم متصلة';
+
+  @override
+  String get connectGamepadPrompt => 'قم بتوصيل وحدة تحكم واضغط أي زر';
+
+  @override
+  String get pressButtonToTest => 'اضغط أي زر للاختبار (الإجراءات معطلة)';
+
+  @override
+  String get buttonFunctionTests => 'اختبارات وظائف الأزرار';
+
+  @override
+  String get gamepadASelect => 'A (تحديد)';
+
+  @override
+  String get gamepadBBack => 'B (رجوع)';
+
+  @override
+  String get gamepadXSearch => 'X (بحث)';
+
+  @override
+  String get gamepadYHelp => 'Y (مساعدة)';
+
+  @override
+  String get gamepadLBPageDown => 'LB (صفحة لأسفل)';
+
+  @override
+  String get gamepadRBPageUp => 'RB (صفحة لأعلى)';
+
+  @override
+  String get gamepadStartMenu => 'Start (القائمة)';
+
+  @override
+  String get gamepadSelectSettings => 'Select (الإعدادات)';
+
+  @override
+  String get gamepadLSClick => 'LS نقر';
+
+  @override
+  String get gamepadRSView => 'RS نقر (عرض)';
+
+  @override
+  String get gamepadLTTrigger => 'LT (زناد)';
+
+  @override
+  String get gamepadRTTrigger => 'RT (زناد)';
+
+  @override
+  String get rawButtonStates => 'حالات الأزرار الخام';
+
+  @override
+  String get noButtonsPressed => 'لا توجد أزرار مضغوطة';
+
+  @override
+  String get axisValues => 'قيم المحاور';
+
+  @override
+  String get noAxisMovement => 'لا توجد حركة محاور';
+
+  @override
+  String get dpadLeftStick => 'D-Pad + العصا اليسرى';
+
+  @override
+  String get webSettingsDescription => 'تكوين الإعدادات الخاصة بمنصة الويب';
+
+  @override
+  String get corsProxyWhyNeeded => 'لماذا يُحتاج وكيل CORS؟';
+
+  @override
+  String get corsProxyExplanation =>
+      'تحظر المتصفحات تنزيل ROM من الخوادم الخارجية بسبب قيود أمان CORS. يقوم وكيل CORS بإعادة توجيه الطلب من خادم تتحكم فيه، مضيفاً الرؤوس اللازمة.\n\nيتضمن Forsaken عامل Cloudflare يمكنك نشره مجاناً (100 ألف طلب/يوم). راجع مجلد tools/cors-proxy-worker/ لتعليمات الإعداد.';
+
+  @override
+  String get corsProxyUrl => 'عنوان URL لوكيل CORS';
+
+  @override
+  String get corsProxyHelperText =>
+      'اتركه فارغاً لتعطيل وكيل CORS (ستفشل ROM من الخوادم بدون CORS)';
+
+  @override
+  String get testingProxy => 'جارٍ اختبار الوكيل...';
+
+  @override
+  String get testProxyConnection => 'اختبار اتصال الوكيل';
+
+  @override
+  String get noProxyUrlConfigured => 'لم يتم تكوين عنوان URL للوكيل';
+
+  @override
+  String proxyWorking(int statusCode) {
+    return 'الوكيل يعمل (HTTP $statusCode)';
+  }
+
+  @override
+  String proxyReturnedHttp(int statusCode) {
+    return 'الوكيل أرجع HTTP $statusCode';
+  }
+
+  @override
+  String get connectionTimedOut => 'انتهت مهلة الاتصال';
+
+  @override
+  String get corsProxySettingsSaved =>
+      'تم حفظ إعدادات وكيل CORS. يسري مفعولها فوراً لعمليات تشغيل ROM الجديدة.';
+
+  @override
+  String get quickDeploy => 'نشر سريع';
+
+  @override
+  String get corsProxyDeploySteps =>
+      '1. سجّل في dash.cloudflare.com (مجاني)\n2. ثبّت Wrangler: npm install -g wrangler\n3. تسجيل الدخول: wrangler login\n4. cd tools/cors-proxy-worker\n5. npx wrangler deploy\n6. الصق عنوان URL للعامل أعلاه';
+
+  @override
+  String get permanentStorage => 'التخزين الدائم';
+
+  @override
+  String get temporaryStorage => 'التخزين المؤقت';
+
+  @override
+  String get noDownloadedRoms => 'لا توجد ألعاب ROM محمّلة';
+
+  @override
+  String get biosErrorNetworkMessage => 'فشل الاتصال بالشبكة';
+
+  @override
+  String get biosErrorNetworkSuggestions =>
+      'تحقق من اتصالك بالإنترنت\nحاول مرة أخرى بعد لحظات\nتحقق من إعدادات DNS\nجرّب استخدام VPN إذا كان الوصول مقيّداً';
+
+  @override
+  String get biosErrorFileNotFoundMessage => 'الملف غير موجود على الخادم';
+
+  @override
+  String get biosErrorFileNotFoundSuggestions =>
+      'ربما تم نقل ملف BIOS أو إعادة تسميته\nجرّب التنزيل من مصدر بديل\nتحقق مما إذا كان الملف موجوداً في فرع/مستودع مختلف\nأبلغ عن هذه المشكلة إذا استمرت';
+
+  @override
+  String get biosErrorAccessDeniedMessage => 'تم رفض الوصول من قبل الخادم';
+
+  @override
+  String get biosErrorAccessDeniedSuggestions =>
+      'قد يكون الخادم يحظر التنزيلات\nحاول مرة أخرى لاحقاً - قد يكون الخادم مقيّداً مؤقتاً\nاستخدم VPN إذا كان الوصول مقيّداً حسب المنطقة\nتحقق مما إذا كانت المصادقة مطلوبة';
+
+  @override
+  String get biosErrorRateLimitedMessage => 'تم تجاوز حد الطلبات';
+
+  @override
+  String get biosErrorRateLimitedSuggestions =>
+      'انتظر بضع دقائق قبل المحاولة مرة أخرى\nقلّل عدد التنزيلات المتزامنة\nالخادم يحمي نفسه من الطلبات المفرطة';
+
+  @override
+  String get biosErrorChecksumMessage => 'فشل التحقق من سلامة الملف';
+
+  @override
+  String get biosErrorChecksumSuggestions =>
+      'قد يكون الملف تالفاً أثناء التنزيل\nجرّب التنزيل مرة أخرى\nتحقق مما إذا تم تحديث الملف على الخادم\nتحقق من استقرار اتصالك بالإنترنت';
+
+  @override
+  String get biosErrorSizeMismatchMessage => 'حجم الملف غير متوقع';
+
+  @override
+  String get biosErrorSizeMismatchSuggestions =>
+      'قد يكون الملف بإصدار مختلف عن المتوقع\nقد يكون التنزيل غير مكتمل\nجرّب التنزيل مرة أخرى\nتحقق من المساحة المتاحة على القرص';
+
+  @override
+  String get biosErrorStorageMessage => 'خطأ في التخزين';
+
+  @override
+  String get biosErrorStorageSuggestions =>
+      'قم بتحرير مساحة على القرص\nتحقق من أذونات الملفات\nتأكد من أن مجلد الوجهة قابل للكتابة\nجرّب التنزيل إلى موقع مختلف';
+
+  @override
+  String get biosErrorTimeoutMessage => 'انتهت مهلة التنزيل';
+
+  @override
+  String get biosErrorTimeoutSuggestions =>
+      'قد يكون اتصال الإنترنت بطيئاً\nقد يكون الخادم محملاً بشكل زائد\nحاول مرة أخرى مع اتصال مستقر\nتحقق مما إذا كان جدار الحماية يحظر الاتصال';
+
+  @override
+  String get biosErrorArchiveMessage => 'فشل استخراج الأرشيف';
+
+  @override
+  String get biosErrorArchiveSuggestions =>
+      'قد يكون الأرشيف المُنزّل تالفاً\nجرّب تنزيل الملف مرة أخرى\nتحقق من توفر أداة الاستخراج الصحيحة\nتحقق من أن الملف بتنسيق أرشيف صالح';
+
+  @override
+  String get biosErrorUnknownMessage => 'فشل التنزيل';
+
+  @override
+  String get biosErrorUnknownSuggestions =>
+      'جرّب التنزيل مرة أخرى\nتحقق من اتصالك بالإنترنت\nتحقق من أن الملف لا يزال متاحاً\nتواصل مع الدعم إذا استمرت المشكلة';
 }

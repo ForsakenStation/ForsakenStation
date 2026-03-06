@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pdfrx/pdfrx.dart';
 import 'fullscreen_viewer_controller.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/gamepad_service.dart';
 
 class FullScreenManualContent extends StatefulWidget {
@@ -130,6 +131,7 @@ class _FullScreenManualContentState extends State<FullScreenManualContent> {
   }
 
   Widget _buildPdfTopBar() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -145,18 +147,18 @@ class _FullScreenManualContentState extends State<FullScreenManualContent> {
             IconButton(
               icon: const Icon(Icons.zoom_out, color: Colors.white, size: 22),
               onPressed: () => _pdfController.zoomDown(),
-              tooltip: 'Zoom Out',
+              tooltip: l10n.zoomOut,
             ),
             IconButton(
               icon: const Icon(Icons.zoom_in, color: Colors.white, size: 22),
               onPressed: () => _pdfController.zoomUp(),
-              tooltip: 'Zoom In',
+              tooltip: l10n.zoomIn,
             ),
             const SizedBox(width: 8),
             Container(width: 1, height: 28, color: Colors.white30),
             const SizedBox(width: 12),
             Text(
-              'Page $_currentPage / $_totalPages',
+              l10n.pageCounter(_currentPage.toString(), _totalPages.toString()),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
@@ -186,6 +188,7 @@ class _FullScreenManualContentState extends State<FullScreenManualContent> {
 
   Widget _buildPdfControlsBar() {
     final isGamepad = GamepadService.instance.isGamepadConnected;
+    final l10n = AppLocalizations.of(context)!;
 
     return Center(
       child: Container(
@@ -198,11 +201,11 @@ class _FullScreenManualContentState extends State<FullScreenManualContent> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildActionHint(isGamepad ? 'L2/R2' : '+/-', 'Zoom'),
+            _buildActionHint(isGamepad ? 'L2/R2' : '+/-', l10n.zoom),
             const SizedBox(width: 20),
-            _buildActionHint(isGamepad ? 'L1/R1' : 'Home/End', 'First/Last'),
+            _buildActionHint(isGamepad ? 'L1/R1' : 'Home/End', l10n.firstLast),
             const SizedBox(width: 20),
-            _buildActionHint(isGamepad ? 'D-Pad' : 'Arrows', 'Scroll'),
+            _buildActionHint(isGamepad ? 'D-Pad' : 'Arrows', l10n.scroll),
           ],
         ),
       ),

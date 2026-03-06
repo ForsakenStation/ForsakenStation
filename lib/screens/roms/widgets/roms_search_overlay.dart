@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../widgets/common/virtual_keyboard.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class RomsSearchOverlay extends StatelessWidget {
   final bool isSearchMode;
@@ -54,9 +55,9 @@ class RomsSearchOverlay extends StatelessWidget {
                     focusNode: searchFocusNode,
                     autofocus: true,
                     style: const TextStyle(color: Colors.white, fontSize: 18),
-                    decoration: const InputDecoration(
-                      hintText: 'Search games...',
-                      hintStyle: TextStyle(color: Colors.grey),
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.searchGamesHint,
+                      hintStyle: const TextStyle(color: Colors.grey),
                       border: InputBorder.none,
                     ),
                     onChanged: onSearchChanged,
@@ -68,12 +69,12 @@ class RomsSearchOverlay extends StatelessWidget {
                     color: Colors.grey,
                   ),
                   onPressed: onToggleVirtualKeyboard,
-                  tooltip: 'Virtual Keyboard',
+                  tooltip: AppLocalizations.of(context)!.virtualKeyboard,
                 ),
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.grey),
                   onPressed: onCancelSearch,
-                  tooltip: 'Cancel Search',
+                  tooltip: AppLocalizations.of(context)!.cancelSearch,
                 ),
               ],
             ),

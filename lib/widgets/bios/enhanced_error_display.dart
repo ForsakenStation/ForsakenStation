@@ -226,6 +226,60 @@ class BiosDownloadError {
         return Colors.grey;
     }
   }
+
+  /// Get localized error message based on error type
+  String getLocalizedMessage(AppLocalizations l10n) {
+    switch (type) {
+      case BiosErrorType.network:
+        return l10n.biosErrorNetworkMessage;
+      case BiosErrorType.fileNotFound:
+        return l10n.biosErrorFileNotFoundMessage;
+      case BiosErrorType.accessDenied:
+        return l10n.biosErrorAccessDeniedMessage;
+      case BiosErrorType.rateLimited:
+        return l10n.biosErrorRateLimitedMessage;
+      case BiosErrorType.checksumMismatch:
+        return l10n.biosErrorChecksumMessage;
+      case BiosErrorType.sizeMismatch:
+        return l10n.biosErrorSizeMismatchMessage;
+      case BiosErrorType.storage:
+        return l10n.biosErrorStorageMessage;
+      case BiosErrorType.timeout:
+        return l10n.biosErrorTimeoutMessage;
+      case BiosErrorType.archiveError:
+        return l10n.biosErrorArchiveMessage;
+      case BiosErrorType.unknown:
+        return l10n.biosErrorUnknownMessage;
+    }
+  }
+
+  /// Get localized recovery suggestions based on error type
+  List<String> getLocalizedSuggestions(AppLocalizations l10n) {
+    final String suggestions;
+    switch (type) {
+      case BiosErrorType.network:
+        suggestions = l10n.biosErrorNetworkSuggestions;
+      case BiosErrorType.fileNotFound:
+        suggestions = l10n.biosErrorFileNotFoundSuggestions;
+      case BiosErrorType.accessDenied:
+        suggestions = l10n.biosErrorAccessDeniedSuggestions;
+      case BiosErrorType.rateLimited:
+        suggestions = l10n.biosErrorRateLimitedSuggestions;
+      case BiosErrorType.checksumMismatch:
+        suggestions = l10n.biosErrorChecksumSuggestions;
+      case BiosErrorType.sizeMismatch:
+        suggestions = l10n.biosErrorSizeMismatchSuggestions;
+      case BiosErrorType.storage:
+        suggestions = l10n.biosErrorStorageSuggestions;
+      case BiosErrorType.timeout:
+        suggestions = l10n.biosErrorTimeoutSuggestions;
+      case BiosErrorType.archiveError:
+        suggestions = l10n.biosErrorArchiveSuggestions;
+      case BiosErrorType.unknown:
+        suggestions = l10n.biosErrorUnknownSuggestions;
+    }
+    return suggestions.split('\n');
+  }
 }
 
 enum BiosErrorType {
@@ -256,6 +310,10 @@ class BiosErrorDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final localizedMessage = error.getLocalizedMessage(l10n);
+    final localizedSuggestions = error.getLocalizedSuggestions(l10n);
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -273,7 +331,7 @@ class BiosErrorDisplay extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  error.message,
+                  localizedMessage,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: error.color,
@@ -304,14 +362,14 @@ class BiosErrorDisplay extends StatelessWidget {
           ],
 
           // Recovery suggestions
-          if (error.recoverySuggestions.isNotEmpty) ...[
+          if (localizedSuggestions.isNotEmpty) ...[
             const SizedBox(height: 12),
             Text(
-              AppLocalizations.of(context)!.whatYouCanTry,
+              l10n.whatYouCanTry,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
             ),
             const SizedBox(height: 4),
-            ...error.recoverySuggestions.map(
+            ...localizedSuggestions.map(
               (suggestion) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 child: Row(
@@ -338,7 +396,7 @@ class BiosErrorDisplay extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh, size: 16),
-                label: Text(AppLocalizations.of(context)!.tryAgain),
+                label: Text(l10n.tryAgain),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: error.color,
                   foregroundColor: Colors.white,

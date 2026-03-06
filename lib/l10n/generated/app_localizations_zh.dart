@@ -114,7 +114,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get romNotFound => '未找到ROM';
 
   @override
-  String get biosRequired => '需要BIOS';
+  String get biosRequired => '必需';
 
   @override
   String get systemCheck => '系统检查';
@@ -482,7 +482,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get removeFromFavorites => '从收藏中移除';
 
   @override
-  String get biosMissing => 'BIOS缺失';
+  String get biosMissing => '缺失';
 
   @override
   String get biosPresent => 'BIOS存在';
@@ -1552,4 +1552,813 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deletedToSaveSpace => '否则，稍后将删除以节省空间。';
+
+  @override
+  String get view => '视图';
+
+  @override
+  String get media => '媒体';
+
+  @override
+  String get navigate => '导航';
+
+  @override
+  String get info => '信息';
+
+  @override
+  String get toggleFilter => '切换筛选';
+
+  @override
+  String get changeTheme => '更换主题';
+
+  @override
+  String get keyboard => '键盘';
+
+  @override
+  String get gamepad => '手柄';
+
+  @override
+  String get hideKeyboard => '隐藏键盘';
+
+  @override
+  String get gameManual => '游戏手册';
+
+  @override
+  String get pdfDocument => 'PDF 文档';
+
+  @override
+  String get manual => '手册';
+
+  @override
+  String get video => '视频';
+
+  @override
+  String get zoomOut => '缩小';
+
+  @override
+  String get zoomIn => '放大';
+
+  @override
+  String pageCounter(String current, String total) {
+    return '第 $current / $total 页';
+  }
+
+  @override
+  String get zoom => '缩放';
+
+  @override
+  String get firstLast => '首页/末页';
+
+  @override
+  String get scroll => '滚动';
+
+  @override
+  String get loadingVideo => '正在加载视频...';
+
+  @override
+  String get playPause => '播放/暂停';
+
+  @override
+  String get useArrowKeysToNavigate => '使用方向键或滑动进行导航';
+
+  @override
+  String get searchRomsHint => '搜索 ROM...';
+
+  @override
+  String get cancelSearch => '取消搜索';
+
+  @override
+  String get virtualKeyboard => '虚拟键盘';
+
+  @override
+  String get noRomsAvailable => '没有可用的 ROM';
+
+  @override
+  String get noRomsForPlatformMessage =>
+      '未找到此平台的 ROM 文件。ROM 文件应以包含下载链接的 .txt 文件形式放置在平台目录中。';
+
+  @override
+  String get noMatchingRoms => '没有匹配的 ROM';
+
+  @override
+  String get tryDifferentSearch => '请尝试其他搜索词';
+
+  @override
+  String get saveToPermanentStorage => '保存到永久存储';
+
+  @override
+  String get temporary => '临时';
+
+  @override
+  String get permanent => '永久';
+
+  @override
+  String get tempPathLabel => '临时';
+
+  @override
+  String get foreverPathLabel => '永久';
+
+  @override
+  String get storageOverview => '存储概览';
+
+  @override
+  String get clearTemporaryStorage => '清除临时存储';
+
+  @override
+  String filesCount(String count) {
+    return '$count 个文件';
+  }
+
+  @override
+  String pathDisplay(String label, String path) {
+    return '$label路径：$path';
+  }
+
+  @override
+  String get unknown => '未知';
+
+  @override
+  String get tagVerifiedGoodDump => '已验证的正确转储 - 确认可运行';
+
+  @override
+  String get tagBadDump => '错误转储 - 可能无法正常运行';
+
+  @override
+  String get tagAlternateVersion => '替代版本';
+
+  @override
+  String get tagOverdump => '过度转储 - 包含额外数据';
+
+  @override
+  String get tagModifiedHacked => '修改/破解版 ROM';
+
+  @override
+  String get tagFanTranslation => '粉丝翻译';
+
+  @override
+  String get tagPirateBootleg => '盗版/非官方版本';
+
+  @override
+  String get tagFixedVersion => '修复版本';
+
+  @override
+  String get tagCheatTrainer => '包含作弊训练器';
+
+  @override
+  String tagVersion(String text) {
+    return '版本：$text';
+  }
+
+  @override
+  String tagSpecialRelease(String text) {
+    return '特别发行：$text';
+  }
+
+  @override
+  String tagMediaInfo(String text) {
+    return '媒体信息：$text';
+  }
+
+  @override
+  String noEmulatorConfigured(
+    String displayName,
+    String platform,
+    String configPath,
+  ) {
+    return '未为 $displayName 配置模拟器。\n\n请在以下位置添加「$platform」的配置:\n$configPath';
+  }
+
+  @override
+  String get noEmulatorCommandAvailable => '没有可用的模拟器命令';
+
+  @override
+  String platformNotSupportedWeb(String platform, String supportedPlatforms) {
+    return '平台「$platform」尚不支持在网页浏览器中运行。\n\n支持的平台: $supportedPlatforms';
+  }
+
+  @override
+  String failedToLaunchWebEmulator(String error) {
+    return '启动网页模拟器失败: $error';
+  }
+
+  @override
+  String failedToLaunchRom(String error) {
+    return '启动ROM失败。\n\n请检查:\n• 模拟器已正确安装\n• ROM文件有效\n• 配置正确\n\n错误: $error';
+  }
+
+  @override
+  String errorLaunchingRom(String error) {
+    return '启动ROM时出错: $error';
+  }
+
+  @override
+  String noInfoAvailable(String platformName) {
+    return '$platformName没有可用信息';
+  }
+
+  @override
+  String get platformInfoTooltip => '平台信息 (I)';
+
+  @override
+  String get navigationHint => '使用方向键或滑动进行导航';
+
+  @override
+  String get noGamesFound => '未找到游戏';
+
+  @override
+  String get noGamesFoundForSearch => '搜索未找到游戏';
+
+  @override
+  String get tryDifferentSearchOrClear => '尝试不同的搜索词或清除过滤器';
+
+  @override
+  String get checkStorageOrDownload => '检查存储设置或下载一些 ROM';
+
+  @override
+  String get searchGamesHint => '搜索游戏...';
+
+  @override
+  String get settingsHeaderTitle => 'Forsaken模拟器配置';
+
+  @override
+  String get settingsHeaderSubtitle => '配置模拟器、路径和下载内容';
+
+  @override
+  String get emulatorManagementDesc => '添加、编辑和配置模拟器命令';
+
+  @override
+  String get systemPaths => '系统路径';
+
+  @override
+  String get systemPathsDesc => '配置ROM、媒体和模拟器路径';
+
+  @override
+  String get romDatabaseDesc => '从GitHub下载和管理ROM列表';
+
+  @override
+  String get romStorageDesc => '管理已下载的ROM、存储和临时文件清理';
+
+  @override
+  String get downloadManagerDesc => '下载模拟器、ROM列表和游戏数据';
+
+  @override
+  String get systemRequirementsDesc => '检查所需工具和依赖项';
+
+  @override
+  String get gamepadTestDebug => '手柄测试与调试';
+
+  @override
+  String get gamepadTestDebugDesc => '测试手柄按钮、摇杆轴并排除故障';
+
+  @override
+  String get biosFirmwareHelpDesc => '检查BIOS文件和固件要求';
+
+  @override
+  String get webSettingsDesc => 'CORS代理和Web平台配置';
+
+  @override
+  String get setupWizardDesc => '重新运行初始设置向导';
+
+  @override
+  String get languageDesc => '选择应用语言';
+
+  @override
+  String get aboutDebug => '关于与调试';
+
+  @override
+  String get aboutDebugDesc => '应用信息和调试设置';
+
+  @override
+  String get legalDisclaimer => '法律免责声明';
+
+  @override
+  String get romDatabaseCredits => 'ROM列表最初来源于Arley4d的AndroidRoms仓库：';
+
+  @override
+  String get romDatabaseThanks => '特别感谢AndroidRoms项目为保存目的维护全面的ROM数据库。';
+
+  @override
+  String get biosFilesSection => 'BIOS文件';
+
+  @override
+  String get biosFilesCredits => 'BIOS文件来源于Abdess的retroarch_system仓库：';
+
+  @override
+  String get biosFilesThanks => '此仓库包含各种模拟平台所需的系统文件和BIOS。特别感谢维护者保存这些重要文件。';
+
+  @override
+  String get amigaCopyProtection => 'Amiga复制保护支持由capsimg库提供：';
+
+  @override
+  String get amigaCopyProtectionThanks =>
+      '特别感谢rsn8887维护capsimg库，使Amiga模拟的IPF（复制保护）磁盘映像支持成为可能。';
+
+  @override
+  String get additionalBiosFiles => '额外的BIOS文件由RetroPieBios项目提供：';
+
+  @override
+  String get additionalBiosThanks =>
+      '感谢PIBSAS/RetroPieBios提供额外的BIOS变体和区域文件，增强了不同系统和区域之间的兼容性。';
+
+  @override
+  String get enabled => '已启用';
+
+  @override
+  String get disabled => '已禁用';
+
+  @override
+  String get disclaimerRequired => '您必须接受免责声明才能继续。';
+
+  @override
+  String get emulatorsPathRequired => '模拟器目录路径为必填项。';
+
+  @override
+  String get emulatorConfigPathRequired => '模拟器配置文件路径为必填项。';
+
+  @override
+  String get mediaPathRequired => '媒体路径为必填项。';
+
+  @override
+  String get tempRomPathRequired => '临时ROM存储路径为必填项。';
+
+  @override
+  String get permanentRomPathRequired => '永久ROM存储路径为必填项。';
+
+  @override
+  String wizardStepCounter(int current, int total) {
+    return '步骤 $current / $total';
+  }
+
+  @override
+  String get emulatorConfiguration => '模拟器配置';
+
+  @override
+  String get emulatorConfigStepDesc => '设置模拟器安装路径。您可以稍后在设置 > 系统路径中更改。';
+
+  @override
+  String get emulatorsDirectory => '模拟器目录';
+
+  @override
+  String get pathToEmulatorBinaries => '模拟器二进制文件路径';
+
+  @override
+  String get emulatorConfigFile => '模拟器配置文件';
+
+  @override
+  String get pathToEmulatorConfig => '模拟器配置JSON路径';
+
+  @override
+  String get storagePaths => '存储路径';
+
+  @override
+  String get storagePathsStepDesc => '配置媒体资源和ROM文件的存储位置。您可以稍后在设置 > 系统路径中更改。';
+
+  @override
+  String get wizardMediaPathHint => '封面、截图和视频';
+
+  @override
+  String get temporaryRomStorage => '临时ROM存储';
+
+  @override
+  String get temporaryRomStorageHint => '为单次游戏会话下载的ROM';
+
+  @override
+  String get permanentRomStorage => '永久ROM存储';
+
+  @override
+  String get permanentRomStorageHint => '保存用于离线游玩的ROM';
+
+  @override
+  String get allSet => '一切就绪！';
+
+  @override
+  String get wizardEmulatorReady => 'Forsaken模拟器已准备就绪。';
+
+  @override
+  String get changeSettingsLater => '您可以稍后在设置界面更改这些设置。';
+
+  @override
+  String get configurationSummary => '配置摘要';
+
+  @override
+  String get summaryEmulators => '模拟器';
+
+  @override
+  String get summaryMedia => '媒体';
+
+  @override
+  String get summaryTempRoms => '临时ROM';
+
+  @override
+  String get summarySavedRoms => '已保存ROM';
+
+  @override
+  String get defaultValue => '（默认）';
+
+  @override
+  String pdfPageIndicator(int current, int total) {
+    return '第 $current 页，共 $total 页';
+  }
+
+  @override
+  String get pdfZoomOut => '缩小 (-)';
+
+  @override
+  String get pdfZoomIn => '放大 (+)';
+
+  @override
+  String get pdfResetZoom => '重置缩放 (0)';
+
+  @override
+  String get pdfFirstPage => '第一页 (Home)';
+
+  @override
+  String get pdfPreviousPage => '上一页 (←/PgUp)';
+
+  @override
+  String get pdfNextPage => '下一页 (→/PgDn)';
+
+  @override
+  String get pdfLastPage => '最后一页 (End)';
+
+  @override
+  String get pdfFileNotFound => '未找到PDF文件';
+
+  @override
+  String confirmDeleteEmulator(String system) {
+    return '您确定要删除 $system 的模拟器配置吗？';
+  }
+
+  @override
+  String commandsConfigured(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已配置$count个命令',
+      one: '已配置1个命令',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noCommand => '无命令';
+
+  @override
+  String get reloadConfigTooltip => '重新加载配置 (R)';
+
+  @override
+  String get configurationInfo => '配置信息';
+
+  @override
+  String get configLocation => '配置位置：';
+
+  @override
+  String get hasLocalOverridesYes => '有本地覆盖：是';
+
+  @override
+  String get hasLocalOverridesNo => '有本地覆盖：否';
+
+  @override
+  String get changesSavedToDevice => '您的更改已保存到设备存储。';
+
+  @override
+  String get usingBundledConfig => '使用捆绑配置。编辑以创建本地覆盖。';
+
+  @override
+  String get noEmulatorsConfigured => '未配置模拟器';
+
+  @override
+  String get addFirstEmulator => '添加您的第一个模拟器以开始';
+
+  @override
+  String get edit => '编辑';
+
+  @override
+  String get editEmulator => '编辑模拟器';
+
+  @override
+  String get system => '系统';
+
+  @override
+  String get systemHint => 'e.g., nes, snes, ps1';
+
+  @override
+  String get commands => '命令';
+
+  @override
+  String commandNumber(int number) {
+    return '命令 $number';
+  }
+
+  @override
+  String get commandHint => 'e.g., ../retroarch.AppImage -f -L core.so';
+
+  @override
+  String get remove => '移除';
+
+  @override
+  String get options => '选项';
+
+  @override
+  String get biosDownloading => '下载中...';
+
+  @override
+  String downloadRequiredAndExtras(int requiredCount, int optionalCount) {
+    return '下载 $requiredCount 个必需 + $optionalCount 个额外文件';
+  }
+
+  @override
+  String downloadRequiredFiles(int requiredCount) {
+    return '下载 $requiredCount 个必需文件';
+  }
+
+  @override
+  String downloadOptionalExtras(int optionalCount) {
+    return '下载 $optionalCount 个可选额外文件';
+  }
+
+  @override
+  String get downloadFiles => '下载文件';
+
+  @override
+  String batchDownloadConfirmation(int totalFiles, int platformCount) {
+    return '将为 $platformCount 个平台下载 $totalFiles 个 BIOS 文件：';
+  }
+
+  @override
+  String get downloadSourceNote => '文件将从 retroarch_system 仓库下载。';
+
+  @override
+  String get biosOptional => '可选';
+
+  @override
+  String biosFilesFound(int foundCount, int totalCount) {
+    return '已找到 $foundCount/$totalCount 个文件';
+  }
+
+  @override
+  String optionalExtrasAvailable(int count) {
+    return '+$count 个可选额外文件可用';
+  }
+
+  @override
+  String get biosLocations => '位置：';
+
+  @override
+  String get availableForDownload => '可从多个来源下载';
+
+  @override
+  String get summary => '摘要';
+
+  @override
+  String get biosComplete => '完整';
+
+  @override
+  String get biosPartial => '部分';
+
+  @override
+  String get biosFiles => '文件';
+
+  @override
+  String get biosDownloadable => '可下载';
+
+  @override
+  String get refreshF5Tooltip => '刷新 (F5)';
+
+  @override
+  String get allBiosFilesFound => '已找到所有 BIOS 文件！';
+
+  @override
+  String get noBiosRequirements => '未找到 BIOS 要求';
+
+  @override
+  String platformCount(int count) {
+    return '$count 个平台';
+  }
+
+  @override
+  String failedToLoadBiosStatus(String error) {
+    return '加载 BIOS 状态失败：$error';
+  }
+
+  @override
+  String get refreshStatus => '刷新状态';
+
+  @override
+  String platformsCompleteCount(int complete, int total) {
+    return '$complete/$total 个平台已完成';
+  }
+
+  @override
+  String get platformStatusHeader => '平台状态';
+
+  @override
+  String filesVerifiedStatus(
+    int presentFiles,
+    int totalFiles,
+    int verifiedFiles,
+  ) {
+    return '$presentFiles/$totalFiles 个文件（$verifiedFiles 个已验证）';
+  }
+
+  @override
+  String get biosCollectionOverview => 'BIOS 收藏概览';
+
+  @override
+  String get biosVerified => '已验证';
+
+  @override
+  String downloadComingSoon(String platformName) {
+    return '$platformName 的下载功能即将推出！';
+  }
+
+  @override
+  String get noGamepadConnected => '未连接手柄';
+
+  @override
+  String get connectGamepadPrompt => '连接手柄并按任意按钮';
+
+  @override
+  String get pressButtonToTest => '按任意按钮测试（操作已禁用）';
+
+  @override
+  String get buttonFunctionTests => '按钮功能测试';
+
+  @override
+  String get gamepadASelect => 'A（选择）';
+
+  @override
+  String get gamepadBBack => 'B（返回）';
+
+  @override
+  String get gamepadXSearch => 'X（搜索）';
+
+  @override
+  String get gamepadYHelp => 'Y（帮助）';
+
+  @override
+  String get gamepadLBPageDown => 'LB（向下翻页）';
+
+  @override
+  String get gamepadRBPageUp => 'RB（向上翻页）';
+
+  @override
+  String get gamepadStartMenu => 'Start（菜单）';
+
+  @override
+  String get gamepadSelectSettings => 'Select（设置）';
+
+  @override
+  String get gamepadLSClick => 'LS 点击';
+
+  @override
+  String get gamepadRSView => 'RS 点击（视图）';
+
+  @override
+  String get gamepadLTTrigger => 'LT（扳机）';
+
+  @override
+  String get gamepadRTTrigger => 'RT（扳机）';
+
+  @override
+  String get rawButtonStates => '原始按钮状态';
+
+  @override
+  String get noButtonsPressed => '无按钮按下';
+
+  @override
+  String get axisValues => '轴值';
+
+  @override
+  String get noAxisMovement => '无轴移动';
+
+  @override
+  String get dpadLeftStick => 'D-Pad + 左摇杆';
+
+  @override
+  String get webSettingsDescription => '配置Web平台特定设置';
+
+  @override
+  String get corsProxyWhyNeeded => '为什么需要CORS代理？';
+
+  @override
+  String get corsProxyExplanation =>
+      '浏览器由于CORS安全限制会阻止从外部服务器下载ROM。CORS代理从您控制的服务器中转请求，添加必要的头信息。\n\nForsaken包含一个可免费部署的Cloudflare Worker（每天10万请求）。设置说明请参阅tools/cors-proxy-worker/目录。';
+
+  @override
+  String get corsProxyUrl => 'CORS代理URL';
+
+  @override
+  String get corsProxyHelperText => '留空以禁用CORS代理（没有CORS的服务器上的ROM将失败）';
+
+  @override
+  String get testingProxy => '正在测试代理...';
+
+  @override
+  String get testProxyConnection => '测试代理连接';
+
+  @override
+  String get noProxyUrlConfigured => '未配置代理URL';
+
+  @override
+  String proxyWorking(int statusCode) {
+    return '代理正常工作（HTTP $statusCode）';
+  }
+
+  @override
+  String proxyReturnedHttp(int statusCode) {
+    return '代理返回HTTP $statusCode';
+  }
+
+  @override
+  String get connectionTimedOut => '连接超时';
+
+  @override
+  String get corsProxySettingsSaved => 'CORS代理设置已保存。新ROM启动时立即生效。';
+
+  @override
+  String get quickDeploy => '快速部署';
+
+  @override
+  String get corsProxyDeploySteps =>
+      '1. 在dash.cloudflare.com注册（免费）\n2. 安装Wrangler: npm install -g wrangler\n3. 登录: wrangler login\n4. cd tools/cors-proxy-worker\n5. npx wrangler deploy\n6. 将Worker URL粘贴到上方';
+
+  @override
+  String get permanentStorage => '永久存储';
+
+  @override
+  String get temporaryStorage => '临时存储';
+
+  @override
+  String get noDownloadedRoms => '没有已下载的ROM';
+
+  @override
+  String get biosErrorNetworkMessage => '网络连接失败';
+
+  @override
+  String get biosErrorNetworkSuggestions =>
+      '请检查您的网络连接\n稍后重试\n检查DNS设置\n如果访问受限，请尝试使用VPN';
+
+  @override
+  String get biosErrorFileNotFoundMessage => '服务器上未找到文件';
+
+  @override
+  String get biosErrorFileNotFoundSuggestions =>
+      'BIOS文件可能已被移动或重命名\n尝试从其他来源下载\n检查文件是否存在于其他分支/仓库中\n如果问题持续存在，请报告此问题';
+
+  @override
+  String get biosErrorAccessDeniedMessage => '服务器拒绝访问';
+
+  @override
+  String get biosErrorAccessDeniedSuggestions =>
+      '服务器可能正在阻止下载\n稍后重试——服务器可能暂时受限\n如果访问受地区限制，请使用VPN\n检查是否需要身份验证';
+
+  @override
+  String get biosErrorRateLimitedMessage => '超出请求频率限制';
+
+  @override
+  String get biosErrorRateLimitedSuggestions =>
+      '请等待几分钟后重试\n减少同时下载的数量\n服务器正在防止过多请求';
+
+  @override
+  String get biosErrorChecksumMessage => '文件完整性验证失败';
+
+  @override
+  String get biosErrorChecksumSuggestions =>
+      '文件在下载过程中可能已损坏\n请重新下载\n检查服务器上的文件是否已更新\n检查网络连接的稳定性';
+
+  @override
+  String get biosErrorSizeMismatchMessage => '文件大小不符';
+
+  @override
+  String get biosErrorSizeMismatchSuggestions =>
+      '文件可能是不同于预期的版本\n下载可能不完整\n请重新下载\n检查可用磁盘空间';
+
+  @override
+  String get biosErrorStorageMessage => '存储错误';
+
+  @override
+  String get biosErrorStorageSuggestions =>
+      '释放磁盘空间\n检查文件权限\n确保目标目录可写\n尝试下载到其他位置';
+
+  @override
+  String get biosErrorTimeoutMessage => '下载超时';
+
+  @override
+  String get biosErrorTimeoutSuggestions =>
+      '网络连接可能较慢\n服务器可能过载\n请使用稳定的连接重试\n检查防火墙是否阻止了连接';
+
+  @override
+  String get biosErrorArchiveMessage => '解压缩失败';
+
+  @override
+  String get biosErrorArchiveSuggestions =>
+      '下载的压缩包可能已损坏\n请重新下载文件\n检查是否有正确的解压工具\n验证文件是否为有效的压缩格式';
+
+  @override
+  String get biosErrorUnknownMessage => '下载失败';
+
+  @override
+  String get biosErrorUnknownSuggestions =>
+      '请重新下载\n检查您的网络连接\n确认文件仍然可用\n如果问题持续存在，请联系支持';
 }

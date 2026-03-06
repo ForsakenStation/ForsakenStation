@@ -218,14 +218,14 @@ class _DownloadManagerScreenState extends State<DownloadManagerScreen> {
               ),
             ),
             ControlsBottomBar(
-              actions: const [
+              actions: [
                 BottomBarAction(
-                  label: 'Back',
+                  label: AppLocalizations.of(context)!.back,
                   keyboardKey: 'ESC',
                   gamepadButton: 'B',
                 ),
                 BottomBarAction(
-                  label: 'Clear',
+                  label: AppLocalizations.of(context)!.clear,
                   keyboardKey: 'C',
                   gamepadButton: 'Y',
                 ),

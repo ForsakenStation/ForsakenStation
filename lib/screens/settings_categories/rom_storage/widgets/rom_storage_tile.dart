@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../utils/format_utils.dart';
 import '../../../../widgets/common/gamepad_button_indicator.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class RomStorageTile extends StatelessWidget {
   final File file;
@@ -55,7 +56,7 @@ class RomStorageTile extends StatelessWidget {
           formatBytes(fileSize),
           style: const TextStyle(fontSize: 12),
         ),
-        trailing: _buildActions(),
+        trailing: _buildActions(context),
       ),
     );
   }
@@ -74,7 +75,8 @@ class RomStorageTile extends StatelessWidget {
     );
   }
 
-  Widget _buildActions() {
+  Widget _buildActions(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -82,12 +84,12 @@ class RomStorageTile extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.save, size: 20),
             onPressed: onSave,
-            tooltip: 'Save to permanent storage',
+            tooltip: l10n.saveToPermanentStorage,
           ),
         IconButton(
           icon: const Icon(Icons.delete_outline, size: 20),
           onPressed: onDelete,
-          tooltip: 'Delete',
+          tooltip: l10n.delete,
         ),
       ],
     );

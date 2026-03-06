@@ -141,7 +141,7 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to load BIOS status: $e';
+        _errorMessage = e.toString();
         _isLoading = false;
       });
     }
@@ -156,7 +156,7 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadBiosStatus,
-            tooltip: 'Refresh Status',
+            tooltip: AppLocalizations.of(context)!.refreshStatus,
           ),
         ],
       ),
@@ -177,7 +177,9 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _errorMessage!,
+                          AppLocalizations.of(
+                            context,
+                          )!.failedToLoadBiosStatus(_errorMessage!),
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
@@ -187,20 +189,23 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
                 : _buildDashboardContent(),
           ),
           ControlsBottomBar(
-            actions: const [
+            actions: [
               BottomBarAction(
-                label: 'Back',
+                label: AppLocalizations.of(context)!.back,
                 keyboardKey: 'ESC',
                 gamepadButton: 'B',
               ),
               BottomBarAction(
-                label: 'Refresh',
+                label: AppLocalizations.of(context)!.refresh,
                 keyboardKey: 'F5',
                 gamepadButton: 'Start',
               ),
             ],
             counterText: _summaryStats != null
-                ? '${_summaryStats!.completePlatforms}/${_summaryStats!.totalPlatforms} platforms complete'
+                ? AppLocalizations.of(context)!.platformsCompleteCount(
+                    _summaryStats!.completePlatforms,
+                    _summaryStats!.totalPlatforms,
+                  )
                 : null,
           ),
         ],
@@ -218,7 +223,7 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
 
         // Platform Status Grid
         Text(
-          'Platform Status',
+          AppLocalizations.of(context)!.platformStatusHeader,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 8),
@@ -241,8 +246,11 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
               ),
               title: Text(platformStatus.displayName),
               subtitle: Text(
-                '${platformStatus.presentFiles}/${platformStatus.totalFiles} files '
-                '(${platformStatus.verifiedFiles} verified)',
+                AppLocalizations.of(context)!.filesVerifiedStatus(
+                  platformStatus.presentFiles,
+                  platformStatus.totalFiles,
+                  platformStatus.verifiedFiles,
+                ),
               ),
               trailing: platformStatus.available
                   ? const Icon(Icons.cloud_download, color: Colors.blue)
@@ -324,7 +332,7 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'BIOS Collection Overview',
+              AppLocalizations.of(context)!.biosCollectionOverview,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 16),
@@ -332,7 +340,7 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
               children: [
                 Expanded(
                   child: _buildStatItem(
-                    'Platforms',
+                    AppLocalizations.of(context)!.platforms,
                     '${stats.completePlatforms}/${stats.totalPlatforms}',
                     stats.completePlatforms / stats.totalPlatforms,
                     Colors.blue,
@@ -340,7 +348,7 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
                 ),
                 Expanded(
                   child: _buildStatItem(
-                    'Files',
+                    AppLocalizations.of(context)!.biosFiles,
                     '${stats.presentFiles}/${stats.totalFiles}',
                     stats.presentFiles / stats.totalFiles,
                     Colors.green,
@@ -353,7 +361,7 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
               children: [
                 Expanded(
                   child: _buildStatItem(
-                    'Verified',
+                    AppLocalizations.of(context)!.biosVerified,
                     '${stats.verifiedFiles}/${stats.presentFiles}',
                     stats.presentFiles > 0
                         ? stats.verifiedFiles / stats.presentFiles
@@ -363,7 +371,7 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
                 ),
                 Expanded(
                   child: _buildStatItem(
-                    'Downloadable',
+                    AppLocalizations.of(context)!.biosDownloadable,
                     '${stats.downloadableFiles}/${stats.totalFiles}',
                     stats.downloadableFiles / stats.totalFiles,
                     Colors.orange,
@@ -405,7 +413,9 @@ class _BiosStatusDashboardState extends State<BiosStatusDashboard> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Download functionality for ${platformStatus.displayName} - Coming soon!',
+          AppLocalizations.of(
+            context,
+          )!.downloadComingSoon(platformStatus.displayName),
         ),
       ),
     );

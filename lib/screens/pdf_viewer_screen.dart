@@ -251,7 +251,9 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
               ),
               if (_totalPages > 0)
                 Text(
-                  'Page $_currentPage of $_totalPages',
+                  AppLocalizations.of(
+                    context,
+                  )!.pdfPageIndicator(_currentPage, _totalPages),
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
             ],
@@ -261,44 +263,44 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
             IconButton(
               icon: const Icon(Icons.zoom_out),
               onPressed: _zoomOut,
-              tooltip: 'Zoom out (-)',
+              tooltip: AppLocalizations.of(context)!.pdfZoomOut,
             ),
             IconButton(
               icon: const Icon(Icons.zoom_in),
               onPressed: _zoomIn,
-              tooltip: 'Zoom in (+)',
+              tooltip: AppLocalizations.of(context)!.pdfZoomIn,
             ),
             IconButton(
               icon: const Icon(Icons.fit_screen),
               onPressed: _resetZoom,
-              tooltip: 'Reset zoom (0)',
+              tooltip: AppLocalizations.of(context)!.pdfResetZoom,
             ),
             const SizedBox(width: 8),
             // Navigation controls
             IconButton(
               icon: const Icon(Icons.first_page),
               onPressed: _currentPage > 1 ? _firstPage : null,
-              tooltip: 'First page (Home)',
+              tooltip: AppLocalizations.of(context)!.pdfFirstPage,
             ),
             IconButton(
               icon: const Icon(Icons.chevron_left),
               onPressed: _currentPage > 1 ? _previousPage : null,
-              tooltip: 'Previous page (←/PgUp)',
+              tooltip: AppLocalizations.of(context)!.pdfPreviousPage,
             ),
             IconButton(
               icon: const Icon(Icons.chevron_right),
               onPressed: _currentPage < _totalPages ? _nextPage : null,
-              tooltip: 'Next page (→/PgDn)',
+              tooltip: AppLocalizations.of(context)!.pdfNextPage,
             ),
             IconButton(
               icon: const Icon(Icons.last_page),
               onPressed: _currentPage < _totalPages ? _lastPage : null,
-              tooltip: 'Last page (End)',
+              tooltip: AppLocalizations.of(context)!.pdfLastPage,
             ),
           ],
         ),
         body: _buildBody(),
-        bottomNavigationBar: _buildControlsBar(),
+        bottomNavigationBar: _buildControlsBar(context),
       ),
     );
   }
@@ -315,9 +317,9 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
             children: [
               const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
-              const Text(
-                'PDF file not found',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.pdfFileNotFound,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -345,8 +347,9 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   }
 
   /// Build controls bar showing keyboard/gamepad shortcuts
-  Widget _buildControlsBar() {
+  Widget _buildControlsBar(BuildContext context) {
     final isGamepadConnected = _gamepadService.isGamepadConnected;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       height: 48,
@@ -361,21 +364,21 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (isGamepadConnected) ...[
-            _buildControlHint(Icons.gamepad, 'D-Pad/Stick', 'Navigate'),
+            _buildControlHint(Icons.gamepad, 'D-Pad/Stick', l10n.navigate),
             const SizedBox(width: 24),
-            _buildControlHint(Icons.gamepad, 'L1/R1', 'First/Last'),
+            _buildControlHint(Icons.gamepad, 'L1/R1', l10n.firstLast),
             const SizedBox(width: 24),
-            _buildControlHint(Icons.gamepad, 'L2/R2', 'Zoom'),
+            _buildControlHint(Icons.gamepad, 'L2/R2', l10n.zoom),
             const SizedBox(width: 24),
-            _buildControlHint(Icons.gamepad, 'B', 'Back'),
+            _buildControlHint(Icons.gamepad, 'B', l10n.back),
           ] else ...[
-            _buildControlHint(Icons.keyboard, '←/→', 'Navigate'),
+            _buildControlHint(Icons.keyboard, '←/→', l10n.navigate),
             const SizedBox(width: 24),
-            _buildControlHint(Icons.keyboard, 'Home/End', 'First/Last'),
+            _buildControlHint(Icons.keyboard, 'Home/End', l10n.firstLast),
             const SizedBox(width: 24),
-            _buildControlHint(Icons.keyboard, '+/-', 'Zoom'),
+            _buildControlHint(Icons.keyboard, '+/-', l10n.zoom),
             const SizedBox(width: 24),
-            _buildControlHint(Icons.keyboard, 'Esc', 'Back'),
+            _buildControlHint(Icons.keyboard, 'Esc', l10n.back),
           ],
         ],
       ),

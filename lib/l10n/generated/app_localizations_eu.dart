@@ -115,7 +115,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get romNotFound => 'ROMa ez da aurkitu';
 
   @override
-  String get biosRequired => 'BIOS beharrezkoa';
+  String get biosRequired => 'BEHARREZKOA';
 
   @override
   String get systemCheck => 'Sistemaren Egiaztapena';
@@ -490,7 +490,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get removeFromFavorites => 'Gogokoetatik Kendu';
 
   @override
-  String get biosMissing => 'BIOS falta';
+  String get biosMissing => 'Falta';
 
   @override
   String get biosPresent => 'BIOS dago';
@@ -576,7 +576,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get emulatorError => 'Emuladore Akatsa';
 
   @override
-  String get gamepadConnected => 'Gamepad konektatuta';
+  String get gamepadConnected => 'Gamepad-a konektatuta';
 
   @override
   String get gamepadDisconnected => 'Gamepad deskonektatuta';
@@ -1602,4 +1602,857 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get deletedToSaveSpace =>
       'Bestela, geroago ezabatuko da tokia aurrezteko.';
+
+  @override
+  String get view => 'Ikusi';
+
+  @override
+  String get media => 'Multimedia';
+
+  @override
+  String get navigate => 'Nabigatu';
+
+  @override
+  String get info => 'Info';
+
+  @override
+  String get toggleFilter => 'Iragazkia txandakatu';
+
+  @override
+  String get changeTheme => 'Gaia aldatu';
+
+  @override
+  String get keyboard => 'Teklatua';
+
+  @override
+  String get gamepad => 'Gamepad-a';
+
+  @override
+  String get hideKeyboard => 'Teklatua ezkutatu';
+
+  @override
+  String get gameManual => 'Jokoaren Eskuliburua';
+
+  @override
+  String get pdfDocument => 'PDF Dokumentua';
+
+  @override
+  String get manual => 'Eskuliburua';
+
+  @override
+  String get video => 'Bideoa';
+
+  @override
+  String get zoomOut => 'Txikiagotu';
+
+  @override
+  String get zoomIn => 'Handiaagotu';
+
+  @override
+  String pageCounter(String current, String total) {
+    return 'Orrialdea $current / $total';
+  }
+
+  @override
+  String get zoom => 'Zoom';
+
+  @override
+  String get firstLast => 'Lehena/Azkena';
+
+  @override
+  String get scroll => 'Korritu';
+
+  @override
+  String get loadingVideo => 'Bideoa kargatzen...';
+
+  @override
+  String get playPause => 'Erreproduzitu/Pausatu';
+
+  @override
+  String get useArrowKeysToNavigate =>
+      'Erabili gezi-teklak edo irristatu nabigatzeko';
+
+  @override
+  String get searchRomsHint => 'ROMak Bilatu...';
+
+  @override
+  String get cancelSearch => 'Bilaketa Ezeztatu';
+
+  @override
+  String get virtualKeyboard => 'Teklatu Birtuala';
+
+  @override
+  String get noRomsAvailable => 'ROMrik ez dago eskuragarri';
+
+  @override
+  String get noRomsForPlatformMessage =>
+      'Ez da ROM fitxategirik aurkitu plataforma honetarako. ROM fitxategiak .txt fitxategi moduan jarri behar dira deskarga URLak edukita plataformaren direktorioan.';
+
+  @override
+  String get noMatchingRoms => 'Ez dago ROM bat datorren';
+
+  @override
+  String get tryDifferentSearch => 'Saiatu bilaketa-termino desberdin batekin';
+
+  @override
+  String get saveToPermanentStorage => 'Biltegiratze permanentean gorde';
+
+  @override
+  String get temporary => 'Aldi baterako';
+
+  @override
+  String get permanent => 'Betiko';
+
+  @override
+  String get tempPathLabel => 'Temp';
+
+  @override
+  String get foreverPathLabel => 'Forever';
+
+  @override
+  String get storageOverview => 'Biltegiratze Laburpena';
+
+  @override
+  String get clearTemporaryStorage => 'Aldi baterako biltegiratzea garbitu';
+
+  @override
+  String filesCount(String count) {
+    return '$count fitxategi';
+  }
+
+  @override
+  String pathDisplay(String label, String path) {
+    return '$label bidea: $path';
+  }
+
+  @override
+  String get unknown => 'Ezezaguna';
+
+  @override
+  String get tagVerifiedGoodDump =>
+      'Egiaztatutako bolketa ona - funtzionamendua berretsia';
+
+  @override
+  String get tagBadDump => 'Bolketa txarra - agian ez du ondo funtzionatzen';
+
+  @override
+  String get tagAlternateVersion => 'Bertsio alternatiboa';
+
+  @override
+  String get tagOverdump => 'Gehiegizko bolketa - datu gehigarriak ditu';
+
+  @override
+  String get tagModifiedHacked => 'ROM aldatua/hackeatua';
+
+  @override
+  String get tagFanTranslation => 'Zale-itzulpena';
+
+  @override
+  String get tagPirateBootleg => 'Pirata/bootleg bertsioa';
+
+  @override
+  String get tagFixedVersion => 'Bertsio zuzendua';
+
+  @override
+  String get tagCheatTrainer => 'Truko-treinatzailea du';
+
+  @override
+  String tagVersion(String text) {
+    return 'Bertsioa: $text';
+  }
+
+  @override
+  String tagSpecialRelease(String text) {
+    return 'Argitalpen berezia: $text';
+  }
+
+  @override
+  String tagMediaInfo(String text) {
+    return 'Multimedia info: $text';
+  }
+
+  @override
+  String noEmulatorConfigured(
+    String displayName,
+    String platform,
+    String configPath,
+  ) {
+    return 'Ez dago emuladorerik konfiguratuta $displayName plataformarako.\n\nMesedez, gehitu \"$platform\" konfigurazioa hemen:\n$configPath';
+  }
+
+  @override
+  String get noEmulatorCommandAvailable =>
+      'Ez dago emuladoreen komandorik erabilgarri';
+
+  @override
+  String platformNotSupportedWeb(String platform, String supportedPlatforms) {
+    return '\"$platform\" plataforma ez da oraindik web nabigatzailean onartzen.\n\nOnartutako plataformak: $supportedPlatforms';
+  }
+
+  @override
+  String failedToLaunchWebEmulator(String error) {
+    return 'Ezin izan da web emuladore abiarazi: $error';
+  }
+
+  @override
+  String failedToLaunchRom(String error) {
+    return 'Ezin izan da ROM-a abiarazi.\n\nEgiaztatu:\n• Emuladorea behar bezala instalatuta dagoela\n• ROM fitxategia baliozkoa dela\n• Konfigurazioa zuzena dela\n\nErrorea: $error';
+  }
+
+  @override
+  String errorLaunchingRom(String error) {
+    return 'Errorea ROM-a abiarazterakoan: $error';
+  }
+
+  @override
+  String noInfoAvailable(String platformName) {
+    return 'Ez dago informaziorik eskuragarri $platformName plataformarako';
+  }
+
+  @override
+  String get platformInfoTooltip => 'Plataformaren informazioa (I)';
+
+  @override
+  String get navigationHint => 'Erabili gezi-teklak edo irristatu nabigatzeko';
+
+  @override
+  String get noGamesFound => 'Ez da jokorik aurkitu';
+
+  @override
+  String get noGamesFoundForSearch => 'Ez da jokorik aurkitu bilaketarako';
+
+  @override
+  String get tryDifferentSearchOrClear =>
+      'Saiatu beste bilaketa-termino batekin edo garbitu iragazkia';
+
+  @override
+  String get checkStorageOrDownload =>
+      'Egiaztatu biltegiratzeko ezarpenak edo deskargatu ROM batzuk';
+
+  @override
+  String get searchGamesHint => 'Jokoak bilatu...';
+
+  @override
+  String get settingsHeaderTitle => 'Forsaken Emuladorea Konfigurazioa';
+
+  @override
+  String get settingsHeaderSubtitle =>
+      'Emuladoreak, bideak konfiguratu eta edukia deskargatu';
+
+  @override
+  String get emulatorManagementDesc =>
+      'Emuladore komandoak gehitu, editatu eta konfiguratu';
+
+  @override
+  String get systemPaths => 'Sistema bideak';
+
+  @override
+  String get systemPathsDesc =>
+      'ROMs, multimedia eta emuladore bideak konfiguratu';
+
+  @override
+  String get romDatabaseDesc =>
+      'ROM zerrendak GitHub-etik deskargatu eta kudeatu';
+
+  @override
+  String get romStorageDesc =>
+      'Deskargatutako ROMak, biltegiratzea eta aldi baterako fitxategien garbiketa kudeatu';
+
+  @override
+  String get downloadManagerDesc =>
+      'Emuladoreak, ROM zerrendak eta joko datuak deskargatu';
+
+  @override
+  String get systemRequirementsDesc =>
+      'Beharrezko tresnak eta mendekotasunak egiaztatu';
+
+  @override
+  String get gamepadTestDebug => 'Gamepad proba eta arazketa';
+
+  @override
+  String get gamepadTestDebugDesc =>
+      'Gamepad botoiak, ardatzak probatu eta arazoak konpondu';
+
+  @override
+  String get biosFirmwareHelpDesc =>
+      'BIOS fitxategiak eta firmware baldintzak egiaztatu';
+
+  @override
+  String get webSettingsDesc => 'CORS proxy eta web plataforma konfigurazioa';
+
+  @override
+  String get setupWizardDesc =>
+      'Hasierako konfigurazio laguntzailea berriz exekutatu';
+
+  @override
+  String get languageDesc => 'Aplikazioaren hizkuntza hautatu';
+
+  @override
+  String get aboutDebug => 'Honi buruz eta arazketa';
+
+  @override
+  String get aboutDebugDesc => 'Aplikazio informazioa eta arazketa ezarpenak';
+
+  @override
+  String get legalDisclaimer => 'Lege oharra';
+
+  @override
+  String get romDatabaseCredits =>
+      'ROM zerrendak jatorriz Arley4d-ren AndroidRoms biltegitik datoz:';
+
+  @override
+  String get romDatabaseThanks =>
+      'Esker berezia AndroidRoms proiektuari ROM datu-base osoak mantentzeagatik kontserbazio helburuekin.';
+
+  @override
+  String get biosFilesSection => 'BIOS fitxategiak';
+
+  @override
+  String get biosFilesCredits =>
+      'BIOS fitxategiak Abdess-en retroarch_system biltegitik datoz:';
+
+  @override
+  String get biosFilesThanks =>
+      'Biltegi honek hainbat emulazio plataformek behar dituzten sistema fitxategiak eta BIOS-ak ditu. Esker berezia mantentzeaileei funtsezko fitxategi hauek gordetzeko.';
+
+  @override
+  String get amigaCopyProtection =>
+      'Amiga kopia babesaren laguntza capsimg liburutegiak emana:';
+
+  @override
+  String get amigaCopyProtectionThanks =>
+      'Esker berezia rsn8887-ri capsimg liburutegia mantentzeagatik, Amiga emulaziorako IPF (kopia babestutako) disko irudi laguntza ahalbidetzen duena.';
+
+  @override
+  String get additionalBiosFiles =>
+      'BIOS fitxategi osagarriak RetroPieBios proiektuak emanak:';
+
+  @override
+  String get additionalBiosThanks =>
+      'Eskerrak PIBSAS/RetroPieBios-i BIOS aldaera osagarriak eta eskualdeko fitxategiak emateagatik, sistema eta eskualde ezberdinetako bateragarritasuna hobetzen dutenak.';
+
+  @override
+  String get enabled => 'Gaituta';
+
+  @override
+  String get disabled => 'Desgaituta';
+
+  @override
+  String get disclaimerRequired =>
+      'Erantzukizunen oharra onartu behar duzu jarraitzeko.';
+
+  @override
+  String get emulatorsPathRequired =>
+      'Emuladore-direktorioaren bidea beharrezkoa da.';
+
+  @override
+  String get emulatorConfigPathRequired =>
+      'Emuladorearen konfigurazio-fitxategiaren bidea beharrezkoa da.';
+
+  @override
+  String get mediaPathRequired => 'Multimedia-bidea beharrezkoa da.';
+
+  @override
+  String get tempRomPathRequired =>
+      'Aldi baterako ROM biltegiratzearen bidea beharrezkoa da.';
+
+  @override
+  String get permanentRomPathRequired =>
+      'Betirako ROM biltegiratzearen bidea beharrezkoa da.';
+
+  @override
+  String wizardStepCounter(int current, int total) {
+    return '$current. urratsa / $total';
+  }
+
+  @override
+  String get emulatorConfiguration => 'Emuladorearen konfigurazioa';
+
+  @override
+  String get emulatorConfigStepDesc =>
+      'Ezarri zure emuladoreak instalatuta dauden bideak. Geroago alda ditzakezu Ezarpenak > Sistema-bideak atalean.';
+
+  @override
+  String get emulatorsDirectory => 'Emuladore-direktorioa';
+
+  @override
+  String get pathToEmulatorBinaries => 'Emuladore-bitarren bidea';
+
+  @override
+  String get emulatorConfigFile => 'Emuladorearen konfigurazio-fitxategia';
+
+  @override
+  String get pathToEmulatorConfig =>
+      'Emuladorearen konfigurazio JSON-aren bidea';
+
+  @override
+  String get storagePaths => 'Biltegiratze-bideak';
+
+  @override
+  String get storagePathsStepDesc =>
+      'Konfiguratu non biltegiratzen diren multimedia-baliabideak eta ROM fitxategiak. Geroago alda ditzakezu Ezarpenak > Sistema-bideak atalean.';
+
+  @override
+  String get wizardMediaPathHint => 'Azalak, pantaila-argazkiak eta bideoak';
+
+  @override
+  String get temporaryRomStorage => 'Aldi baterako ROM biltegiratzea';
+
+  @override
+  String get temporaryRomStorageHint =>
+      'Joko-saio bakarretarako deskargatutako ROMak';
+
+  @override
+  String get permanentRomStorage => 'Betirako ROM biltegiratzea';
+
+  @override
+  String get permanentRomStorageHint =>
+      'Lineaz kanpo jolasteko gordetako ROMak';
+
+  @override
+  String get allSet => 'Dena prest!';
+
+  @override
+  String get wizardEmulatorReady =>
+      'Forsaken emuladorea erabiltzeko prest dago.';
+
+  @override
+  String get changeSettingsLater =>
+      'Ezarpen hauetako edozein geroago alda dezakezu Ezarpenak pantailatik.';
+
+  @override
+  String get configurationSummary => 'Konfigurazio-laburpena';
+
+  @override
+  String get summaryEmulators => 'Emuladoreak';
+
+  @override
+  String get summaryMedia => 'Multimedia';
+
+  @override
+  String get summaryTempRoms => 'Aldi baterako ROMak';
+
+  @override
+  String get summarySavedRoms => 'Gordetako ROMak';
+
+  @override
+  String get defaultValue => '(lehenetsia)';
+
+  @override
+  String pdfPageIndicator(int current, int total) {
+    return '$current. orrialdea $total-tik';
+  }
+
+  @override
+  String get pdfZoomOut => 'Txikitu (-)';
+
+  @override
+  String get pdfZoomIn => 'Handitu (+)';
+
+  @override
+  String get pdfResetZoom => 'Zooma berrezarri (0)';
+
+  @override
+  String get pdfFirstPage => 'Lehen orrialdea (Home)';
+
+  @override
+  String get pdfPreviousPage => 'Aurreko orrialdea (←/PgUp)';
+
+  @override
+  String get pdfNextPage => 'Hurrengo orrialdea (→/PgDn)';
+
+  @override
+  String get pdfLastPage => 'Azken orrialdea (End)';
+
+  @override
+  String get pdfFileNotFound => 'PDF fitxategia ez da aurkitu';
+
+  @override
+  String confirmDeleteEmulator(String system) {
+    return 'Ziur zaude $system-ren emuladoreen konfigurazioa ezabatu nahi duzula?';
+  }
+
+  @override
+  String commandsConfigured(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count komando konfiguratuta',
+      one: 'Komando 1 konfiguratuta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noCommand => 'Komandorik ez';
+
+  @override
+  String get reloadConfigTooltip => 'Konfigurazioa birkargatu (R)';
+
+  @override
+  String get configurationInfo => 'Konfigurazio informazioa';
+
+  @override
+  String get configLocation => 'Konfigurazio kokapena:';
+
+  @override
+  String get hasLocalOverridesYes => 'Gainidazketa lokalak ditu: Bai';
+
+  @override
+  String get hasLocalOverridesNo => 'Gainidazketa lokalak ditu: Ez';
+
+  @override
+  String get changesSavedToDevice =>
+      'Zure aldaketak gailuaren biltegian gordetzen dira.';
+
+  @override
+  String get usingBundledConfig =>
+      'Sartutako konfigurazioa erabiliz. Editatu gainidazketa lokalak sortzeko.';
+
+  @override
+  String get noEmulatorsConfigured => 'Ez dago emuladorerik konfiguratuta';
+
+  @override
+  String get addFirstEmulator => 'Gehitu zure lehen emuladorea hasteko';
+
+  @override
+  String get edit => 'Editatu';
+
+  @override
+  String get editEmulator => 'Emuladorea editatu';
+
+  @override
+  String get system => 'Sistema';
+
+  @override
+  String get systemHint => 'e.g., nes, snes, ps1';
+
+  @override
+  String get commands => 'Komandoak';
+
+  @override
+  String commandNumber(int number) {
+    return '$number. komandoa';
+  }
+
+  @override
+  String get commandHint => 'e.g., ../retroarch.AppImage -f -L core.so';
+
+  @override
+  String get remove => 'Kendu';
+
+  @override
+  String get options => 'Aukerak';
+
+  @override
+  String get biosDownloading => 'Deskargatzen...';
+
+  @override
+  String downloadRequiredAndExtras(int requiredCount, int optionalCount) {
+    return 'Deskargatu $requiredCount beharrezkoak + $optionalCount gehigarriak';
+  }
+
+  @override
+  String downloadRequiredFiles(int requiredCount) {
+    return 'Deskargatu $requiredCount fitxategi beharrezkoak';
+  }
+
+  @override
+  String downloadOptionalExtras(int optionalCount) {
+    return 'Deskargatu $optionalCount gehigarri aukerakoak';
+  }
+
+  @override
+  String get downloadFiles => 'Fitxategiak deskargatu';
+
+  @override
+  String batchDownloadConfirmation(int totalFiles, int platformCount) {
+    return '$totalFiles BIOS fitxategi deskargatuko dira $platformCount plataformetarako:';
+  }
+
+  @override
+  String get downloadSourceNote =>
+      'Fitxategiak retroarch_system biltegitik deskargatuko dira.';
+
+  @override
+  String get biosOptional => 'AUKERAKOA';
+
+  @override
+  String biosFilesFound(int foundCount, int totalCount) {
+    return '$foundCount/$totalCount fitxategi aurkitu';
+  }
+
+  @override
+  String optionalExtrasAvailable(int count) {
+    return '+$count gehigarri aukerako eskuragarri';
+  }
+
+  @override
+  String get biosLocations => 'Kokapena:';
+
+  @override
+  String get availableForDownload =>
+      'Iturri aniztatik deskargatzeko eskuragarri';
+
+  @override
+  String get summary => 'Laburpena';
+
+  @override
+  String get biosComplete => 'Osoa';
+
+  @override
+  String get biosPartial => 'Partziala';
+
+  @override
+  String get biosFiles => 'Fitxategiak';
+
+  @override
+  String get biosDownloadable => 'Deskargagarria';
+
+  @override
+  String get refreshF5Tooltip => 'Freskatu (F5)';
+
+  @override
+  String get allBiosFilesFound => 'BIOS fitxategi guztiak aurkitu dira!';
+
+  @override
+  String get noBiosRequirements => 'Ez da BIOS eskakizunik aurkitu';
+
+  @override
+  String platformCount(int count) {
+    return '$count plataforma';
+  }
+
+  @override
+  String failedToLoadBiosStatus(String error) {
+    return 'Ezin izan da BIOS egoera kargatu: $error';
+  }
+
+  @override
+  String get refreshStatus => 'Egoera freskatu';
+
+  @override
+  String platformsCompleteCount(int complete, int total) {
+    return '$complete/$total plataforma osatu';
+  }
+
+  @override
+  String get platformStatusHeader => 'Plataforma egoera';
+
+  @override
+  String filesVerifiedStatus(
+    int presentFiles,
+    int totalFiles,
+    int verifiedFiles,
+  ) {
+    return '$presentFiles/$totalFiles fitxategi ($verifiedFiles egiaztatuta)';
+  }
+
+  @override
+  String get biosCollectionOverview => 'BIOS bilduma ikuspegi orokorra';
+
+  @override
+  String get biosVerified => 'Egiaztatuta';
+
+  @override
+  String downloadComingSoon(String platformName) {
+    return '$platformName deskarga funtzioa - Laster!';
+  }
+
+  @override
+  String get noGamepadConnected => 'Ez dago gamepad-ik konektatuta';
+
+  @override
+  String get connectGamepadPrompt =>
+      'Konektatu gamepad bat eta sakatu edozein botoi';
+
+  @override
+  String get pressButtonToTest =>
+      'Sakatu edozein botoi probatzeko (ekintzak desgaituta)';
+
+  @override
+  String get buttonFunctionTests => 'Botoien funtzio-probak';
+
+  @override
+  String get gamepadASelect => 'A (Hautatu)';
+
+  @override
+  String get gamepadBBack => 'B (Atzera)';
+
+  @override
+  String get gamepadXSearch => 'X (Bilatu)';
+
+  @override
+  String get gamepadYHelp => 'Y (Laguntza)';
+
+  @override
+  String get gamepadLBPageDown => 'LB (Orrialdea behera)';
+
+  @override
+  String get gamepadRBPageUp => 'RB (Orrialdea gora)';
+
+  @override
+  String get gamepadStartMenu => 'Start (Menua)';
+
+  @override
+  String get gamepadSelectSettings => 'Select (Ezarpenak)';
+
+  @override
+  String get gamepadLSClick => 'LS Klik';
+
+  @override
+  String get gamepadRSView => 'RS Klik (Ikuspegia)';
+
+  @override
+  String get gamepadLTTrigger => 'LT (Abiarazlea)';
+
+  @override
+  String get gamepadRTTrigger => 'RT (Abiarazlea)';
+
+  @override
+  String get rawButtonStates => 'Botoien egoera gordinak';
+
+  @override
+  String get noButtonsPressed => 'Ez da botoirik sakatuta';
+
+  @override
+  String get axisValues => 'Ardatzen balioak';
+
+  @override
+  String get noAxisMovement => 'Ardatz mugimendurik ez';
+
+  @override
+  String get dpadLeftStick => 'D-Pad + Ezkerreko Stick-a';
+
+  @override
+  String get webSettingsDescription =>
+      'Web plataformaren ezarpen espezifikoak konfiguratu';
+
+  @override
+  String get corsProxyWhyNeeded => 'Zergatik behar da CORS proxy bat?';
+
+  @override
+  String get corsProxyExplanation =>
+      'Nabigatzaileek kanpoko zerbitzarietako ROM deskargak blokeatzen dituzte CORS segurtasun murrizketen ondorioz. CORS proxy batek eskaera zuk kontrolatzen duzun zerbitzari batetik birbidaltzen du, beharrezko goiburuak gehituz.\n\nForsaken-ek Cloudflare Worker bat dauka doain zabaldu dezakezuna (100k eskaera/eguneko). Ikusi tools/cors-proxy-worker/ direktorioa konfigurazio argibideetarako.';
+
+  @override
+  String get corsProxyUrl => 'CORS proxy URL-a';
+
+  @override
+  String get corsProxyHelperText =>
+      'Utzi hutsik CORS proxy-a desgaitzeko (CORS-ik gabeko zerbitzarietako ROM-ek huts egingo dute)';
+
+  @override
+  String get testingProxy => 'Proxy-a probatzen...';
+
+  @override
+  String get testProxyConnection => 'Proxy konexioa probatu';
+
+  @override
+  String get noProxyUrlConfigured => 'Ez dago proxy URL-rik konfiguratuta';
+
+  @override
+  String proxyWorking(int statusCode) {
+    return 'Proxy-a funtzionatzen du (HTTP $statusCode)';
+  }
+
+  @override
+  String proxyReturnedHttp(int statusCode) {
+    return 'Proxy-ak HTTP $statusCode itzuli du';
+  }
+
+  @override
+  String get connectionTimedOut => 'Konexioa denbora-muga gainditu du';
+
+  @override
+  String get corsProxySettingsSaved =>
+      'CORS proxy ezarpenak gordeta. Berehala aplikatzen da ROM abiarazte berrietarako.';
+
+  @override
+  String get quickDeploy => 'Zabaltze azkarra';
+
+  @override
+  String get corsProxyDeploySteps =>
+      '1. Erregistratu dash.cloudflare.com-en (doakoa)\n2. Instalatu Wrangler: npm install -g wrangler\n3. Saioa hasi: wrangler login\n4. cd tools/cors-proxy-worker\n5. npx wrangler deploy\n6. Itsatsi worker URL-a goian';
+
+  @override
+  String get permanentStorage => 'Biltegiratze iraunkorra';
+
+  @override
+  String get temporaryStorage => 'Aldi baterako biltegiratze';
+
+  @override
+  String get noDownloadedRoms => 'Ez dago ROM deskargatuik';
+
+  @override
+  String get biosErrorNetworkMessage => 'Sare-konexioak huts egin du';
+
+  @override
+  String get biosErrorNetworkSuggestions =>
+      'Egiaztatu zure Interneteko konexioa\nSaiatu berriro momentu batzuen buruan\nEgiaztatu DNS ezarpenak\nSaiatu VPN bat erabiltzen sarbidea mugatuta badago';
+
+  @override
+  String get biosErrorFileNotFoundMessage =>
+      'Fitxategia ez da zerbitzarian aurkitu';
+
+  @override
+  String get biosErrorFileNotFoundSuggestions =>
+      'BIOS fitxategia mugitu edo berrizendatu egin daiteke\nSaiatu beste iturri batetik deskargatzen\nEgiaztatu fitxategia beste adar/biltegi batean dagoen\nJakinarazi arazo hau irauten badu';
+
+  @override
+  String get biosErrorAccessDeniedMessage => 'Zerbitzariak sarbidea ukatu du';
+
+  @override
+  String get biosErrorAccessDeniedSuggestions =>
+      'Zerbitzariak deskargak blokeatzen egon daiteke\nSaiatu berriro geroago - zerbitzaria aldi baterako mugatuta egon daiteke\nErabili VPN bat sarbidea eskualdeka mugatuta badago\nEgiaztatu autentifikazioa beharrezkoa den';
+
+  @override
+  String get biosErrorRateLimitedMessage => 'Eskaera-muga gainditu da';
+
+  @override
+  String get biosErrorRateLimitedSuggestions =>
+      'Itxaron minutu batzuk berriro saiatu aurretik\nMurriztu aldi bereko deskarga kopurua\nZerbitzariak gehiegizko eskaeren aurka babesten du';
+
+  @override
+  String get biosErrorChecksumMessage =>
+      'Fitxategiaren osotasun-egiaztapenak huts egin du';
+
+  @override
+  String get biosErrorChecksumSuggestions =>
+      'Fitxategia hondatu egin daiteke deskargatzean\nSaiatu berriro deskargatzen\nEgiaztatu fitxategia zerbitzarian eguneratu den\nEgiaztatu Interneteko konexioaren egonkortasuna';
+
+  @override
+  String get biosErrorSizeMismatchMessage => 'Ustekabeko fitxategi-tamaina';
+
+  @override
+  String get biosErrorSizeMismatchSuggestions =>
+      'Fitxategia espero zenetik bertsio desberdinekoa izan daiteke\nDeskarga osatu gabe egon daiteke\nSaiatu berriro deskargatzen\nEgiaztatu diskoan dagoen toki librea';
+
+  @override
+  String get biosErrorStorageMessage => 'Biltegiratze-errorea';
+
+  @override
+  String get biosErrorStorageSuggestions =>
+      'Askatu diskoko tokia\nEgiaztatu fitxategi-baimenak\nZiurtatu helmugako direktorioa idazgarria dela\nSaiatu beste kokapen batera deskargatzen';
+
+  @override
+  String get biosErrorTimeoutMessage => 'Deskargaren denbora-muga gainditu da';
+
+  @override
+  String get biosErrorTimeoutSuggestions =>
+      'Interneteko konexioa motela izan daiteke\nZerbitzaria gainkargatuta egon daiteke\nSaiatu berriro konexio egonkor batekin\nEgiaztatu suebakiak konexioa blokeatzen duen';
+
+  @override
+  String get biosErrorArchiveMessage => 'Artxiboaren erauzketak huts egin du';
+
+  @override
+  String get biosErrorArchiveSuggestions =>
+      'Deskargatutako artxiboa hondatuta egon daiteke\nSaiatu fitxategia berriro deskargatzen\nEgiaztatu erauzketa-tresna egokia eskuragarri dagoen\nEgiaztatu fitxategia artxibo-formatu baliozkoa dela';
+
+  @override
+  String get biosErrorUnknownMessage => 'Deskargak huts egin du';
+
+  @override
+  String get biosErrorUnknownSuggestions =>
+      'Saiatu berriro deskargatzen\nEgiaztatu zure Interneteko konexioa\nEgiaztatu fitxategia oraindik eskuragarri dagoen\nJarri harremanetan laguntza-zerbitzuarekin arazoak irauten badu';
 }

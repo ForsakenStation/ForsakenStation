@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'fullscreen_viewer_controller.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/gamepad_service.dart';
 
 class FullScreenVideoContent extends StatelessWidget {
@@ -16,17 +17,18 @@ class FullScreenVideoContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!controller.isVideoReady(path)) {
+      final l10n = AppLocalizations.of(context)!;
       return Container(
         color: Colors.black,
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(color: Colors.white),
-              SizedBox(height: 16),
+              const CircularProgressIndicator(color: Colors.white),
+              const SizedBox(height: 16),
               Text(
-                'Loading video...',
-                style: TextStyle(color: Colors.white, fontSize: 14),
+                l10n.loadingVideo,
+                style: const TextStyle(color: Colors.white, fontSize: 14),
               ),
             ],
           ),
@@ -65,7 +67,7 @@ class FullScreenVideoContent extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildControlHints(),
+            _buildControlHints(AppLocalizations.of(context)!),
             const SizedBox(height: 12),
             _buildProgressBar(player),
           ],
@@ -74,7 +76,7 @@ class FullScreenVideoContent extends StatelessWidget {
     );
   }
 
-  Widget _buildControlHints() {
+  Widget _buildControlHints(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -90,9 +92,9 @@ class FullScreenVideoContent extends StatelessWidget {
           if (GamepadService.instance.isGamepadConnected)
             _buildGamepadHint('Ⓐ'),
           const SizedBox(width: 8),
-          const Text(
-            'Play/Pause',
-            style: TextStyle(color: Colors.white, fontSize: 12),
+          Text(
+            l10n.playPause,
+            style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         ],
       ),

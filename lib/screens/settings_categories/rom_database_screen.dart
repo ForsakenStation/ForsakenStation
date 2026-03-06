@@ -536,19 +536,19 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
                   : _buildContentView(),
             ),
             ControlsBottomBar(
-              actions: const [
+              actions: [
                 BottomBarAction(
-                  label: 'Back',
+                  label: AppLocalizations.of(context)!.back,
                   keyboardKey: 'ESC',
                   gamepadButton: 'B',
                 ),
                 BottomBarAction(
-                  label: 'Navigate',
+                  label: AppLocalizations.of(context)!.navigate,
                   keyboardKey: '↑↓←→',
                   gamepadButton: 'D-pad',
                 ),
                 BottomBarAction(
-                  label: 'Select',
+                  label: AppLocalizations.of(context)!.select,
                   keyboardKey: 'Enter',
                   gamepadButton: 'A',
                 ),
