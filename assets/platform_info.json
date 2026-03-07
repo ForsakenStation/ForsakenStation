@@ -23,7 +23,7 @@
     "cpu": "Dual-core ARM11 MPCore @ 268 MHz",
     "description": "The Nintendo 3DS is a handheld game console produced by Nintendo. It is capable of displaying stereoscopic 3D effects without the use of 3D glasses or additional accessories.",
     "notableGames": [
-      "Pok\u00e9mon X/Y",
+      "Pokémon X/Y",
       "The Legend of Zelda: A Link Between Worlds",
       "Mario Kart 7",
       "Super Mario 3D Land"
@@ -356,6 +356,21 @@
       "Chuckie Egg"
     ]
   },
+  "c128": {
+    "name": "Commodore 128",
+    "manufacturer": "Commodore International",
+    "releaseYear": 1985,
+    "generation": 3,
+    "type": "Home Computer",
+    "cpu": "MOS 8502 @ 2 MHz / Zilog Z80 @ 4 MHz",
+    "description": "The Commodore 128 was the successor to the Commodore 64, featuring three operating modes: C128 native mode, C64 compatibility mode, and CP/M mode via its built-in Z80 processor. It offered 128 KB of RAM, an 80-column display, and full backward compatibility with C64 software.",
+    "notableGames": [
+      "Ultima V",
+      "Bard's Tale III",
+      "Pirates!",
+      "Pool of Radiance"
+    ]
+  },
   "c20": {
     "name": "C20",
     "manufacturer": "n/a",
@@ -562,6 +577,21 @@
     "description": "n/a",
     "notableGames": []
   },
+  "doom": {
+    "name": "DOOM",
+    "manufacturer": "id Software",
+    "releaseYear": 1993,
+    "generation": 0,
+    "type": "Game Engine",
+    "cpu": "Various",
+    "description": "DOOM is a landmark first-person shooter created by id Software that revolutionized PC gaming. The PrBoom libretro core allows playing DOOM, DOOM II, and compatible WAD files. It is one of the most influential games in the history of the medium.",
+    "notableGames": [
+      "DOOM",
+      "DOOM II: Hell on Earth",
+      "The Plutonia Experiment",
+      "TNT: Evilution"
+    ]
+  },
   "dos": {
     "name": "MS-DOS",
     "manufacturer": "Microsoft",
@@ -760,10 +790,10 @@
     "generation": 4,
     "type": "Handheld Console",
     "cpu": "Sharp LR35902 @ 4.19 MHz",
-    "description": "The Game Boy revolutionized portable gaming and became one of the best-selling consoles of all time with over 118 million units sold. Its long battery life, durability, and strong software library (especially Tetris and Pok\u00e9mon) made it a cultural phenomenon despite its monochrome screen.",
+    "description": "The Game Boy revolutionized portable gaming and became one of the best-selling consoles of all time with over 118 million units sold. Its long battery life, durability, and strong software library (especially Tetris and Pokémon) made it a cultural phenomenon despite its monochrome screen.",
     "notableGames": [
       "Tetris",
-      "Pok\u00e9mon Red/Blue",
+      "Pokémon Red/Blue",
       "The Legend of Zelda: Link's Awakening",
       "Super Mario Land"
     ]
@@ -777,7 +807,7 @@
     "cpu": "ARM7TDMI @ 16.78 MHz",
     "description": "The Game Boy Advance featured 32-bit processing power comparable to the Super Nintendo, bringing console-quality gaming to a portable format. It was backward compatible with Game Boy and Game Boy Color games. The GBA sold over 81 million units and had excellent battery life.",
     "notableGames": [
-      "Pok\u00e9mon Ruby/Sapphire",
+      "Pokémon Ruby/Sapphire",
       "The Legend of Zelda: The Minish Cap",
       "Metroid Fusion",
       "Advance Wars"
@@ -792,7 +822,7 @@
     "cpu": "Sharp LR35902 @ 8.38 MHz",
     "description": "The Game Boy Color added color graphics to the Game Boy line while maintaining backward compatibility with original Game Boy games. It featured twice the processor speed and three times the memory of the original Game Boy, allowing for more complex games and vibrant graphics.",
     "notableGames": [
-      "Pok\u00e9mon Gold/Silver",
+      "Pokémon Gold/Silver",
       "The Legend of Zelda: Oracle series",
       "Super Mario Bros. Deluxe",
       "Wario Land 3"
@@ -1118,7 +1148,7 @@
     "cpu": "Dual-core ARM11 MPCore @ 268 MHz",
     "description": "The Nintendo 3DS is a handheld game console produced by Nintendo. It is capable of displaying stereoscopic 3D effects without the use of 3D glasses or additional accessories.",
     "notableGames": [
-      "Pok\u00e9mon X/Y",
+      "Pokémon X/Y",
       "The Legend of Zelda: A Link Between Worlds",
       "Mario Kart 7",
       "Super Mario 3D Land"
@@ -1197,7 +1227,7 @@
     "cpu": "ARM946E-S @ 67 MHz",
     "description": "The Nintendo DS revolutionized handheld gaming with dual screens (one touchscreen), wireless connectivity, and backward compatibility with Game Boy Advance. It became one of the best-selling game consoles ever with over 154 million units sold. The DS introduced innovative touch-based gameplay.",
     "notableGames": [
-      "Pok\u00e9mon Diamond/Pearl",
+      "Pokémon Diamond/Pearl",
       "New Super Mario Bros.",
       "Brain Age",
       "Animal Crossing: Wild World",
@@ -1299,13 +1329,13 @@
     ]
   },
   "odyssey2": {
-    "name": "Magnavox Odyssey\u00b2",
+    "name": "Magnavox Odyssey²",
     "manufacturer": "Magnavox/Philips",
     "releaseYear": 1978,
     "generation": 2,
     "type": "Home Console",
     "cpu": "Intel 8048 @ 1.79 MHz",
-    "description": "The Odyssey\u00b2 (Videopac G7000 in Europe) was Magnavox's follow-up to the first home video game console. It featured a built-in keyboard and emphasized educational games alongside entertainment. While it had unique features, it struggled against the Atari 2600 and Intellivision.",
+    "description": "The Odyssey² (Videopac G7000 in Europe) was Magnavox's follow-up to the first home video game console. It featured a built-in keyboard and emphasized educational games alongside entertainment. While it had unique features, it struggled against the Atari 2600 and Intellivision.",
     "notableGames": [
       "K.C. Munchkin!",
       "Conquest of the World",
@@ -1393,6 +1423,20 @@
     "description": "n/a",
     "notableGames": []
   },
+  "pcfx": {
+    "name": "PC-FX",
+    "manufacturer": "NEC",
+    "releaseYear": 1994,
+    "generation": 5,
+    "type": "Home Console",
+    "cpu": "NEC V810 @ 21.5 MHz",
+    "description": "The PC-FX was NEC's successor to the PC Engine, released only in Japan. Unlike its competitors which focused on 3D graphics, the PC-FX specialized in 2D graphics and full-motion video playback. It was a commercial failure and was discontinued in 1998.",
+    "notableGames": [
+      "Zenki FX",
+      "Last Imperial Prince",
+      "Chip Chan Kick!"
+    ]
+  },
   "pet": {
     "name": "PET",
     "manufacturer": "n/a",
@@ -1429,7 +1473,7 @@
     "notableGames": []
   },
   "pokemini": {
-    "name": "Pok\u00e9mon Mini",
+    "name": "Pokémon Mini",
     "manufacturer": "Nintendo",
     "releaseYear": 2001,
     "generation": 6,
@@ -1437,9 +1481,9 @@
     "cpu": "Epson S1C88 8-bit @ 4 MHz",
     "description": "The smallest cartridge-based console ever made by Nintendo. It featured a monochrome screen, rumble, and a shock sensor.",
     "notableGames": [
-      "Pok\u00e9mon Party Mini",
-      "Pok\u00e9mon Pinball Mini",
-      "Pok\u00e9mon Tetris"
+      "Pokémon Party Mini",
+      "Pokémon Pinball Mini",
+      "Pokémon Tetris"
     ]
   },
   "ps2": {

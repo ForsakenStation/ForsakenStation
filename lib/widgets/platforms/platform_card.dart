@@ -33,7 +33,6 @@ class _PlatformCardState extends State<PlatformCard> {
   @override
   void initState() {
     super.initState();
-    // Trigger lazy loading of logo and background
     if (widget.logoPath == null) {
       widget.onLoadLogo();
     }
@@ -45,7 +44,6 @@ class _PlatformCardState extends State<PlatformCard> {
   @override
   void didUpdateWidget(PlatformCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Re-trigger loading if platform changed and paths are still null
     if (oldWidget.platform.name != widget.platform.name) {
       if (widget.logoPath == null) {
         widget.onLoadLogo();
@@ -71,13 +69,12 @@ class _PlatformCardState extends State<PlatformCard> {
         onTap: widget.onTap,
         child: Stack(
           children: [
-            // Background image (full card)
             if (widget.backgroundPath != null)
               Positioned.fill(
                 child: Image.asset(
                   widget.backgroundPath!,
                   fit: BoxFit.cover,
-                  cacheWidth: 400, // Optimize: no need for full resolution
+                  cacheWidth: 400,
                   cacheHeight: 300,
                   errorBuilder: (context, error, stackTrace) =>
                       Container(color: Theme.of(context).colorScheme.surface),

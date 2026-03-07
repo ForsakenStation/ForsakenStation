@@ -370,6 +370,18 @@
             "corePreferences": {}
         },
         {
+            "system": "c128",
+            "command": [
+                {
+                    "name": "vice_x128",
+                    "command": "retroarch://org.libretro.ios/LOAD/vice_x128"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
             "system": "c20",
             "command": [
                 {
@@ -583,6 +595,18 @@
             "corePreferences": {}
         },
         {
+            "system": "doom",
+            "command": [
+                {
+                    "name": "prboom",
+                    "command": "retroarch://org.libretro.ios/LOAD/prboom"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
             "system": "dos",
             "command": [
                 {
@@ -632,6 +656,18 @@
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
+            "system": "ebooks",
+            "command": [
+                {
+                    "name": "Pdf viwer",
+                    "command": "pdf.viewer"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": false,
             "corePreferences": {}
         },
         {
@@ -875,6 +911,26 @@
             ],
             "useForeverMode": false,
             "acceptZipFiles": false,
+            "corePreferences": {}
+        },
+        {
+            "system": "genesis",
+            "command": [
+                {
+                    "name": "genesis_plus_gx",
+                    "command": "retroarch://org.libretro.ios/LOAD/genesis_plus_gx"
+                },
+                {
+                    "name": "picodrive",
+                    "command": "retroarch://org.libretro.ios/LOAD/picodrive"
+                },
+                {
+                    "name": "blastem",
+                    "command": "retroarch://org.libretro.ios/LOAD/blastem"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
             "corePreferences": {}
         },
         {
@@ -1473,6 +1529,18 @@
             "corePreferences": {}
         },
         {
+            "system": "pcfx",
+            "command": [
+                {
+                    "name": "mednafen_pcfx",
+                    "command": "retroarch://org.libretro.ios/LOAD/mednafen_pcfx"
+                }
+            ],
+            "useForeverMode": false,
+            "acceptZipFiles": true,
+            "corePreferences": {}
+        },
+        {
             "system": "pet",
             "command": [
                 {
@@ -1618,18 +1686,6 @@
             ],
             "useForeverMode": false,
             "acceptZipFiles": true,
-            "corePreferences": {}
-        },
-        {
-            "system": "ebooks",
-            "command": [
-                {
-                    "name": "Pdf viwer",
-                    "command": "pdf.viewer"
-                }
-            ],
-            "useForeverMode": false,
-            "acceptZipFiles": false,
             "corePreferences": {}
         },
         {

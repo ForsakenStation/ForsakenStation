@@ -28,7 +28,7 @@ Usage:
 
 Examples:
   # Download media and update gamelist
-  ./scrape_media.py arduboy --media-types covers,screenshots
+  ./scrape_media.py arduboy --media-types covers, screenshots
 
   # Only update gamelist without downloading media
   ./scrape_media.py nes --gamelist-only --limit 50
@@ -123,9 +123,8 @@ PLATFORM_IDS = {
     "american laser games": 170,
     "amiga": 64,
     "amiga500": 64,
-    "amiga1200": 64,
-    "amiga (aga)": 111,
-    "amiga cd": 134,
+    "amiga1200": 111,
+    "amigacd": 134,
     "amigacd32": 130,
     "amiga cd32 (hack)": 139,
     "amigacdtv": 129,
@@ -133,7 +132,6 @@ PLATFORM_IDS = {
     "apple2": 86,
     "apple iigs": 217,
     "arcadia": 94,
-    "archimedes": 84,
     "arduboy": 263,
     "astrocade": 44,
     "atari2600": 26,
@@ -149,7 +147,7 @@ PLATFORM_IDS = {
     "atom": 36,
     "atomiswave": 53,
     "banpresto": 186,
-    "bbc micro": 37,
+    "bbcmicro": 37,
     "bk": 93,
     "camputers lynx": 88,
     "capcom classics": 151,
@@ -159,7 +157,7 @@ PLATFORM_IDS = {
     "cps3": 8,
     "cassettevision": 300,
     "cave": 47,
-    "cd-i": 133,
+    "cdi": 133,
     "century electronics": 179,
     "channelf": 80,
     "cinematronics": 192,
@@ -173,7 +171,8 @@ PLATFORM_IDS = {
     "daphne": 49,
     "hypseus": 49,
     "data east classics": 162,
-    "dragon 32/64": 91,
+    "dragon32": 91,
+    "dragon64": 91,
     "dreamcast": 23,
     "dynax": 173,
     "easyrpg": 231,
@@ -181,12 +180,12 @@ PLATFORM_IDS = {
     "eighting / raizing": 152,
     "electron": 85,
     "exidy": 165,
-    "exl 100": 96,
+    "exl100": 96,
     "fds": 106,
     "flipper": 197,
     "fmtowns": 253,
     "fm7": 97,
-    "future pinball": 199,
+    "fpinball": 199,
     "gaelco": 194,
     "gamate": 266,
     "gameandwatch": 52,
@@ -238,7 +237,7 @@ PLATFORM_IDS = {
     "model3": 55,
     "msx": 113,
     "msx1": 113,
-    "msx turbo r": 118,
+    "msxturbor": 118,
     "msx2": 116,
     "msx2+": 117,
     "ngage": 30,
@@ -781,7 +780,7 @@ def save_gamelist(gamelist_root: ET.Element, gamelist_path: Path) -> bool:
 def game_exists_in_gamelist(
     gamelist_root: ET.Element, rom_name: str, parent: str = ""
 ) -> bool:
-    """Check if game already exists in gamelist with metadata"""
+    """Check if a game already exists in gamelist with metadata"""
     # Build path (with parent directory if exists)
     if parent:
         rom_path = f"./{parent}/{rom_name}.zip"
@@ -814,7 +813,7 @@ def scrape_platform(
     limit: Optional[int] = None,
     skip_gamelist: bool = False,
     gamelist_only: bool = False,
-    startIndex: int = 0,
+    start_index: int = 0,
 ):
     """Scrape media for a platform"""
 
@@ -879,7 +878,7 @@ def scrape_platform(
         parent = rom["parent"]
 
         print(f"[{i}/{stats['total']}] {rom_name}")
-        if i < startIndex:
+        if i < start_index:
             continue
 
         # Check if gamelist entry already exists with full metadata
@@ -1166,7 +1165,7 @@ Examples:
         limit=args.limit,
         skip_gamelist=args.skip_gamelist,
         gamelist_only=args.gamelist_only,
-        startIndex=args.start_index,
+        start_index=args.start_index,
     )
 
     return 0 if success else 1
