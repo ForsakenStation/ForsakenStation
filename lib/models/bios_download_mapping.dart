@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import '../services/debug_service.dart';
 
 /// Represents a downloadable BIOS file with metadata from retroarch_system repo
 class DownloadableBiosFile {
@@ -77,8 +78,12 @@ class DownloadableBiosFile {
     const baseUrl = 'https://github.com/Abdess/retroarch_system/raw';
 
     if (customPath != null) {
-      // Direct path (e.g., "system/filename.bin")
-      final encodedPath = Uri.encodeComponent(customPath!);
+      // Direct path (e.g., "system/Machines/MSX - Arabic")
+      // Encode each segment individually to preserve '/' separators
+      final encodedPath = customPath!
+          .split('/')
+          .map(Uri.encodeComponent)
+          .join('/');
       final encodedFilename = Uri.encodeComponent(filename);
       return '$baseUrl/$branch/$encodedPath/$encodedFilename';
     } else {
@@ -105,13 +110,19 @@ class BiosDownloadMapping {
   });
 
   factory BiosDownloadMapping.fromJson(Map<String, dynamic> json) {
+    final rawFiles = json['files'] as List;
+    final parsedFiles = <DownloadableBiosFile>[];
+    for (final f in rawFiles) {
+      final map = f as Map<String, dynamic>;
+      // Skip entries with null or missing filename
+      if (map['filename'] == null) continue;
+      parsedFiles.add(DownloadableBiosFile.fromJson(map));
+    }
     return BiosDownloadMapping(
       platformId: json['platformId'] as String,
       repoFolder: json['repoFolder'] as String? ?? '',
       available: json['available'] as bool? ?? true,
-      files: (json['files'] as List)
-          .map((f) => DownloadableBiosFile.fromJson(f as Map<String, dynamic>))
-          .toList(),
+      files: parsedFiles,
     );
   }
 
@@ -150,6 +161,10 @@ class BiosDownloadMapping {
           .toList();
       return _cachedMappings!;
     } catch (e) {
+      DebugService.instance.error(
+        'Failed to load BIOS download mappings: $e',
+        tag: 'BiosMapping',
+      );
       return [];
     }
   }

@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../services/config_service.dart';
 import '../../services/keyboard_service.dart';
+import '../../services/emulator_download_service.dart';
+import '../../models/emulator_download_info.dart';
 import '../../widgets/common/platform_logo.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
@@ -25,10 +29,15 @@ class EmulatorManagementScreen extends StatefulWidget {
 
 class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
   final _configService = ConfigService.instance;
+  final _downloadService = EmulatorDownloadService.instance;
   final _keyboardService = KeyboardService.instance;
   final _focusNode = FocusNode();
   List<Map<String, dynamic>> _emulators = [];
   bool _isLoading = true;
+
+  // Download state
+  bool _isDownloading = false;
+  final Map<String, _EmulatorDownloadTask> _downloadTasks = {};
 
   @override
   void initState() {
@@ -94,6 +103,298 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
         );
       }
     }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Emulator download functionality
+  // ---------------------------------------------------------------------------
+
+  void _showDownloadDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          AppLocalizations.of(context)!.downloadEmulatorsAndGameLists,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _DownloadCategoryTile(
+              icon: Icons.download,
+              title: AppLocalizations.of(context)!.downloadAll,
+              onTap: () {
+                Navigator.pop(context);
+                _downloadCategory('all');
+              },
+            ),
+            _DownloadCategoryTile(
+              icon: Icons.videogame_asset,
+              title: AppLocalizations.of(context)!.categorySony,
+              onTap: () {
+                Navigator.pop(context);
+                _downloadCategory('sony');
+              },
+            ),
+            _DownloadCategoryTile(
+              icon: Icons.sports_esports,
+              title: AppLocalizations.of(context)!.categoryNintendo,
+              onTap: () {
+                Navigator.pop(context);
+                _downloadCategory('nintendo');
+              },
+            ),
+            _DownloadCategoryTile(
+              icon: Icons.gamepad,
+              title: AppLocalizations.of(context)!.categoryMicrosoft,
+              onTap: () {
+                Navigator.pop(context);
+                _downloadCategory('microsoft');
+              },
+            ),
+            _DownloadCategoryTile(
+              icon: Icons.apps,
+              title: AppLocalizations.of(context)!.categoryMultiPlatform,
+              onTap: () {
+                Navigator.pop(context);
+                _downloadCategory('multi');
+              },
+            ),
+            _DownloadCategoryTile(
+              icon: Icons.more_horiz,
+              title: AppLocalizations.of(context)!.categoryOtherEmulators,
+              onTap: () {
+                Navigator.pop(context);
+                _downloadCategory('other');
+              },
+            ),
+            _DownloadCategoryTile(
+              icon: Icons.build,
+              title: AppLocalizations.of(context)!.categoryUtilities,
+              onTap: () {
+                Navigator.pop(context);
+                _downloadCategory('utilities');
+              },
+            ),
+          ],
+        ),
+        actions: [
+          DialogButtonBar(
+            buttons: [
+              DialogButton(
+                label: AppLocalizations.of(context)!.cancel,
+                onPressed: () => Navigator.pop(context),
+                primary: true,
+                gamepadButton: GamepadButton.b,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _downloadCategory(String category) async {
+    setState(() => _isDownloading = true);
+
+    try {
+      final List<EmulatorDownloadInfo> emulators;
+      if (category == 'all') {
+        emulators = await EmulatorCatalog.getAvailableForCurrentPlatform();
+      } else {
+        final allInCategory = await EmulatorCatalog.getByCategory(category);
+        emulators = allInCategory
+            .where((e) => e.isAvailableForCurrentPlatform())
+            .toList();
+      }
+
+      if (emulators.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.noEmulatorsAvailable),
+          ),
+        );
+        return;
+      }
+
+      final totalSizeMB = _downloadService.getTotalDownloadSize(emulators);
+
+      if (!mounted) return;
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(AppLocalizations.of(context)!.confirmDownload),
+          content: Text(
+            AppLocalizations.of(context)!.confirmDownloadDescription(
+              '${emulators.length}',
+              '$totalSizeMB',
+            ),
+          ),
+          actions: [
+            DialogButtonBar(
+              buttons: [
+                DialogButton(
+                  label: AppLocalizations.of(context)!.cancel,
+                  onPressed: () => Navigator.pop(context, false),
+                  gamepadButton: GamepadButton.b,
+                ),
+                DialogButton(
+                  label: AppLocalizations.of(context)!.download,
+                  onPressed: () => Navigator.pop(context, true),
+                  primary: true,
+                  gamepadButton: GamepadButton.a,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+      if (confirm != true) return;
+
+      for (final emulator in emulators) {
+        final isInstalled = await _downloadService.isEmulatorInstalled(
+          emulator,
+        );
+        if (isInstalled) {
+          setState(() {
+            _downloadTasks[emulator.name] = _EmulatorDownloadTask(
+              name: emulator.displayName,
+              status: _DownloadStatus.completed,
+              progress: 1.0,
+              statusMessage: AppLocalizations.of(context)!.alreadyInstalled,
+            );
+          });
+          continue;
+        }
+
+        setState(() {
+          _downloadTasks[emulator.name] = _EmulatorDownloadTask(
+            name: emulator.displayName,
+            status: _DownloadStatus.pending,
+          );
+        });
+      }
+
+      for (final emulator in emulators) {
+        final task = _downloadTasks[emulator.name];
+        if (task == null || task.status == _DownloadStatus.completed) continue;
+
+        setState(() {
+          task.status = _DownloadStatus.downloading;
+          task.statusMessage = AppLocalizations.of(context)!.starting;
+        });
+
+        await _downloadService.downloadEmulator(
+          emulator,
+          onProgress: (progress) {
+            if (mounted) {
+              setState(() {
+                task.progress = progress;
+              });
+            }
+          },
+          onStatus: (status) {
+            if (mounted) {
+              setState(() {
+                task.statusMessage = status;
+              });
+            }
+          },
+        );
+
+        setState(() {
+          task.status = _DownloadStatus.completed;
+          task.progress = 1.0;
+          task.statusMessage = AppLocalizations.of(context)!.completed;
+        });
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.allDownloads)),
+        );
+      }
+      _downloadService.makeAppImagesExecutable(
+        Directory(ConfigService.instance.emulatorsPath).path,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+        );
+      }
+    } finally {
+      setState(() => _isDownloading = false);
+    }
+  }
+
+  void _clearDownloadTasks() {
+    setState(() {
+      _downloadTasks.removeWhere(
+        (key, task) =>
+            task.status == _DownloadStatus.completed ||
+            task.status == _DownloadStatus.failed,
+      );
+    });
+  }
+
+  Widget _buildDownloadTaskRow(_EmulatorDownloadTask task) {
+    final IconData icon;
+    final Color color;
+    switch (task.status) {
+      case _DownloadStatus.pending:
+        icon = Icons.hourglass_empty;
+        color = Colors.grey;
+      case _DownloadStatus.downloading:
+        icon = Icons.downloading;
+        color = Colors.blue;
+      case _DownloadStatus.completed:
+        icon = Icons.check_circle;
+        color = Colors.green;
+      case _DownloadStatus.failed:
+        icon = Icons.error;
+        color = Colors.red;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(task.name, style: const TextStyle(fontSize: 13)),
+                if (task.statusMessage != null)
+                  Text(
+                    task.statusMessage!,
+                    style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                  ),
+              ],
+            ),
+          ),
+          if (task.status == _DownloadStatus.downloading) ...[
+            SizedBox(
+              width: 60,
+              child: LinearProgressIndicator(
+                value: task.progress > 0 ? task.progress : null,
+              ),
+            ),
+            if (task.progress > 0)
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: Text(
+                  '${(task.progress * 100).toStringAsFixed(0)}%',
+                  style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                ),
+              ),
+          ],
+        ],
+      ),
+    );
   }
 
   void _addEmulator() {
@@ -319,125 +620,203 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             Expanded(
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : _emulators.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.videogame_asset_off,
-                            size: 64,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            AppLocalizations.of(context)!.noEmulatorsConfigured,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            AppLocalizations.of(context)!.addFirstEmulator,
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                          const SizedBox(height: 24),
-                          ElevatedButton.icon(
-                            onPressed: _addEmulator,
-                            icon: const Icon(Icons.add),
-                            label: Text(
-                              AppLocalizations.of(context)!.addEmulator,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: _emulators.length,
-                      itemBuilder: (context, index) {
-                        final emulator = _emulators[index];
-                        final system = emulator['system'] as String;
-                        final command = emulator['command'];
-                        final acceptZip = emulator['acceptZipFiles'];
-                        final todo = emulator['todo'] == true;
-
-                        return Card(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: ListTile(
-                            leading: PlatformLogo(
-                              platformName: system,
-                              size: 96,
-                            ),
-                            title: Row(
-                              children: [
-                                Text(
-                                  system.toUpperCase(),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
+                  : ListView(
+                      children: [
+                        // Download emulators section
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.download, size: 20),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.downloadAll,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      ElevatedButton.icon(
+                                        onPressed: _isDownloading
+                                            ? null
+                                            : _showDownloadDialog,
+                                        icon: const Icon(Icons.download),
+                                        label: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.download,
+                                        ),
+                                      ),
+                                    ],
                                   ),
+                                  // Active download tasks
+                                  if (_downloadTasks.isNotEmpty) ...[
+                                    const SizedBox(height: 12),
+                                    const Divider(),
+                                    const SizedBox(height: 8),
+                                    ..._downloadTasks.values.map(
+                                      (task) => _buildDownloadTaskRow(task),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextButton(
+                                        onPressed: _clearDownloadTasks,
+                                        child: Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.clearCompleted,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Emulators list or empty state
+                        if (_emulators.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(32),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.videogame_asset_off,
+                                    size: 64,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.noEmulatorsConfigured,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.addFirstEmulator,
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                  const SizedBox(height: 24),
+                                  ElevatedButton.icon(
+                                    onPressed: _addEmulator,
+                                    icon: const Icon(Icons.add),
+                                    label: Text(
+                                      AppLocalizations.of(context)!.addEmulator,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        else
+                          ..._emulators.map((emulator) {
+                            final system = emulator['system'] as String;
+                            final command = emulator['command'];
+                            final acceptZip = emulator['acceptZipFiles'];
+                            final todo = emulator['todo'] == true;
+
+                            return Card(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              child: ListTile(
+                                leading: PlatformLogo(
+                                  platformName: system,
+                                  size: 96,
                                 ),
-                                if (todo) ...[
-                                  const SizedBox(width: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.orange,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: const Text(
-                                      'WIP',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.white,
+                                title: Row(
+                                  children: [
+                                    Text(
+                                      system.toUpperCase(),
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                ],
-                                if (acceptZip == true) ...[
-                                  const SizedBox(width: 8),
-                                  const Icon(
-                                    Icons.folder_zip,
-                                    size: 16,
-                                    color: Colors.grey,
-                                  ),
-                                ],
-                              ],
-                            ),
-                            subtitle: Text(
-                              _getCommandPreview(command),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () => _editEmulator(emulator),
-                                  tooltip: AppLocalizations.of(context)!.edit,
+                                    if (todo) ...[
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.orange,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'WIP',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    if (acceptZip == true) ...[
+                                      const SizedBox(width: 8),
+                                      const Icon(
+                                        Icons.folder_zip,
+                                        size: 16,
+                                        color: Colors.grey,
+                                      ),
+                                    ],
+                                  ],
                                 ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red[300],
-                                  ),
-                                  onPressed: () => _deleteEmulator(system),
-                                  tooltip: AppLocalizations.of(context)!.delete,
+                                subtitle: Text(
+                                  _getCommandPreview(command),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ],
-                            ),
-                            onTap: () => _editEmulator(emulator),
-                          ),
-                        );
-                      },
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () => _editEmulator(emulator),
+                                      tooltip: AppLocalizations.of(
+                                        context,
+                                      )!.edit,
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red[300],
+                                      ),
+                                      onPressed: () => _deleteEmulator(system),
+                                      tooltip: AppLocalizations.of(
+                                        context,
+                                      )!.delete,
+                                    ),
+                                  ],
+                                ),
+                                onTap: () => _editEmulator(emulator),
+                              ),
+                            );
+                          }),
+                      ],
                     ),
             ),
             ControlsBottomBar(
@@ -748,4 +1127,46 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
       ],
     );
   }
+}
+
+// -----------------------------------------------------------------------------
+// Emulator download helper classes
+// -----------------------------------------------------------------------------
+
+class _DownloadCategoryTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  const _DownloadCategoryTile({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: onTap,
+    );
+  }
+}
+
+enum _DownloadStatus { pending, downloading, completed, failed }
+
+class _EmulatorDownloadTask {
+  final String name;
+  _DownloadStatus status;
+  double progress;
+  String? statusMessage;
+
+  _EmulatorDownloadTask({
+    required this.name,
+    this.status = _DownloadStatus.pending,
+    this.progress = 0.0,
+    this.statusMessage,
+  });
 }

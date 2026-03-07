@@ -111,25 +111,27 @@ class _SaveRomDialogState extends State<SaveRomDialog>
               if (widget.imagePath != null)
                 Container(
                   constraints: const BoxConstraints(
-                    maxHeight: 150,
-                    maxWidth: 150,
+                    maxHeight: 200,
+                    maxWidth: 200,
                   ),
-                  margin: const EdgeInsets.only(bottom: 16),
+                  margin: const EdgeInsets.only(bottom: 24),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.file(
                       File(widget.imagePath!),
                       fit: BoxFit.contain,
+                      cacheWidth: 400, // Max 200px displayed, 2x for retina
+                      cacheHeight: 400,
                       errorBuilder: (context, error, stackTrace) {
-                        return const PlaceholderImage(size: 100);
+                        return PlaceholderImage(size: 150);
                       },
                     ),
                   ),
                 )
               else
                 Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: const PlaceholderImage(size: 100),
+                  margin: const EdgeInsets.only(bottom: 24),
+                  child: PlaceholderImage(size: 150),
                 ),
 
               // ROM Name

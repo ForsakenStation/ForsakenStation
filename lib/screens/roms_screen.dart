@@ -120,6 +120,8 @@ class _RomsScreenState extends State<RomsScreen> {
       platformName: widget.platform.name,
       requestFocus: _requestFocusForCurrentViewMode,
       isCollection: widget.isCollection,
+      mediaService: _mediaService,
+      mediaCache: _controller.mediaCache,
     );
 
     // Update gamelist service with correct path asynchronously
@@ -275,6 +277,8 @@ class _RomsScreenState extends State<RomsScreen> {
       platformName: widget.platform.name,
       requestFocus: _requestFocusForCurrentViewMode,
       isCollection: widget.isCollection,
+      mediaService: _mediaService,
+      mediaCache: _controller.mediaCache,
     );
 
     _debug.info(
@@ -713,7 +717,8 @@ class _RomsScreenState extends State<RomsScreen> {
   void _handleRomLaunch(RomItem item) async {
     final success = await _romLauncher.launchRom(context, item);
     if (success && mounted) {
-      await _romSaveHandler.handleRomSave(context, item, null);
+      sleep(Duration(seconds: 2));
+      await _romSaveHandler.handleRomSave(context, item);
     }
   }
 

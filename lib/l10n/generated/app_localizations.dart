@@ -4482,6 +4482,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try downloading again\nCheck your internet connection\nVerify the file is still available\nContact support if problem persists'**
   String get biosErrorUnknownSuggestions;
+
+  /// Title for the download emulators step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Download Emulators'**
+  String get wizardDownloadEmulators;
+
+  /// Description for the download emulators step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Download pre-configured emulator binaries for your platform. You can choose to download all or select by category.'**
+  String get wizardDownloadEmulatorsDesc;
+
+  /// Title for the download ROM lists step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Download ROM Lists'**
+  String get wizardDownloadRomLists;
+
+  /// Description for the download ROM lists step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Download the ROM database files from GitHub. These contain metadata for organizing your game library.'**
+  String get wizardDownloadRomListsDesc;
+
+  /// Title for the download gamelists step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Download Gamelists'**
+  String get wizardDownloadGamelists;
+
+  /// Description for the download gamelists step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Download gamelist.xml files from GitHub. These contain game names, descriptions, ratings, and other metadata.'**
+  String get wizardDownloadGamelistsDesc;
+
+  /// Button label to skip an optional download step in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get wizardSkipStep;
+
+  /// Status message when a wizard download step finishes successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Download complete!'**
+  String get wizardDownloadComplete;
+
+  /// Status message when a wizard download step fails
+  ///
+  /// In en, this message translates to:
+  /// **'Download failed: {error}'**
+  String wizardDownloadFailed(String error);
+
+  /// Status shown when content is already downloaded in wizard step
+  ///
+  /// In en, this message translates to:
+  /// **'Already downloaded'**
+  String get wizardAlreadyDownloaded;
+
+  /// Instruction text for emulator category selection in wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Select a category to download, or download all:'**
+  String get wizardSelectCategory;
+
+  /// Status text shown while a download is in progress in wizard
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading...'**
+  String get wizardDownloading;
+
+  /// Note shown on optional download steps in setup wizard
+  ///
+  /// In en, this message translates to:
+  /// **'This step is optional. You can download later from Settings.'**
+  String get wizardDownloadOptional;
 }
 
 class _AppLocalizationsDelegate

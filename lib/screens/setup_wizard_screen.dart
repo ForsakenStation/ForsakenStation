@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +10,10 @@ import '../services/config_service.dart';
 import '../services/debug_service.dart';
 import '../services/keyboard_service.dart';
 import '../services/gamepad_service.dart';
+import '../services/emulator_download_service.dart';
+import '../services/romlist_download_service.dart';
+import '../services/gamelist_download_service.dart';
+import '../models/emulator_download_info.dart';
 import '../widgets/common/controls_bottom_bar.dart';
 import '../mixins/gamepad_polling_mixin.dart';
 import '../mixins/screen_navigation_mixin.dart';
@@ -19,7 +25,10 @@ import '../l10n/generated/app_localizations.dart';
 ///   1. Welcome + Legal Disclaimer (must accept to proceed)
 ///   2. Platform Selection / Emulator Paths (desktop only, skipped on web)
 ///   3. Storage Paths (desktop only, skipped on web)
-///   4. Ready / Summary
+///   4. Download Emulators (desktop only, optional)
+///   5. Download ROM Lists (desktop only, optional)
+///   6. Download Gamelists (desktop only, optional)
+///   7. Ready / Summary
 class SetupWizardScreen extends StatefulWidget {
   /// Callback invoked when the wizard completes.
   /// The parent should navigate to the home screen.
@@ -42,8 +51,9 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
 
   // Step tracking
   int _currentStep = 0;
-  late final int _totalSteps;
-  late final List<_WizardStep> _steps;
+  late int _totalSteps;
+  late List<_WizardStep> _steps;
+  bool _stepsInitialized = false;
 
   // Validation
   String? _validationError;
@@ -59,6 +69,21 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
   late final TextEditingController _mediaPathController;
   late final TextEditingController _romTempPathController;
   late final TextEditingController _romForeverPathController;
+
+  // Step 4: Download Emulators (desktop only)
+  _WizardDownloadState _emuDownloadState = _WizardDownloadState.idle;
+  double _emuDownloadProgress = 0.0;
+  String? _emuDownloadStatus;
+  int _emuDownloadTotal = 0;
+  int _emuDownloadCompleted = 0;
+
+  // Step 5: Download ROM Lists (desktop only)
+  _WizardDownloadState _romlistDownloadState = _WizardDownloadState.idle;
+  double _romlistDownloadProgress = 0.0;
+
+  // Step 6: Download Gamelists (desktop only)
+  _WizardDownloadState _gamelistDownloadState = _WizardDownloadState.idle;
+  double _gamelistDownloadProgress = 0.0;
 
   @override
   void initState() {
@@ -81,34 +106,78 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
       text: _configService.romForeverPath,
     );
 
-    // Build step list based on platform
-    _steps = [
-      _WizardStep(
-        title: AppLocalizations.of(context)!.welcome,
-        icon: Icons.waving_hand,
-        builder: _buildWelcomeStep,
-      ),
-      if (!kIsWeb) ...[
-        _WizardStep(
-          title: AppLocalizations.of(context)!.emulators,
-          icon: Icons.videogame_asset,
-          builder: _buildEmulatorsStep,
-        ),
-        _WizardStep(
-          title: AppLocalizations.of(context)!.storage,
-          icon: Icons.folder,
-          builder: _buildStorageStep,
-        ),
-      ],
-      _WizardStep(
-        title: AppLocalizations.of(context)!.ready,
-        icon: Icons.check_circle,
-        builder: _buildReadyStep,
-      ),
-    ];
-    _totalSteps = _steps.length;
-
     startGamepadPolling(_handleGamepadInput);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_stepsInitialized) {
+      _stepsInitialized = true;
+      // Build step list based on platform
+      _steps = [
+        _WizardStep(
+          title: AppLocalizations.of(context)!.welcome,
+          icon: Icons.waving_hand,
+          builder: _buildWelcomeStep,
+        ),
+        if (!kIsWeb) ...[
+          _WizardStep(
+            title: AppLocalizations.of(context)!.emulators,
+            icon: Icons.videogame_asset,
+            builder: _buildEmulatorsStep,
+          ),
+          _WizardStep(
+            title: AppLocalizations.of(context)!.storage,
+            icon: Icons.folder,
+            builder: _buildStorageStep,
+          ),
+          _WizardStep(
+            title: AppLocalizations.of(context)!.wizardDownloadEmulators,
+            icon: Icons.download,
+            builder: _buildDownloadEmulatorsStep,
+          ),
+          _WizardStep(
+            title: AppLocalizations.of(context)!.wizardDownloadRomLists,
+            icon: Icons.list_alt,
+            builder: _buildDownloadRomListsStep,
+          ),
+          _WizardStep(
+            title: AppLocalizations.of(context)!.wizardDownloadGamelists,
+            icon: Icons.format_list_bulleted,
+            builder: _buildDownloadGamelistsStep,
+          ),
+        ],
+        _WizardStep(
+          title: AppLocalizations.of(context)!.ready,
+          icon: Icons.check_circle,
+          builder: _buildReadyStep,
+        ),
+      ];
+      _totalSteps = _steps.length;
+
+      // Check initial download states
+      if (!kIsWeb) {
+        _checkInitialDownloadStates();
+      }
+    }
+  }
+
+  Future<void> _checkInitialDownloadStates() async {
+    final romlistDownloaded = await RomlistDownloadService.instance
+        .isDownloaded();
+    final gamelistDownloaded = await GamelistDownloadService.instance
+        .isDownloaded();
+
+    if (!mounted) return;
+    setState(() {
+      if (romlistDownloaded) {
+        _romlistDownloadState = _WizardDownloadState.alreadyDone;
+      }
+      if (gamelistDownloaded) {
+        _gamelistDownloadState = _WizardDownloadState.alreadyDone;
+      }
+    });
   }
 
   @override
@@ -169,6 +238,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
       }
     }
 
+    // Download steps (3, 4, 5) are optional - no validation needed
     return null;
   }
 
@@ -178,6 +248,13 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
       setState(() => _validationError = error);
       return;
     }
+
+    // Save paths when leaving storage step (step 2) so download steps
+    // can use the configured paths
+    if (!kIsWeb && _currentStep == 2) {
+      _savePaths();
+    }
+
     if (!_canGoNext) return;
     setState(() {
       _validationError = null;
@@ -280,6 +357,180 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
     }
 
     return KeyEventResult.ignored;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Download logic
+  // ---------------------------------------------------------------------------
+
+  Future<void> _downloadEmulators(String category) async {
+    setState(() {
+      _emuDownloadState = _WizardDownloadState.downloading;
+      _emuDownloadProgress = 0.0;
+      _emuDownloadStatus = null;
+      _emuDownloadCompleted = 0;
+    });
+
+    try {
+      final downloadService = EmulatorDownloadService.instance;
+      final List<EmulatorDownloadInfo> emulators;
+
+      if (category == 'all') {
+        emulators = await EmulatorCatalog.getAvailableForCurrentPlatform();
+      } else {
+        final allInCategory = await EmulatorCatalog.getByCategory(category);
+        emulators = allInCategory
+            .where((e) => e.isAvailableForCurrentPlatform())
+            .toList();
+      }
+
+      if (emulators.isEmpty) {
+        if (!mounted) return;
+        setState(() {
+          _emuDownloadState = _WizardDownloadState.done;
+        });
+        return;
+      }
+
+      setState(() {
+        _emuDownloadTotal = emulators.length;
+      });
+
+      for (final emulator in emulators) {
+        final isInstalled = await downloadService.isEmulatorInstalled(emulator);
+        if (isInstalled) {
+          setState(() {
+            _emuDownloadCompleted++;
+            _emuDownloadProgress = _emuDownloadCompleted / _emuDownloadTotal;
+            _emuDownloadStatus = emulator.displayName;
+          });
+          continue;
+        }
+
+        if (!mounted) return;
+        setState(() {
+          _emuDownloadStatus = emulator.displayName;
+        });
+
+        await downloadService.downloadEmulator(
+          emulator,
+          onProgress: (progress) {
+            if (mounted) {
+              setState(() {
+                final baseProgress = _emuDownloadCompleted / _emuDownloadTotal;
+                final stepProgress = progress / _emuDownloadTotal;
+                _emuDownloadProgress = baseProgress + stepProgress;
+              });
+            }
+          },
+          onStatus: (status) {
+            if (mounted) {
+              setState(() {
+                _emuDownloadStatus = '${emulator.displayName}: $status';
+              });
+            }
+          },
+        );
+
+        if (!mounted) return;
+        setState(() {
+          _emuDownloadCompleted++;
+          _emuDownloadProgress = _emuDownloadCompleted / _emuDownloadTotal;
+        });
+      }
+
+      downloadService.makeAppImagesExecutable(
+        Directory(ConfigService.instance.emulatorsPath).path,
+      );
+
+      if (!mounted) return;
+      setState(() {
+        _emuDownloadState = _WizardDownloadState.done;
+        _emuDownloadProgress = 1.0;
+      });
+    } catch (e) {
+      DebugService.instance.error(
+        'Wizard emulator download failed: $e',
+        tag: 'SetupWizard',
+      );
+      if (!mounted) return;
+      setState(() {
+        _emuDownloadState = _WizardDownloadState.failed;
+        _emuDownloadStatus = e.toString();
+      });
+    }
+  }
+
+  Future<void> _downloadRomLists() async {
+    setState(() {
+      _romlistDownloadState = _WizardDownloadState.downloading;
+      _romlistDownloadProgress = 0.0;
+    });
+
+    try {
+      final success = await RomlistDownloadService.instance.downloadAndExtract(
+        onProgress: (progress, received, total) {
+          if (mounted) {
+            setState(() {
+              _romlistDownloadProgress = progress;
+            });
+          }
+        },
+      );
+
+      if (!mounted) return;
+      setState(() {
+        _romlistDownloadState = success
+            ? _WizardDownloadState.done
+            : _WizardDownloadState.failed;
+        _romlistDownloadProgress = success ? 1.0 : 0.0;
+      });
+    } catch (e) {
+      DebugService.instance.error(
+        'Wizard ROM list download failed: $e',
+        tag: 'SetupWizard',
+      );
+      if (!mounted) return;
+      setState(() {
+        _romlistDownloadState = _WizardDownloadState.failed;
+      });
+    }
+  }
+
+  Future<void> _downloadGamelists() async {
+    setState(() {
+      _gamelistDownloadState = _WizardDownloadState.downloading;
+      _gamelistDownloadProgress = 0.0;
+    });
+
+    try {
+      final success = await GamelistDownloadService.instance.downloadAndExtract(
+        onProgress: (progress, received, total) {
+          if (mounted) {
+            setState(() {
+              _gamelistDownloadProgress = progress;
+            });
+          }
+        },
+      );
+
+      if (!mounted) return;
+      setState(() {
+        _gamelistDownloadState = success
+            ? _WizardDownloadState.done
+            : _WizardDownloadState.failed;
+        _gamelistDownloadProgress = success ? 1.0 : 0.0;
+      });
+    } catch (e) {
+      DebugService.instance.error(
+        'Wizard gamelist download failed: $e',
+        tag: 'SetupWizard',
+      );
+      if (!mounted) return;
+      setState(() {
+        _gamelistDownloadState = _WizardDownloadState.failed;
+      });
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -421,6 +672,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
                               ? FontWeight.bold
                               : FontWeight.normal,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -629,7 +881,250 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
   }
 
   // ---------------------------------------------------------------------------
-  // Step 4: Ready
+  // Step 4: Download Emulators (desktop only)
+  // ---------------------------------------------------------------------------
+
+  Widget _buildDownloadEmulatorsStep() {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              Text(
+                l10n.wizardDownloadEmulators,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.wizardDownloadEmulatorsDesc,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.wizardDownloadOptional,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Status / progress
+              _buildDownloadStateWidget(
+                theme: theme,
+                state: _emuDownloadState,
+                progress: _emuDownloadProgress,
+                statusText: _emuDownloadStatus,
+                completedCount: _emuDownloadCompleted,
+                totalCount: _emuDownloadTotal,
+              ),
+
+              const SizedBox(height: 24),
+
+              // Category selection buttons
+              if (_emuDownloadState == _WizardDownloadState.idle ||
+                  _emuDownloadState == _WizardDownloadState.failed) ...[
+                Text(
+                  l10n.wizardSelectCategory,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    _buildCategoryChip(
+                      label: l10n.downloadAll,
+                      icon: Icons.download,
+                      onTap: () => _downloadEmulators('all'),
+                    ),
+                    _buildCategoryChip(
+                      label: l10n.categorySony,
+                      icon: Icons.videogame_asset,
+                      onTap: () => _downloadEmulators('sony'),
+                    ),
+                    _buildCategoryChip(
+                      label: l10n.categoryNintendo,
+                      icon: Icons.sports_esports,
+                      onTap: () => _downloadEmulators('nintendo'),
+                    ),
+                    _buildCategoryChip(
+                      label: l10n.categoryMicrosoft,
+                      icon: Icons.gamepad,
+                      onTap: () => _downloadEmulators('microsoft'),
+                    ),
+                    _buildCategoryChip(
+                      label: l10n.categoryMultiPlatform,
+                      icon: Icons.apps,
+                      onTap: () => _downloadEmulators('multi'),
+                    ),
+                    _buildCategoryChip(
+                      label: l10n.categoryOtherEmulators,
+                      icon: Icons.more_horiz,
+                      onTap: () => _downloadEmulators('other'),
+                    ),
+                    _buildCategoryChip(
+                      label: l10n.categoryUtilities,
+                      icon: Icons.build,
+                      onTap: () => _downloadEmulators('utilities'),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Step 5: Download ROM Lists (desktop only)
+  // ---------------------------------------------------------------------------
+
+  Widget _buildDownloadRomListsStep() {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              Text(
+                l10n.wizardDownloadRomLists,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.wizardDownloadRomListsDesc,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.wizardDownloadOptional,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Status / progress
+              _buildDownloadStateWidget(
+                theme: theme,
+                state: _romlistDownloadState,
+                progress: _romlistDownloadProgress,
+              ),
+
+              const SizedBox(height: 24),
+
+              // Download button
+              if (_romlistDownloadState == _WizardDownloadState.idle ||
+                  _romlistDownloadState == _WizardDownloadState.failed)
+                Center(
+                  child: FilledButton.icon(
+                    onPressed: _downloadRomLists,
+                    icon: const Icon(Icons.download),
+                    label: Text(l10n.download),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Step 6: Download Gamelists (desktop only)
+  // ---------------------------------------------------------------------------
+
+  Widget _buildDownloadGamelistsStep() {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              Text(
+                l10n.wizardDownloadGamelists,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.wizardDownloadGamelistsDesc,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.wizardDownloadOptional,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Status / progress
+              _buildDownloadStateWidget(
+                theme: theme,
+                state: _gamelistDownloadState,
+                progress: _gamelistDownloadProgress,
+              ),
+
+              const SizedBox(height: 24),
+
+              // Download button
+              if (_gamelistDownloadState == _WizardDownloadState.idle ||
+                  _gamelistDownloadState == _WizardDownloadState.failed)
+                Center(
+                  child: FilledButton.icon(
+                    onPressed: _downloadGamelists,
+                    icon: const Icon(Icons.download),
+                    label: Text(l10n.download),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Step 7: Ready
   // ---------------------------------------------------------------------------
 
   Widget _buildReadyStep() {
@@ -811,10 +1306,167 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
       ],
     );
   }
+
+  /// Shared widget for showing download state across the 3 download steps.
+  Widget _buildDownloadStateWidget({
+    required ThemeData theme,
+    required _WizardDownloadState state,
+    required double progress,
+    String? statusText,
+    int? completedCount,
+    int? totalCount,
+  }) {
+    final l10n = AppLocalizations.of(context)!;
+
+    switch (state) {
+      case _WizardDownloadState.idle:
+        return const SizedBox.shrink();
+
+      case _WizardDownloadState.downloading:
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        l10n.wizardDownloading,
+                        style: theme.textTheme.titleSmall,
+                      ),
+                    ),
+                    if (completedCount != null && totalCount != null)
+                      Text(
+                        '$completedCount / $totalCount',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                LinearProgressIndicator(value: progress > 0 ? progress : null),
+                if (statusText != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    statusText,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+                if (progress > 0) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    '${(progress * 100).toStringAsFixed(0)}%',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        );
+
+      case _WizardDownloadState.done:
+        return Card(
+          color: Colors.green.withValues(alpha: 0.1),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.green),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.wizardDownloadComplete,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+
+      case _WizardDownloadState.failed:
+        return Card(
+          color: Colors.red.withValues(alpha: 0.1),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.error, color: Colors.red),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        l10n.wizardDownloadFailed(
+                          statusText ?? 'Unknown error',
+                        ),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+
+      case _WizardDownloadState.alreadyDone:
+        return Card(
+          color: Colors.blue.withValues(alpha: 0.1),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                const Icon(Icons.info, color: Colors.blue),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.wizardAlreadyDownloaded,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+    }
+  }
+
+  Widget _buildCategoryChip({
+    required String label,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return ActionChip(
+      avatar: Icon(icon, size: 18),
+      label: Text(label),
+      onPressed: onTap,
+    );
+  }
 }
 
 // -----------------------------------------------------------------------------
-// Helper class
+// Helper classes
 // -----------------------------------------------------------------------------
 
 class _WizardStep {
@@ -828,3 +1480,6 @@ class _WizardStep {
     required this.builder,
   });
 }
+
+/// State for each download step in the wizard.
+enum _WizardDownloadState { idle, downloading, done, failed, alreadyDone }

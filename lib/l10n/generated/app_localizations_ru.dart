@@ -2447,4 +2447,50 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get biosErrorUnknownSuggestions =>
       'Попробуйте загрузить снова\nПроверьте подключение к интернету\nУбедитесь, что файл ещё доступен\nОбратитесь в поддержку, если проблема сохраняется';
+
+  @override
+  String get wizardDownloadEmulators => 'Скачать эмуляторы';
+
+  @override
+  String get wizardDownloadEmulatorsDesc =>
+      'Скачайте предварительно настроенные файлы эмуляторов для вашей платформы. Вы можете скачать все или выбрать по категории.';
+
+  @override
+  String get wizardDownloadRomLists => 'Скачать списки ROM';
+
+  @override
+  String get wizardDownloadRomListsDesc =>
+      'Скачайте файлы базы данных ROM с GitHub. Они содержат метаданные для организации вашей игровой библиотеки.';
+
+  @override
+  String get wizardDownloadGamelists => 'Скачать списки игр';
+
+  @override
+  String get wizardDownloadGamelistsDesc =>
+      'Скачайте файлы gamelist.xml с GitHub. Они содержат названия игр, описания, оценки и другие метаданные.';
+
+  @override
+  String get wizardSkipStep => 'Пропустить';
+
+  @override
+  String get wizardDownloadComplete => 'Загрузка завершена!';
+
+  @override
+  String wizardDownloadFailed(String error) {
+    return 'Ошибка загрузки: $error';
+  }
+
+  @override
+  String get wizardAlreadyDownloaded => 'Уже скачано';
+
+  @override
+  String get wizardSelectCategory =>
+      'Выберите категорию для скачивания или скачайте все:';
+
+  @override
+  String get wizardDownloading => 'Скачивание...';
+
+  @override
+  String get wizardDownloadOptional =>
+      'Этот шаг необязателен. Вы можете скачать позже из Настроек.';
 }

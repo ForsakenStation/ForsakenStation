@@ -742,5 +742,18 @@
   "biosErrorArchiveMessage": "Error al extraer el archivo",
   "biosErrorArchiveSuggestions": "El archivo descargado puede estar dañado\nIntenta descargar el archivo de nuevo\nComprueba si la herramienta de extracción correcta está disponible\nVerifica que el archivo tiene un formato de archivo válido",
   "biosErrorUnknownMessage": "Descarga fallida",
-  "biosErrorUnknownSuggestions": "Intenta descargarlo de nuevo\nComprueba tu conexión a internet\nVerifica que el archivo sigue disponible\nContacta con soporte si el problema persiste"
+  "biosErrorUnknownSuggestions": "Intenta descargarlo de nuevo\nComprueba tu conexión a internet\nVerifica que el archivo sigue disponible\nContacta con soporte si el problema persiste",
+  "wizardDownloadEmulators": "Descargar emuladores",
+  "wizardDownloadEmulatorsDesc": "Descarga los binarios de emuladores preconfigurados para tu plataforma. Puedes descargar todos o seleccionar por categoría.",
+  "wizardDownloadRomLists": "Descargar listas de ROMs",
+  "wizardDownloadRomListsDesc": "Descarga los archivos de base de datos de ROMs desde GitHub. Contienen metadatos para organizar tu biblioteca de juegos.",
+  "wizardDownloadGamelists": "Descargar gamelists",
+  "wizardDownloadGamelistsDesc": "Descarga archivos gamelist.xml desde GitHub. Contienen nombres de juegos, descripciones, puntuaciones y otros metadatos.",
+  "wizardSkipStep": "Omitir",
+  "wizardDownloadComplete": "¡Descarga completada!",
+  "wizardDownloadFailed": "Error en la descarga: {error}",
+  "wizardAlreadyDownloaded": "Ya descargado",
+  "wizardSelectCategory": "Selecciona una categoría para descargar, o descarga todo:",
+  "wizardDownloading": "Descargando...",
+  "wizardDownloadOptional": "Este paso es opcional. Puedes descargar más tarde desde Ajustes."
 }

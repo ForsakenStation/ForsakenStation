@@ -2417,4 +2417,49 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get biosErrorUnknownSuggestions =>
       'جرّب التنزيل مرة أخرى\nتحقق من اتصالك بالإنترنت\nتحقق من أن الملف لا يزال متاحاً\nتواصل مع الدعم إذا استمرت المشكلة';
+
+  @override
+  String get wizardDownloadEmulators => 'تنزيل المحاكيات';
+
+  @override
+  String get wizardDownloadEmulatorsDesc =>
+      'تنزيل ملفات المحاكيات المُعدّة مسبقاً لمنصتك. يمكنك تنزيل الكل أو الاختيار حسب الفئة.';
+
+  @override
+  String get wizardDownloadRomLists => 'تنزيل قوائم الرومات';
+
+  @override
+  String get wizardDownloadRomListsDesc =>
+      'تنزيل ملفات قاعدة بيانات الرومات من GitHub. تحتوي على بيانات وصفية لتنظيم مكتبة ألعابك.';
+
+  @override
+  String get wizardDownloadGamelists => 'تنزيل قوائم الألعاب';
+
+  @override
+  String get wizardDownloadGamelistsDesc =>
+      'تنزيل ملفات gamelist.xml من GitHub. تحتوي على أسماء الألعاب والأوصاف والتقييمات وبيانات وصفية أخرى.';
+
+  @override
+  String get wizardSkipStep => 'تخطي';
+
+  @override
+  String get wizardDownloadComplete => 'اكتمل التنزيل!';
+
+  @override
+  String wizardDownloadFailed(String error) {
+    return 'فشل التنزيل: $error';
+  }
+
+  @override
+  String get wizardAlreadyDownloaded => 'تم التنزيل مسبقاً';
+
+  @override
+  String get wizardSelectCategory => 'اختر فئة للتنزيل، أو نزّل الكل:';
+
+  @override
+  String get wizardDownloading => 'جارٍ التنزيل...';
+
+  @override
+  String get wizardDownloadOptional =>
+      'هذه الخطوة اختيارية. يمكنك التنزيل لاحقاً من الإعدادات.';
 }

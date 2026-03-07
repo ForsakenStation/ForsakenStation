@@ -19,11 +19,11 @@ import '../utils/platform_utils.dart';
 class RomLauncher {
   final EmulatorService emulatorService;
   final MediaService mediaService;
-  final String platformName; // Default platform (for non-collection views)
-  final String platformDisplayName; // Default platform display name
+  final String platformName;
+  final String platformDisplayName;
   final Map<String, RomMedia> mediaCache;
   final VoidCallback requestFocus;
-  final bool isCollection; // Whether this is a collection view
+  final bool isCollection;
 
   RomLauncher({
     required this.emulatorService,
@@ -151,7 +151,6 @@ class RomLauncher {
     EmulatorCommand command,
     String actualPlatform,
   ) async {
-    // Get media for this ROM to show marquee/boxart
     final media = mediaCache[item.name];
     final imagePath = media != null
         ? mediaService.getLaunchImagePath(media)

@@ -981,10 +981,18 @@ class _RomDbDownloadConfirmDialogState
     extends State<_RomDbDownloadConfirmDialog>
     with DialogControlsMixin<_RomDbDownloadConfirmDialog> {
   late final List<DialogButton> _buttons;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
 
     _buttons = [
       DialogButton(
@@ -1062,10 +1070,18 @@ class _RomDbClearConfirmDialog extends StatefulWidget {
 class _RomDbClearConfirmDialogState extends State<_RomDbClearConfirmDialog>
     with DialogControlsMixin<_RomDbClearConfirmDialog> {
   late final List<DialogButton> _buttons;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
 
     _buttons = [
       DialogButton(
@@ -1126,10 +1142,18 @@ class _GamelistDownloadConfirmDialogState
     extends State<_GamelistDownloadConfirmDialog>
     with DialogControlsMixin<_GamelistDownloadConfirmDialog> {
   late final List<DialogButton> _buttons;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
 
     _buttons = [
       DialogButton(
@@ -1203,10 +1227,18 @@ class _GamelistClearConfirmDialogState
     extends State<_GamelistClearConfirmDialog>
     with DialogControlsMixin<_GamelistClearConfirmDialog> {
   late final List<DialogButton> _buttons;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
 
     _buttons = [
       DialogButton(
@@ -1262,10 +1294,18 @@ class _MediaCacheConfirmDialog extends StatefulWidget {
 class _MediaCacheConfirmDialogState extends State<_MediaCacheConfirmDialog>
     with DialogControlsMixin<_MediaCacheConfirmDialog> {
   late final List<DialogButton> _buttons;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
 
     _buttons = [
       DialogButton(

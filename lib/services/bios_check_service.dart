@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 import '../models/bios_requirement.dart';
+import '../models/bios_download_mapping.dart';
+import 'debug_service.dart';
 
 class BiosCheckService {
   static BiosCheckService? _instance;
@@ -34,6 +37,48 @@ class BiosCheckService {
     return false;
   }
 
+  /// For archive files with extractedFiles, check the platform-specific
+  /// extracted file instead of the archive itself.
+  /// Returns the platform-specific filename to check, or null if not applicable.
+  Future<String?> _getPlatformExtractedFile(
+    String platformId,
+    String filename,
+  ) async {
+    if (kIsWeb) return null;
+    if (!filename.endsWith('.zip')) return null;
+
+    final mapping = await BiosDownloadMapping.getMapping(platformId);
+    if (mapping == null) return null;
+
+    final downloadFile = mapping.getFile(filename);
+    if (downloadFile == null || !downloadFile.requiresExtraction) return null;
+
+    final extractedFiles = downloadFile.extractedFiles;
+    if (extractedFiles == null || extractedFiles.isEmpty) return null;
+
+    // Determine the platform-specific file extension
+    List<String> platformFiles;
+    if (Platform.isLinux || Platform.isAndroid) {
+      platformFiles = extractedFiles.where((f) => f.endsWith('.so')).toList();
+    } else if (Platform.isWindows) {
+      platformFiles = extractedFiles.where((f) => f.endsWith('.dll')).toList();
+    } else if (Platform.isMacOS) {
+      platformFiles = extractedFiles
+          .where((f) => f.endsWith('.dylib'))
+          .toList();
+    } else {
+      return null;
+    }
+
+    if (platformFiles.isEmpty) return null;
+
+    DebugService.instance.debug(
+      'Checking "${platformFiles.first}" instead of archive "$filename"',
+      tag: 'BiosCheck',
+    );
+    return platformFiles.first;
+  }
+
   /// Scans all BIOS requirements and updates found status
   Future<List<BiosRequirement>> scanAllBios() async {
     final requirements = await BiosRequirement.getDefaultRequirements();
@@ -43,10 +88,14 @@ class BiosCheckService {
       final updatedFiles = <BiosFile>[];
 
       for (final biosFile in requirement.files) {
-        final found = await checkBiosFile(
-          requirement.locations,
+        // For archive files, check the platform-specific extracted file
+        final extractedFile = await _getPlatformExtractedFile(
+          requirement.platform,
           biosFile.filename,
         );
+
+        final fileToCheck = extractedFile ?? biosFile.filename;
+        final found = await checkBiosFile(requirement.locations, fileToCheck);
         updatedFiles.add(biosFile.copyWith(found: found));
       }
 

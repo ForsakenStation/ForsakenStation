@@ -1854,5 +1854,64 @@
   "biosErrorUnknownSuggestions": "Try downloading again\nCheck your internet connection\nVerify the file is still available\nContact support if problem persists",
   "@biosErrorUnknownSuggestions": {
     "description": "Recovery suggestions for unknown/generic errors (newline-separated)"
+  },
+
+  "wizardDownloadEmulators": "Download Emulators",
+  "@wizardDownloadEmulators": {
+    "description": "Title for the download emulators step in setup wizard"
+  },
+  "wizardDownloadEmulatorsDesc": "Download pre-configured emulator binaries for your platform. You can choose to download all or select by category.",
+  "@wizardDownloadEmulatorsDesc": {
+    "description": "Description for the download emulators step in setup wizard"
+  },
+  "wizardDownloadRomLists": "Download ROM Lists",
+  "@wizardDownloadRomLists": {
+    "description": "Title for the download ROM lists step in setup wizard"
+  },
+  "wizardDownloadRomListsDesc": "Download the ROM database files from GitHub. These contain metadata for organizing your game library.",
+  "@wizardDownloadRomListsDesc": {
+    "description": "Description for the download ROM lists step in setup wizard"
+  },
+  "wizardDownloadGamelists": "Download Gamelists",
+  "@wizardDownloadGamelists": {
+    "description": "Title for the download gamelists step in setup wizard"
+  },
+  "wizardDownloadGamelistsDesc": "Download gamelist.xml files from GitHub. These contain game names, descriptions, ratings, and other metadata.",
+  "@wizardDownloadGamelistsDesc": {
+    "description": "Description for the download gamelists step in setup wizard"
+  },
+  "wizardSkipStep": "Skip",
+  "@wizardSkipStep": {
+    "description": "Button label to skip an optional download step in setup wizard"
+  },
+  "wizardDownloadComplete": "Download complete!",
+  "@wizardDownloadComplete": {
+    "description": "Status message when a wizard download step finishes successfully"
+  },
+  "wizardDownloadFailed": "Download failed: {error}",
+  "@wizardDownloadFailed": {
+    "description": "Status message when a wizard download step fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Connection timeout"
+      }
+    }
+  },
+  "wizardAlreadyDownloaded": "Already downloaded",
+  "@wizardAlreadyDownloaded": {
+    "description": "Status shown when content is already downloaded in wizard step"
+  },
+  "wizardSelectCategory": "Select a category to download, or download all:",
+  "@wizardSelectCategory": {
+    "description": "Instruction text for emulator category selection in wizard"
+  },
+  "wizardDownloading": "Downloading...",
+  "@wizardDownloading": {
+    "description": "Status text shown while a download is in progress in wizard"
+  },
+  "wizardDownloadOptional": "This step is optional. You can download later from Settings.",
+  "@wizardDownloadOptional": {
+    "description": "Note shown on optional download steps in setup wizard"
   }
 }

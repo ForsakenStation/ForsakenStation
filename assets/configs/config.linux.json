@@ -54,22 +54,6 @@
       "corePreferences": {}
     },
     {
-      "system": "amiga",
-      "command": [
-        {
-          "name": "puae",
-          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae_libretro.so"
-        },
-        {
-          "name": "puae2021",
-          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/puae2021_libretro.so"
-        }
-      ],
-      "useForeverMode": false,
-      "acceptZipFiles": true,
-      "corePreferences": {}
-    },
-    {
       "system": "amiga1200",
       "command": [
         {
@@ -587,6 +571,24 @@
       "corePreferences": {}
     },
     {
+      "system": "daphne",
+      "command": [
+        {
+          "name": "retroarch daphne",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/daphne_libretro.so"
+        }
+      ]
+    },
+    {
+      "system": "hypseus",
+      "command": [
+        {
+          "name": "Hypseus",
+          "command": "hypseus.AppImage"
+        }
+      ]
+    },
+    {
       "system": "dos",
       "command": [
         {
@@ -755,6 +757,18 @@
         {
           "name": "dolphin",
           "command": "dolphin.AppImage -e"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": false,
+      "corePreferences": {}
+    },
+    {
+      "system": "gamecom",
+      "command": [
+        {
+          "name": "gamecom",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
         }
       ],
       "useForeverMode": false,
@@ -1701,6 +1715,18 @@
       "corePreferences": {}
     },
     {
+      "system": "sg1000",
+      "command": [
+        {
+          "name": "retorarch",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_wide_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
       "system": "sega32x",
       "command": [
         {
@@ -2043,30 +2069,6 @@
       "corePreferences": {}
     },
     {
-      "system": "wswan",
-      "command": [
-        {
-          "name": "mednafen_wswan",
-          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
-        }
-      ],
-      "useForeverMode": false,
-      "acceptZipFiles": true,
-      "corePreferences": {}
-    },
-    {
-      "system": "wswanc",
-      "command": [
-        {
-          "name": "mednafen_wswan",
-          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_wswan_libretro.so"
-        }
-      ],
-      "useForeverMode": false,
-      "acceptZipFiles": true,
-      "corePreferences": {}
-    },
-    {
       "system": "x68000",
       "command": [
         {
@@ -2161,19 +2163,6 @@
       "useForeverMode": false,
       "acceptZipFiles": true,
       "corePreferences": {}
-    },
-    {
-      "system": "daphne",
-      "command": [
-        {
-          "name": "retroarch daphne",
-          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/daphne_libretro.so"
-        },
-        {
-          "name": "Hypseus",
-          "command": "hypseus.AppImage"
-        }
-      ]
     }
   ]
 }

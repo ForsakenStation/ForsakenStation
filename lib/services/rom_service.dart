@@ -218,11 +218,13 @@ class RomService {
         );
       }
 
-      // Sort: folders first, then ROMs
+      // Sort: folders first, then ROMs (case-insensitive)
       items.sort((a, b) {
         if (a.isFolder && !b.isFolder) return -1;
         if (!a.isFolder && b.isFolder) return 1;
-        return a.displayName.compareTo(b.displayName);
+        return a.displayName.toLowerCase().compareTo(
+          b.displayName.toLowerCase(),
+        );
       });
 
       _debug.info(

@@ -2419,4 +2419,50 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get biosErrorUnknownSuggestions =>
       'Try downloading again\nCheck your internet connection\nVerify the file is still available\nContact support if problem persists';
+
+  @override
+  String get wizardDownloadEmulators => 'Download Emulators';
+
+  @override
+  String get wizardDownloadEmulatorsDesc =>
+      'Download pre-configured emulator binaries for your platform. You can choose to download all or select by category.';
+
+  @override
+  String get wizardDownloadRomLists => 'Download ROM Lists';
+
+  @override
+  String get wizardDownloadRomListsDesc =>
+      'Download the ROM database files from GitHub. These contain metadata for organizing your game library.';
+
+  @override
+  String get wizardDownloadGamelists => 'Download Gamelists';
+
+  @override
+  String get wizardDownloadGamelistsDesc =>
+      'Download gamelist.xml files from GitHub. These contain game names, descriptions, ratings, and other metadata.';
+
+  @override
+  String get wizardSkipStep => 'Skip';
+
+  @override
+  String get wizardDownloadComplete => 'Download complete!';
+
+  @override
+  String wizardDownloadFailed(String error) {
+    return 'Download failed: $error';
+  }
+
+  @override
+  String get wizardAlreadyDownloaded => 'Already downloaded';
+
+  @override
+  String get wizardSelectCategory =>
+      'Select a category to download, or download all:';
+
+  @override
+  String get wizardDownloading => 'Downloading...';
+
+  @override
+  String get wizardDownloadOptional =>
+      'This step is optional. You can download later from Settings.';
 }

@@ -27,6 +27,7 @@ class RomsScreenController extends ChangeNotifier {
   Timer? _mediaLoadTimer;
   Timer? _preloadTimer;
   bool _isNavigating = false;
+  bool _isDisposed = false;
   final Set<int> _preloadedThumbnailIndices = {};
 
   // Caches
@@ -61,6 +62,7 @@ class RomsScreenController extends ChangeNotifier {
   /// Dispose resources
   @override
   void dispose() {
+    _isDisposed = true;
     _mediaLoadTimer?.cancel();
     _preloadTimer?.cancel();
     super.dispose();
@@ -106,6 +108,7 @@ class RomsScreenController extends ChangeNotifier {
       }
 
       await _updateDisplayNames(platform.name);
+      _sortItems();
       _updateFilteredItems();
       _isLoading = false;
       notifyListeners();
@@ -130,6 +133,15 @@ class RomsScreenController extends ChangeNotifier {
         }
       }
     }
+  }
+
+  /// Re-sort items: folders first, then alphabetically by displayName
+  void _sortItems() {
+    _items.sort((a, b) {
+      if (a.isFolder && !b.isFolder) return -1;
+      if (!a.isFolder && b.isFolder) return 1;
+      return a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase());
+    });
   }
 
   /// Update search query and filter items
@@ -160,7 +172,7 @@ class RomsScreenController extends ChangeNotifier {
 
   /// Load media for a specific ROM item
   Future<void> loadMediaForItem(RomItem item, String platformName) async {
-    if (_mediaCache.containsKey(item.name)) {
+    if (_isDisposed || _mediaCache.containsKey(item.name)) {
       return;
     }
 
@@ -174,13 +186,14 @@ class RomsScreenController extends ChangeNotifier {
       gameInfo: gameInfo,
     );
 
+    if (_isDisposed) return;
     _mediaCache[item.name] = media;
     notifyListeners();
   }
 
   /// Load game info for a specific ROM item
   Future<void> loadGameInfoForItem(RomItem item, String platformName) async {
-    if (_gameInfoCache.containsKey(item.name)) {
+    if (_isDisposed || _gameInfoCache.containsKey(item.name)) {
       return;
     }
 
@@ -191,6 +204,7 @@ class RomsScreenController extends ChangeNotifier {
         item.path,
       );
 
+      if (_isDisposed) return;
       if (gameInfo != null) {
         _gameInfoCache[item.name] = gameInfo;
         notifyListeners();
@@ -213,7 +227,7 @@ class RomsScreenController extends ChangeNotifier {
     notifyListeners();
 
     _mediaLoadTimer = Timer(const Duration(milliseconds: 500), () async {
-      if (!isMounted()) return;
+      if (_isDisposed || !isMounted()) return;
 
       _isNavigating = false;
       notifyListeners();
@@ -258,7 +272,7 @@ class RomsScreenController extends ChangeNotifier {
 
     _preloadTimer?.cancel();
     _preloadTimer = Timer(const Duration(milliseconds: 100), () async {
-      if (!isMounted() || _isNavigating) return;
+      if (_isDisposed || !isMounted() || _isNavigating) return;
 
       final startIndex = (_selectedIndex - preloadRange).clamp(
         0,
@@ -270,12 +284,13 @@ class RomsScreenController extends ChangeNotifier {
       );
 
       for (int i = startIndex; i <= endIndex; i++) {
-        if (_isNavigating) break;
+        if (_isDisposed || _isNavigating) break;
         if (_preloadedThumbnailIndices.contains(i)) continue;
 
         final item = _filteredItems[i];
         if (item.isRom && !_mediaCache.containsKey(item.name) && isMounted()) {
           await loadMediaForItem(item, platformName);
+          if (_isDisposed) break;
           _preloadedThumbnailIndices.add(i);
           await Future.delayed(
             Duration(milliseconds: _filteredItems.length > 5000 ? 100 : 50),

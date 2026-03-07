@@ -2361,4 +2361,47 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get biosErrorUnknownSuggestions =>
       '请重新下载\n检查您的网络连接\n确认文件仍然可用\n如果问题持续存在，请联系支持';
+
+  @override
+  String get wizardDownloadEmulators => '下载模拟器';
+
+  @override
+  String get wizardDownloadEmulatorsDesc =>
+      '下载适用于您平台的预配置模拟器二进制文件。您可以全部下载或按类别选择。';
+
+  @override
+  String get wizardDownloadRomLists => '下载ROM列表';
+
+  @override
+  String get wizardDownloadRomListsDesc => '从GitHub下载ROM数据库文件。其中包含用于整理游戏库的元数据。';
+
+  @override
+  String get wizardDownloadGamelists => '下载游戏列表';
+
+  @override
+  String get wizardDownloadGamelistsDesc =>
+      '从GitHub下载gamelist.xml文件。其中包含游戏名称、描述、评分及其他元数据。';
+
+  @override
+  String get wizardSkipStep => '跳过';
+
+  @override
+  String get wizardDownloadComplete => '下载完成！';
+
+  @override
+  String wizardDownloadFailed(String error) {
+    return '下载失败：$error';
+  }
+
+  @override
+  String get wizardAlreadyDownloaded => '已下载';
+
+  @override
+  String get wizardSelectCategory => '选择要下载的类别，或全部下载：';
+
+  @override
+  String get wizardDownloading => '正在下载...';
+
+  @override
+  String get wizardDownloadOptional => '此步骤为可选。您可以稍后在「设置」中下载。';
 }

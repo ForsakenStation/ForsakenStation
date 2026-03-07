@@ -649,24 +649,6 @@
     "available": true,
     "files": [
       {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
-      {
         "filename": "48.rom",
         "expectedMd5": null,
         "expectedSha1": null,
@@ -871,24 +853,6 @@
     "repoFolder": "Nintendo - Super Nintendo Entertainment System",
     "available": true,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "cx4.data.rom",
         "expectedMd5": null,
@@ -2052,30 +2016,6 @@
         "extractionPath": null,
         "isOptional": false,
         "category": null
-      },
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": 455782,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": true,
-        "extractedFiles": [
-          "syscard1.pce",
-          "syscard2.pce",
-          "syscard3.pce",
-          "gecard.pce",
-          "gexpress.pce"
-        ],
-        "extractionPath": null,
-        "isOptional": true,
-        "category": "archive_collection"
       }
     ]
   },
@@ -2365,26 +2305,8 @@
   {
     "platformId": "msx_sony",
     "repoFolder": "Sony - MSX",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "hb10.rom",
         "expectedMd5": null,
@@ -2696,26 +2618,8 @@
   {
     "platformId": "msx_panasonic",
     "repoFolder": "Panasonic - MSX",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "cf2000.rom",
         "expectedMd5": null,
@@ -3063,26 +2967,8 @@
   {
     "platformId": "msx_philips",
     "repoFolder": "Philips - MSX",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "vg8000.rom",
         "expectedMd5": null,
@@ -3304,26 +3190,8 @@
   {
     "platformId": "msx_toshiba",
     "repoFolder": "Toshiba - MSX",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "hx10.rom",
         "expectedMd5": null,
@@ -3527,26 +3395,8 @@
   {
     "platformId": "msx_yamaha",
     "repoFolder": "Yamaha - MSX",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "cx5m.rom",
         "expectedMd5": null,
@@ -3768,26 +3618,8 @@
   {
     "platformId": "msx_european",
     "repoFolder": "European - MSX",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "canonv8.rom",
         "expectedMd5": null,
@@ -3973,26 +3805,8 @@
   {
     "platformId": "msx_korean",
     "repoFolder": "Korean - MSX",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "cpc300.rom",
         "expectedMd5": null,
@@ -4232,7 +4046,7 @@
   {
     "platformId": "msx_arabic",
     "repoFolder": "Arabic - MSX",
-    "available": true,
+    "available": false,
     "files": [
       {
         "filename": "sakhrax100.rom",
@@ -4275,26 +4089,8 @@
   {
     "platformId": "msx_brazilian",
     "repoFolder": "Brazilian - MSX",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "expert.rom",
         "expectedMd5": null,
@@ -4606,42 +4402,6 @@
     "available": true,
     "files": [
       {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
-      {
-        "filename": "ng-lo.rom",
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": 65536,
-        "sizeTolerance": 0.0,
-        "description": "Neo Geo CD Low ROM",
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
-      {
         "filename": "neocd.bin",
         "expectedMd5": null,
         "expectedSha1": null,
@@ -4705,7 +4465,7 @@
         "description": "Neo Geo Arcade BIOS (complete set)",
         "region": null,
         "customBranch": null,
-        "customPath": null,
+        "customPath": "Arcade",
         "customRepository": null,
         "requiresExtraction": false,
         "extractedFiles": null,
@@ -5580,24 +5340,6 @@
     "available": true,
     "files": [
       {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
-      {
         "filename": "SCPH-10000.bin",
         "expectedMd5": null,
         "expectedSha1": null,
@@ -5925,24 +5667,6 @@
         "category": null
       },
       {
-        "filename": "sgb_bios.bin",
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": 256,
-        "sizeTolerance": 0.0,
-        "description": "Super Game Boy BIOS (RetroPieBios)",
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
-      {
         "filename": "sgb2_boot.bin",
         "expectedMd5": null,
         "expectedSha1": null,
@@ -5990,26 +5714,8 @@
   {
     "platformId": "cdi",
     "repoFolder": "Philips - CD-i",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "cdi200.rom",
         "expectedMd5": null,
@@ -6123,26 +5829,8 @@
   {
     "platformId": "3ds",
     "repoFolder": "Nintendo - 3DS",
-    "available": true,
+    "available": false,
     "files": [
-      {
-        "filename": null,
-        "expectedMd5": null,
-        "expectedSha1": null,
-        "expectedCrc32": null,
-        "expectedSize": null,
-        "sizeTolerance": 0.0,
-        "description": null,
-        "region": null,
-        "customBranch": null,
-        "customPath": null,
-        "customRepository": null,
-        "requiresExtraction": false,
-        "extractedFiles": null,
-        "extractionPath": null,
-        "isOptional": false,
-        "category": null
-      },
       {
         "filename": "Nintendo - 3DS (Citra).zip",
         "expectedMd5": null,

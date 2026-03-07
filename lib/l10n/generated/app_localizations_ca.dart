@@ -2461,4 +2461,50 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get biosErrorUnknownSuggestions =>
       'Proveu de descarregar de nou\nComproveu la vostra connexió a Internet\nVerifiqueu que el fitxer encara està disponible\nContacteu amb el suport si el problema persisteix';
+
+  @override
+  String get wizardDownloadEmulators => 'Baixar emuladors';
+
+  @override
+  String get wizardDownloadEmulatorsDesc =>
+      'Baixa els binaris d\'emuladors preconfigurats per a la teva plataforma. Pots baixar-los tots o seleccionar per categoria.';
+
+  @override
+  String get wizardDownloadRomLists => 'Baixar llistes de ROMs';
+
+  @override
+  String get wizardDownloadRomListsDesc =>
+      'Baixa els fitxers de base de dades de ROMs des de GitHub. Contenen metadades per organitzar la teva biblioteca de jocs.';
+
+  @override
+  String get wizardDownloadGamelists => 'Baixar gamelists';
+
+  @override
+  String get wizardDownloadGamelistsDesc =>
+      'Baixa fitxers gamelist.xml des de GitHub. Contenen noms de jocs, descripcions, puntuacions i altres metadades.';
+
+  @override
+  String get wizardSkipStep => 'Omet';
+
+  @override
+  String get wizardDownloadComplete => 'Baixada completada!';
+
+  @override
+  String wizardDownloadFailed(String error) {
+    return 'Error en la baixada: $error';
+  }
+
+  @override
+  String get wizardAlreadyDownloaded => 'Ja baixat';
+
+  @override
+  String get wizardSelectCategory =>
+      'Selecciona una categoria per baixar, o baixa-ho tot:';
+
+  @override
+  String get wizardDownloading => 'Baixant...';
+
+  @override
+  String get wizardDownloadOptional =>
+      'Aquest pas és opcional. Pots baixar-ho més tard des de Configuració.';
 }

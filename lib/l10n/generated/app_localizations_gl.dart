@@ -2455,4 +2455,50 @@ class AppLocalizationsGl extends AppLocalizations {
   @override
   String get biosErrorUnknownSuggestions =>
       'Probe a descargar de novo\nComprobe a súa conexión a Internet\nVerifique que o ficheiro aínda está dispoñible\nContacte co soporte se o problema persiste';
+
+  @override
+  String get wizardDownloadEmulators => 'Descargar emuladores';
+
+  @override
+  String get wizardDownloadEmulatorsDesc =>
+      'Descarga os binarios de emuladores preconfigurados para a túa plataforma. Podes descargar todos ou seleccionar por categoría.';
+
+  @override
+  String get wizardDownloadRomLists => 'Descargar listas de ROMs';
+
+  @override
+  String get wizardDownloadRomListsDesc =>
+      'Descarga os ficheiros de base de datos de ROMs dende GitHub. Conteñen metadatos para organizar a túa biblioteca de xogos.';
+
+  @override
+  String get wizardDownloadGamelists => 'Descargar gamelists';
+
+  @override
+  String get wizardDownloadGamelistsDesc =>
+      'Descarga ficheiros gamelist.xml dende GitHub. Conteñen nomes de xogos, descricións, puntuacións e outros metadatos.';
+
+  @override
+  String get wizardSkipStep => 'Omitir';
+
+  @override
+  String get wizardDownloadComplete => 'Descarga completada!';
+
+  @override
+  String wizardDownloadFailed(String error) {
+    return 'Erro na descarga: $error';
+  }
+
+  @override
+  String get wizardAlreadyDownloaded => 'Xa descargado';
+
+  @override
+  String get wizardSelectCategory =>
+      'Selecciona unha categoría para descargar, ou descarga todo:';
+
+  @override
+  String get wizardDownloading => 'Descargando...';
+
+  @override
+  String get wizardDownloadOptional =>
+      'Este paso é opcional. Podes descargar máis tarde dende Axustes.';
 }

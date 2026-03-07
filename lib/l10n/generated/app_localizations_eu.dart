@@ -2455,4 +2455,50 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get biosErrorUnknownSuggestions =>
       'Saiatu berriro deskargatzen\nEgiaztatu zure Interneteko konexioa\nEgiaztatu fitxategia oraindik eskuragarri dagoen\nJarri harremanetan laguntza-zerbitzuarekin arazoak irauten badu';
+
+  @override
+  String get wizardDownloadEmulators => 'Emuladoreak deskargatu';
+
+  @override
+  String get wizardDownloadEmulatorsDesc =>
+      'Deskargatu zure plataformarako aurrekonfiguratutako emuladoreen fitxategiak. Guztiak deskarga ditzakezu edo kategoriaren arabera hautatu.';
+
+  @override
+  String get wizardDownloadRomLists => 'ROM zerrendak deskargatu';
+
+  @override
+  String get wizardDownloadRomListsDesc =>
+      'Deskargatu ROM datu-baseen fitxategiak GitHubetik. Zure joko-liburutegia antolatzeko metadatuak dituzte.';
+
+  @override
+  String get wizardDownloadGamelists => 'Joko-zerrendak deskargatu';
+
+  @override
+  String get wizardDownloadGamelistsDesc =>
+      'Deskargatu gamelist.xml fitxategiak GitHubetik. Jokoen izenak, deskribapenak, puntuazioak eta beste metadatu batzuk dituzte.';
+
+  @override
+  String get wizardSkipStep => 'Saltatu';
+
+  @override
+  String get wizardDownloadComplete => 'Deskarga osatuta!';
+
+  @override
+  String wizardDownloadFailed(String error) {
+    return 'Deskargak huts egin du: $error';
+  }
+
+  @override
+  String get wizardAlreadyDownloaded => 'Jadanik deskargatua';
+
+  @override
+  String get wizardSelectCategory =>
+      'Hautatu kategoria bat deskargatzeko, edo deskargatu guztiak:';
+
+  @override
+  String get wizardDownloading => 'Deskargatzen...';
+
+  @override
+  String get wizardDownloadOptional =>
+      'Urrats hau aukerakoa da. Geroago deskarga dezakezu Ezarpenetatik.';
 }

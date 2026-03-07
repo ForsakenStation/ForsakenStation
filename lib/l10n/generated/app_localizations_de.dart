@@ -2456,4 +2456,50 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get biosErrorUnknownSuggestions =>
       'Versuchen Sie den Download erneut\nÜberprüfen Sie Ihre Internetverbindung\nStellen Sie sicher, dass die Datei noch verfügbar ist\nKontaktieren Sie den Support, wenn das Problem weiterhin besteht';
+
+  @override
+  String get wizardDownloadEmulators => 'Emulatoren herunterladen';
+
+  @override
+  String get wizardDownloadEmulatorsDesc =>
+      'Lade vorkonfigurierte Emulator-Dateien für deine Plattform herunter. Du kannst alle herunterladen oder nach Kategorie auswählen.';
+
+  @override
+  String get wizardDownloadRomLists => 'ROM-Listen herunterladen';
+
+  @override
+  String get wizardDownloadRomListsDesc =>
+      'Lade die ROM-Datenbankdateien von GitHub herunter. Sie enthalten Metadaten zur Organisation deiner Spielebibliothek.';
+
+  @override
+  String get wizardDownloadGamelists => 'Spielelisten herunterladen';
+
+  @override
+  String get wizardDownloadGamelistsDesc =>
+      'Lade gamelist.xml-Dateien von GitHub herunter. Sie enthalten Spielnamen, Beschreibungen, Bewertungen und andere Metadaten.';
+
+  @override
+  String get wizardSkipStep => 'Überspringen';
+
+  @override
+  String get wizardDownloadComplete => 'Download abgeschlossen!';
+
+  @override
+  String wizardDownloadFailed(String error) {
+    return 'Download fehlgeschlagen: $error';
+  }
+
+  @override
+  String get wizardAlreadyDownloaded => 'Bereits heruntergeladen';
+
+  @override
+  String get wizardSelectCategory =>
+      'Wähle eine Kategorie zum Herunterladen oder lade alle herunter:';
+
+  @override
+  String get wizardDownloading => 'Wird heruntergeladen...';
+
+  @override
+  String get wizardDownloadOptional =>
+      'Dieser Schritt ist optional. Du kannst später in den Einstellungen herunterladen.';
 }

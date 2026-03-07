@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:forsaken/models/media.dart';
+import 'package:forsaken/services/media_service.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/rom_item.dart';
 import '../../../services/debug_service.dart';
@@ -9,26 +11,26 @@ import '../utils/platform_utils.dart';
 
 /// Handles saving downloaded ROMs permanently to storage
 class RomSaveHandler {
-  final String platformName; // Default platform
+  final String platformName;
   final VoidCallback requestFocus;
-  final bool isCollection; // Whether this is a collection view
+  final bool isCollection;
+  final MediaService mediaService;
+  final Map<String, RomMedia> mediaCache;
 
   RomSaveHandler({
     required this.platformName,
     required this.requestFocus,
+    required this.mediaService,
+    required this.mediaCache,
     this.isCollection = false,
   });
 
-  /// Check if a ROM should be saved and handle the save process
-  /// Returns true if user chose to save, false if declined, null if already saved
   Future<bool?> handleRomSave(
     BuildContext context,
     RomItem item,
-    String? imagePath,
   ) async {
     final storageService = RomStorageService.instance;
 
-    // For collections, use the ROM's platform; otherwise use default
     final actualPlatform = PlatformUtils.getActualPlatform(
       item,
       platformName,
@@ -36,13 +38,11 @@ class RomSaveHandler {
     );
 
     try {
-      // Check if ROM is already in forever storage
       final foreverPath = await storageService.findRomInForeverStorage(
         actualPlatform,
         item.name,
       );
 
-      // Already saved, no need to ask
       if (foreverPath != null) {
         return null;
       }
@@ -51,15 +51,12 @@ class RomSaveHandler {
         'Error checking ROM storage status: $e',
         tag: 'RomSave',
       );
-      // Continue to ask user to save, even if check failed
     }
 
-    // Ask user if they want to save ROM permanently
     if (!context.mounted) return false;
     return await _askToSaveRomPermanently(
       context,
       item,
-      imagePath,
       actualPlatform,
     );
   }
@@ -68,23 +65,25 @@ class RomSaveHandler {
   Future<bool> _askToSaveRomPermanently(
     BuildContext context,
     RomItem item,
-    String? imagePath,
     String actualPlatform,
   ) async {
-    // Show dialog asking if user wants to save ROM permanently
+    final media = mediaCache[item.name];
+    final imagePath = media != null
+        ? mediaService.getLaunchImagePath(media)
+        : null;
+
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.black.withValues(alpha: 0.7), // Darker barrier
+      barrierColor: Colors.black.withValues(alpha: 0.7),
       builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blur background
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: SaveRomDialog(item: item, imagePath: imagePath),
       ),
     );
 
     if (!context.mounted) return false;
 
-    // If user chose to save permanently
     if (result == true) {
       return await _saveRomPermanently(context, item, actualPlatform);
     } else {

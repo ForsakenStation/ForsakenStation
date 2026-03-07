@@ -40,10 +40,19 @@ class ExitDialog extends StatefulWidget {
 class _ExitDialogState extends State<ExitDialog>
     with DialogControlsMixin<ExitDialog> {
   late List<DialogButton> _buttons;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
+
     final l10n = AppLocalizations.of(context)!;
 
     // Build buttons list

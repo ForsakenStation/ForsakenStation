@@ -82,7 +82,10 @@ Future<List<Rom>> loadRomsForPlatform(
       }
     }
 
-    roms.sort((a, b) => a.displayName.compareTo(b.displayName));
+    roms.sort(
+      (a, b) =>
+          a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase()),
+    );
 
     _debug.info(
       'Loaded ${roms.length} ROMs for platform $platformName',
@@ -148,7 +151,7 @@ Future<List<RomItem>> loadItemsInDirectory(
     items.sort((a, b) {
       if (a.isFolder && !b.isFolder) return -1;
       if (!a.isFolder && b.isFolder) return 1;
-      return a.displayName.compareTo(b.displayName);
+      return a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase());
     });
   } catch (e) {
     _debug.error(

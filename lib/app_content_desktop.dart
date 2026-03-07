@@ -42,22 +42,8 @@ Future<AppInitResult> initializeApp() async {
       );
     }
 
-    // Check if romlists are already downloaded
+    // Get the JSONL path (romlists are downloaded during Setup Wizard)
     final romlistService = RomlistDownloadService.instance;
-    final isDownloaded = await romlistService.isDownloaded();
-
-    if (!isDownloaded) {
-      // First-time setup: download romlists
-      final success = await romlistService.downloadAndExtract();
-
-      if (!success) {
-        return AppInitResult(
-          errorMessage: 'Failed to download ROM lists from GitHub',
-        );
-      }
-    }
-
-    // Get the JSONL path
     final jsonlPath = await romlistService.getJsonlPath();
     final romsPath = ConfigService.instance.romsPath;
 

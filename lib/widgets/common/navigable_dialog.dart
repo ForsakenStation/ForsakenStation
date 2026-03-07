@@ -107,10 +107,21 @@ abstract class NavigableDialog extends StatefulWidget {
 class _NavigableDialogState extends State<NavigableDialog>
     with DialogControlsMixin<NavigableDialog> {
   late List<DialogButton> _buttons;
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
+    // Note: context-dependent initialization moved to didChangeDependencies
+    // because AppLocalizations.of(context) cannot be called before
+    // initState() completes.
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
 
     // Build buttons
     _buttons = widget.buildButtons(context);
