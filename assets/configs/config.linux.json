@@ -398,7 +398,7 @@
       "command": [
         {
           "name": "mame",
-          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so casloopy -cart"
         }
       ],
       "useForeverMode": false,
@@ -959,7 +959,7 @@
       "command": [
         {
           "name": "mame",
-          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so gp32 -memc"
         }
       ],
       "useForeverMode": false,
@@ -1655,11 +1655,12 @@
       "command": [
         {
           "name": "shadps4",
-          "command": "shadps4.AppImage -f -g"
+          "command": "shadps4.AppImage -f true -g"
         }
       ],
       "useForeverMode": false,
-      "acceptZipFiles": true,
+      "acceptZipFiles": false,pv
+      "launchFile": "eboot.bin",
       "corePreferences": {}
     },
     {
@@ -1715,7 +1716,7 @@
       "command": [
         {
           "name": "mame",
-          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so pv1000 -cart"
         }
       ],
       "useForeverMode": false,

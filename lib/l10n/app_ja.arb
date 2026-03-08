@@ -908,5 +908,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "launchFile": "起動ファイル",
+  "launchFileHint": "例: eboot.bin",
+  "launchFileSubtitle": "解凍されたZIP内で検索するファイル（例: eboot.bin）",
+  "archiveOrgSettings": "Archive.org アカウント",
+  "archiveOrgSettingsDesc": "ROM ダウンロード用の Archive.org 認証情報を設定",
+  "archiveOrgSettingsDescription": "一部の ROM は Archive.org でホストされており、ダウンロードには認証が必要です。ここで S3 API キーを設定してください。",
+  "archiveOrgWhyNeeded": "なぜ認証情報が必要ですか？",
+  "archiveOrgExplanation": "Archive.org の一部のファイルはダウンロードにログイン済みアカウントが必要です。Forsaken は S3 スタイルの API キーを使用するため、パスワードが保存されることはありません。\n\nキーの生成はこちら：\nhttps://archive.org/account/s3.php",
+  "archiveOrgAccessKey": "アクセスキー",
+  "archiveOrgSecretKey": "シークレットキー",
+  "archiveOrgAccessKeyHint": "S3 スタイルのアクセスキー",
+  "archiveOrgSecretKeyHint": "S3 スタイルのシークレットキー",
+  "archiveOrgSettingsSaved": "Archive.org の認証情報を保存しました。",
+  "archiveOrgAuthRequired": "認証が必要です",
+  "archiveOrgAuthRequiredMessage": "このファイルのダウンロードには Archive.org アカウントが必要です。\n\n設定で Archive.org の S3 API キーを設定してください。",
+  "goToSettings": "設定へ移動"
 }

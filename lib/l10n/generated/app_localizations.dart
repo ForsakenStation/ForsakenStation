@@ -728,6 +728,24 @@ abstract class AppLocalizations {
   /// **'Keep emulator running'**
   String get useForeverSubtitle;
 
+  /// No description provided for @launchFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Launch File'**
+  String get launchFile;
+
+  /// No description provided for @launchFileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'File to find inside extracted ZIP (e.g. eboot.bin)'**
+  String get launchFileSubtitle;
+
+  /// No description provided for @launchFileHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. eboot.bin'**
+  String get launchFileHint;
+
   /// No description provided for @workInProgress.
   ///
   /// In en, this message translates to:
@@ -4560,6 +4578,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This step is optional. You can download later from Settings.'**
   String get wizardDownloadOptional;
+
+  /// Title for the Archive.org settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Archive.org Account'**
+  String get archiveOrgSettings;
+
+  /// Description for Archive.org settings category card
+  ///
+  /// In en, this message translates to:
+  /// **'Configure Archive.org credentials for ROM downloads'**
+  String get archiveOrgSettingsDesc;
+
+  /// Subtitle description for Archive.org settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Some ROMs are hosted on Archive.org and require authentication to download. Configure your S3 API keys here.'**
+  String get archiveOrgSettingsDescription;
+
+  /// Info card title explaining why Archive.org credentials are needed
+  ///
+  /// In en, this message translates to:
+  /// **'Why are credentials needed?'**
+  String get archiveOrgWhyNeeded;
+
+  /// Detailed explanation of Archive.org credentials
+  ///
+  /// In en, this message translates to:
+  /// **'Some files on Archive.org require a logged-in account to download. Forsaken uses S3-style API keys so your password is never stored.\n\nGenerate your keys at:\nhttps://archive.org/account/s3.php'**
+  String get archiveOrgExplanation;
+
+  /// Label for Archive.org S3 access key field
+  ///
+  /// In en, this message translates to:
+  /// **'Access Key'**
+  String get archiveOrgAccessKey;
+
+  /// Label for Archive.org S3 secret key field
+  ///
+  /// In en, this message translates to:
+  /// **'Secret Key'**
+  String get archiveOrgSecretKey;
+
+  /// Hint text for Archive.org access key field
+  ///
+  /// In en, this message translates to:
+  /// **'Your S3-like access key'**
+  String get archiveOrgAccessKeyHint;
+
+  /// Hint text for Archive.org secret key field
+  ///
+  /// In en, this message translates to:
+  /// **'Your S3-like secret key'**
+  String get archiveOrgSecretKeyHint;
+
+  /// Success snackbar message after saving Archive.org credentials
+  ///
+  /// In en, this message translates to:
+  /// **'Archive.org credentials saved.'**
+  String get archiveOrgSettingsSaved;
+
+  /// Title for the auth required error dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication Required'**
+  String get archiveOrgAuthRequired;
+
+  /// Message shown when a download fails due to missing Archive.org credentials
+  ///
+  /// In en, this message translates to:
+  /// **'This file requires an Archive.org account to download.\n\nPlease configure your Archive.org S3 API keys in Settings to continue.'**
+  String get archiveOrgAuthRequiredMessage;
+
+  /// Button label to navigate to the settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings'**
+  String get goToSettings;
 }
 
 class _AppLocalizationsDelegate

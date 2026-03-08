@@ -9,6 +9,7 @@ import 'settings_categories/rom_storage_management_screen.dart';
 import 'settings_categories/system_check_screen.dart';
 import 'settings_categories/gamepad_test_screen.dart';
 import 'settings_categories/bios_help_screen.dart';
+import 'settings_categories/archive_org_settings_screen.dart';
 import 'settings_categories/web_settings_screen.dart';
 import 'settings_categories/language_settings_screen.dart';
 import 'setup_wizard_screen.dart';
@@ -40,7 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _scrollController = ScrollController();
   Timer? _gamepadPollTimer;
   int _selectedIndex = 0;
-  final int _categoryCount = kIsWeb ? 11 : 10;
+  final int _categoryCount = kIsWeb ? 12 : 11;
   bool _isGamepadNavigating = false;
 
   // Height of each card + spacing (approximate)
@@ -127,7 +128,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _stopGamepadPolling();
 
     // "About & Debug" is the last item (index depends on platform)
-    final aboutIndex = kIsWeb ? 11 : 10;
+    final aboutIndex = kIsWeb ? 12 : 11;
     if (index == aboutIndex) {
       _showAboutDialog(context);
       if (mounted) _startGamepadPolling();
@@ -135,14 +136,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     // "Setup Wizard"
-    final wizardIndex = kIsWeb ? 9 : 8;
+    final wizardIndex = kIsWeb ? 10 : 9;
     if (index == wizardIndex) {
       _rerunSetupWizard();
       return;
     }
 
     // "Language Settings"
-    final languageIndex = kIsWeb ? 10 : 9;
+    final languageIndex = kIsWeb ? 11 : 10;
     if (index == languageIndex) {
       Navigator.push(
         context,
@@ -177,7 +178,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         screen = const BiosHelpScreen();
         break;
       case 7:
-        // Web Settings (only reachable on web since wizardIndex is 9 on web)
+        screen = const ArchiveOrgSettingsScreen();
+        break;
+      case 8:
+        // Web Settings (only reachable on web since wizardIndex is 10 on web)
         screen = const WebSettingsScreen();
         break;
       default:
@@ -190,7 +194,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ).then((_) async {
       // After returning from Web Settings, reload the proxy URL
       // into the running WebEmulatorService instance
-      if (kIsWeb && index == 7) {
+      if (kIsWeb && index == 8) {
         await _reloadCorsProxy();
       }
       if (mounted) _startGamepadPolling();
@@ -391,35 +395,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 12),
 
+            _buildCategoryCard(
+              context,
+              index: 7,
+              icon: Icons.cloud_outlined,
+              title: l10n.archiveOrgSettings,
+              description: l10n.archiveOrgSettingsDesc,
+              onTap: () => _navigateToCategory(7),
+            ),
+            const SizedBox(height: 12),
+
             // Web Settings (only shown on web platform)
             if (kIsWeb) ...[
               _buildCategoryCard(
                 context,
-                index: 7,
+                index: 8,
                 icon: Icons.language,
                 title: l10n.webSettings,
                 description: l10n.webSettingsDesc,
-                onTap: () => _navigateToCategory(7),
+                onTap: () => _navigateToCategory(8),
               ),
               const SizedBox(height: 12),
             ],
 
             _buildCategoryCard(
               context,
-              index: kIsWeb ? 9 : 8,
+              index: kIsWeb ? 10 : 9,
               icon: Icons.auto_fix_high,
               title: l10n.setupWizard,
               description: l10n.setupWizardDesc,
-              onTap: () => _navigateToCategory(kIsWeb ? 9 : 8),
-            ),
-            const SizedBox(height: 12),
-
-            _buildCategoryCard(
-              context,
-              index: kIsWeb ? 10 : 9,
-              icon: Icons.language,
-              title: l10n.language,
-              description: l10n.languageDesc,
               onTap: () => _navigateToCategory(kIsWeb ? 10 : 9),
             ),
             const SizedBox(height: 12),
@@ -427,6 +431,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildCategoryCard(
               context,
               index: kIsWeb ? 11 : 10,
+              icon: Icons.language,
+              title: l10n.language,
+              description: l10n.languageDesc,
+              onTap: () => _navigateToCategory(kIsWeb ? 11 : 10),
+            ),
+            const SizedBox(height: 12),
+
+            _buildCategoryCard(
+              context,
+              index: kIsWeb ? 12 : 11,
               icon: Icons.info_outline,
               title: l10n.aboutDebug,
               description: l10n.aboutDebugDesc,

@@ -1621,11 +1621,12 @@
       "command": [
         {
           "name": "shadps4",
-          "command": "shadps4.AppImage -f -g"
+          "command": "shadps4.AppImage -f true -g"
         }
       ],
       "useForeverMode": false,
-      "acceptZipFiles": true,
+      "acceptZipFiles": false,
+      "launchFile": "eboot.bin",
       "corePreferences": {}
     },
     {

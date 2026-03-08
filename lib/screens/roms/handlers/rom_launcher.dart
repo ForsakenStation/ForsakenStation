@@ -11,7 +11,9 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../widgets/roms/launch_progress_dialog.dart';
 import '../../../widgets/roms/emulator_selection_dialog.dart';
 import '../../../widgets/common/error_dialog.dart';
+import '../../../widgets/common/auth_error_dialog.dart';
 import '../../pdf_viewer_screen.dart';
+import '../../settings_categories/archive_org_settings_screen.dart';
 import '../utils/platform_utils.dart';
 
 /// Handles ROM launching logic including emulator selection,
@@ -243,12 +245,28 @@ class RomLauncher {
         requestFocus();
         return true;
       } else if (!wasCancelled) {
-        _showErrorDialog(
-          context,
-          AppLocalizations.of(context)!.failedToLaunchRom(
-            result.error ?? AppLocalizations.of(context)!.unknown,
-          ),
-        );
+        // Check if this is an auth error from Archive.org
+        if (result.isAuthError) {
+          final goToSettings = await AuthErrorDialog.show(
+            context: context,
+            onClose: requestFocus,
+          );
+          if (goToSettings && context.mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ArchiveOrgSettingsScreen(),
+              ),
+            );
+          }
+        } else {
+          _showErrorDialog(
+            context,
+            AppLocalizations.of(context)!.failedToLaunchRom(
+              result.error ?? AppLocalizations.of(context)!.unknown,
+            ),
+          );
+        }
       }
 
       requestFocus();

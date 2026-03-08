@@ -859,6 +859,7 @@ class EmulatorEditDialog extends StatefulWidget {
 
 class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
   late final TextEditingController _systemController;
+  late final TextEditingController _launchFileController;
   final List<TextEditingController> _commandControllers = [];
   late bool _acceptZipFiles;
   late bool _useForeverMode;
@@ -870,6 +871,9 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
 
     final system = widget.emulator?['system'] as String? ?? '';
     _systemController = TextEditingController(text: system);
+    _launchFileController = TextEditingController(
+      text: widget.emulator?['launchFile'] as String? ?? '',
+    );
 
     _acceptZipFiles = widget.emulator?['acceptZipFiles'] == true;
     _useForeverMode = widget.emulator?['useForeverMode'] == true;
@@ -902,6 +906,7 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
   @override
   void dispose() {
     _systemController.dispose();
+    _launchFileController.dispose();
     for (final controller in _commandControllers) {
       controller.dispose();
     }
@@ -977,6 +982,11 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
       'acceptZipFiles': _acceptZipFiles,
       'corePreferences': {},
     };
+
+    final launchFile = _launchFileController.text.trim();
+    if (launchFile.isNotEmpty) {
+      emulator['launchFile'] = launchFile;
+    }
 
     if (_todo) {
       emulator['todo'] = true;
@@ -1092,6 +1102,23 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
                     setState(() => _acceptZipFiles = value ?? false),
                 dense: true,
               ),
+
+              // Launch file field (only relevant when acceptZipFiles is false)
+              if (!_acceptZipFiles)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TextField(
+                    controller: _launchFileController,
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.launchFile,
+                      hintText: AppLocalizations.of(context)!.launchFileHint,
+                      helperText: AppLocalizations.of(
+                        context,
+                      )!.launchFileSubtitle,
+                      helperMaxLines: 2,
+                    ),
+                  ),
+                ),
 
               CheckboxListTile(
                 title: Text(AppLocalizations.of(context)!.useForeverMode),

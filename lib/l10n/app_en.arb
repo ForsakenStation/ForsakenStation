@@ -135,6 +135,9 @@
   "acceptZipSubtitle": "Allow launching ROMs from ZIP archives",
   "useForeverMode": "Use Forever Mode",
   "useForeverSubtitle": "Keep emulator running",
+  "launchFile": "Launch File",
+  "launchFileSubtitle": "File to find inside extracted ZIP (e.g. eboot.bin)",
+  "launchFileHint": "e.g. eboot.bin",
   "workInProgress": "Work In Progress",
   "wipSubtitle": "Mark as not yet fully configured",
   "biosFirmwareHelp": "BIOS & Firmware Help",
@@ -1913,5 +1916,58 @@
   "wizardDownloadOptional": "This step is optional. You can download later from Settings.",
   "@wizardDownloadOptional": {
     "description": "Note shown on optional download steps in setup wizard"
+  },
+
+  "archiveOrgSettings": "Archive.org Account",
+  "@archiveOrgSettings": {
+    "description": "Title for the Archive.org settings screen"
+  },
+  "archiveOrgSettingsDesc": "Configure Archive.org credentials for ROM downloads",
+  "@archiveOrgSettingsDesc": {
+    "description": "Description for Archive.org settings category card"
+  },
+  "archiveOrgSettingsDescription": "Some ROMs are hosted on Archive.org and require authentication to download. Configure your S3 API keys here.",
+  "@archiveOrgSettingsDescription": {
+    "description": "Subtitle description for Archive.org settings screen"
+  },
+  "archiveOrgWhyNeeded": "Why are credentials needed?",
+  "@archiveOrgWhyNeeded": {
+    "description": "Info card title explaining why Archive.org credentials are needed"
+  },
+  "archiveOrgExplanation": "Some files on Archive.org require a logged-in account to download. Forsaken uses S3-style API keys so your password is never stored.\n\nGenerate your keys at:\nhttps://archive.org/account/s3.php",
+  "@archiveOrgExplanation": {
+    "description": "Detailed explanation of Archive.org credentials"
+  },
+  "archiveOrgAccessKey": "Access Key",
+  "@archiveOrgAccessKey": {
+    "description": "Label for Archive.org S3 access key field"
+  },
+  "archiveOrgSecretKey": "Secret Key",
+  "@archiveOrgSecretKey": {
+    "description": "Label for Archive.org S3 secret key field"
+  },
+  "archiveOrgAccessKeyHint": "Your S3-like access key",
+  "@archiveOrgAccessKeyHint": {
+    "description": "Hint text for Archive.org access key field"
+  },
+  "archiveOrgSecretKeyHint": "Your S3-like secret key",
+  "@archiveOrgSecretKeyHint": {
+    "description": "Hint text for Archive.org secret key field"
+  },
+  "archiveOrgSettingsSaved": "Archive.org credentials saved.",
+  "@archiveOrgSettingsSaved": {
+    "description": "Success snackbar message after saving Archive.org credentials"
+  },
+  "archiveOrgAuthRequired": "Authentication Required",
+  "@archiveOrgAuthRequired": {
+    "description": "Title for the auth required error dialog"
+  },
+  "archiveOrgAuthRequiredMessage": "This file requires an Archive.org account to download.\n\nPlease configure your Archive.org S3 API keys in Settings to continue.",
+  "@archiveOrgAuthRequiredMessage": {
+    "description": "Message shown when a download fails due to missing Archive.org credentials"
+  },
+  "goToSettings": "Go to Settings",
+  "@goToSettings": {
+    "description": "Button label to navigate to the settings screen"
   }
 }

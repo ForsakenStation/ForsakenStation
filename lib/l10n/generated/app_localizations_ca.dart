@@ -326,6 +326,16 @@ class AppLocalizationsCa extends AppLocalizations {
   String get useForeverSubtitle => 'Mantenir l\'emulador en execució';
 
   @override
+  String get launchFile => 'Fitxer d\'inici';
+
+  @override
+  String get launchFileSubtitle =>
+      'Fitxer a cercar dins del ZIP extret (ex. eboot.bin)';
+
+  @override
+  String get launchFileHint => 'ex. eboot.bin';
+
+  @override
   String get workInProgress => 'Treball en Curs';
 
   @override
@@ -2507,4 +2517,47 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get wizardDownloadOptional =>
       'Aquest pas és opcional. Pots baixar-ho més tard des de Configuració.';
+
+  @override
+  String get archiveOrgSettings => 'Compte d\'Archive.org';
+
+  @override
+  String get archiveOrgSettingsDesc =>
+      'Configurar credencials d\'Archive.org per a la descàrrega de ROMs';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      'Algunes ROMs estan allotjades a Archive.org i requereixen autenticació per descarregar-les. Configureu les vostres claus API S3 aquí.';
+
+  @override
+  String get archiveOrgWhyNeeded => 'Per què calen les credencials?';
+
+  @override
+  String get archiveOrgExplanation =>
+      'Alguns fitxers a Archive.org requereixen un compte amb sessió iniciada per descarregar-los. Forsaken utilitza claus API d\'estil S3 perquè la vostra contrasenya no s\'emmagatzemi mai.\n\nGenereu les vostres claus a:\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => 'Clau d\'accés';
+
+  @override
+  String get archiveOrgSecretKey => 'Clau secreta';
+
+  @override
+  String get archiveOrgAccessKeyHint => 'La vostra clau d\'accés d\'estil S3';
+
+  @override
+  String get archiveOrgSecretKeyHint => 'La vostra clau secreta d\'estil S3';
+
+  @override
+  String get archiveOrgSettingsSaved => 'Credencials d\'Archive.org desades.';
+
+  @override
+  String get archiveOrgAuthRequired => 'Autenticació requerida';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      'Aquest fitxer requereix un compte d\'Archive.org per descarregar-lo.\n\nSi us plau, configureu les vostres claus API S3 d\'Archive.org a Configuració per continuar.';
+
+  @override
+  String get goToSettings => 'Anar a Configuració';
 }

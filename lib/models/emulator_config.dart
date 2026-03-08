@@ -114,12 +114,35 @@ class EmulatorConfig {
   final String platform;
   final List<EmulatorCommand> commands;
 
-  EmulatorConfig({required this.platform, required this.commands});
+  /// Whether the emulator accepts zip files directly.
+  /// When true, zip files are passed as-is to the emulator.
+  /// When false, zip files are extracted before launching.
+  final bool acceptZipFiles;
+
+  /// Whether ROMs for this emulator should always be saved to forever storage.
+  final bool useForeverMode;
+
+  /// The filename to search for inside extracted zip directories.
+  /// Used when acceptZipFiles is false to find the correct file to launch.
+  /// Example: "eboot.bin" for PS4 games.
+  final String? launchFile;
+
+  EmulatorConfig({
+    required this.platform,
+    required this.commands,
+    this.acceptZipFiles = true,
+    this.useForeverMode = false,
+    this.launchFile,
+  });
 
   factory EmulatorConfig.fromJson(Map<String, dynamic> json) {
     // Support both our format and Forsaken format
     // Our format: { "platform": "nes", "commands": [...] }
     // Forsaken format: { "system": "nes", "command": "..." or command: [...] }
+
+    final acceptZip = json['acceptZipFiles'] == true;
+    final foreverMode = json['useForeverMode'] == true;
+    final launchFile = json['launchFile'] as String?;
 
     if (json.containsKey('system') && json.containsKey('command')) {
       // Forsaken format
@@ -151,7 +174,13 @@ class EmulatorConfig {
         throw Exception('Invalid command type for system: $system');
       }
 
-      return EmulatorConfig(platform: system, commands: commands);
+      return EmulatorConfig(
+        platform: system,
+        commands: commands,
+        acceptZipFiles: acceptZip,
+        useForeverMode: foreverMode,
+        launchFile: launchFile,
+      );
     } else {
       // Our format
       return EmulatorConfig(
@@ -159,14 +188,23 @@ class EmulatorConfig {
         commands: (json['commands'] as List)
             .map((cmd) => EmulatorCommand.fromJson(cmd as Map<String, dynamic>))
             .toList(),
+        acceptZipFiles: acceptZip,
+        useForeverMode: foreverMode,
+        launchFile: launchFile,
       );
     }
   }
+
+  /// Whether this platform requires zip extraction before launching
+  bool get requiresExtraction => !acceptZipFiles;
 
   Map<String, dynamic> toJson() {
     return {
       'platform': platform,
       'commands': commands.map((cmd) => cmd.toJson()).toList(),
+      'acceptZipFiles': acceptZipFiles,
+      'useForeverMode': useForeverMode,
+      if (launchFile != null) 'launchFile': launchFile,
     };
   }
 

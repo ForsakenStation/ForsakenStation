@@ -321,6 +321,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get useForeverSubtitle => '保持模拟器运行';
 
   @override
+  String get launchFile => '启动文件';
+
+  @override
+  String get launchFileSubtitle => '在解压的ZIP中查找的文件（例如 eboot.bin）';
+
+  @override
+  String get launchFileHint => '例如 eboot.bin';
+
+  @override
   String get workInProgress => '进行中的工作';
 
   @override
@@ -2404,4 +2413,46 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get wizardDownloadOptional => '此步骤为可选。您可以稍后在「设置」中下载。';
+
+  @override
+  String get archiveOrgSettings => 'Archive.org 账户';
+
+  @override
+  String get archiveOrgSettingsDesc => '配置 Archive.org 凭据以下载 ROM';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      '部分 ROM 托管在 Archive.org 上，需要身份验证才能下载。请在此处配置您的 S3 API 密钥。';
+
+  @override
+  String get archiveOrgWhyNeeded => '为什么需要凭据？';
+
+  @override
+  String get archiveOrgExplanation =>
+      'Archive.org 上的部分文件需要登录账户才能下载。Forsaken 使用 S3 风格的 API 密钥，因此您的密码永远不会被存储。\n\n在此生成您的密钥：\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => '访问密钥';
+
+  @override
+  String get archiveOrgSecretKey => '秘密密钥';
+
+  @override
+  String get archiveOrgAccessKeyHint => '您的 S3 风格访问密钥';
+
+  @override
+  String get archiveOrgSecretKeyHint => '您的 S3 风格秘密密钥';
+
+  @override
+  String get archiveOrgSettingsSaved => 'Archive.org 凭据已保存。';
+
+  @override
+  String get archiveOrgAuthRequired => '需要身份验证';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      '此文件需要 Archive.org 账户才能下载。\n\n请在设置中配置您的 Archive.org S3 API 密钥以继续。';
+
+  @override
+  String get goToSettings => '前往设置';
 }

@@ -161,6 +161,46 @@ Future<String?> findRomInForeverStorage(
   }
 }
 
+/// Find an extracted ROM directory in forever storage.
+///
+/// When acceptZipFiles=false, zips are extracted to a directory named after
+/// the zip file (without the .zip extension). This checks if that dir exists.
+Future<String?> findExtractedRomInForeverStorage(
+  String platform,
+  String zipFileName,
+  String? customPath,
+) async {
+  try {
+    final foreverDir = await getPlatformForeverDirectory(platform, customPath);
+
+    if (!await foreverDir.exists()) {
+      return null;
+    }
+
+    // Remove .zip extension to get the directory name
+    String dirName = zipFileName;
+    if (dirName.toLowerCase().endsWith('.zip')) {
+      dirName = dirName.substring(0, dirName.length - 4);
+    }
+
+    final dirPath = path.join(foreverDir.path, dirName);
+    final dir = Directory(dirPath);
+
+    if (await dir.exists()) {
+      return dirPath;
+    }
+
+    return null;
+  } catch (e) {
+    _debug.error(
+      'Error checking extracted ROM in forever storage',
+      tag: 'RomStorageService',
+      error: e,
+    );
+    return null;
+  }
+}
+
 Future<String?> findRomInTempStorage(
   String platform,
   String fileName,

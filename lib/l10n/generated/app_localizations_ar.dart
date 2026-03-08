@@ -326,6 +326,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get useForeverSubtitle => 'إبقاء المحاكي قيد التشغيل';
 
   @override
+  String get launchFile => 'ملف التشغيل';
+
+  @override
+  String get launchFileSubtitle =>
+      'الملف المراد البحث عنه داخل ملف ZIP المستخرج (مثال: eboot.bin)';
+
+  @override
+  String get launchFileHint => 'مثال: eboot.bin';
+
+  @override
   String get workInProgress => 'عمل قيد التقدم';
 
   @override
@@ -2462,4 +2472,47 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get wizardDownloadOptional =>
       'هذه الخطوة اختيارية. يمكنك التنزيل لاحقاً من الإعدادات.';
+
+  @override
+  String get archiveOrgSettings => 'حساب Archive.org';
+
+  @override
+  String get archiveOrgSettingsDesc =>
+      'تكوين بيانات اعتماد Archive.org لتنزيل الرومات';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      'بعض الرومات مستضافة على Archive.org وتتطلب مصادقة للتنزيل. قم بتكوين مفاتيح API من نوع S3 هنا.';
+
+  @override
+  String get archiveOrgWhyNeeded => 'لماذا بيانات الاعتماد مطلوبة؟';
+
+  @override
+  String get archiveOrgExplanation =>
+      'بعض الملفات على Archive.org تتطلب حسابًا مسجل الدخول للتنزيل. يستخدم Forsaken مفاتيح API بنمط S3 حتى لا يتم تخزين كلمة المرور الخاصة بك أبدًا.\n\nقم بإنشاء مفاتيحك على:\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => 'مفتاح الوصول';
+
+  @override
+  String get archiveOrgSecretKey => 'المفتاح السري';
+
+  @override
+  String get archiveOrgAccessKeyHint => 'مفتاح الوصول بنمط S3';
+
+  @override
+  String get archiveOrgSecretKeyHint => 'المفتاح السري بنمط S3';
+
+  @override
+  String get archiveOrgSettingsSaved => 'تم حفظ بيانات اعتماد Archive.org.';
+
+  @override
+  String get archiveOrgAuthRequired => 'المصادقة مطلوبة';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      'يتطلب هذا الملف حساب Archive.org للتنزيل.\n\nيرجى تكوين مفاتيح API من نوع S3 لـ Archive.org في الإعدادات للمتابعة.';
+
+  @override
+  String get goToSettings => 'الذهاب إلى الإعدادات';
 }

@@ -322,6 +322,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get useForeverSubtitle => '에뮬레이터 계속 실행 유지';
 
   @override
+  String get launchFile => '실행 파일';
+
+  @override
+  String get launchFileSubtitle => '압축 해제된 ZIP에서 찾을 파일 (예: eboot.bin)';
+
+  @override
+  String get launchFileHint => '예: eboot.bin';
+
+  @override
   String get workInProgress => '진행 중인 작업';
 
   @override
@@ -2420,4 +2429,46 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get wizardDownloadOptional => '이 단계는 선택 사항입니다. 나중에 설정에서 다운로드할 수 있습니다.';
+
+  @override
+  String get archiveOrgSettings => 'Archive.org 계정';
+
+  @override
+  String get archiveOrgSettingsDesc => 'ROM 다운로드를 위한 Archive.org 자격 증명 구성';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      '일부 ROM은 Archive.org에 호스팅되어 있으며 다운로드하려면 인증이 필요합니다. 여기에서 S3 API 키를 구성하세요.';
+
+  @override
+  String get archiveOrgWhyNeeded => '자격 증명이 왜 필요한가요?';
+
+  @override
+  String get archiveOrgExplanation =>
+      'Archive.org의 일부 파일은 다운로드하려면 로그인된 계정이 필요합니다. Forsaken은 S3 스타일 API 키를 사용하므로 비밀번호가 저장되지 않습니다.\n\n키 생성:\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => '액세스 키';
+
+  @override
+  String get archiveOrgSecretKey => '시크릿 키';
+
+  @override
+  String get archiveOrgAccessKeyHint => 'S3 스타일 액세스 키';
+
+  @override
+  String get archiveOrgSecretKeyHint => 'S3 스타일 시크릿 키';
+
+  @override
+  String get archiveOrgSettingsSaved => 'Archive.org 자격 증명이 저장되었습니다.';
+
+  @override
+  String get archiveOrgAuthRequired => '인증 필요';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      '이 파일을 다운로드하려면 Archive.org 계정이 필요합니다.\n\n계속하려면 설정에서 Archive.org S3 API 키를 구성하세요.';
+
+  @override
+  String get goToSettings => '설정으로 이동';
 }

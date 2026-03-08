@@ -908,5 +908,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "launchFile": "Fichier de lancement",
+  "launchFileHint": "ex. eboot.bin",
+  "launchFileSubtitle": "Fichier à trouver dans le ZIP extrait (ex. eboot.bin)",
+  "archiveOrgSettings": "Compte Archive.org",
+  "archiveOrgSettingsDesc": "Configurer les identifiants Archive.org pour le téléchargement de ROMs",
+  "archiveOrgSettingsDescription": "Certaines ROMs sont hébergées sur Archive.org et nécessitent une authentification pour être téléchargées. Configurez vos clés API S3 ici.",
+  "archiveOrgWhyNeeded": "Pourquoi les identifiants sont-ils nécessaires ?",
+  "archiveOrgExplanation": "Certains fichiers sur Archive.org nécessitent un compte connecté pour être téléchargés. Forsaken utilise des clés API de style S3 pour que votre mot de passe ne soit jamais stocké.\n\nGénérez vos clés sur :\nhttps://archive.org/account/s3.php",
+  "archiveOrgAccessKey": "Clé d'accès",
+  "archiveOrgSecretKey": "Clé secrète",
+  "archiveOrgAccessKeyHint": "Votre clé d'accès de type S3",
+  "archiveOrgSecretKeyHint": "Votre clé secrète de type S3",
+  "archiveOrgSettingsSaved": "Identifiants Archive.org enregistrés.",
+  "archiveOrgAuthRequired": "Authentification requise",
+  "archiveOrgAuthRequiredMessage": "Ce fichier nécessite un compte Archive.org pour être téléchargé.\n\nVeuillez configurer vos clés API S3 Archive.org dans les Paramètres pour continuer.",
+  "goToSettings": "Aller aux Paramètres"
 }

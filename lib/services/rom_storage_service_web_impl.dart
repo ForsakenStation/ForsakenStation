@@ -148,6 +148,16 @@ Future<String?> findRomInForeverStorage(
   return null;
 }
 
+/// Web stub: extracted ROM directories are not supported on web.
+Future<String?> findExtractedRomInForeverStorage(
+  String platform,
+  String zipFileName,
+  String? customPath,
+) async {
+  // Extraction is not supported on web platform
+  return null;
+}
+
 Future<String?> findRomInTempStorage(
   String platform,
   String fileName,

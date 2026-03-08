@@ -298,6 +298,10 @@ class EmulatorService {
       );
       _debug.debug('Platform: $platform', tag: 'EmulatorService');
 
+      // Load platform configuration early so we can pass it to download service
+      // (needed to know if zip extraction is required)
+      final config = await loadPlatformConfig(platform);
+
       String romPath;
 
       // Check if ROM needs to be downloaded
@@ -320,21 +324,28 @@ class EmulatorService {
         );
         rom.downloadUrl = romItem.downloadUrl;
 
-        // Download ROM
-        final downloadedPath = await downloadService.downloadRom(
+        // Download ROM (pass emulator config for zip extraction handling)
+        final downloadResult = await downloadService.downloadRom(
           rom,
           onProgress: onDownloadProgress,
+          emulatorConfig: config,
         );
-        if (downloadedPath == null) {
-          _debug.error('Failed to download ROM', tag: 'EmulatorService');
-          return LaunchResult.failure('Failed to download file');
+        if (!downloadResult.success) {
+          _debug.error(
+            'Failed to download ROM: ${downloadResult.errorMessage}',
+            tag: 'EmulatorService',
+          );
+          return LaunchResult.failure(
+            downloadResult.errorMessage ?? 'Failed to download file',
+            downloadErrorType: downloadResult.errorType,
+          );
         }
 
         _debug.info(
-          'Downloaded ROM to: $downloadedPath',
+          'Downloaded ROM to: ${downloadResult.filePath}',
           tag: 'EmulatorService',
         );
-        romPath = downloadedPath;
+        romPath = downloadResult.filePath!;
       } else {
         // Use local ROM file
         romPath = romItem.path;
@@ -350,8 +361,6 @@ class EmulatorService {
         return LaunchResult.success(filePath: romPath, isPdf: true);
       }
 
-      // Load platform configuration
-      final config = await loadPlatformConfig(platform);
       if (config == null || config.commands.isEmpty) {
         _debug.error(
           'No emulator configuration found for platform: $platform',

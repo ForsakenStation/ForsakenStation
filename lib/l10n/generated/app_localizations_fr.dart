@@ -332,6 +332,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get useForeverSubtitle => 'Garder l\'émulateur en cours d\'exécution';
 
   @override
+  String get launchFile => 'Fichier de lancement';
+
+  @override
+  String get launchFileSubtitle =>
+      'Fichier à trouver dans le ZIP extrait (ex. eboot.bin)';
+
+  @override
+  String get launchFileHint => 'ex. eboot.bin';
+
+  @override
   String get workInProgress => 'Travail en Cours';
 
   @override
@@ -2525,4 +2535,48 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get wizardDownloadOptional =>
       'Cette étape est facultative. Vous pouvez télécharger plus tard depuis les Paramètres.';
+
+  @override
+  String get archiveOrgSettings => 'Compte Archive.org';
+
+  @override
+  String get archiveOrgSettingsDesc =>
+      'Configurer les identifiants Archive.org pour le téléchargement de ROMs';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      'Certaines ROMs sont hébergées sur Archive.org et nécessitent une authentification pour être téléchargées. Configurez vos clés API S3 ici.';
+
+  @override
+  String get archiveOrgWhyNeeded =>
+      'Pourquoi les identifiants sont-ils nécessaires ?';
+
+  @override
+  String get archiveOrgExplanation =>
+      'Certains fichiers sur Archive.org nécessitent un compte connecté pour être téléchargés. Forsaken utilise des clés API de style S3 pour que votre mot de passe ne soit jamais stocké.\n\nGénérez vos clés sur :\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => 'Clé d\'accès';
+
+  @override
+  String get archiveOrgSecretKey => 'Clé secrète';
+
+  @override
+  String get archiveOrgAccessKeyHint => 'Votre clé d\'accès de type S3';
+
+  @override
+  String get archiveOrgSecretKeyHint => 'Votre clé secrète de type S3';
+
+  @override
+  String get archiveOrgSettingsSaved => 'Identifiants Archive.org enregistrés.';
+
+  @override
+  String get archiveOrgAuthRequired => 'Authentification requise';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      'Ce fichier nécessite un compte Archive.org pour être téléchargé.\n\nVeuillez configurer vos clés API S3 Archive.org dans les Paramètres pour continuer.';
+
+  @override
+  String get goToSettings => 'Aller aux Paramètres';
 }

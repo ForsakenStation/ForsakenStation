@@ -908,5 +908,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "launchFile": "ملف التشغيل",
+  "launchFileHint": "مثال: eboot.bin",
+  "launchFileSubtitle": "الملف المراد البحث عنه داخل ملف ZIP المستخرج (مثال: eboot.bin)",
+  "archiveOrgSettings": "حساب Archive.org",
+  "archiveOrgSettingsDesc": "تكوين بيانات اعتماد Archive.org لتنزيل الرومات",
+  "archiveOrgSettingsDescription": "بعض الرومات مستضافة على Archive.org وتتطلب مصادقة للتنزيل. قم بتكوين مفاتيح API من نوع S3 هنا.",
+  "archiveOrgWhyNeeded": "لماذا بيانات الاعتماد مطلوبة؟",
+  "archiveOrgExplanation": "بعض الملفات على Archive.org تتطلب حسابًا مسجل الدخول للتنزيل. يستخدم Forsaken مفاتيح API بنمط S3 حتى لا يتم تخزين كلمة المرور الخاصة بك أبدًا.\n\nقم بإنشاء مفاتيحك على:\nhttps://archive.org/account/s3.php",
+  "archiveOrgAccessKey": "مفتاح الوصول",
+  "archiveOrgSecretKey": "المفتاح السري",
+  "archiveOrgAccessKeyHint": "مفتاح الوصول بنمط S3",
+  "archiveOrgSecretKeyHint": "المفتاح السري بنمط S3",
+  "archiveOrgSettingsSaved": "تم حفظ بيانات اعتماد Archive.org.",
+  "archiveOrgAuthRequired": "المصادقة مطلوبة",
+  "archiveOrgAuthRequiredMessage": "يتطلب هذا الملف حساب Archive.org للتنزيل.\n\nيرجى تكوين مفاتيح API من نوع S3 لـ Archive.org في الإعدادات للمتابعة.",
+  "goToSettings": "الذهاب إلى الإعدادات"
 }

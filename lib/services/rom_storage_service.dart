@@ -78,6 +78,21 @@ class RomStorageService {
     );
   }
 
+  /// Find an extracted ROM directory in forever storage.
+  ///
+  /// When a zip is extracted, it creates a directory named after the zip
+  /// (without the .zip extension). This method checks if that directory exists.
+  Future<String?> findExtractedRomInForeverStorage(
+    String platform,
+    String zipFileName,
+  ) async {
+    return platform_service.findExtractedRomInForeverStorage(
+      platform,
+      zipFileName,
+      _customForeverPath,
+    );
+  }
+
   /// Move ROM from temp to permanent storage
   Future<String?> moveToForeverStorage(String platform, String fileName) async {
     return platform_service.moveToForeverStorage(

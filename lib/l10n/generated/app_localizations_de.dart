@@ -328,6 +328,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get useForeverSubtitle => 'Emulator weiterlaufen lassen';
 
   @override
+  String get launchFile => 'Startdatei';
+
+  @override
+  String get launchFileSubtitle =>
+      'Datei, die im entpackten ZIP gesucht wird (z.B. eboot.bin)';
+
+  @override
+  String get launchFileHint => 'z.B. eboot.bin';
+
+  @override
   String get workInProgress => 'Arbeit in Arbeit';
 
   @override
@@ -2502,4 +2512,47 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get wizardDownloadOptional =>
       'Dieser Schritt ist optional. Du kannst später in den Einstellungen herunterladen.';
+
+  @override
+  String get archiveOrgSettings => 'Archive.org-Konto';
+
+  @override
+  String get archiveOrgSettingsDesc =>
+      'Archive.org-Zugangsdaten für ROM-Downloads konfigurieren';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      'Einige ROMs werden auf Archive.org gehostet und erfordern eine Authentifizierung zum Herunterladen. Konfigurieren Sie hier Ihre S3-API-Schlüssel.';
+
+  @override
+  String get archiveOrgWhyNeeded => 'Warum werden Zugangsdaten benötigt?';
+
+  @override
+  String get archiveOrgExplanation =>
+      'Einige Dateien auf Archive.org erfordern ein angemeldetes Konto zum Herunterladen. Forsaken verwendet API-Schlüssel im S3-Stil, sodass Ihr Passwort niemals gespeichert wird.\n\nErstellen Sie Ihre Schlüssel unter:\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => 'Zugriffsschlüssel';
+
+  @override
+  String get archiveOrgSecretKey => 'Geheimer Schlüssel';
+
+  @override
+  String get archiveOrgAccessKeyHint => 'Ihr S3-ähnlicher Zugriffsschlüssel';
+
+  @override
+  String get archiveOrgSecretKeyHint => 'Ihr S3-ähnlicher geheimer Schlüssel';
+
+  @override
+  String get archiveOrgSettingsSaved => 'Archive.org-Zugangsdaten gespeichert.';
+
+  @override
+  String get archiveOrgAuthRequired => 'Authentifizierung erforderlich';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      'Diese Datei erfordert ein Archive.org-Konto zum Herunterladen.\n\nBitte konfigurieren Sie Ihre Archive.org S3-API-Schlüssel in den Einstellungen, um fortzufahren.';
+
+  @override
+  String get goToSettings => 'Zu den Einstellungen';
 }

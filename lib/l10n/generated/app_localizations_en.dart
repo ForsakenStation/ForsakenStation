@@ -324,6 +324,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get useForeverSubtitle => 'Keep emulator running';
 
   @override
+  String get launchFile => 'Launch File';
+
+  @override
+  String get launchFileSubtitle =>
+      'File to find inside extracted ZIP (e.g. eboot.bin)';
+
+  @override
+  String get launchFileHint => 'e.g. eboot.bin';
+
+  @override
   String get workInProgress => 'Work In Progress';
 
   @override
@@ -2465,4 +2475,47 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wizardDownloadOptional =>
       'This step is optional. You can download later from Settings.';
+
+  @override
+  String get archiveOrgSettings => 'Archive.org Account';
+
+  @override
+  String get archiveOrgSettingsDesc =>
+      'Configure Archive.org credentials for ROM downloads';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      'Some ROMs are hosted on Archive.org and require authentication to download. Configure your S3 API keys here.';
+
+  @override
+  String get archiveOrgWhyNeeded => 'Why are credentials needed?';
+
+  @override
+  String get archiveOrgExplanation =>
+      'Some files on Archive.org require a logged-in account to download. Forsaken uses S3-style API keys so your password is never stored.\n\nGenerate your keys at:\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => 'Access Key';
+
+  @override
+  String get archiveOrgSecretKey => 'Secret Key';
+
+  @override
+  String get archiveOrgAccessKeyHint => 'Your S3-like access key';
+
+  @override
+  String get archiveOrgSecretKeyHint => 'Your S3-like secret key';
+
+  @override
+  String get archiveOrgSettingsSaved => 'Archive.org credentials saved.';
+
+  @override
+  String get archiveOrgAuthRequired => 'Authentication Required';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      'This file requires an Archive.org account to download.\n\nPlease configure your Archive.org S3 API keys in Settings to continue.';
+
+  @override
+  String get goToSettings => 'Go to Settings';
 }

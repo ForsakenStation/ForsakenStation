@@ -908,5 +908,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "launchFile": "Файл запуска",
+  "launchFileHint": "напр. eboot.bin",
+  "launchFileSubtitle": "Файл для поиска в извлечённом ZIP (напр. eboot.bin)",
+  "archiveOrgSettings": "Аккаунт Archive.org",
+  "archiveOrgSettingsDesc": "Настроить учётные данные Archive.org для загрузки ROM",
+  "archiveOrgSettingsDescription": "Некоторые ROM размещены на Archive.org и требуют аутентификации для загрузки. Настройте свои ключи API S3 здесь.",
+  "archiveOrgWhyNeeded": "Зачем нужны учётные данные?",
+  "archiveOrgExplanation": "Некоторые файлы на Archive.org требуют авторизованного аккаунта для загрузки. Forsaken использует ключи API в стиле S3, чтобы ваш пароль никогда не сохранялся.\n\nСгенерируйте свои ключи на:\nhttps://archive.org/account/s3.php",
+  "archiveOrgAccessKey": "Ключ доступа",
+  "archiveOrgSecretKey": "Секретный ключ",
+  "archiveOrgAccessKeyHint": "Ваш ключ доступа в стиле S3",
+  "archiveOrgSecretKeyHint": "Ваш секретный ключ в стиле S3",
+  "archiveOrgSettingsSaved": "Учётные данные Archive.org сохранены.",
+  "archiveOrgAuthRequired": "Требуется аутентификация",
+  "archiveOrgAuthRequiredMessage": "Для загрузки этого файла требуется аккаунт Archive.org.\n\nПожалуйста, настройте ваши ключи API S3 Archive.org в Настройках для продолжения.",
+  "goToSettings": "Перейти к настройкам"
 }

@@ -908,5 +908,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "launchFile": "Startdatei",
+  "launchFileHint": "z.B. eboot.bin",
+  "launchFileSubtitle": "Datei, die im entpackten ZIP gesucht wird (z.B. eboot.bin)",
+  "archiveOrgSettings": "Archive.org-Konto",
+  "archiveOrgSettingsDesc": "Archive.org-Zugangsdaten für ROM-Downloads konfigurieren",
+  "archiveOrgSettingsDescription": "Einige ROMs werden auf Archive.org gehostet und erfordern eine Authentifizierung zum Herunterladen. Konfigurieren Sie hier Ihre S3-API-Schlüssel.",
+  "archiveOrgWhyNeeded": "Warum werden Zugangsdaten benötigt?",
+  "archiveOrgExplanation": "Einige Dateien auf Archive.org erfordern ein angemeldetes Konto zum Herunterladen. Forsaken verwendet API-Schlüssel im S3-Stil, sodass Ihr Passwort niemals gespeichert wird.\n\nErstellen Sie Ihre Schlüssel unter:\nhttps://archive.org/account/s3.php",
+  "archiveOrgAccessKey": "Zugriffsschlüssel",
+  "archiveOrgSecretKey": "Geheimer Schlüssel",
+  "archiveOrgAccessKeyHint": "Ihr S3-ähnlicher Zugriffsschlüssel",
+  "archiveOrgSecretKeyHint": "Ihr S3-ähnlicher geheimer Schlüssel",
+  "archiveOrgSettingsSaved": "Archive.org-Zugangsdaten gespeichert.",
+  "archiveOrgAuthRequired": "Authentifizierung erforderlich",
+  "archiveOrgAuthRequiredMessage": "Diese Datei erfordert ein Archive.org-Konto zum Herunterladen.\n\nBitte konfigurieren Sie Ihre Archive.org S3-API-Schlüssel in den Einstellungen, um fortzufahren.",
+  "goToSettings": "Zu den Einstellungen"
 }

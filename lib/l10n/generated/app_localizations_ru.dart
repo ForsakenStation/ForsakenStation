@@ -325,6 +325,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get useForeverSubtitle => 'Держать эмулятор запущенным';
 
   @override
+  String get launchFile => 'Файл запуска';
+
+  @override
+  String get launchFileSubtitle =>
+      'Файл для поиска в извлечённом ZIP (напр. eboot.bin)';
+
+  @override
+  String get launchFileHint => 'напр. eboot.bin';
+
+  @override
   String get workInProgress => 'В работе';
 
   @override
@@ -2493,4 +2503,47 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get wizardDownloadOptional =>
       'Этот шаг необязателен. Вы можете скачать позже из Настроек.';
+
+  @override
+  String get archiveOrgSettings => 'Аккаунт Archive.org';
+
+  @override
+  String get archiveOrgSettingsDesc =>
+      'Настроить учётные данные Archive.org для загрузки ROM';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      'Некоторые ROM размещены на Archive.org и требуют аутентификации для загрузки. Настройте свои ключи API S3 здесь.';
+
+  @override
+  String get archiveOrgWhyNeeded => 'Зачем нужны учётные данные?';
+
+  @override
+  String get archiveOrgExplanation =>
+      'Некоторые файлы на Archive.org требуют авторизованного аккаунта для загрузки. Forsaken использует ключи API в стиле S3, чтобы ваш пароль никогда не сохранялся.\n\nСгенерируйте свои ключи на:\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => 'Ключ доступа';
+
+  @override
+  String get archiveOrgSecretKey => 'Секретный ключ';
+
+  @override
+  String get archiveOrgAccessKeyHint => 'Ваш ключ доступа в стиле S3';
+
+  @override
+  String get archiveOrgSecretKeyHint => 'Ваш секретный ключ в стиле S3';
+
+  @override
+  String get archiveOrgSettingsSaved => 'Учётные данные Archive.org сохранены.';
+
+  @override
+  String get archiveOrgAuthRequired => 'Требуется аутентификация';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      'Для загрузки этого файла требуется аккаунт Archive.org.\n\nПожалуйста, настройте ваши ключи API S3 Archive.org в Настройках для продолжения.';
+
+  @override
+  String get goToSettings => 'Перейти к настройкам';
 }

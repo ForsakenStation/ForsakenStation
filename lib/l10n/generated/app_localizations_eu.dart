@@ -326,6 +326,16 @@ class AppLocalizationsEu extends AppLocalizations {
   String get useForeverSubtitle => 'Emuladorea martxan mantendu';
 
   @override
+  String get launchFile => 'Abio-fitxategia';
+
+  @override
+  String get launchFileSubtitle =>
+      'Ateratako ZIP barruan bilatu beharreko fitxategia (adib. eboot.bin)';
+
+  @override
+  String get launchFileHint => 'adib. eboot.bin';
+
+  @override
   String get workInProgress => 'Lanean';
 
   @override
@@ -2501,4 +2511,47 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get wizardDownloadOptional =>
       'Urrats hau aukerakoa da. Geroago deskarga dezakezu Ezarpenetatik.';
+
+  @override
+  String get archiveOrgSettings => 'Archive.org kontua';
+
+  @override
+  String get archiveOrgSettingsDesc =>
+      'Konfiguratu Archive.org kredentzialak ROM-ak deskargatzeko';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      'ROM batzuk Archive.org-en ostatatuta daude eta autentifikazioa behar dute deskargatzeko. Konfiguratu zure S3 API gakoak hemen.';
+
+  @override
+  String get archiveOrgWhyNeeded => 'Zergatik dira kredentzialak beharrezkoak?';
+
+  @override
+  String get archiveOrgExplanation =>
+      'Archive.org-eko fitxategi batzuek saioa hasitako kontu bat behar dute deskargatzeko. Forsaken-ek S3 estiloko API gakoak erabiltzen ditu zure pasahitza inoiz ez gordetzeko.\n\nSortu zure gakoak hemen:\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => 'Sarbide-gakoa';
+
+  @override
+  String get archiveOrgSecretKey => 'Gako sekretua';
+
+  @override
+  String get archiveOrgAccessKeyHint => 'Zure S3 estiloko sarbide-gakoa';
+
+  @override
+  String get archiveOrgSecretKeyHint => 'Zure S3 estiloko gako sekretua';
+
+  @override
+  String get archiveOrgSettingsSaved => 'Archive.org kredentzialak gordeta.';
+
+  @override
+  String get archiveOrgAuthRequired => 'Autentifikazioa beharrezkoa';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      'Fitxategi honek Archive.org kontu bat behar du deskargatzeko.\n\nMesedez, konfiguratu zure Archive.org S3 API gakoak Ezarpenetan jarraitzeko.';
+
+  @override
+  String get goToSettings => 'Joan Ezarpenetara';
 }

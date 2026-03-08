@@ -34,6 +34,10 @@ class ConfigService {
   static const String _debugMinLevelKey = 'forsaken_debug_min_level';
   static const String _romsPathKey = 'forsaken_roms_path';
   static const String _setupCompletedKey = 'forsaken_setup_completed';
+  static const String _archiveOrgAccessKeyKey =
+      'forsaken_archive_org_access_key';
+  static const String _archiveOrgSecretKeyKey =
+      'forsaken_archive_org_secret_key';
 
   Map<String, dynamic>? _config;
   bool _hasLocalOverrides = false;
@@ -48,6 +52,8 @@ class ConfigService {
   bool _isDebugEnabled = false;
   String _debugMinLevel = 'debug';
   bool _setupCompleted = false;
+  String _archiveOrgAccessKey = '';
+  String _archiveOrgSecretKey = '';
 
   ConfigService._();
 
@@ -126,6 +132,8 @@ class ConfigService {
     _isDebugEnabled = prefs.getBool(_debugEnabledKey) ?? false;
     _debugMinLevel = prefs.getString(_debugMinLevelKey) ?? 'debug';
     _setupCompleted = prefs.getBool(_setupCompletedKey) ?? false;
+    _archiveOrgAccessKey = prefs.getString(_archiveOrgAccessKeyKey) ?? '';
+    _archiveOrgSecretKey = prefs.getString(_archiveOrgSecretKeyKey) ?? '';
 
     DebugService.instance.debug(
       'Path settings loaded from SharedPreferences',
@@ -416,6 +424,30 @@ class ConfigService {
 
   /// Check if the setup wizard has been completed
   bool get isSetupCompleted => _setupCompleted;
+
+  /// Get Archive.org S3 access key
+  String get archiveOrgAccessKey => _archiveOrgAccessKey;
+
+  /// Get Archive.org S3 secret key
+  String get archiveOrgSecretKey => _archiveOrgSecretKey;
+
+  /// Check if Archive.org credentials are configured
+  bool get hasArchiveOrgCredentials =>
+      _archiveOrgAccessKey.isNotEmpty && _archiveOrgSecretKey.isNotEmpty;
+
+  /// Set Archive.org S3 access key
+  Future<void> setArchiveOrgAccessKey(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    _archiveOrgAccessKey = value;
+    await prefs.setString(_archiveOrgAccessKeyKey, value);
+  }
+
+  /// Set Archive.org S3 secret key
+  Future<void> setArchiveOrgSecretKey(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    _archiveOrgSecretKey = value;
+    await prefs.setString(_archiveOrgSecretKeyKey, value);
+  }
 
   /// Mark the setup wizard as completed or not
   Future<void> setSetupCompleted(bool value) async {

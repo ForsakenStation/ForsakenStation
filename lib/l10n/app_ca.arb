@@ -908,5 +908,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "launchFile": "Fitxer d'inici",
+  "launchFileHint": "ex. eboot.bin",
+  "launchFileSubtitle": "Fitxer a cercar dins del ZIP extret (ex. eboot.bin)",
+  "archiveOrgSettings": "Compte d'Archive.org",
+  "archiveOrgSettingsDesc": "Configurar credencials d'Archive.org per a la descàrrega de ROMs",
+  "archiveOrgSettingsDescription": "Algunes ROMs estan allotjades a Archive.org i requereixen autenticació per descarregar-les. Configureu les vostres claus API S3 aquí.",
+  "archiveOrgWhyNeeded": "Per què calen les credencials?",
+  "archiveOrgExplanation": "Alguns fitxers a Archive.org requereixen un compte amb sessió iniciada per descarregar-los. Forsaken utilitza claus API d'estil S3 perquè la vostra contrasenya no s'emmagatzemi mai.\n\nGenereu les vostres claus a:\nhttps://archive.org/account/s3.php",
+  "archiveOrgAccessKey": "Clau d'accés",
+  "archiveOrgSecretKey": "Clau secreta",
+  "archiveOrgAccessKeyHint": "La vostra clau d'accés d'estil S3",
+  "archiveOrgSecretKeyHint": "La vostra clau secreta d'estil S3",
+  "archiveOrgSettingsSaved": "Credencials d'Archive.org desades.",
+  "archiveOrgAuthRequired": "Autenticació requerida",
+  "archiveOrgAuthRequiredMessage": "Aquest fitxer requereix un compte d'Archive.org per descarregar-lo.\n\nSi us plau, configureu les vostres claus API S3 d'Archive.org a Configuració per continuar.",
+  "goToSettings": "Anar a Configuració"
 }

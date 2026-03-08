@@ -324,6 +324,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get useForeverSubtitle => 'Manter emulador em execução';
 
   @override
+  String get launchFile => 'Arquivo de inicialização';
+
+  @override
+  String get launchFileSubtitle =>
+      'Arquivo a encontrar dentro do ZIP extraído (ex. eboot.bin)';
+
+  @override
+  String get launchFileHint => 'ex. eboot.bin';
+
+  @override
   String get workInProgress => 'Trabalho em Andamento';
 
   @override
@@ -2494,4 +2504,47 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get wizardDownloadOptional =>
       'Esta etapa é opcional. Você pode baixar mais tarde nas Configurações.';
+
+  @override
+  String get archiveOrgSettings => 'Conta Archive.org';
+
+  @override
+  String get archiveOrgSettingsDesc =>
+      'Configurar credenciais do Archive.org para download de ROMs';
+
+  @override
+  String get archiveOrgSettingsDescription =>
+      'Algumas ROMs estão hospedadas no Archive.org e requerem autenticação para download. Configure suas chaves API S3 aqui.';
+
+  @override
+  String get archiveOrgWhyNeeded => 'Por que as credenciais são necessárias?';
+
+  @override
+  String get archiveOrgExplanation =>
+      'Alguns arquivos no Archive.org requerem uma conta logada para download. O Forsaken usa chaves API estilo S3 para que sua senha nunca seja armazenada.\n\nGere suas chaves em:\nhttps://archive.org/account/s3.php';
+
+  @override
+  String get archiveOrgAccessKey => 'Chave de acesso';
+
+  @override
+  String get archiveOrgSecretKey => 'Chave secreta';
+
+  @override
+  String get archiveOrgAccessKeyHint => 'Sua chave de acesso estilo S3';
+
+  @override
+  String get archiveOrgSecretKeyHint => 'Sua chave secreta estilo S3';
+
+  @override
+  String get archiveOrgSettingsSaved => 'Credenciais do Archive.org salvas.';
+
+  @override
+  String get archiveOrgAuthRequired => 'Autenticação necessária';
+
+  @override
+  String get archiveOrgAuthRequiredMessage =>
+      'Este arquivo requer uma conta Archive.org para download.\n\nPor favor, configure suas chaves API S3 do Archive.org nas Configurações para continuar.';
+
+  @override
+  String get goToSettings => 'Ir para Configurações';
 }

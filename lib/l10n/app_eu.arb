@@ -908,5 +908,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "launchFile": "Abio-fitxategia",
+  "launchFileHint": "adib. eboot.bin",
+  "launchFileSubtitle": "Ateratako ZIP barruan bilatu beharreko fitxategia (adib. eboot.bin)",
+  "archiveOrgSettings": "Archive.org kontua",
+  "archiveOrgSettingsDesc": "Konfiguratu Archive.org kredentzialak ROM-ak deskargatzeko",
+  "archiveOrgSettingsDescription": "ROM batzuk Archive.org-en ostatatuta daude eta autentifikazioa behar dute deskargatzeko. Konfiguratu zure S3 API gakoak hemen.",
+  "archiveOrgWhyNeeded": "Zergatik dira kredentzialak beharrezkoak?",
+  "archiveOrgExplanation": "Archive.org-eko fitxategi batzuek saioa hasitako kontu bat behar dute deskargatzeko. Forsaken-ek S3 estiloko API gakoak erabiltzen ditu zure pasahitza inoiz ez gordetzeko.\n\nSortu zure gakoak hemen:\nhttps://archive.org/account/s3.php",
+  "archiveOrgAccessKey": "Sarbide-gakoa",
+  "archiveOrgSecretKey": "Gako sekretua",
+  "archiveOrgAccessKeyHint": "Zure S3 estiloko sarbide-gakoa",
+  "archiveOrgSecretKeyHint": "Zure S3 estiloko gako sekretua",
+  "archiveOrgSettingsSaved": "Archive.org kredentzialak gordeta.",
+  "archiveOrgAuthRequired": "Autentifikazioa beharrezkoa",
+  "archiveOrgAuthRequiredMessage": "Fitxategi honek Archive.org kontu bat behar du deskargatzeko.\n\nMesedez, konfiguratu zure Archive.org S3 API gakoak Ezarpenetan jarraitzeko.",
+  "goToSettings": "Joan Ezarpenetara"
 }
