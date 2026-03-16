@@ -4,6 +4,7 @@
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
+#include <glib.h>
 
 #include "flutter/generated_plugin_registrant.h"
 
@@ -25,6 +26,37 @@ static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
   GtkWindow* window =
       GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
+
+  // Load and set window icon
+  GError* error = nullptr;
+  gchar* exe_path = nullptr;
+  gchar* link_path = g_build_filename(g_get_current_dir(), g_get_prgname(), nullptr);
+  if (g_file_test(link_path, G_FILE_TEST_EXISTS)) {
+    exe_path = g_path_get_dirname(link_path);
+  } else {
+    exe_path = g_path_get_dirname(g_get_prgname());
+    if (exe_path == nullptr || g_strcmp0(exe_path, ".") == 0) {
+      g_free(exe_path);
+      exe_path = g_get_current_dir();
+    }
+  }
+  g_free(link_path);
+  // Try data/flutter_assets first (bundled with app), then fallback to flutter/ (for development)
+  gchar* icon_path = g_build_filename(exe_path, "data", "flutter_assets", "assets", "images", "icon.png", nullptr);
+  if (!g_file_test(icon_path, G_FILE_TEST_EXISTS)) {
+    g_free(icon_path);
+    icon_path = g_build_filename(exe_path, "flutter", "launcher_icon.png", nullptr);
+  }
+  GdkPixbuf* icon = gdk_pixbuf_new_from_file(icon_path, &error);
+  g_free(icon_path);
+  g_free(exe_path);
+  if (icon != nullptr) {
+    gtk_window_set_icon(window, icon);
+    g_object_unref(icon);
+  } else {
+    g_warning("Failed to load window icon: %s", error->message);
+    g_error_free(error);
+  }
 
   // Use a header bar when running in GNOME as this is the common style used
   // by applications and is the setup most users will be using (e.g. Ubuntu

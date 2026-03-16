@@ -158,7 +158,7 @@
       "corePreferences": {}
     },
     {
-      "system": "jaguar",
+      "system": "atarijaguar",
       "command": [
         {
           "name": "emulatorjs",
@@ -170,7 +170,7 @@
       "corePreferences": {}
     },
     {
-      "system": "atarijaguar",
+      "system": "atarijaguarcd",
       "command": [
         {
           "name": "emulatorjs",

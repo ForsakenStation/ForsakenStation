@@ -1659,7 +1659,7 @@
         }
       ],
       "useForeverMode": false,
-      "acceptZipFiles": false,pv
+      "acceptZipFiles": false,
       "launchFile": "eboot.bin",
       "corePreferences": {}
     },

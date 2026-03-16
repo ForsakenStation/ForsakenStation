@@ -50,4 +50,8 @@ class EmulatorDownloadService {
   int getTotalDownloadSize(List<EmulatorDownloadInfo> emulators) {
     return 0;
   }
+  /// No downloads on web
+  Future<void> makeAppImagesExecutable(String directory) async {
+    return;
+  }
 }
