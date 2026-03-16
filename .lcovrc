@@ -1,0 +1,10 @@
+# lcov configuration for ForsakenStation
+# Exclude generated files, stubs, and localizations from coverage reports
+
+[lcov]
+# Exclude generated Dart files
+exclude_pattern = *.g.dart
+exclude_pattern = *.freezed.dart
+exclude_pattern = *_stub.dart
+exclude_pattern = */l10n/generated/*
+exclude_pattern = */l10n/app_*.dart

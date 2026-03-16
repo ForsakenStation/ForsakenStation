@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:forsaken/models/region_info.dart';
 import 'package:forsaken/models/rom_tags.dart';
@@ -70,6 +71,47 @@ void main() {
       );
       expect(info.regions.length, 1);
     });
+
+    test('getFlag returns flag emoji for USA', () {
+      final flag = RegionInfo.getFlag('USA');
+      expect(flag, isNotEmpty);
+      expect(flag, isNot(equals('🗺️')));
+    });
+
+    test('getFlag returns flag emoji for Japan', () {
+      final flag = RegionInfo.getFlag('Japan');
+      expect(flag, isNotEmpty);
+      expect(flag, isNot(equals('🗺️')));
+    });
+
+    test('getFlag returns globe emoji for unknown regions', () {
+      expect(RegionInfo.getFlag('UnknownRegion'), equals('🗺️'));
+    });
+
+    test('getRegionName returns full name for known regions', () {
+      expect(RegionInfo.getRegionName('usa'), equals('United States'));
+      expect(RegionInfo.getRegionName('japan'), equals('Japan'));
+      expect(RegionInfo.getRegionName('europe'), equals('Europe'));
+    });
+
+    test('getRegionName returns original string for unknown regions', () {
+      expect(RegionInfo.getRegionName('Atlantis'), equals('Atlantis'));
+    });
+
+    test('isEmpty and isNotEmpty work correctly', () {
+      final info = RegionInfo(['USA']);
+      expect(info.isEmpty, isFalse);
+      expect(info.isNotEmpty, isTrue);
+
+      final empty = RegionInfo([]);
+      expect(empty.isEmpty, isTrue);
+      expect(empty.isNotEmpty, isFalse);
+    });
+
+    test('toString returns expected format', () {
+      final info = RegionInfo(['USA', 'Europe']);
+      expect(info.toString(), equals('RegionInfo(USA, Europe)'));
+    });
   });
 
   group('RomTags', () {
@@ -135,6 +177,52 @@ void main() {
       expect(tags.tags.any((t) => t.type == RomTagType.version), isTrue);
       expect(
         tags.tags.any((t) => t.text.toLowerCase().contains('demo')),
+        isTrue,
+      );
+    });
+
+    test('isEmpty and isNotEmpty work correctly', () {
+      final tags = RomTags([const RomTag(
+        text: 'Verified',
+        type: RomTagType.quality,
+        icon: '✓',
+        color: Color(0xFF4CAF50),
+      )]);
+      expect(tags.isEmpty, isFalse);
+      expect(tags.isNotEmpty, isTrue);
+
+      final empty = RomTags([]);
+      expect(empty.isEmpty, isTrue);
+      expect(empty.isNotEmpty, isFalse);
+    });
+
+    test('toString returns expected format', () {
+      final tags = RomTags([
+        const RomTag(
+          text: 'Verified',
+          type: RomTagType.quality,
+          icon: '✓',
+          color: Color(0xFF4CAF50),
+        ),
+        const RomTag(
+          text: 'Hack',
+          type: RomTagType.modification,
+          icon: '🔧',
+          color: Color(0xFF9C27B0),
+        ),
+      ]);
+      expect(tags.toString(), equals('RomTags(Verified, Hack)'));
+    });
+
+    test('translation tag is parsed correctly from [t]', () {
+      final tags = RomTags.fromRomName('Game [t].nes');
+      expect(tags, isNotNull);
+      expect(
+        tags!.tags.any((t) => t.type == RomTagType.modification),
+        isTrue,
+      );
+      expect(
+        tags.tags.any((t) => t.text.toLowerCase().contains('translation')),
         isTrue,
       );
     });

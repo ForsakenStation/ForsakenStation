@@ -508,3 +508,32 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [⬆ back to top](#forsaken---multi-platform-retro-gaming-frontend)
 
 </div>
+
+## Testing
+
+### Run all tests
+```bash
+fvm flutter test
+```
+
+### Run tests with coverage
+```bash
+fvm flutter test --coverage
+```
+
+Coverage data is written to `coverage/lcov.info`. To generate an HTML report (requires `lcov`):
+```bash
+genhtml coverage/lcov.info -o coverage/html
+```
+
+### Coverage targets
+- Models: 80%
+- Services: 70%
+- Utils: 75%
+
+### Excluded from coverage
+- Generated files (`*.g.dart`, `*.freezed.dart`)
+- Platform stubs (`*_stub.dart`)
+- Localization files (`lib/l10n/generated/`)
+
+See `.lcovrc` for the full exclusion configuration.
