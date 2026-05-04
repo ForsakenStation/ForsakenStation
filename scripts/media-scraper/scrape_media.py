@@ -75,7 +75,7 @@ COLORS = {
 }
 
 # Configuration
-JSONL_DIR = Path.home() / ".local/share/com.forsaken.emulator/romlists/romList-main"
+JSONL_DIR = Path.home() / "Code/romList"
 MEDIA_DIR = Path.home() / ".local/share/com.forsaken.emulator/media"
 GAMELIST_DIR = Path.home() / ".local/share/com.forsaken.emulator/gamelists"
 
@@ -134,6 +134,7 @@ PLATFORM_IDS = {
     "arcadia": 94,
     "arduboy": 263,
     "astrocade": 44,
+    "astrocde": 44,
     "atari2600": 26,
     "atari2600supercharger": 39,
     "atari5200": 40,
@@ -291,7 +292,7 @@ PLATFORM_IDS = {
     "ps4": 60,
     "ps5": 284,
     "playstation minis": 172,
-    "plus/4": 99,
+    "cplus4": 99,
     "pocket challenge v2": 237,
     "pokemini": 211,
     "prboom": 290,
