@@ -69,6 +69,7 @@ class RomsScreenController extends ChangeNotifier {
   }
 
   /// Load items for a platform and path
+  /// Uses lazy loading for display names to improve performance with large collections
   Future<void> loadItems({
     required EmulatorPlatform platform,
     required String currentPath,
@@ -79,7 +80,7 @@ class RomsScreenController extends ChangeNotifier {
     _selectedIndex = 0;
     _items = [];
     _filteredItems = [];
-    clearCaches();
+    _preloadedThumbnailIndices.clear();
     notifyListeners();
 
     try {
@@ -107,9 +108,12 @@ class RomsScreenController extends ChangeNotifier {
         );
       }
 
-      await _updateDisplayNames(platform.name);
       _sortItems();
       _updateFilteredItems();
+      
+      // Load display names lazily for visible items only
+      await _loadDisplayNamesForVisibleRange(platform.name, startIndex: 0, endIndex: 20);
+      
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -119,20 +123,67 @@ class RomsScreenController extends ChangeNotifier {
     }
   }
 
-  Future<void> _updateDisplayNames(String platformName) async {
-    for (var item in _items) {
-      if (item.isRom) {
-        final actualPlatform = item.platform ?? platformName;
-        final gameInfo = await _gamelistService.getGameInfo(
-          actualPlatform,
-          item.path,
-        );
-        if (gameInfo != null && gameInfo.name.isNotEmpty) {
-          item.setGameInfo(gameInfo);
-          _gameInfoCache[item.name] = gameInfo;
+  /// Load display names for a specific range of items (lazy loading)
+  /// This avoids loading all gameInfo at once for large collections
+  Future<void> _loadDisplayNamesForVisibleRange(String platformName, {required int startIndex, required int endIndex}) async {
+    final itemsToProcess = _filteredItems.sublist(
+      startIndex.clamp(0, _filteredItems.length),
+      endIndex.clamp(0, _filteredItems.length),
+    );
+    
+    for (var item in itemsToProcess) {
+      if (item.isRom && !_gameInfoCache.containsKey(item.name)) {
+        try {
+          final actualPlatform = item.platform ?? platformName;
+          final gameInfo = await _gamelistService.getGameInfo(
+            actualPlatform,
+            item.path,
+          );
+          if (gameInfo != null && gameInfo.name.isNotEmpty) {
+            item.setGameInfo(gameInfo);
+            _gameInfoCache[item.name] = gameInfo;
+          }
+        } catch (e) {
+          _debug.warning('Failed to load game info for ${item.name}: $e', tag: 'RomsScreenController');
         }
       }
+      
+      // Yield to event loop periodically to prevent UI freezing
+      if (itemsToProcess.indexOf(item) % 10 == 0) {
+        await Future.delayed(Duration.zero);
+      }
     }
+    
+    notifyListeners();
+  }
+
+  /// Load display name for a single item if not already loaded
+  Future<void> loadDisplayNameForItem(RomItem item, String platformName) async {
+    if (_gameInfoCache.containsKey(item.name) || !item.isRom) {
+      return;
+    }
+    
+    try {
+      final actualPlatform = item.platform ?? platformName;
+      final gameInfo = await _gamelistService.getGameInfo(
+        actualPlatform,
+        item.path,
+      );
+      if (gameInfo != null && gameInfo.name.isNotEmpty) {
+        item.setGameInfo(gameInfo);
+        _gameInfoCache[item.name] = gameInfo;
+        notifyListeners();
+      }
+    } catch (e) {
+      _debug.warning('Failed to load game info for ${item.name}: $e', tag: 'RomsScreenController');
+    }
+  }
+
+  /// Load display names for items in a range around the selected index
+  Future<void> loadDisplayNamesAroundIndex(String platformName, int centerIndex, {int range = 10}) async {
+    final start = (centerIndex - range).clamp(0, _filteredItems.length - 1);
+    final end = (centerIndex + range).clamp(0, _filteredItems.length);
+    await _loadDisplayNamesForVisibleRange(platformName, startIndex: start, endIndex: end);
   }
 
   /// Re-sort items: folders first, then alphabetically by displayName
@@ -236,6 +287,8 @@ class RomsScreenController extends ChangeNotifier {
         return;
       }
 
+      // Load display names for items around selected index
+      await loadDisplayNamesAroundIndex(platformName, _selectedIndex, range: 20);
       await _loadMediaForSelectedAndNeighbors(platformName, isMounted);
       _scheduleThumbnailPreload(platformName, isMounted);
     });
