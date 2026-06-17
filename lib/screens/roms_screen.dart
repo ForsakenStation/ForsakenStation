@@ -9,6 +9,9 @@ import 'roms/utils/bottom_bar_actions.dart';
 import 'roms/controllers/roms_screen_controller.dart';
 import 'roms/handlers/rom_launcher.dart';
 import 'roms/handlers/rom_save_handler.dart';
+import '../widgets/roms/folder_widget.dart';
+import '../widgets/roms/rom_grid_card.dart';
+import '../widgets/roms/rom_list_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/emulator_platform.dart';
@@ -25,6 +28,7 @@ import '../services/config_service.dart';
 import '../widgets/common/help_dialog.dart';
 import '../widgets/common/controls_bottom_bar.dart';
 import '../widgets/common/smart_svg.dart';
+import '../widgets/common/paginated_builder.dart';
 import '../widgets/roms/fullscreen_image_viewer.dart';
 import '../widgets/roms/rom_detail_dialog.dart';
 import '../l10n/generated/app_localizations.dart';
@@ -74,6 +78,10 @@ class _RomsScreenState extends State<RomsScreen> {
   Widget? _cachedLogoWidget; // Cache del logo para evitar rebuilds
   Timer? _gamepadPollTimer;
   final _debug = DebugService.instance;
+  
+  // Pagination settings
+  static const int _gridPageSize = 60;
+  static const int _listPageSize = 50;
 
   // EmulatorPlatform navigation support
   List<EmulatorPlatform>? _allEmulatorPlatforms;
@@ -511,11 +519,16 @@ class _RomsScreenState extends State<RomsScreen> {
       });
     }
 
+    final pageSize = _viewMode == ScreenViewMode.grid 
+        ? _gridPageSize 
+        : _listPageSize;
+    
     await _controller.loadItems(
       platform: widget.platform,
       currentPath: _currentPath,
       currentSubdirectory: _currentSubdirectory,
       isCollection: widget.isCollection,
+      pageSize: pageSize,
     );
 
     if (mounted) {
@@ -831,6 +844,70 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   Widget _buildMainContent() {
+    // Check if pagination is enabled and we have enough items
+    final usePagination = _controller.isPaginationEnabled &&
+        _controller.filteredItems.length > (_viewMode == ScreenViewMode.grid ? _gridPageSize : _listPageSize);
+    
+    if (usePagination) {
+      return _buildPaginatedContent();
+    }
+    
+    // Fallback to original views when pagination is not needed
+    return _buildOriginalContent();
+  }
+  
+  Widget _buildPaginatedContent() {
+    final pageSize = _viewMode == ScreenViewMode.grid ? _gridPageSize : _listPageSize;
+    
+    switch (_viewMode) {
+      case ScreenViewMode.grid:
+        return PaginatedBuilder(
+          itemCount: _controller.filteredItems.length,
+          itemsPerPage: pageSize,
+          scrollController: _gridScrollController,
+          padding: const EdgeInsets.only(top: 48, left: 16, right: 16),
+          isGrid: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: _calculateCrossAxisCount(context),
+            childAspectRatio: 0.7,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          ),
+          itemBuilder: (context, globalIndex) {
+            final item = _controller.filteredItems[globalIndex];
+            return _buildGridCard(context, globalIndex, item);
+          },
+          onPageChanged: (newPage) {
+            _controller.goToPage(newPage);
+          },
+          showControls: true,
+          controlsBackgroundColor: Colors.transparent,
+        );
+      case ScreenViewMode.list:
+        return PaginatedBuilder(
+          itemCount: _controller.filteredItems.length,
+          itemsPerPage: pageSize,
+          scrollController: _listScrollController,
+          padding: const EdgeInsets.all(8),
+          isGrid: false,
+          itemBuilder: (context, globalIndex) {
+            final item = _controller.filteredItems[globalIndex];
+            final isSelected = globalIndex == _controller.selectedIndex;
+            return _buildListItem(context, globalIndex, item, isSelected, false);
+          },
+          onPageChanged: (newPage) {
+            _controller.goToPage(newPage);
+          },
+          showControls: true,
+          controlsBackgroundColor: Colors.transparent,
+        );
+      case ScreenViewMode.carousel:
+        // Carousel view doesn't use pagination (performance is not an issue)
+        return _buildOriginalContent();
+    }
+  }
+  
+  Widget _buildOriginalContent() {
     switch (_viewMode) {
       case ScreenViewMode.grid:
         return RomsGridView(
@@ -900,5 +977,130 @@ class _RomsScreenState extends State<RomsScreen> {
           showNavigationHint: false,
         );
     }
+  }
+  
+  // ============================================================================
+  // Pagination Helper Methods
+  // ============================================================================
+  
+  /// Build a grid card for a ROM or folder item
+  Widget _buildGridCard(BuildContext context, int globalIndex, RomItem item) {
+    final isSelected = globalIndex == _controller.selectedIndex;
+    
+    if (item.isFolder) {
+      return Card(
+        elevation: isSelected ? 8 : 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: isSelected
+              ? BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 3,
+                )
+              : BorderSide.none,
+        ),
+        child: InkWell(
+          onTap: () {
+            _controller.selectedIndex = globalIndex;
+            _handleSelection(item);
+          },
+          onFocusChange: (hasFocus) {
+            if (hasFocus) {
+              _controller.selectedIndex = globalIndex;
+            }
+          },
+          autofocus: isSelected,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FolderWidget(width: 64, height: 64, iconSize: 64),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  item.displayName,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
+    // ROM item
+    return RomGridCard(
+      item: item,
+      isSelected: isSelected,
+      onTap: () {
+        _controller.selectedIndex = globalIndex;
+        _handleSelection(item);
+      },
+      media: _controller.mediaCache[item.name],
+      mediaService: _mediaService,
+      isRomDownloaded: (item) async => await _romSaveHandler.isRomDownloaded(item),
+      showPlatform: widget.isCollection,
+    );
+  }
+  
+  /// Build a list item for a ROM or folder item
+  Widget _buildListItem(
+    BuildContext context,
+    int globalIndex,
+    RomItem item,
+    bool isSelected,
+    bool isWideScreen,
+  ) {
+    
+    if (item.isFolder) {
+      return Card(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        elevation: isSelected ? 8 : 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: isSelected
+              ? BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 3,
+                )
+              : BorderSide.none,
+        ),
+        color: isSelected
+            ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+            : null,
+        child: ListTile(
+          leading: FolderWidget(
+            width: 60,
+            height: 60,
+            iconSize: 60,
+            borderRadius: 4,
+          ),
+          title: Text(
+            item.displayName,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          trailing: Icon(Icons.chevron_right, color: Colors.grey[600]),
+          onTap: () => _handleSelection(item),
+        ),
+      );
+    }
+    
+    // ROM item
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: RomListCard(
+        item: item,
+        isSelected: isSelected,
+        onTap: () => _handleSelection(item),
+        media: _controller.mediaCache[item.name],
+        mediaService: _mediaService,
+        isRomDownloaded: (item) async => await _romSaveHandler.isRomDownloaded(item),
+        isLoading: false,
+        showPlatform: widget.isCollection,
+      ),
+    );
   }
 }

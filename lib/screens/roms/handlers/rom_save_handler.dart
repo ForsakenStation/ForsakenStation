@@ -25,6 +25,29 @@ class RomSaveHandler {
     this.isCollection = false,
   });
 
+  /// Check if a ROM is already saved in permanent storage
+  Future<bool> isRomDownloaded(RomItem item) async {
+    try {
+      final storageService = RomStorageService.instance;
+      final actualPlatform = PlatformUtils.getActualPlatform(
+        item,
+        platformName,
+        isCollection: isCollection,
+      );
+      final foreverPath = await storageService.findRomInForeverStorage(
+        actualPlatform,
+        item.name,
+      );
+      return foreverPath != null;
+    } catch (e) {
+      DebugService.instance.error(
+        'Error checking if ROM is downloaded: $e',
+        tag: 'RomSaveHandler',
+      );
+      return false;
+    }
+  }
+
   Future<bool?> handleRomSave(
     BuildContext context,
     RomItem item,

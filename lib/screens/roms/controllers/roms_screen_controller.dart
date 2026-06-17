@@ -22,6 +22,11 @@ class RomsScreenController extends ChangeNotifier {
   int _selectedIndex = 0;
   bool _isLoading = true;
   String _searchQuery = '';
+  
+  // Pagination state
+  int _currentPage = 0;
+  int _pageSize = 50;
+  static const int _paginationThreshold = 100; // Enable pagination when items exceed this count
 
   // Media loading control with debouncing
   Timer? _mediaLoadTimer;
@@ -51,12 +56,60 @@ class RomsScreenController extends ChangeNotifier {
   Map<String, RomMedia> get mediaCache => _mediaCache;
   Map<String, GameInfo> get gameInfoCache => _gameInfoCache;
   bool get isNavigating => _isNavigating;
+  
+  // Pagination getters
+  int get currentPage => _currentPage;
+  int get pageSize => _pageSize;
+  bool get isPaginationEnabled => _filteredItems.length > _paginationThreshold;
+  int get totalPages => ((_filteredItems.length + _pageSize - 1) / _pageSize).ceil();
 
   set selectedIndex(int value) {
     if (_selectedIndex != value) {
       _selectedIndex = value;
       notifyListeners();
     }
+  }
+  
+  /// Set the page size for pagination
+  set pageSize(int value) {
+    if (_pageSize != value) {
+      _pageSize = value;
+      _currentPage = 0; // Reset to first page when page size changes
+      notifyListeners();
+    }
+  }
+
+  /// Go to a specific page
+  void goToPage(int page) {
+    if (page >= 0 && page < totalPages) {
+      _currentPage = page;
+      _selectedIndex = page * _pageSize;
+      notifyListeners();
+    }
+  }
+
+  /// Go to next page
+  void nextPage() {
+    if (_currentPage < totalPages - 1) {
+      _currentPage++;
+      _selectedIndex = _currentPage * _pageSize;
+      notifyListeners();
+    }
+  }
+
+  /// Go to previous page
+  void previousPage() {
+    if (_currentPage > 0) {
+      _currentPage--;
+      _selectedIndex = _currentPage * _pageSize;
+      notifyListeners();
+    }
+  }
+
+  /// Reset pagination to first page
+  void resetPagination() {
+    _currentPage = 0;
+    notifyListeners();
   }
 
   /// Dispose resources
@@ -74,9 +127,14 @@ class RomsScreenController extends ChangeNotifier {
     required String currentPath,
     String? currentSubdirectory,
     bool isCollection = false,
+    int? pageSize,
   }) async {
     _isLoading = true;
     _selectedIndex = 0;
+    _currentPage = 0; // Reset to first page when loading new items
+    if (pageSize != null) {
+      _pageSize = pageSize;
+    }
     _items = [];
     _filteredItems = [];
     clearCaches();
@@ -149,6 +207,7 @@ class RomsScreenController extends ChangeNotifier {
     _searchQuery = query;
     _updateFilteredItems();
     _selectedIndex = 0;
+    _currentPage = 0; // Reset to first page when search changes
     notifyListeners();
   }
 
