@@ -367,15 +367,16 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
 
       // Get save location from user
       final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
-      final result = await FilePicker.platform.saveFile(
-        dialogTitle: AppLocalizations.of(context)!.saveConfigurationBackup,
+      final result = await FilePicker.saveFile(
         fileName: 'config_backup_$timestamp.json',
+        bytes: utf8.encode(jsonString),
+        dialogTitle: AppLocalizations.of(context)!.saveConfigurationBackup,
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
 
       if (result != null) {
-        final file = File(result);
+        final file = File(result as String);
         await file.writeAsString(jsonString);
 
         if (mounted) {
