@@ -51,3 +51,6 @@ app.*.map.json
 .venv/
 _others/
 /tools/cors-proxy-worker/.wrangler/
+/dist/1.0.0+1/forsaken-1.0.0+1-android.aab
+/dist/1.0.0+1/forsaken-1.0.0+1-android.apk
+/dist/1.0.0+1/forsaken-1.0.0+1-linux.zip

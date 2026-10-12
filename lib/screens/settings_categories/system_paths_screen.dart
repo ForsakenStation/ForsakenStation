@@ -229,7 +229,7 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
   }
 
   Future<void> _pickDirectory(TextEditingController controller) async {
-    final result = await FilePicker.platform.getDirectoryPath();
+    final result = await FilePicker.getDirectoryPath();
     if (result != null) {
       setState(() {
         controller.text = result;
