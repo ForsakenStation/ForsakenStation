@@ -20,15 +20,15 @@ dependencies:
   shared_preferences: ^2.5.4
   window_manager: ^0.5.1
   file_picker: ^10.3.10
-  google_fonts: ^8.0.2
+  google_fonts: ^9.0.0
   xml: ^6.6.1
-  archive: ^4.0.9
-  gamepads: ^0.1.9
-  pdfrx: ^2.2.24
+  archive: ^4.5.1
+  gamepads: ^0.1.12
+  pdfrx: ^2.6.5
   crypto: ^3.0.7
   flutter_localizations:
     sdk: flutter
-  intl: ^0.20.2
+  intl: ^0.20.3
   # Web-specific dependencies
   web: ^1.1.1
 
