@@ -187,9 +187,6 @@ void main() {
   group('Property 25 - Platform IDs are consistent', () {
     test('platforms_info.json keys are a subset of known platform IDs or extensions',
         () {
-      final platforms = loadJsonList('assets/data/platforms.json')
-          .cast<String>()
-          .toSet();
       final platformsInfo = loadJsonMap('assets/data/platforms_info.json');
 
       for (final key in platformsInfo.keys) {

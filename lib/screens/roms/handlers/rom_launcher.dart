@@ -14,6 +14,7 @@ import '../../../widgets/common/error_dialog.dart';
 import '../../../widgets/common/auth_error_dialog.dart';
 import '../../pdf_viewer_screen.dart';
 import '../../settings_categories/archive_org_settings_screen.dart';
+import '../../../utils/platform_names.dart';
 import '../utils/platform_utils.dart';
 
 /// Handles ROM launching logic including emulator selection,
@@ -54,7 +55,7 @@ class RomLauncher {
     );
 
     final actualDisplayName = isCollection && item.platform != null
-        ? item.platform! // TODO: Get display name from platform list if needed
+        ? PlatformNames.getDisplayName(item.platform!)
         : platformDisplayName;
 
     final config = await emulatorService.loadPlatformConfig(actualPlatform);

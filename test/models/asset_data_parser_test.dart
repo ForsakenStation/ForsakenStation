@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:forsaken/models/emulator_config.dart';
 import 'package:forsaken/models/platform_info.dart';
 
 void main() {

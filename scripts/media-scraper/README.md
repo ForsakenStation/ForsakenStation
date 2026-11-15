@@ -9,8 +9,6 @@ Downloads missing media (covers, screenshots, videos) from ScreenScraper.fr API 
 - **Resume-Friendly:** Interrupted scraping can resume without re-processing
 - **Safe for Large Collections:** No memory issues, handles thousands of ROMs
 
-See [INCREMENTAL_SAVE_FEATURE.md](INCREMENTAL_SAVE_FEATURE.md) for details.
-
 ## Quick Start
 
 ```bash

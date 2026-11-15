@@ -23,6 +23,7 @@ import '../l10n/generated/app_localizations.dart';
 import '../platforms/web/web_emulator_service.dart'
     if (dart.library.io) 'package:forsaken/services/empty_stub.dart';
 import '../constants/legal.dart';
+import '../widgets/common/controls_bottom_bar.dart';
 import '../widgets/common/dialog_button_bar.dart';
 import '../widgets/common/gamepad_button_indicator.dart';
 
@@ -284,10 +285,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: Text(l10n.settingsAndConfiguration),
           centerTitle: true,
         ),
-        body: ListView(
-          controller: _scrollController,
-          padding: const EdgeInsets.all(16),
+        body: Column(
           children: [
+            Expanded(
+              child: ListView(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(16),
+                children: [
             // Header
             Card(
               elevation: 0,
@@ -445,6 +449,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: l10n.aboutDebug,
               description: l10n.aboutDebugDesc,
               onTap: () => _showAboutDialog(context),
+            ),
+          ],
+        ),
+            ),
+            ControlsBottomBar(
+              actions: [
+                BottomBarAction(
+                  label: l10n.back,
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                BottomBarAction(
+                  label: l10n.select,
+                  keyboardKey: 'Enter',
+                  gamepadButton: 'A',
+                ),
+              ],
             ),
           ],
         ),

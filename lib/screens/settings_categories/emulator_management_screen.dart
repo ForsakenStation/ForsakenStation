@@ -399,6 +399,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
 
   void _addEmulator() {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => EmulatorEditDialog(
@@ -408,19 +409,13 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             await _loadEmulators();
             if (mounted) {
               scaffoldMessenger.showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.emulatorAdded),
-                ),
+                SnackBar(content: Text(l10n.emulatorAdded)),
               );
             }
           } catch (e) {
             if (mounted) {
               scaffoldMessenger.showSnackBar(
-                SnackBar(
-                  content: Text(
-                    '${AppLocalizations.of(context)!.errorAddingEmulator} $e',
-                  ),
-                ),
+                SnackBar(content: Text('${l10n.errorAddingEmulator} $e')),
               );
             }
           }
@@ -431,6 +426,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
 
   void _editEmulator(Map<String, dynamic> emulator) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => EmulatorEditDialog(
@@ -444,19 +440,13 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             await _loadEmulators();
             if (mounted) {
               scaffoldMessenger.showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.emulatorUpdated),
-                ),
+                SnackBar(content: Text(l10n.emulatorUpdated)),
               );
             }
           } catch (e) {
             if (mounted) {
               scaffoldMessenger.showSnackBar(
-                SnackBar(
-                  content: Text(
-                    '${AppLocalizations.of(context)!.errorUpdatingEmulator} $e',
-                  ),
-                ),
+                SnackBar(content: Text('${l10n.errorUpdatingEmulator} $e')),
               );
             }
           }
@@ -467,23 +457,22 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
 
   void _deleteEmulator(String system) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteEmulator),
-        content: Text(
-          AppLocalizations.of(context)!.confirmDeleteEmulator(system),
-        ),
+        title: Text(l10n.deleteEmulator),
+        content: Text(l10n.confirmDeleteEmulator(system)),
         actions: [
           DialogButtonBar(
             buttons: [
               DialogButton(
-                label: AppLocalizations.of(context)!.cancel,
+                label: l10n.cancel,
                 onPressed: () => Navigator.pop(context),
                 gamepadButton: GamepadButton.b,
               ),
               DialogButton(
-                label: AppLocalizations.of(context)!.delete,
+                label: l10n.delete,
                 onPressed: () async {
                   Navigator.pop(context);
                   try {
@@ -491,20 +480,14 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                     await _loadEmulators();
                     if (mounted) {
                       scaffoldMessenger.showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            AppLocalizations.of(context)!.emulatorDeleted,
-                          ),
-                        ),
+                        SnackBar(content: Text(l10n.emulatorDeleted)),
                       );
                     }
                   } catch (e) {
                     if (mounted) {
                       scaffoldMessenger.showSnackBar(
                         SnackBar(
-                          content: Text(
-                            '${AppLocalizations.of(context)!.errorDeletingEmulator} $e',
-                          ),
+                          content: Text('${l10n.errorDeletingEmulator} $e'),
                         ),
                       );
                     }

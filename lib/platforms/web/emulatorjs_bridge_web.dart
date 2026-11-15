@@ -181,7 +181,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
 
   /// Call a method on the JS emulator object, handling Promises.
   /// Supports 0-2 arguments (covers all current use cases).
-  Future<T> _callAsyncMethod<T>(
+  Future<JSAny?> _callAsyncMethod(
     String method, [
     JSAny? arg1,
     JSAny? arg2,
@@ -204,11 +204,10 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     // Check if result is a Promise (has a .then property)
     if (result != null && result.isA<JSPromise>()) {
       final future = (result as JSPromise).toDart;
-      final value = await future;
-      return value as T;
+      return await future;
     }
 
-    return result as T;
+    return result;
   }
 
   /// Call a void method (no return value)
@@ -237,7 +236,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
         tag: 'EmulatorJS',
       );
 
-      await _callAsyncMethod<void>('loadCore', coreUrl.toJS, platform.toJS);
+      await _callAsyncMethod('loadCore', coreUrl.toJS, platform.toJS);
 
       DebugService.instance.info(
         'Core loaded successfully: $platform',
@@ -267,7 +266,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
       // Convert Uint8List to JS Uint8Array
       final jsArray = romData.toJS;
 
-      await _callAsyncMethod<void>('loadRom', jsArray, fileName.toJS);
+      await _callAsyncMethod('loadRom', jsArray, fileName.toJS);
 
       DebugService.instance.info(
         'ROM loaded successfully: $fileName',
@@ -294,7 +293,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
         tag: 'EmulatorJS',
       );
 
-      await _callAsyncMethod<void>(
+      await _callAsyncMethod(
         'loadRomFromUrl',
         romUrl.toJS,
         fileName.toJS,
@@ -399,7 +398,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     try {
       DebugService.instance.info('Creating save state', tag: 'EmulatorJS');
 
-      final result = await _callAsyncMethod<JSAny?>('createSaveState');
+      final result = await _callAsyncMethod('createSaveState');
 
       if (result == null) {
         DebugService.instance.warning(
@@ -456,7 +455,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
         tag: 'EmulatorJS',
       );
 
-      await _callAsyncMethod<void>('loadSaveState', saveData.toJS);
+      await _callAsyncMethod('loadSaveState', saveData.toJS);
 
       DebugService.instance.info(
         'Save state loaded successfully',
@@ -482,7 +481,7 @@ class EmulatorJSBridgeWeb implements EmulatorJSBridge {
     try {
       DebugService.instance.info('Taking screenshot', tag: 'EmulatorJS');
 
-      final result = await _callAsyncMethod<JSAny?>('getScreenshot');
+      final result = await _callAsyncMethod('getScreenshot');
 
       if (result != null && result.isA<JSString>()) {
         final screenshot = (result as JSString).toDart;

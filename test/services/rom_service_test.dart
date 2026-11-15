@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:forsaken/models/rom_item.dart';
 import 'package:forsaken/services/rom_service.dart';
 
 import '../helpers/test_data_generators.dart';

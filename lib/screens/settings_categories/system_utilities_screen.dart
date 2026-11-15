@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import '../../services/config_service.dart';
 import '../../services/debug_service.dart';
 import '../../services/keyboard_service.dart';
+import '../../widgets/common/controls_bottom_bar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -359,6 +360,7 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       }
 
       // Get current config
+      final dialogTitle = AppLocalizations.of(context)!.saveConfigurationBackup;
       final config = await _configService.getConfig();
 
       // Format as JSON
@@ -370,7 +372,7 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       final result = await FilePicker.saveFile(
         fileName: 'config_backup_$timestamp.json',
         bytes: utf8.encode(jsonString),
-        dialogTitle: AppLocalizations.of(context)!.saveConfigurationBackup,
+        dialogTitle: dialogTitle,
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
@@ -417,9 +419,12 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+        body: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Stats Card
@@ -511,6 +516,23 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
               ),
             ],
           ),
+        ),
+            ),
+            ControlsBottomBar(
+              actions: [
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.back,
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.refresh,
+                  keyboardKey: 'R',
+                  gamepadButton: 'Start',
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

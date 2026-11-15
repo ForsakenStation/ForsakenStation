@@ -4,8 +4,8 @@
 
 **A beautiful, feature-rich Flutter-based frontend for managing and launching retro game emulators**
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.9.2+-02569B?logo=flutter)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.9.2+-0175C2?logo=dart)](https://dart.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.10+-02569B?logo=flutter)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.10+-0175C2?logo=dart)](https://dart.dev)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 </div>
@@ -35,26 +35,20 @@ Forsaken is a modern, cross-platform retro gaming frontend built with Flutter. I
 
 ---
 
-## 📸 Screenshots
-
-*(Add screenshots here showing different views and features)*
-
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- **Flutter SDK** 3.9.2 or higher
+- **Flutter SDK** 3.10.0 or higher
 - **FVM** (Flutter Version Management) - recommended
-- **Dart SDK** 3.9.2 or higher
+- **Dart SDK** 3.10.0 or higher
 - Platform-specific build tools (for mobile/desktop builds)
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/forsaken.git
+   git clone <repository-url>
    cd forsaken
    ```
 
@@ -476,11 +470,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support
+## 📚 Documentation
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/forsaken/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/forsaken/discussions)
-- **Documentation**: [Wiki](https://github.com/yourusername/forsaken/wiki)
+See the `docs/` directory for detailed guides on configuration, controls, and debugging:
+- [docs/CONTROLS.md](docs/CONTROLS.md)
+- [docs/CONTROLS_ARCHITECTURE.md](docs/CONTROLS_ARCHITECTURE.md)
+- [docs/EMULATOR_CONFIG.md](docs/EMULATOR_CONFIG.md)
+- [docs/GAMEPAD_DEBUG.md](docs/GAMEPAD_DEBUG.md)
 
 ---
 

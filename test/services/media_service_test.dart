@@ -144,7 +144,7 @@ void main() {
       final result =
           await MediaService.instance.getSystemImage('__unknown_platform__');
       // May return null or a default path — both are valid.
-      expect(result == null || result is String, isTrue);
+      expect(result, anyOf(isNull, isA<String>()));
     });
   });
 

@@ -6,6 +6,7 @@ import 'package:pdfrx/pdfrx.dart';
 import 'package:path/path.dart' as path;
 import '../services/debug_service.dart';
 import '../services/gamepad_service.dart';
+import '../widgets/common/controls_bottom_bar.dart';
 import '../l10n/generated/app_localizations.dart';
 
 /// Full-screen PDF viewer with page navigation and zoom
@@ -299,8 +300,35 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
             ),
           ],
         ),
-        body: _buildBody(),
-        bottomNavigationBar: _buildControlsBar(context),
+        body: Column(
+          children: [
+            Expanded(child: _buildBody()),
+            ControlsBottomBar(
+              actions: [
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.navigate,
+                  keyboardKey: '←/→',
+                  gamepadButton: 'D-Pad',
+                ),
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.firstLast,
+                  keyboardKey: 'Home/End',
+                  gamepadButton: 'L1/R1',
+                ),
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.zoom,
+                  keyboardKey: '+/-',
+                  gamepadButton: 'L2/R2',
+                ),
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.back,
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -344,67 +372,5 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     }
 
     return PdfViewer.file(widget.pdfPath, controller: _controller);
-  }
-
-  /// Build controls bar showing keyboard/gamepad shortcuts
-  Widget _buildControlsBar(BuildContext context) {
-    final isGamepadConnected = _gamepadService.isGamepadConnected;
-    final l10n = AppLocalizations.of(context)!;
-
-    return Container(
-      height: 48,
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.8),
-        border: Border(
-          top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (isGamepadConnected) ...[
-            _buildControlHint(Icons.gamepad, 'D-Pad/Stick', l10n.navigate),
-            const SizedBox(width: 24),
-            _buildControlHint(Icons.gamepad, 'L1/R1', l10n.firstLast),
-            const SizedBox(width: 24),
-            _buildControlHint(Icons.gamepad, 'L2/R2', l10n.zoom),
-            const SizedBox(width: 24),
-            _buildControlHint(Icons.gamepad, 'B', l10n.back),
-          ] else ...[
-            _buildControlHint(Icons.keyboard, '←/→', l10n.navigate),
-            const SizedBox(width: 24),
-            _buildControlHint(Icons.keyboard, 'Home/End', l10n.firstLast),
-            const SizedBox(width: 24),
-            _buildControlHint(Icons.keyboard, '+/-', l10n.zoom),
-            const SizedBox(width: 24),
-            _buildControlHint(Icons.keyboard, 'Esc', l10n.back),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildControlHint(IconData icon, String key, String action) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 16, color: Colors.white70),
-        const SizedBox(width: 6),
-        Text(
-          key,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          action,
-          style: const TextStyle(color: Colors.white70, fontSize: 12),
-        ),
-      ],
-    );
   }
 }
