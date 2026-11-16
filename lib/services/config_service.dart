@@ -34,10 +34,12 @@ class ConfigService {
   static const String _debugMinLevelKey = 'forsaken_debug_min_level';
   static const String _romsPathKey = 'forsaken_roms_path';
   static const String _setupCompletedKey = 'forsaken_setup_completed';
+  static const String _disclaimerAcceptedKey = 'forsaken_disclaimer_accepted';
   static const String _archiveOrgAccessKeyKey =
       'forsaken_archive_org_access_key';
   static const String _archiveOrgSecretKeyKey =
       'forsaken_archive_org_secret_key';
+  static const String _romsViewModeKey = 'forsaken_roms_view_mode';
 
   Map<String, dynamic>? _config;
   bool _hasLocalOverrides = false;
@@ -52,8 +54,10 @@ class ConfigService {
   bool _isDebugEnabled = false;
   String _debugMinLevel = 'debug';
   bool _setupCompleted = false;
+  bool _disclaimerAccepted = false;
   String _archiveOrgAccessKey = '';
   String _archiveOrgSecretKey = '';
+  String? _romsViewMode;
 
   ConfigService._();
 
@@ -132,8 +136,10 @@ class ConfigService {
     _isDebugEnabled = prefs.getBool(_debugEnabledKey) ?? false;
     _debugMinLevel = prefs.getString(_debugMinLevelKey) ?? 'debug';
     _setupCompleted = prefs.getBool(_setupCompletedKey) ?? false;
+    _disclaimerAccepted = prefs.getBool(_disclaimerAcceptedKey) ?? false;
     _archiveOrgAccessKey = prefs.getString(_archiveOrgAccessKeyKey) ?? '';
     _archiveOrgSecretKey = prefs.getString(_archiveOrgSecretKeyKey) ?? '';
+    _romsViewMode = prefs.getString(_romsViewModeKey);
 
     DebugService.instance.debug(
       'Path settings loaded from SharedPreferences',
@@ -425,6 +431,9 @@ class ConfigService {
   /// Check if the setup wizard has been completed
   bool get isSetupCompleted => _setupCompleted;
 
+  /// Check if the legal disclaimer has been accepted
+  bool get isDisclaimerAccepted => _disclaimerAccepted;
+
   /// Get Archive.org S3 access key
   String get archiveOrgAccessKey => _archiveOrgAccessKey;
 
@@ -454,6 +463,23 @@ class ConfigService {
     final prefs = await SharedPreferences.getInstance();
     _setupCompleted = value;
     await prefs.setBool(_setupCompletedKey, value);
+  }
+
+  /// Get saved ROM list view mode ('list', 'carousel', or 'grid')
+  String? get romsViewMode => _romsViewMode;
+
+  /// Persist whether the legal disclaimer has been accepted
+  Future<void> setDisclaimerAccepted(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    _disclaimerAccepted = value;
+    await prefs.setBool(_disclaimerAcceptedKey, value);
+  }
+
+  /// Persist the last used ROM list view mode
+  Future<void> setRomsViewMode(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    _romsViewMode = value;
+    await prefs.setString(_romsViewModeKey, value);
   }
 
   /// Set a path setting and persist to SharedPreferences

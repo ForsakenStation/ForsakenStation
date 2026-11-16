@@ -4,6 +4,8 @@ import '../../models/rom_item.dart';
 import '../../models/media.dart';
 import '../../services/media_service.dart';
 import '../common/download_badge.dart';
+import '../common/placeholder_image.dart';
+import '../common/platform_badge.dart';
 
 /// ROM card widget for list view (horizontal layout)
 ///
@@ -72,20 +74,22 @@ class _RomListCardState extends State<RomListCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
-      elevation: widget.isSelected ? 8 : 1,
+      elevation: 0,
+      margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 2),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         side: widget.isSelected
-            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
-            : BorderSide.none,
+            ? BorderSide(color: Colors.white.withValues(alpha: 0.9), width: 2)
+            : BorderSide(color: Colors.white.withValues(alpha: 0.06), width: 1),
       ),
       color: widget.isSelected
-          ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-          : null,
+          ? Colors.white.withValues(alpha: 0.12)
+          : Colors.white.withValues(alpha: 0.03),
       child: InkWell(
+        borderRadius: BorderRadius.circular(12),
         onTap: widget.onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           child: Row(
             children: [
               _buildThumbnail(context),
@@ -103,14 +107,10 @@ class _RomListCardState extends State<RomListCard> {
                     ),
                     if (widget.showPlatform &&
                         widget.item.platform != null) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        widget.item.platform!,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color?.withValues(
-                            alpha: 0.6,
-                          ),
-                        ),
+                      const SizedBox(height: 4),
+                      PlatformBadge(
+                        platformId: widget.item.platform!,
+                        compact: true,
                       ),
                     ],
                   ],
@@ -164,7 +164,7 @@ class _RomListCardState extends State<RomListCard> {
         // Thumbnail image or placeholder
         if (imagePath != null && File(imagePath).existsSync())
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
             child: Image.file(
               File(imagePath),
               width: 60,
@@ -192,22 +192,7 @@ class _RomListCardState extends State<RomListCard> {
   }
 
   Widget _defaultThumbnail(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-        color: isDark ? Colors.grey[850] : Colors.grey[300],
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Icon(
-        Icons.games,
-        size: 30,
-        color: isDark ? Colors.grey[700] : Colors.grey,
-      ),
-    );
+    return const PlaceholderImage(size: 60, borderRadius: 8);
   }
 
   Widget _buildMediaIndicators() {

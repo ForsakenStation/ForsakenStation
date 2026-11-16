@@ -3,59 +3,59 @@ import 'package:google_fonts/google_fonts.dart';
 
 /// Custom color schemes for the app
 class AppColors {
-  // Light Theme Colors
-  static const lightPrimary = Color(0xFF6750A4);
+  // Light Theme Colors (Clean Apple-inspired)
+  static const lightPrimary = Color(0xFF007AFF);
   static const lightOnPrimary = Color(0xFFFFFFFF);
-  static const lightPrimaryContainer = Color(0xFFEADDFF);
-  static const lightOnPrimaryContainer = Color(0xFF21005D);
+  static const lightPrimaryContainer = Color(0xFFE5F1FF);
+  static const lightOnPrimaryContainer = Color(0xFF002A5C);
 
-  static const lightSecondary = Color(0xFF625B71);
+  static const lightSecondary = Color(0xFF5E6673);
   static const lightOnSecondary = Color(0xFFFFFFFF);
-  static const lightSecondaryContainer = Color(0xFFE8DEF8);
-  static const lightOnSecondaryContainer = Color(0xFF1D192B);
+  static const lightSecondaryContainer = Color(0xFFEAECEF);
+  static const lightOnSecondaryContainer = Color(0xFF1D222B);
 
-  static const lightTertiary = Color(0xFF7D5260);
+  static const lightTertiary = Color(0xFF32ADE6);
   static const lightOnTertiary = Color(0xFFFFFFFF);
-  static const lightTertiaryContainer = Color(0xFFFFD8E4);
-  static const lightOnTertiaryContainer = Color(0xFF31111D);
+  static const lightTertiaryContainer = Color(0xFFE1F5FE);
+  static const lightOnTertiaryContainer = Color(0xFF003549);
 
-  static const lightSurface = Color(0xFFFFFBFE);
-  static const lightOnSurface = Color(0xFF1C1B1F);
-  static const lightSurfaceVariant = Color(0xFFE7E0EC);
-  static const lightOnSurfaceVariant = Color(0xFF49454F);
+  static const lightSurface = Color(0xFFFFFFFF);
+  static const lightOnSurface = Color(0xFF1D1D1F);
+  static const lightSurfaceVariant = Color(0xFFE5E5EA);
+  static const lightOnSurfaceVariant = Color(0xFF6E6E73);
 
-  static const lightBackground = Color(0xFFFFFBFE);
-  static const lightOnBackground = Color(0xFF1C1B1F);
+  static const lightBackground = Color(0xFFF5F5F7);
+  static const lightOnBackground = Color(0xFF1D1D1F);
 
-  static const lightError = Color(0xFFB3261E);
+  static const lightError = Color(0xFFFF3B30);
   static const lightOnError = Color(0xFFFFFFFF);
 
-  // Dark Theme Colors
-  static const darkPrimary = Color(0xFFD0BCFF);
-  static const darkOnPrimary = Color(0xFF381E72);
-  static const darkPrimaryContainer = Color(0xFF4F378B);
-  static const darkOnPrimaryContainer = Color(0xFFEADDFF);
+  // Dark Theme Colors (Apple TV / Media-Manager inspired)
+  static const darkPrimary = Color(0xFF0A84FF);
+  static const darkOnPrimary = Color(0xFFFFFFFF);
+  static const darkPrimaryContainer = Color(0xFF1B2B40);
+  static const darkOnPrimaryContainer = Color(0xFFD6E9FF);
 
-  static const darkSecondary = Color(0xFFCCC2DC);
-  static const darkOnSecondary = Color(0xFF332D41);
-  static const darkSecondaryContainer = Color(0xFF4A4458);
-  static const darkOnSecondaryContainer = Color(0xFFE8DEF8);
+  static const darkSecondary = Color(0xFF98A2B3);
+  static const darkOnSecondary = Color(0xFF14161D);
+  static const darkSecondaryContainer = Color(0xFF232734);
+  static const darkOnSecondaryContainer = Color(0xFFE5E7EB);
 
-  static const darkTertiary = Color(0xFFEFB8C8);
-  static const darkOnTertiary = Color(0xFF492532);
-  static const darkTertiaryContainer = Color(0xFF633B48);
-  static const darkOnTertiaryContainer = Color(0xFFFFD8E4);
+  static const darkTertiary = Color(0xFF64D2FF);
+  static const darkOnTertiary = Color(0xFF002A3A);
+  static const darkTertiaryContainer = Color(0xFF163544);
+  static const darkOnTertiaryContainer = Color(0xFFD1F2FF);
 
-  static const darkSurface = Color(0xFF1C1B1F);
-  static const darkOnSurface = Color(0xFFE6E1E5);
-  static const darkSurfaceVariant = Color(0xFF49454F);
-  static const darkOnSurfaceVariant = Color(0xFFCAC4D0);
+  static const darkSurface = Color(0xFF14161D);
+  static const darkOnSurface = Color(0xFFF5F5F7);
+  static const darkSurfaceVariant = Color(0xFF1E212B);
+  static const darkOnSurfaceVariant = Color(0xFF98A2B3);
 
-  static const darkBackground = Color(0xFF1C1B1F);
-  static const darkOnBackground = Color(0xFFE6E1E5);
+  static const darkBackground = Color(0xFF0B0C10);
+  static const darkOnBackground = Color(0xFFF5F5F7);
 
-  static const darkError = Color(0xFFF2B8B5);
-  static const darkOnError = Color(0xFF601410);
+  static const darkError = Color(0xFFFF453A);
+  static const darkOnError = Color(0xFFFFFFFF);
 }
 
 /// App theme definitions
@@ -88,30 +88,55 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: AppColors.lightBackground,
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.lightSurface,
+        backgroundColor: Colors.transparent,
         foregroundColor: AppColors.lightOnSurface,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: false,
       ),
       cardTheme: CardThemeData(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        color: AppColors.lightSurface,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.black.withValues(alpha: 0.06)),
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          elevation: 1,
+          elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
         filled: true,
-        fillColor: AppColors.lightSurfaceVariant.withValues(alpha: 0.3),
+        fillColor: AppColors.lightSurfaceVariant.withValues(alpha: 0.6),
       ),
-      fontFamily: GoogleFonts.orbitron().fontFamily,
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: const Color(0xFF1C1F28),
+        contentTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 13.5,
+          fontWeight: FontWeight.w500,
+        ),
+        actionTextColor: AppColors.darkTertiary,
+        closeIconColor: Colors.white70,
+        elevation: 8,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.12)),
+        ),
+      ),
+      fontFamily: GoogleFonts.inter().fontFamily,
     );
   }
 
@@ -143,30 +168,55 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: AppColors.darkBackground,
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.darkSurface,
+        backgroundColor: Colors.transparent,
         foregroundColor: AppColors.darkOnSurface,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: false,
       ),
       cardTheme: CardThemeData(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        color: AppColors.darkSurface,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          elevation: 1,
+          elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
         filled: true,
-        fillColor: AppColors.darkSurfaceVariant.withValues(alpha: 0.3),
+        fillColor: AppColors.darkSurfaceVariant.withValues(alpha: 0.8),
       ),
-      fontFamily: GoogleFonts.orbitron().fontFamily,
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: const Color(0xFF1C1F28),
+        contentTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 13.5,
+          fontWeight: FontWeight.w500,
+        ),
+        actionTextColor: AppColors.darkTertiary,
+        closeIconColor: Colors.white70,
+        elevation: 8,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.12)),
+        ),
+      ),
+      fontFamily: GoogleFonts.inter().fontFamily,
     );
   }
 }

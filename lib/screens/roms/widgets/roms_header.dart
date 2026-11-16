@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../models/emulator_platform.dart';
 import '../../../widgets/common/platform_logo.dart';
@@ -20,17 +21,20 @@ class RomsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.4),
-        border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-            width: 1,
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.35),
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.white.withValues(alpha: 0.08),
+                width: 1,
+              ),
+            ),
           ),
-        ),
-      ),
       child: Row(
         children: [
           IconButton(
@@ -74,6 +78,8 @@ class RomsHeader extends StatelessWidget {
             ),
           ),
         ],
+      ),
+        ),
       ),
     );
   }

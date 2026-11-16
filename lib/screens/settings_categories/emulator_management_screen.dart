@@ -8,6 +8,7 @@ import '../../services/emulator_download_service.dart';
 import '../../models/emulator_download_info.dart';
 import '../../widgets/common/platform_logo.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -64,14 +65,14 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
 
     // Handle refresh (R key)
     if (key == LogicalKeyboardKey.keyR && !_isLoading) {
-      _loadEmulators();
+      _loadEmulators(showReloadedMessage: true);
       return KeyEventResult.handled;
     }
 
     return KeyEventResult.ignored;
   }
 
-  Future<void> _loadEmulators() async {
+  Future<void> _loadEmulators({bool showReloadedMessage = false}) async {
     setState(() => _isLoading = true);
     try {
       // Force reload config from source (assets or shared_preferences)
@@ -83,23 +84,19 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
         _isLoading = false;
       });
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.configurationReloaded),
-            duration: const Duration(seconds: 1),
-          ),
+      if (mounted && showReloadedMessage) {
+        AppSnackBar.success(
+          context,
+          AppLocalizations.of(context)!.configurationReloaded,
+          duration: const Duration(seconds: 2),
         );
       }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.errorLoadingEmulators} $e',
-            ),
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorLoadingEmulators} $e',
         );
       }
     }
@@ -209,10 +206,9 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
 
       if (emulators.isEmpty) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.noEmulatorsAvailable),
-          ),
+        AppSnackBar.info(
+          context,
+          AppLocalizations.of(context)!.noEmulatorsAvailable,
         );
         return;
       }
@@ -311,8 +307,9 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.allDownloads)),
+        AppSnackBar.success(
+          context,
+          AppLocalizations.of(context)!.allDownloads,
         );
       }
       _downloadService.makeAppImagesExecutable(
@@ -320,8 +317,9 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.error}: $e',
         );
       }
     } finally {
@@ -399,6 +397,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
 
   void _addEmulator() {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
     final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
@@ -408,14 +407,22 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             await _configService.addEmulator(emulator);
             await _loadEmulators();
             if (mounted) {
-              scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text(l10n.emulatorAdded)),
+              AppSnackBar.showWithMessenger(
+                scaffoldMessenger,
+                screenWidth: screenWidth,
+                message: l10n.emulatorAdded,
+                icon: Icons.check_circle_outline,
+                accentColor: Colors.green.shade400,
               );
             }
           } catch (e) {
             if (mounted) {
-              scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text('${l10n.errorAddingEmulator} $e')),
+              AppSnackBar.showWithMessenger(
+                scaffoldMessenger,
+                screenWidth: screenWidth,
+                message: '${l10n.errorAddingEmulator} $e',
+                icon: Icons.error_outline,
+                accentColor: Colors.red.shade400,
               );
             }
           }
@@ -426,6 +433,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
 
   void _editEmulator(Map<String, dynamic> emulator) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
     final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
@@ -439,14 +447,22 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             );
             await _loadEmulators();
             if (mounted) {
-              scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text(l10n.emulatorUpdated)),
+              AppSnackBar.showWithMessenger(
+                scaffoldMessenger,
+                screenWidth: screenWidth,
+                message: l10n.emulatorUpdated,
+                icon: Icons.check_circle_outline,
+                accentColor: Colors.green.shade400,
               );
             }
           } catch (e) {
             if (mounted) {
-              scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text('${l10n.errorUpdatingEmulator} $e')),
+              AppSnackBar.showWithMessenger(
+                scaffoldMessenger,
+                screenWidth: screenWidth,
+                message: '${l10n.errorUpdatingEmulator} $e',
+                icon: Icons.error_outline,
+                accentColor: Colors.red.shade400,
               );
             }
           }
@@ -457,6 +473,7 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
 
   void _deleteEmulator(String system) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
     final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
@@ -479,16 +496,22 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                     await _configService.removeEmulator(system);
                     await _loadEmulators();
                     if (mounted) {
-                      scaffoldMessenger.showSnackBar(
-                        SnackBar(content: Text(l10n.emulatorDeleted)),
+                      AppSnackBar.showWithMessenger(
+                        scaffoldMessenger,
+                        screenWidth: screenWidth,
+                        message: l10n.emulatorDeleted,
+                        icon: Icons.delete_outline,
+                        accentColor: Colors.green.shade400,
                       );
                     }
                   } catch (e) {
                     if (mounted) {
-                      scaffoldMessenger.showSnackBar(
-                        SnackBar(
-                          content: Text('${l10n.errorDeletingEmulator} $e'),
-                        ),
+                      AppSnackBar.showWithMessenger(
+                        scaffoldMessenger,
+                        screenWidth: screenWidth,
+                        message: '${l10n.errorDeletingEmulator} $e',
+                        icon: Icons.error_outline,
+                        accentColor: Colors.red.shade400,
                       );
                     }
                   }
@@ -523,11 +546,19 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.emulatorManagement),
           actions: [
+            // Add emulator button (replaces obstructing FAB)
+            IconButton(
+              icon: const Icon(Icons.add_rounded),
+              tooltip: AppLocalizations.of(context)!.addEmulator,
+              onPressed: _isLoading ? null : _addEmulator,
+            ),
             // Reload button
             IconButton(
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh_rounded),
               tooltip: AppLocalizations.of(context)!.reloadConfigTooltip,
-              onPressed: _isLoading ? null : _loadEmulators,
+              onPressed: _isLoading
+                  ? null
+                  : () => _loadEmulators(showReloadedMessage: true),
             ),
             // Info button showing config source
             IconButton(
@@ -603,203 +634,74 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
             Expanded(
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : ListView(
-                      children: [
-                        // Download emulators section
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.download, size: 20),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        AppLocalizations.of(
-                                          context,
-                                        )!.downloadAll,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                  : Align(
+                      alignment: Alignment.topCenter,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1080),
+                        child: ListView(
+                          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                          children: [
+                            // Top action bar card
+                            _buildDownloadAndActionsCard(context),
+                            const SizedBox(height: 16),
+
+                            // Emulators list or empty state
+                            if (_emulators.isEmpty)
+                              _buildEmptyState(context)
+                            else
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  final isWide = constraints.maxWidth >= 820;
+                                  if (!isWide) {
+                                    return Column(
+                                      children: [
+                                        for (final emulator in _emulators) ...[
+                                          _buildEmulatorCard(context, emulator),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      ],
+                                    );
+                                  }
+
+                                  final rows = <Widget>[];
+                                  for (
+                                    var i = 0;
+                                    i < _emulators.length;
+                                    i += 2
+                                  ) {
+                                    rows.add(
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 12,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: _buildEmulatorCard(
+                                                context,
+                                                _emulators[i],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Expanded(
+                                              child: i + 1 < _emulators.length
+                                                  ? _buildEmulatorCard(
+                                                      context,
+                                                      _emulators[i + 1],
+                                                    )
+                                                  : const SizedBox.shrink(),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      const Spacer(),
-                                      ElevatedButton.icon(
-                                        onPressed: _isDownloading
-                                            ? null
-                                            : _showDownloadDialog,
-                                        icon: const Icon(Icons.download),
-                                        label: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.download,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Active download tasks
-                                  if (_downloadTasks.isNotEmpty) ...[
-                                    const SizedBox(height: 12),
-                                    const Divider(),
-                                    const SizedBox(height: 8),
-                                    ..._downloadTasks.values.map(
-                                      (task) => _buildDownloadTaskRow(task),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: TextButton(
-                                        onPressed: _clearDownloadTasks,
-                                        child: Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.clearCompleted,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ],
+                                    );
+                                  }
+                                  return Column(children: rows);
+                                },
                               ),
-                            ),
-                          ),
+                          ],
                         ),
-
-                        // Emulators list or empty state
-                        if (_emulators.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(32),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.videogame_asset_off,
-                                    size: 64,
-                                    color: Colors.grey,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.noEmulatorsConfigured,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.addFirstEmulator,
-                                    style: const TextStyle(color: Colors.grey),
-                                  ),
-                                  const SizedBox(height: 24),
-                                  ElevatedButton.icon(
-                                    onPressed: _addEmulator,
-                                    icon: const Icon(Icons.add),
-                                    label: Text(
-                                      AppLocalizations.of(context)!.addEmulator,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        else
-                          ..._emulators.map((emulator) {
-                            final system = emulator['system'] as String;
-                            final command = emulator['command'];
-                            final acceptZip = emulator['acceptZipFiles'];
-                            final todo = emulator['todo'] == true;
-
-                            return Card(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              child: ListTile(
-                                leading: PlatformLogo(
-                                  platformName: system,
-                                  size: 96,
-                                ),
-                                title: Row(
-                                  children: [
-                                    Text(
-                                      system.toUpperCase(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    if (todo) ...[
-                                      const SizedBox(width: 8),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.orange,
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'WIP',
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                    if (acceptZip == true) ...[
-                                      const SizedBox(width: 8),
-                                      const Icon(
-                                        Icons.folder_zip,
-                                        size: 16,
-                                        color: Colors.grey,
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                                subtitle: Text(
-                                  _getCommandPreview(command),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () => _editEmulator(emulator),
-                                      tooltip: AppLocalizations.of(
-                                        context,
-                                      )!.edit,
-                                    ),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.red[300],
-                                      ),
-                                      onPressed: () => _deleteEmulator(system),
-                                      tooltip: AppLocalizations.of(
-                                        context,
-                                      )!.delete,
-                                    ),
-                                  ],
-                                ),
-                                onTap: () => _editEmulator(emulator),
-                              ),
-                            );
-                          }),
-                      ],
+                      ),
                     ),
             ),
             ControlsBottomBar(
@@ -815,15 +717,253 @@ class _EmulatorManagementScreenState extends State<EmulatorManagementScreen> {
                   gamepadButton: 'Start',
                 ),
               ],
+              counterText: _emulators.isNotEmpty
+                  ? '${_emulators.length} ${AppLocalizations.of(context)!.emulators.toLowerCase()}'
+                  : null,
             ),
           ],
         ),
-        floatingActionButton: _emulators.isNotEmpty
-            ? FloatingActionButton(
+      ),
+    );
+  }
+
+  Widget _buildDownloadAndActionsCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.14),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.download_rounded,
+                  size: 20,
+                  color: colorScheme.primary,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  l10n.downloadAll,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              OutlinedButton.icon(
                 onPressed: _addEmulator,
-                child: const Icon(Icons.add),
-              )
-            : null,
+                icon: const Icon(Icons.add_rounded, size: 18),
+                label: Text(l10n.addEmulator),
+              ),
+              const SizedBox(width: 10),
+              FilledButton.icon(
+                onPressed: _isDownloading ? null : _showDownloadDialog,
+                icon: const Icon(Icons.download_rounded, size: 18),
+                label: Text(l10n.download),
+              ),
+            ],
+          ),
+          if (_downloadTasks.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Divider(
+              height: 1,
+              color: colorScheme.outline.withValues(alpha: 0.12),
+            ),
+            const SizedBox(height: 10),
+            ..._downloadTasks.values.map((task) => _buildDownloadTaskRow(task)),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: _clearDownloadTasks,
+                child: Text(l10n.clearCompleted),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.all(48),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.videogame_asset_off_rounded,
+              size: 56,
+              color: colorScheme.onSurface.withValues(alpha: 0.35),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.noEmulatorsConfigured,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.addFirstEmulator,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+            ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: _addEmulator,
+              icon: const Icon(Icons.add_rounded),
+              label: Text(l10n.addEmulator),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmulatorCard(
+    BuildContext context,
+    Map<String, dynamic> emulator,
+  ) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+    final system = emulator['system'] as String;
+    final command = emulator['command'];
+    final acceptZip = emulator['acceptZipFiles'];
+    final todo = emulator['todo'] == true;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.14),
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => _editEmulator(emulator),
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 72,
+                height: 44,
+                child: Center(
+                  child: PlatformLogo(platformName: system, size: 68),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            system.toUpperCase(),
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        if (todo) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFFFF9F0A,
+                              ).withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Text(
+                              'WIP',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Color(0xFFFF9F0A),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                        if (acceptZip == true) ...[
+                          const SizedBox(width: 6),
+                          Icon(
+                            Icons.folder_zip_outlined,
+                            size: 15,
+                            color: colorScheme.onSurface.withValues(alpha: 0.45),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      _getCommandPreview(command),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.58),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.edit_outlined,
+                  size: 19,
+                  color: colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+                onPressed: () => _editEmulator(emulator),
+                tooltip: l10n.edit,
+                visualDensity: VisualDensity.compact,
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.delete_outline_rounded,
+                  size: 19,
+                  color: Color(0xFFFF453A),
+                ),
+                onPressed: () => _deleteEmulator(system),
+                tooltip: l10n.delete,
+                visualDensity: VisualDensity.compact,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -913,10 +1053,9 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
     final system = _systemController.text.trim();
 
     if (system.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.systemNameRequired),
-        ),
+      AppSnackBar.warning(
+        context,
+        AppLocalizations.of(context)!.systemNameRequired,
       );
       return;
     }
@@ -927,8 +1066,9 @@ class _EmulatorEditDialogState extends State<EmulatorEditDialog> {
         .toList();
 
     if (commandStrings.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.commandRequired)),
+      AppSnackBar.warning(
+        context,
+        AppLocalizations.of(context)!.commandRequired,
       );
       return;
     }

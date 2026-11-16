@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import '../../services/system_check_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for checking system requirements
@@ -69,12 +70,9 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
     } catch (e) {
       setState(() => _isChecking = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.errorCheckingSystem}: $e',
-            ),
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorCheckingSystem}: $e',
         );
       }
     }
@@ -109,139 +107,187 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
                       ),
                     )
                   : SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Overall Status Card
-                          Card(
-                            color: _result!.allRequiredMet
-                                ? Colors.green.shade50
-                                : Colors.orange.shade50,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    _result!.allRequiredMet
-                                        ? Icons.check_circle
-                                        : Icons.warning,
-                                    size: 48,
-                                    color: _result!.allRequiredMet
-                                        ? Colors.green
-                                        : Colors.orange,
+                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 880),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Overall Status Card
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.surfaceContainerLow,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.08),
                                   ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _result!.allRequiredMet
-                                              ? AppLocalizations.of(
-                                                  context,
-                                                )!.allRequiredToolsInstalled
-                                              : AppLocalizations.of(
-                                                  context,
-                                                )!.missingRequiredTools,
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          _result!.allRequiredMet
-                                              ? AppLocalizations.of(
-                                                  context,
-                                                )!.systemReadyToUse
-                                              : AppLocalizations.of(
-                                                  context,
-                                                )!.someRequiredToolsMissing,
-                                          style: TextStyle(
-                                            color: Colors.grey.shade700,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // Required Tools Section
-                          Text(
-                            AppLocalizations.of(context)!.requiredTools,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            AppLocalizations.of(
-                              context,
-                            )!.requiredToolsDescription,
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                          const SizedBox(height: 16),
-
-                          ..._buildToolList(
-                            _systemCheckService.getRequiredTools(),
-                            _result!.missingRequired,
-                            isRequired: true,
-                          ),
-
-                          if (_result!.missingRequired.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            Card(
-                              color: Colors.orange.shade50,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                ),
+                                padding: const EdgeInsets.all(20),
+                                child: Row(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.info,
-                                          color: Colors.orange.shade700,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.installationInstructions,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            (_result!.allRequiredMet
+                                                    ? const Color(0xFF30D158)
+                                                    : const Color(0xFFFF9F0A))
+                                                .withValues(alpha: 0.14),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Icon(
+                                        _result!.allRequiredMet
+                                            ? Icons.check_circle_rounded
+                                            : Icons.warning_rounded,
+                                        size: 30,
+                                        color: _result!.allRequiredMet
+                                            ? const Color(0xFF30D158)
+                                            : const Color(0xFFFF9F0A),
+                                      ),
                                     ),
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      _systemCheckService
-                                          .getInstallInstructions(
-                                            _result!.missingRequired,
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _result!.allRequiredMet
+                                                ? AppLocalizations.of(
+                                                    context,
+                                                  )!.allRequiredToolsInstalled
+                                                : AppLocalizations.of(
+                                                    context,
+                                                  )!.missingRequiredTools,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                           ),
-                                      style: const TextStyle(
-                                        fontFamily: 'monospace',
-                                        fontSize: 12,
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            _result!.allRequiredMet
+                                                ? AppLocalizations.of(
+                                                    context,
+                                                  )!.systemReadyToUse
+                                                : AppLocalizations.of(
+                                                    context,
+                                                  )!.someRequiredToolsMissing,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface
+                                                      .withValues(alpha: 0.65),
+                                                ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                          ],
 
-                          const SizedBox(height: 32),
-                        ],
+                              const SizedBox(height: 28),
+
+                              // Required Tools Section
+                              Text(
+                                AppLocalizations.of(context)!.requiredTools,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.requiredToolsDescription,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.65),
+                                    ),
+                              ),
+                              const SizedBox(height: 14),
+
+                              ..._buildToolList(
+                                _systemCheckService.getRequiredTools(),
+                                _result!.missingRequired,
+                                isRequired: true,
+                              ),
+
+                              if (_result!.missingRequired.isNotEmpty) ...[
+                                const SizedBox(height: 16),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainerLow,
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.08,
+                                      ),
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.info_outline_rounded,
+                                            size: 20,
+                                            color: Color(0xFFFF9F0A),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.installationInstructions,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        _systemCheckService
+                                            .getInstallInstructions(
+                                              _result!.missingRequired,
+                                            ),
+                                        style: TextStyle(
+                                          fontFamily: 'monospace',
+                                          fontSize: 12,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withValues(alpha: 0.8),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+
+                              const SizedBox(height: 16),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
             ),
@@ -270,34 +316,70 @@ class _SystemCheckScreenState extends State<SystemCheckScreen> {
     List<String> missingTools, {
     required bool isRequired,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return allTools.map((tool) {
       final isInstalled = !missingTools.contains(tool);
-      return Card(
-        margin: const EdgeInsets.only(bottom: 8),
-        child: ListTile(
-          leading: Icon(
-            isInstalled ? Icons.check_circle : Icons.cancel,
-            color: isInstalled ? Colors.green : Colors.red,
+      final statusColor =
+          isInstalled ? const Color(0xFF30D158) : const Color(0xFFFF453A);
+      return Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.08),
           ),
-          title: Text(
-            tool,
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-          subtitle: Text(
-            _systemCheckService.getToolDescription(tool),
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-          ),
-          trailing: Chip(
-            label: Text(
-              isInstalled
-                  ? AppLocalizations.of(context)!.installed
-                  : AppLocalizations.of(context)!.missing,
-              style: const TextStyle(fontSize: 11),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Icon(
+              isInstalled ? Icons.check_circle_rounded : Icons.cancel_rounded,
+              color: statusColor,
+              size: 22,
             ),
-            backgroundColor: isInstalled
-                ? Colors.green.shade100
-                : Colors.red.shade100,
-          ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tool,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _systemCheckService.getToolDescription(tool),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: statusColor.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Text(
+                isInstalled
+                    ? AppLocalizations.of(context)!.installed
+                    : AppLocalizations.of(context)!.missing,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: statusColor,
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }).toList();

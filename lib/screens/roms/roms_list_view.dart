@@ -6,6 +6,7 @@ import '../../services/media_service.dart';
 import '../../widgets/roms/folder_widget.dart';
 import '../../widgets/roms/rom_list_card.dart';
 import '../../widgets/roms/rom_detail_panel.dart';
+import '../../widgets/common/platform_badge.dart';
 
 class RomsListView extends StatelessWidget {
   final List<RomItem> items;
@@ -66,26 +67,71 @@ class RomsListView extends StatelessWidget {
               controller: scrollController,
               padding: const EdgeInsets.all(8),
               itemCount: items.length,
-              itemExtent: 72.0,
+              itemExtent: isCollection ? null : 72.0,
               itemBuilder: (context, index) {
                 final item = items[index];
                 final isSelected = index == selectedIndex;
-                return _buildListItem(
+                final isGroupStart =
+                    isCollection &&
+                    item.platform != null &&
+                    (index == 0 || items[index - 1].platform != item.platform);
+                final card = _buildListItem(
                   context,
                   index,
                   item,
                   isSelected,
                   isWideScreen,
                 );
+                if (!isGroupStart) {
+                  return isCollection ? SizedBox(height: 72.0, child: card) : card;
+                }
+                var groupCount = 0;
+                for (var i = index; i < items.length; i++) {
+                  if (items[i].platform == item.platform) {
+                    groupCount++;
+                  } else {
+                    break;
+                  }
+                }
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _PlatformGroupHeader(
+                      platformId: item.platform!,
+                      count: groupCount,
+                      isFirst: index == 0,
+                    ),
+                    SizedBox(height: 72.0, child: card),
+                  ],
+                );
               },
             ),
           ),
         ),
         isWideScreen
-            ? const VerticalDivider(width: 1)
+            ? Container(
+                width: 1,
+                color: Colors.white.withValues(alpha: 0.06),
+              )
             : const SizedBox.shrink(),
         isWideScreen
-            ? Expanded(flex: 2, child: _buildDetailPanel(selectedRom, context))
+            ? Expanded(
+                flex: 2,
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.025),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.06),
+                      width: 1,
+                    ),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: _buildDetailPanel(selectedRom, context),
+                ),
+              )
             : const SizedBox.shrink(),
       ],
     );
@@ -162,6 +208,49 @@ class RomsListView extends StatelessWidget {
       onLoadGameInfo: () => loadGameInfoForItem(item),
       showMediaCarousel: true,
       mediaHeight: 500,
+    );
+  }
+}
+
+class _PlatformGroupHeader extends StatelessWidget {
+  final String platformId;
+  final int count;
+  final bool isFirst;
+
+  const _PlatformGroupHeader({
+    required this.platformId,
+    required this.count,
+    required this.isFirst,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40.0,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(10, isFirst ? 4 : 10, 10, 4),
+        child: Row(
+          children: [
+            PlatformBadge(platformId: platformId),
+            const SizedBox(width: 8),
+            Text(
+              '$count',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.white.withValues(alpha: 0.45),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Container(
+                height: 1,
+                color: Colors.white.withValues(alpha: 0.08),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

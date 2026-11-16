@@ -8,7 +8,9 @@ import '../../services/keyboard_service.dart';
 import '../../services/gamepad_service.dart';
 import '../../mixins/gamepad_polling_mixin.dart';
 import '../../mixins/screen_navigation_mixin.dart';
+import '../../widgets/common/animated_lucide_icon.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for configuring web-specific settings.
@@ -223,20 +225,16 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
       // into WebEmulatorService after this screen pops.
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.corsProxySettingsSaved),
-          ),
+        AppSnackBar.success(
+          context,
+          AppLocalizations.of(context)!.corsProxySettingsSaved,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.errorSavingSettings} $e',
-            ),
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorSavingSettings} $e',
         );
       }
     } finally {
@@ -255,294 +253,355 @@ class _WebSettingsScreenState extends State<WebSettingsScreen>
       child: Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.webSettings),
-          centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.webSettingsDescription,
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 24),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 820),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.webSettingsDescription,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.65),
+                              ),
+                        ),
+                        const SizedBox(height: 16),
 
-                    // Info card explaining CORS proxy
-                    Card(
-                      color: Colors.blue.shade50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              color: Colors.blue.shade700,
+                        // Info card explaining CORS proxy
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.08),
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.info_outline_rounded,
+                                size: 20,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.7),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.corsProxyWhyNeeded,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.corsProxyExplanation,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.7),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+
+                        // CORS Proxy URL field
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: _selectedIndex == 0
+                                  ? Colors.white.withValues(alpha: 0.35)
+                                  : Colors.white.withValues(alpha: 0.08),
+                              width: _selectedIndex == 0 ? 1.5 : 1,
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.corsProxyUrl,
+                                style: Theme.of(context).textTheme.titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(height: 10),
+                              TextField(
+                                controller: _corsProxyController,
+                                decoration: InputDecoration(
+                                  hintText:
+                                      'https://your-worker.your-subdomain.workers.dev/',
+                                  border: const OutlineInputBorder(),
+                                  helperText: AppLocalizations.of(
+                                    context,
+                                  )!.corsProxyHelperText,
+                                  helperMaxLines: 2,
+                                ),
+                                keyboardType: TextInputType.url,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+
+                        // Test button
+                        Material(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerLow,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            side: BorderSide(
+                              color: _selectedIndex == 1
+                                  ? Colors.white.withValues(alpha: 0.35)
+                                  : Colors.white.withValues(alpha: 0.08),
+                              width: _selectedIndex == 1 ? 1.5 : 1,
+                            ),
+                          ),
+                          child: InkWell(
+                            onTap: _isTesting ? null : _testProxy,
+                            borderRadius: BorderRadius.circular(14),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.corsProxyWhyNeeded,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue.shade900,
-                                    ),
+                                  Row(
+                                    children: [
+                                      AnimatedLucideIcon(
+                                        type: AnimatedLucideIconType.globe,
+                                        size: 20,
+                                        animate:
+                                            _selectedIndex == 1 || _isTesting,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.8),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          _isTesting
+                                              ? AppLocalizations.of(
+                                                  context,
+                                                )!.testingProxy
+                                              : AppLocalizations.of(
+                                                  context,
+                                                )!.testProxyConnection,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                        ),
+                                      ),
+                                      if (_isTesting)
+                                        const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.corsProxyExplanation,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.blue.shade900,
+                                  if (_testResult != null) ...[
+                                    const SizedBox(height: 12),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          _testSuccess == true
+                                              ? Icons.check_circle_rounded
+                                              : Icons.error_rounded,
+                                          color: _testSuccess == true
+                                              ? const Color(0xFF30D158)
+                                              : const Color(0xFFFF453A),
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            _testResult!,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: _testSuccess == true
+                                                  ? const Color(0xFF30D158)
+                                                  : const Color(0xFFFF453A),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
+                                  ],
                                 ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                        const SizedBox(height: 18),
 
-                    // CORS Proxy URL field
-                    Card(
-                      elevation: _selectedIndex == 0 ? 8 : 2,
-                      color: _selectedIndex == 0
-                          ? Theme.of(context).colorScheme.primaryContainer
-                          : null,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!.corsProxyUrl,
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
+                        // Deployment instructions card
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.08),
                             ),
-                            const SizedBox(height: 8),
-                            TextField(
-                              controller: _corsProxyController,
-                              decoration: InputDecoration(
-                                hintText:
-                                    'https://your-worker.your-subdomain.workers.dev/',
-                                border: const OutlineInputBorder(),
-                                helperText: AppLocalizations.of(
-                                  context,
-                                )!.corsProxyHelperText,
-                                helperMaxLines: 2,
-                              ),
-                              keyboardType: TextInputType.url,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Test button
-                    Card(
-                      elevation: _selectedIndex == 1 ? 8 : 2,
-                      color: _selectedIndex == 1
-                          ? Theme.of(context).colorScheme.primaryContainer
-                          : null,
-                      child: InkWell(
-                        onTap: _isTesting ? null : _testProxy,
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
+                          ),
                           padding: const EdgeInsets.all(16),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
                                   Icon(
-                                    _isTesting
-                                        ? Icons.hourglass_top
-                                        : Icons.network_check,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
+                                    Icons.rocket_launch_outlined,
+                                    size: 20,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.75),
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      _isTesting
-                                          ? AppLocalizations.of(
-                                              context,
-                                            )!.testingProxy
-                                          : AppLocalizations.of(
-                                              context,
-                                            )!.testProxyConnection,
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleMedium,
-                                    ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    AppLocalizations.of(context)!.quickDeploy,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(fontWeight: FontWeight.w600),
                                   ),
-                                  if (_isTesting)
-                                    const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    ),
                                 ],
                               ),
-                              if (_testResult != null) ...[
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      _testSuccess == true
-                                          ? Icons.check_circle
-                                          : Icons.error,
-                                      color: _testSuccess == true
-                                          ? Colors.green
-                                          : Colors.red,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        _testResult!,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: _testSuccess == true
-                                              ? Colors.green.shade700
-                                              : Colors.red.shade700,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              const SizedBox(height: 10),
+                              Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.corsProxyDeploySteps,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: 'monospace',
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withValues(alpha: 0.75),
+                                  height: 1.6,
                                 ),
-                              ],
+                              ),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                        const SizedBox(height: 20),
 
-                    // Deployment instructions card
-                    Card(
-                      color: Colors.orange.shade50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.rocket_launch,
-                                  color: Colors.orange.shade700,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  AppLocalizations.of(context)!.quickDeploy,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange.shade900,
+                        // Save button
+                        Container(
+                          decoration: _selectedIndex == 2
+                              ? BoxDecoration(
+                                  borderRadius: BorderRadius.circular(999),
+                                  border: Border.all(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    width: 2,
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.corsProxyDeploySteps,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontFamily: 'monospace',
-                                color: Colors.orange.shade900,
-                                height: 1.6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Save button
-              const SizedBox(height: 16),
-              Container(
-                decoration: _selectedIndex == 2
-                    ? BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 2,
-                        ),
-                      )
-                    : null,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isSaving ? null : _saveSettings,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: _selectedIndex == 2
-                          ? Theme.of(context).colorScheme.primaryContainer
-                          : null,
-                    ),
-                    child: _isSaving
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                                )
+                              : null,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: FilledButton(
+                              onPressed: _isSaving ? null : _saveSettings,
+                              style: FilledButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
                                 ),
                               ),
-                              SizedBox(width: 12),
-                              Text(AppLocalizations.of(context)!.saving),
-                            ],
-                          )
-                        : Text(AppLocalizations.of(context)!.saveSettings),
+                              child: _isSaving
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Text(
+                                          AppLocalizations.of(context)!.saving,
+                                        ),
+                                      ],
+                                    )
+                                  : Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.saveSettings,
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: ControlsBottomBar(
-          actions: [
-            BottomBarAction(
-              label: AppLocalizations.of(context)!.back,
-              keyboardKey: 'ESC',
-              gamepadButton: 'B',
             ),
-            BottomBarAction(
-              label: AppLocalizations.of(context)!.navigate,
-              keyboardKey: '\u2191\u2193',
-              gamepadButton: 'D-pad',
-            ),
-            BottomBarAction(
-              label: AppLocalizations.of(context)!.select,
-              keyboardKey: 'Enter',
-              gamepadButton: 'A',
+            ControlsBottomBar(
+              actions: [
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.back,
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.navigate,
+                  keyboardKey: '\u2191\u2193',
+                  gamepadButton: 'D-pad',
+                ),
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.select,
+                  keyboardKey: 'Enter',
+                  gamepadButton: 'A',
+                ),
+              ],
             ),
           ],
         ),

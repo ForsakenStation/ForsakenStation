@@ -7,15 +7,19 @@ class EmulatorPlatform {
   final String path;
   final List<Rom> roms; // For file-based platforms or cached JSONL ROMs
   final int? _romCount; // For JSONL platforms: pre-calculated count
+  final String? _customDisplayName;
 
   EmulatorPlatform({
     required this.name,
     required this.path,
     this.roms = const [],
     int? romCount,
-  }) : _romCount = romCount;
+    String? customDisplayName,
+  }) : _romCount = romCount,
+       _customDisplayName = customDisplayName;
 
   String get displayName {
+    if (_customDisplayName != null) return _customDisplayName;
     // Check if this is a collection
     if (name == 'recently_played') return 'Recently Played';
     if (name == 'downloaded') return 'Downloaded';

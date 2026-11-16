@@ -7,6 +7,7 @@ import '../../../models/emulator_platform.dart';
 import '../../../services/media_service.dart';
 import '../../../services/gamelist_service.dart';
 import '../../../services/rom_service.dart';
+import '../../../services/platform_info_service.dart';
 import '../../../services/debug_service.dart';
 
 /// Controller for ROM screen state and business logic
@@ -108,7 +109,12 @@ class RomsScreenController extends ChangeNotifier {
       }
 
       await _updateDisplayNames(platform.name);
-      _sortItems();
+      if (isCollection) {
+        final platformDisplayNames = await _resolvePlatformDisplayNames();
+        _sortItems(platformDisplayNames: platformDisplayNames);
+      } else {
+        _sortItems();
+      }
       _updateFilteredItems();
       _isLoading = false;
       notifyListeners();
@@ -135,11 +141,30 @@ class RomsScreenController extends ChangeNotifier {
     }
   }
 
-  /// Re-sort items: folders first, then alphabetically by displayName
-  void _sortItems() {
+  Future<Map<String, String>> _resolvePlatformDisplayNames() async {
+    final names = <String, String>{};
+    final infoService = PlatformInfoService.instance;
+    for (final item in _items) {
+      final pid = item.platform;
+      if (pid != null && !names.containsKey(pid)) {
+        final info = await infoService.getPlatformInfo(pid);
+        names[pid] = (info?.fullName ?? pid).toLowerCase();
+      }
+    }
+    return names;
+  }
+
+  /// Re-sort items: folders first, then by platform (for collections), then by displayName
+  void _sortItems({Map<String, String>? platformDisplayNames}) {
     _items.sort((a, b) {
       if (a.isFolder && !b.isFolder) return -1;
       if (!a.isFolder && b.isFolder) return 1;
+      if (platformDisplayNames != null) {
+        final pa = platformDisplayNames[a.platform ?? ''] ?? (a.platform ?? '').toLowerCase();
+        final pb = platformDisplayNames[b.platform ?? ''] ?? (b.platform ?? '').toLowerCase();
+        final platformCmp = pa.compareTo(pb);
+        if (platformCmp != 0) return platformCmp;
+      }
       return a.displayName.toLowerCase().compareTo(b.displayName.toLowerCase());
     });
   }

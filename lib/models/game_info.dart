@@ -88,15 +88,40 @@ class GameInfo {
       }
     }
 
+    String? unescapeHtml(String? raw) {
+      if (raw == null || !raw.contains('&')) return raw;
+      // Run twice to handle double-escaped entities (e.g. &amp;quot; -> &quot; -> ")
+      var result = raw;
+      for (var i = 0; i < 2; i++) {
+        result = result
+            .replaceAll('&amp;', '&')
+            .replaceAll('&quot;', '"')
+            .replaceAll('&apos;', "'")
+            .replaceAll('&#39;', "'")
+            .replaceAll('&lt;', '<')
+            .replaceAll('&gt;', '>')
+            .replaceAll('&nbsp;', ' ')
+            .replaceAllMapped(
+              RegExp(r'&#x([0-9a-fA-F]+);'),
+              (m) => String.fromCharCode(int.parse(m.group(1)!, radix: 16)),
+            )
+            .replaceAllMapped(
+              RegExp(r'&#(\d+);'),
+              (m) => String.fromCharCode(int.parse(m.group(1)!)),
+            );
+      }
+      return result;
+    }
+
     return GameInfo(
       path: data['path'] ?? '',
-      name: data['name'] ?? '',
-      desc: data['desc'],
+      name: unescapeHtml(data['name']) ?? '',
+      desc: unescapeHtml(data['desc']),
       rating: parseRating(data['rating']),
       releaseDate: parseReleaseDate(data['releasedate']),
-      developer: data['developer'],
-      publisher: data['publisher'],
-      genre: data['genre'],
+      developer: unescapeHtml(data['developer']),
+      publisher: unescapeHtml(data['publisher']),
+      genre: unescapeHtml(data['genre']),
       players: parsePlayers(data['players']),
       box3dPath: data['media_box3d'],
       coverPath: data['media_cover'],

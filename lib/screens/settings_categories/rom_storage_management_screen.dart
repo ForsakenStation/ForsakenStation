@@ -7,6 +7,7 @@ import '../../../mixins/gamepad_polling_mixin.dart';
 import '../../../mixins/screen_navigation_mixin.dart';
 import '../../../widgets/common/gamepad_button_indicator.dart';
 import '../../../widgets/common/controls_bottom_bar.dart';
+import '../../../widgets/common/app_snackbar.dart';
 import '../../../widgets/common/dialog_button_bar.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
@@ -319,12 +320,11 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
       );
       if (mounted && success) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.of(context)!.deleted} $fileName'),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 5),
-          ),
+        AppSnackBar.success(
+          context,
+          '${AppLocalizations.of(context)!.deleted} $fileName',
+          icon: Icons.delete_outline,
+          duration: const Duration(seconds: 5),
         );
       }
     }
@@ -362,12 +362,11 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
       final newPath = await _controller.moveToForever(platform, fileName);
       if (mounted && newPath != null) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.of(context)!.saved} $fileName'),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 5),
-          ),
+        AppSnackBar.success(
+          context,
+          '${AppLocalizations.of(context)!.saved} $fileName',
+          icon: Icons.save_alt,
+          duration: const Duration(seconds: 5),
         );
       }
     }
@@ -403,12 +402,11 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
       await _controller.clearAllTempRoms();
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.allCleared),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 5),
-          ),
+        AppSnackBar.success(
+          context,
+          AppLocalizations.of(context)!.allCleared,
+          icon: Icons.cleaning_services_outlined,
+          duration: const Duration(seconds: 5),
         );
       }
     }
@@ -425,42 +423,57 @@ class _RomStorageManagementScreenState extends State<RomStorageManagementScreen>
           title: Text(AppLocalizations.of(context)!.romStorageManagement),
           actions: _buildAppBarActions(),
         ),
-        body: _controller.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(16),
-                      children: [
-                        StorageStatisticsCard(
-                          stats: _controller.storageStats,
-                          onClearTemp: _clearAllTempRoms,
+        body: Column(
+          children: [
+            Expanded(
+              child: _controller.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Align(
+                      alignment: Alignment.topCenter,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1080),
+                        child: ListView(
+                          controller: _scrollController,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                          children: [
+                            StorageStatisticsCard(
+                              stats: _controller.storageStats,
+                              onClearTemp: _clearAllTempRoms,
+                            ),
+                            const SizedBox(height: 24),
+                            if (_controller.foreverRoms.isNotEmpty) ...[
+                              _buildSectionHeader(
+                                AppLocalizations.of(context)!.permanentStorage,
+                              ),
+                              ..._buildPlatformList(
+                                _controller.foreverRoms,
+                                true,
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                            if (_controller.tempRoms.isNotEmpty) ...[
+                              _buildSectionHeader(
+                                AppLocalizations.of(context)!.temporaryStorage,
+                              ),
+                              ..._buildPlatformList(
+                                _controller.tempRoms,
+                                false,
+                              ),
+                            ],
+                            if (_controller.foreverRoms.isEmpty &&
+                                _controller.tempRoms.isEmpty)
+                              _buildEmptyState(),
+                          ],
                         ),
-                        const SizedBox(height: 24),
-                        if (_controller.foreverRoms.isNotEmpty) ...[
-                          _buildSectionHeader(
-                            AppLocalizations.of(context)!.permanentStorage,
-                          ),
-                          ..._buildPlatformList(_controller.foreverRoms, true),
-                          const SizedBox(height: 16),
-                        ],
-                        if (_controller.tempRoms.isNotEmpty) ...[
-                          _buildSectionHeader(
-                            AppLocalizations.of(context)!.temporaryStorage,
-                          ),
-                          ..._buildPlatformList(_controller.tempRoms, false),
-                        ],
-                        if (_controller.foreverRoms.isEmpty &&
-                            _controller.tempRoms.isEmpty)
-                          _buildEmptyState(),
-                      ],
+                      ),
                     ),
-                  ),
-                  _buildBottomBar(),
-                ],
-              ),
+            ),
+            _buildBottomBar(),
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'roms/roms_carousel_view.dart';
 import 'roms/roms_grid_view.dart';
@@ -24,6 +25,7 @@ import '../services/screen_keyboard_handler.dart';
 import '../services/config_service.dart';
 import '../widgets/common/help_dialog.dart';
 import '../widgets/common/controls_bottom_bar.dart';
+import '../widgets/common/app_snackbar.dart';
 import '../widgets/common/smart_svg.dart';
 import '../widgets/roms/fullscreen_image_viewer.dart';
 import '../widgets/roms/rom_detail_dialog.dart';
@@ -214,14 +216,24 @@ class _RomsScreenState extends State<RomsScreen> {
       ),
     );
 
-    // Set default view mode based on screen size
+    // Restore saved view mode or set default based on screen size
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
+        final savedMode = ConfigService.instance.romsViewMode;
         final width = MediaQuery.of(context).size.width;
         setState(() {
-          _viewMode = width < 600
-              ? ScreenViewMode.carousel
-              : ScreenViewMode.list;
+          if (savedMode != null) {
+            _viewMode = ScreenViewMode.values.firstWhere(
+              (m) => m.name == savedMode,
+              orElse: () => width < 600
+                  ? ScreenViewMode.carousel
+                  : ScreenViewMode.list,
+            );
+          } else {
+            _viewMode = width < 600
+                ? ScreenViewMode.carousel
+                : ScreenViewMode.list;
+          }
         });
       }
     });
@@ -370,15 +382,11 @@ class _RomsScreenState extends State<RomsScreen> {
   void _showGamepadToast(String gamepadName) {
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${AppLocalizations.of(context)!.gamepadConnected}: $gamepadName',
-        ),
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.green.shade700,
-      ),
+    AppSnackBar.success(
+      context,
+      '${AppLocalizations.of(context)!.gamepadConnected}: $gamepadName',
+      icon: Icons.gamepad,
+      duration: const Duration(seconds: 3),
     );
   }
 
@@ -577,10 +585,27 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   void _scrollToIndexInList(int index, {bool centerItem = false}) {
+    var headersBefore = 0;
+    var hasHeader = false;
+    if (widget.isCollection) {
+      final items = _controller.filteredItems;
+      for (var i = 0; i <= index && i < items.length; i++) {
+        final isGroupStart = i == 0 || items[i].platform != items[i - 1].platform;
+        if (isGroupStart) {
+          if (i < index) {
+            headersBefore++;
+          } else {
+            hasHeader = true;
+          }
+        }
+      }
+    }
     ScrollUtils.scrollToIndexInList(
       _listScrollController,
       index,
       centerItem: centerItem,
+      headersBefore: headersBefore,
+      hasHeader: hasHeader,
     );
   }
 
@@ -635,6 +660,7 @@ class _RomsScreenState extends State<RomsScreen> {
           break;
       }
     });
+    ConfigService.instance.setRomsViewMode(_viewMode.name);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -775,11 +801,29 @@ class _RomsScreenState extends State<RomsScreen> {
             // Background
             if (_platformBackgroundPath != null)
               Positioned.fill(
-                child: Image.file(
-                  File(_platformBackgroundPath!),
-                  fit: BoxFit.cover,
-                  color: Colors.black.withValues(alpha: 0.7),
-                  colorBlendMode: BlendMode.darken,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.file(
+                      File(_platformBackgroundPath!),
+                      fit: BoxFit.cover,
+                    ),
+                    BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              const Color(0xFF0B0C10).withValues(alpha: 0.45),
+                              const Color(0xFF0B0C10).withValues(alpha: 0.84),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 

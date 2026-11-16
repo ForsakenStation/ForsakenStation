@@ -12,6 +12,7 @@ import 'media_carousel.dart';
 import '../common/placeholder_image.dart';
 import '../common/dialog_button_bar.dart';
 import '../common/gamepad_button_indicator.dart';
+import '../common/app_snackbar.dart';
 import 'rom_info_section.dart';
 import '../../platforms/web/web_emulator_launcher.dart';
 
@@ -189,11 +190,9 @@ class _RomDetailDialogState extends State<RomDetailDialog>
       );
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.of(context)!.failedToLaunch} $e'),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.failedToLaunch} $e',
         );
       }
     }

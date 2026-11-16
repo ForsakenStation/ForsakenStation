@@ -8,6 +8,7 @@ import '../../services/debug_service.dart';
 import '../../mixins/gamepad_polling_mixin.dart';
 import '../../mixins/screen_navigation_mixin.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for configuring Archive.org S3 API credentials.
@@ -147,12 +148,9 @@ class _ArchiveOrgSettingsScreenState extends State<ArchiveOrgSettingsScreen>
       _debug.info('Archive.org credentials saved', tag: 'ArchiveOrgSettings');
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.archiveOrgSettingsSaved,
-            ),
-          ),
+        AppSnackBar.success(
+          context,
+          AppLocalizations.of(context)!.archiveOrgSettingsSaved,
         );
       }
     } catch (e) {
@@ -161,12 +159,9 @@ class _ArchiveOrgSettingsScreenState extends State<ArchiveOrgSettingsScreen>
         tag: 'ArchiveOrgSettings',
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.errorSavingSettings} $e',
-            ),
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorSavingSettings} $e',
         );
       }
     } finally {
@@ -185,192 +180,233 @@ class _ArchiveOrgSettingsScreenState extends State<ArchiveOrgSettingsScreen>
       onKeyEvent: (node, event) => _handleKeyEvent(event),
       child: Scaffold(
         appBar: AppBar(title: Text(l10n.archiveOrgSettings), centerTitle: true),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: [
-                    Text(
-                      l10n.archiveOrgSettingsDescription,
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Info card
-                    Card(
-                      color: Colors.blue.shade50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              color: Colors.blue.shade700,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.archiveOrgWhyNeeded,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue.shade900,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    l10n.archiveOrgExplanation,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.blue.shade900,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Access Key field
-                    Card(
-                      elevation: _selectedIndex == 0 ? 8 : 2,
-                      color: _selectedIndex == 0
-                          ? Theme.of(context).colorScheme.primaryContainer
-                          : null,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.archiveOrgAccessKey,
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 8),
-                            TextField(
-                              controller: _accessKeyController,
-                              decoration: InputDecoration(
-                                hintText: l10n.archiveOrgAccessKeyHint,
-                                border: const OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.text,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Secret Key field
-                    Card(
-                      elevation: _selectedIndex == 1 ? 8 : 2,
-                      color: _selectedIndex == 1
-                          ? Theme.of(context).colorScheme.primaryContainer
-                          : null,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.archiveOrgSecretKey,
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 8),
-                            TextField(
-                              controller: _secretKeyController,
-                              decoration: InputDecoration(
-                                hintText: l10n.archiveOrgSecretKeyHint,
-                                border: const OutlineInputBorder(),
-                              ),
-                              obscureText: true,
-                              keyboardType: TextInputType.text,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Save button
-              const SizedBox(height: 16),
-              Container(
-                decoration: _selectedIndex == 2
-                    ? BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 2,
-                        ),
-                      )
-                    : null,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isSaving ? null : _saveSettings,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: _selectedIndex == 2
-                          ? Theme.of(context).colorScheme.primaryContainer
-                          : null,
-                    ),
-                    child: _isSaving
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+        body: Column(
+          children: [
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 760),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView(
                             children: [
-                              const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                              Text(
+                                l10n.archiveOrgSettingsDescription,
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.65),
+                                    ),
+                              ),
+                              const SizedBox(height: 20),
+
+                              // Info card
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: const Color(
+                                    0xFF0A84FF,
+                                  ).withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: const Color(
+                                      0xFF0A84FF,
+                                    ).withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Icon(
+                                      Icons.info_outline_rounded,
+                                      color: Color(0xFF0A84FF),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            l10n.archiveOrgWhyNeeded,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: const Color(
+                                                    0xFF0A84FF,
+                                                  ),
+                                                ),
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Text(
+                                            l10n.archiveOrgExplanation,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface
+                                                      .withValues(alpha: 0.8),
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              Text(l10n.saving),
+                              const SizedBox(height: 20),
+
+                              // Access Key field
+                              _buildKeyCard(
+                                context,
+                                isSelected: _selectedIndex == 0,
+                                label: l10n.archiveOrgAccessKey,
+                                hint: l10n.archiveOrgAccessKeyHint,
+                                controller: _accessKeyController,
+                                obscureText: false,
+                              ),
+                              const SizedBox(height: 14),
+
+                              // Secret Key field
+                              _buildKeyCard(
+                                context,
+                                isSelected: _selectedIndex == 1,
+                                label: l10n.archiveOrgSecretKey,
+                                hint: l10n.archiveOrgSecretKeyHint,
+                                controller: _secretKeyController,
+                                obscureText: true,
+                              ),
                             ],
-                          )
-                        : Text(l10n.saveSettings),
+                          ),
+                        ),
+
+                        // Save button
+                        const SizedBox(height: 16),
+                        Container(
+                          decoration: _selectedIndex == 2
+                              ? BoxDecoration(
+                                  borderRadius: BorderRadius.circular(999),
+                                  border: Border.all(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    width: 2,
+                                  ),
+                                )
+                              : null,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: FilledButton(
+                              onPressed: _isSaving ? null : _saveSettings,
+                              style: FilledButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                              ),
+                              child: _isSaving
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Text(l10n.saving),
+                                      ],
+                                    )
+                                  : Text(l10n.saveSettings),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: ControlsBottomBar(
-          actions: [
-            BottomBarAction(
-              label: l10n.back,
-              keyboardKey: 'ESC',
-              gamepadButton: 'B',
             ),
-            BottomBarAction(
-              label: l10n.navigate,
-              keyboardKey: '\u2191\u2193',
-              gamepadButton: 'D-pad',
-            ),
-            BottomBarAction(
-              label: l10n.select,
-              keyboardKey: 'Enter',
-              gamepadButton: 'A',
+            ControlsBottomBar(
+              actions: [
+                BottomBarAction(
+                  label: l10n.back,
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                BottomBarAction(
+                  label: l10n.navigate,
+                  keyboardKey: '\u2191\u2193',
+                  gamepadButton: 'D-pad',
+                ),
+                BottomBarAction(
+                  label: l10n.select,
+                  keyboardKey: 'Enter',
+                  gamepadButton: 'A',
+                ),
+              ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildKeyCard(
+    BuildContext context, {
+    required bool isSelected,
+    required String label,
+    required String hint,
+    required TextEditingController controller,
+    required bool obscureText,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isSelected
+              ? colorScheme.primary
+              : colorScheme.outline.withValues(alpha: 0.14),
+          width: isSelected ? 1.5 : 1,
+        ),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: hint,
+              border: const OutlineInputBorder(),
+            ),
+            obscureText: obscureText,
+            keyboardType: TextInputType.text,
+          ),
+        ],
       ),
     );
   }

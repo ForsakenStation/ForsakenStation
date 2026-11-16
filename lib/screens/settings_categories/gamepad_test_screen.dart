@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../services/gamepad_service.dart';
 import '../../services/keyboard_service.dart';
+import '../../widgets/common/animated_lucide_icon.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 /// Screen for testing and debugging gamepad input
 /// Shows real-time button states and axis values
 class GamepadTestScreen extends StatefulWidget {
-  const GamepadTestScreen({super.key});
+  const GamepadTestScreen({super.key, this.debugForceConnected});
+
+  @visibleForTesting
+  final bool? debugForceConnected;
 
   @override
   State<GamepadTestScreen> createState() => _GamepadTestScreenState();
@@ -30,7 +34,23 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
     super.initState();
     // Enable debug mode to prevent actions
     _gamepadService.setDebugMode(true);
-    _startPolling();
+    if (widget.debugForceConnected == true) {
+      _buttonStates = {
+        '0': true,
+        '1': false,
+        '2': false,
+        '3': false,
+      };
+      _axisValues = {
+        '0': 0.65,
+        '1': -0.25,
+        '2': 0.0,
+        '3': 0.0,
+      };
+      _lastAction = 'A (Select)';
+    } else {
+      _startPolling();
+    }
   }
 
   @override
@@ -164,7 +184,8 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isConnected = _gamepadService.isGamepadConnected;
+    final isConnected =
+        widget.debugForceConnected ?? _gamepadService.isGamepadConnected;
 
     return Focus(
       focusNode: _focusNode,
@@ -173,78 +194,72 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.gamepadTest),
-          backgroundColor: Colors.deepPurple,
         ),
         body: Column(
           children: [
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.grey.shade900, Colors.black],
-                  ),
-                ),
-                child: !isConnected
-                    ? _buildNotConnected()
-                    : Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildConnectionStatus(),
-                            const SizedBox(height: 12),
-                            _buildLastAction(),
-                            const SizedBox(height: 12),
-                            Expanded(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Left column
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Expanded(child: _buildButtonTests()),
-                                        const SizedBox(height: 12),
-                                        Expanded(
-                                          child: _buildLeftNavigationTest(),
-                                        ),
-                                      ],
+              child: !isConnected
+                  ? _buildNotConnected()
+                  : Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1120),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildConnectionStatus(),
+                              const SizedBox(height: 12),
+                              _buildLastAction(),
+                              const SizedBox(height: 12),
+                              Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Left column
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Expanded(child: _buildButtonTests()),
+                                          const SizedBox(height: 12),
+                                          Expanded(
+                                            child: _buildLeftNavigationTest(),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  // Middle column
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Expanded(child: _buildButtonStates()),
-                                        const SizedBox(height: 12),
-                                        Expanded(child: SizedBox()),
-                                      ],
+                                    const SizedBox(width: 12),
+                                    // Middle column
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Expanded(child: _buildButtonStates()),
+                                          const SizedBox(height: 12),
+                                          const Expanded(child: SizedBox()),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  // Right column
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Expanded(child: _buildAxisValues()),
-                                        const SizedBox(height: 12),
-                                        Expanded(
-                                          child: _buildRightNavigationTest(),
-                                        ),
-                                      ],
+                                    const SizedBox(width: 12),
+                                    // Right column
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Expanded(child: _buildAxisValues()),
+                                          const SizedBox(height: 12),
+                                          Expanded(
+                                            child: _buildRightNavigationTest(),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-              ),
+                    ),
             ),
             ControlsBottomBar(
               actions: [
@@ -267,76 +282,112 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
     );
   }
 
+  BoxDecoration _panelDecoration(BuildContext context) {
+    return BoxDecoration(
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+    );
+  }
+
   Widget _buildNotConnected() {
+    final colorScheme = Theme.of(context).colorScheme;
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLow,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.08),
+                ),
+              ),
+              child: AnimatedLucideIcon(
+                type: AnimatedLucideIconType.gamepad,
+                size: 56,
+                animate: true,
+                color: colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              AppLocalizations.of(context)!.noGamepadConnected,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              AppLocalizations.of(context)!.connectGamepadPrompt,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildConnectionStatus() {
+    return Container(
+      decoration: _panelDecoration(context),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
         children: [
-          Icon(Icons.gamepad, size: 100, color: Colors.grey.shade700),
-          const SizedBox(height: 20),
-          Text(
-            AppLocalizations.of(context)!.noGamepadConnected,
-            style: TextStyle(fontSize: 24, color: Colors.grey.shade500),
+          const Icon(
+            Icons.check_circle_rounded,
+            color: Color(0xFF30D158),
+            size: 22,
           ),
-          const SizedBox(height: 10),
+          const SizedBox(width: 12),
           Text(
-            AppLocalizations.of(context)!.connectGamepadPrompt,
-            style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+            AppLocalizations.of(context)!.gamepadConnected,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildConnectionStatus() {
-    return Card(
-      color: Colors.green.shade900,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.green, size: 28),
-            const SizedBox(width: 12),
-            Text(
-              AppLocalizations.of(context)!.gamepadConnected,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildLastAction() {
-    return Card(
-      color: Colors.blue.shade900,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            const Icon(Icons.touch_app, color: Colors.blue, size: 24),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                _lastAction ?? AppLocalizations.of(context)!.pressButtonToTest,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Container(
+      decoration: _panelDecoration(context),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.touch_app_rounded,
+            color: Color(0xFF0A84FF),
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              _lastAction ?? AppLocalizations.of(context)!.pressButtonToTest,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildButtonTests() {
-    return Card(
-      color: Colors.grey.shade800,
+    return Container(
+      decoration: _panelDecoration(context),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -447,10 +498,10 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
   }
 
   Widget _buildButtonStates() {
-    return Card(
-      color: Colors.grey.shade800,
+    return Container(
+      decoration: _panelDecoration(context),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -498,95 +549,93 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
   }
 
   Widget _buildAxisValues() {
-    return Expanded(
-      child: Card(
-        color: Colors.grey.shade800,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.axisValues,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Container(
+      decoration: _panelDecoration(context),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.axisValues,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: _axisValues.isEmpty
-                      ? Text(
-                          AppLocalizations.of(context)!.noAxisMovement,
-                          style: TextStyle(
-                            color: Colors.grey.shade500,
-                            fontSize: 13,
-                          ),
-                        )
-                      : Column(
-                          children: _axisValues.entries.map((entry) {
-                            final value = entry.value;
-                            final absValue = value.abs();
-                            final color = absValue > 0.3
-                                ? Colors.green
-                                : absValue > 0.1
-                                ? Colors.yellow
-                                : Colors.grey.shade600;
-
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 1),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 60,
-                                    child: Text(
-                                      'Axis ${entry.key}:',
-                                      style: const TextStyle(
-                                        fontFamily: 'monospace',
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          value.toStringAsFixed(2).padLeft(6),
-                                          style: TextStyle(
-                                            color: color,
-                                            fontFamily: 'monospace',
-                                            fontSize: 12,
-                                            fontWeight: absValue > 0.3
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Expanded(
-                                          child: SizedBox(
-                                            height: 8,
-                                            child: LinearProgressIndicator(
-                                              value: (value + 1.0) / 2.0,
-                                              backgroundColor:
-                                                  Colors.grey.shade700,
-                                              valueColor:
-                                                  AlwaysStoppedAnimation(color),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                child: _axisValues.isEmpty
+                    ? Text(
+                        AppLocalizations.of(context)!.noAxisMovement,
+                        style: TextStyle(
+                          color: Colors.grey.shade500,
+                          fontSize: 13,
                         ),
-                ),
+                      )
+                    : Column(
+                        children: _axisValues.entries.map((entry) {
+                          final value = entry.value;
+                          final absValue = value.abs();
+                          final color = absValue > 0.3
+                              ? const Color(0xFF30D158)
+                              : absValue > 0.1
+                              ? const Color(0xFFFF9F0A)
+                              : Colors.grey.shade600;
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 1),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 60,
+                                  child: Text(
+                                    'Axis ${entry.key}:',
+                                    style: const TextStyle(
+                                      fontFamily: 'monospace',
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        value.toStringAsFixed(2).padLeft(6),
+                                        style: TextStyle(
+                                          color: color,
+                                          fontFamily: 'monospace',
+                                          fontSize: 12,
+                                          fontWeight: absValue > 0.3
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Expanded(
+                                        child: SizedBox(
+                                          height: 8,
+                                          child: LinearProgressIndicator(
+                                            value: (value + 1.0) / 2.0,
+                                            backgroundColor:
+                                                Colors.grey.shade700,
+                                            valueColor:
+                                                AlwaysStoppedAnimation(color),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -595,10 +644,10 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
   Widget _buildLeftNavigationTest() {
     final direction = _getLeftNavigationDirection();
 
-    return Card(
-      color: Colors.purple.shade900,
+    return Container(
+      decoration: _panelDecoration(context),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -609,20 +658,27 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
             const SizedBox(height: 8),
             Expanded(
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildDirectionIndicator('up', direction == 'up'),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildDirectionIndicator('left', direction == 'left'),
-                        const SizedBox(width: 20),
-                        _buildDirectionIndicator('right', direction == 'right'),
-                      ],
-                    ),
-                    _buildDirectionIndicator('down', direction == 'down'),
-                  ],
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildDirectionIndicator('up', direction == 'up'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildDirectionIndicator('left', direction == 'left'),
+                          const SizedBox(width: 20),
+                          _buildDirectionIndicator(
+                            'right',
+                            direction == 'right',
+                          ),
+                        ],
+                      ),
+                      _buildDirectionIndicator('down', direction == 'down'),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -645,10 +701,10 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
   Widget _buildRightNavigationTest() {
     final direction = _getRightNavigationDirection();
 
-    return Card(
-      color: Colors.orange.shade900,
+    return Container(
+      decoration: _panelDecoration(context),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -659,20 +715,27 @@ class _GamepadTestScreenState extends State<GamepadTestScreen> {
             const SizedBox(height: 8),
             Expanded(
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildDirectionIndicator('up', direction == 'up'),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildDirectionIndicator('left', direction == 'left'),
-                        const SizedBox(width: 20),
-                        _buildDirectionIndicator('right', direction == 'right'),
-                      ],
-                    ),
-                    _buildDirectionIndicator('down', direction == 'down'),
-                  ],
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildDirectionIndicator('up', direction == 'up'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildDirectionIndicator('left', direction == 'left'),
+                          const SizedBox(width: 20),
+                          _buildDirectionIndicator(
+                            'right',
+                            direction == 'right',
+                          ),
+                        ],
+                      ),
+                      _buildDirectionIndicator('down', direction == 'down'),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../../services/keyboard_service.dart';
 import '../../services/gamepad_service.dart';
 import '../../services/locale_service.dart';
-import '../../models/language_info.dart';
 import '../../providers/locale_provider.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
@@ -134,11 +133,6 @@ class _LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
     return LocaleService.getLocaleName(locale.languageCode);
   }
 
-  String? _getLocaleFlag(Locale? locale) {
-    if (locale == null) return null;
-    return LanguageInfo.getFlag(locale.languageCode);
-  }
-
   @override
   Widget build(BuildContext context) {
     return KeyboardListener(
@@ -148,89 +142,144 @@ class _LanguageSettingsScreenState extends State<LanguageSettingsScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.language),
-          centerTitle: true,
         ),
         body: Column(
           children: [
             Expanded(
               child: Consumer<LocaleProvider>(
                 builder: (context, localeProvider, _) {
-                  return ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _localeOptions.length,
-                    itemBuilder: (context, index) {
-                      final locale = _localeOptions[index];
-                      final isSelected = _localesMatch(
-                        locale,
-                        localeProvider.currentLocale,
-                      );
-                      final isFocused = _selectedIndex == index;
+                  return Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 960),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final crossAxisCount = constraints.maxWidth >= 820
+                              ? 3
+                              : constraints.maxWidth >= 560
+                                  ? 2
+                                  : 1;
+                          return GridView.builder(
+                            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              mainAxisExtent: 68,
+                            ),
+                            itemCount: _localeOptions.length,
+                            itemBuilder: (context, index) {
+                              final locale = _localeOptions[index];
+                              final isSelected = _localesMatch(
+                                locale,
+                                localeProvider.currentLocale,
+                              );
+                              final isFocused = _selectedIndex == index;
+                              final colorScheme = Theme.of(context).colorScheme;
+                              final code = locale?.languageCode.toUpperCase();
 
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Card(
-                          elevation: isFocused ? 8 : (isSelected ? 4 : 1),
-                          color: isFocused
-                              ? Theme.of(context).colorScheme.primaryContainer
-                              : (isSelected
-                                    ? Theme.of(
-                                        context,
-                                      ).colorScheme.secondaryContainer
-                                    : null),
-                          child: InkWell(
-                            onTap: () => _selectLocale(index),
-                            borderRadius: BorderRadius.circular(12),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                children: [
-                                  if (_getLocaleFlag(locale) != null)
-                                    Text(
-                                      _getLocaleFlag(locale)!,
-                                      style: const TextStyle(
-                                        fontSize: 28,
-                                        fontFamily: 'Noto Color Emoji',
-                                        fontFamilyFallback: [
-                                          'Apple Color Emoji',
-                                          'Segoe UI Emoji',
-                                          'Noto Color Emoji',
-                                          'Twemoji Mozilla',
-                                        ],
-                                      ),
-                                    )
-                                  else
-                                    const Icon(
-                                      Icons.settings_suggest,
-                                      size: 28,
+                              return Material(
+                                color: colorScheme.surfaceContainerLow,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  side: BorderSide(
+                                    color: isFocused
+                                        ? Colors.white.withValues(alpha: 0.45)
+                                        : isSelected
+                                            ? const Color(
+                                              0xFF0A84FF,
+                                            ).withValues(alpha: 0.7)
+                                            : Colors.white.withValues(
+                                              alpha: 0.08,
+                                            ),
+                                    width: isFocused || isSelected ? 1.5 : 1,
+                                  ),
+                                ),
+                                child: InkWell(
+                                  onTap: () => _selectLocale(index),
+                                  borderRadius: BorderRadius.circular(14),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
                                     ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Text(
-                                      _getLocaleDisplayName(locale),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium
-                                          ?.copyWith(
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 38,
+                                          height: 38,
+                                          decoration: BoxDecoration(
+                                            color: isSelected
+                                                ? const Color(
+                                                  0xFF0A84FF,
+                                                ).withValues(alpha: 0.16)
+                                                : Colors.white.withValues(
+                                                  alpha: 0.06,
+                                                ),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                           ),
+                                          alignment: Alignment.center,
+                                          child: code != null
+                                              ? Text(
+                                                  code,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w700,
+                                                    letterSpacing: 0.5,
+                                                    color: isSelected
+                                                        ? const Color(
+                                                          0xFF0A84FF,
+                                                        )
+                                                        : colorScheme.onSurface
+                                                            .withValues(
+                                                              alpha: 0.85,
+                                                            ),
+                                                  ),
+                                                )
+                                              : Icon(
+                                                  Icons.auto_awesome_rounded,
+                                                  size: 18,
+                                                  color: isSelected
+                                                      ? const Color(0xFF0A84FF)
+                                                      : colorScheme.onSurface
+                                                          .withValues(
+                                                            alpha: 0.85,
+                                                          ),
+                                                ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            _getLocaleDisplayName(locale),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall
+                                                ?.copyWith(
+                                                  fontWeight: isSelected
+                                                      ? FontWeight.w600
+                                                      : FontWeight.w500,
+                                                ),
+                                          ),
+                                        ),
+                                        if (isSelected)
+                                          const Icon(
+                                            Icons.check_circle_rounded,
+                                            size: 20,
+                                            color: Color(0xFF0A84FF),
+                                          ),
+                                      ],
                                     ),
                                   ),
-                                  if (isSelected)
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   );
                 },
               ),

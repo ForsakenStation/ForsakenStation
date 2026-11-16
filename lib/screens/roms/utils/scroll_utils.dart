@@ -8,12 +8,17 @@ class ScrollUtils {
     ScrollController controller,
     int index, {
     bool centerItem = false,
+    int headersBefore = 0,
+    bool hasHeader = false,
   }) {
     if (!controller.hasClients) return;
     const listPaddingTop = 8.0;
-    const itemHeight = 72.0;
+    const rowHeight = 72.0;
+    const headerHeight = 40.0;
 
-    final itemOffset = listPaddingTop + (index * itemHeight);
+    final itemOffset =
+        listPaddingTop + (index * rowHeight) + (headersBefore * headerHeight);
+    final itemHeight = hasHeader ? rowHeight + headerHeight : rowHeight;
     final viewportHeight = controller.position.viewportDimension;
     final currentScroll = controller.offset;
     final maxScroll = controller.position.maxScrollExtent;

@@ -7,6 +7,7 @@ import '../../../models/rom_item.dart';
 import '../../../services/debug_service.dart';
 import '../../../services/rom_storage_service.dart';
 import '../../../widgets/roms/save_rom_dialog.dart';
+import '../../../widgets/common/app_snackbar.dart';
 import '../utils/platform_utils.dart';
 
 /// Handles saving downloaded ROMs permanently to storage
@@ -110,51 +111,40 @@ class RomSaveHandler {
 
       if (newPath != null && context.mounted) {
         final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.romSavedPermanently(item.displayName)),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 5),
-            behavior: SnackBarBehavior.floating,
-            action: SnackBarAction(
-              label: l10n.undo,
-              textColor: Colors.white,
-              onPressed: () async {
-                // Move back to temp storage by deleting from forever
-                await storageService.deleteFromForeverStorage(
-                  actualPlatform,
-                  item.name,
-                );
-              },
-            ),
+        _showNotification(
+          context,
+          message: l10n.romSavedPermanently(item.displayName),
+          icon: Icons.check_circle_rounded,
+          accentColor: const Color(0xFF30D158),
+          action: SnackBarAction(
+            label: l10n.undo,
+            textColor: const Color(0xFF64D2FF),
+            onPressed: () async {
+              // Move back to temp storage by deleting from forever
+              await storageService.deleteFromForeverStorage(
+                actualPlatform,
+                item.name,
+              );
+            },
           ),
         );
         requestFocus();
         return true;
       } else if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.failedToSaveRom),
-            backgroundColor: Colors.orange,
-            duration: const Duration(seconds: 5),
-            behavior: SnackBarBehavior.floating,
-          ),
+        _showNotification(
+          context,
+          message: AppLocalizations.of(context)!.failedToSaveRom,
+          icon: Icons.warning_amber_rounded,
+          accentColor: const Color(0xFFFF9F0A),
         );
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.errorSavingRom(e.toString()),
-            ),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 5),
-            behavior: SnackBarBehavior.floating,
-          ),
+        _showNotification(
+          context,
+          message: AppLocalizations.of(context)!.errorSavingRom(e.toString()),
+          icon: Icons.error_outline_rounded,
+          accentColor: const Color(0xFFFF453A),
         );
       }
     }
@@ -163,19 +153,30 @@ class RomSaveHandler {
     return false;
   }
 
+  void _showNotification(
+    BuildContext context, {
+    required String message,
+    required IconData icon,
+    required Color accentColor,
+    SnackBarAction? action,
+  }) {
+    AppSnackBar.show(
+      context,
+      message: message,
+      icon: icon,
+      accentColor: accentColor,
+      duration: const Duration(seconds: 10),
+      action: action,
+    );
+  }
+
   /// Show message when user chooses not to save
   void _showNotSavedMessage(BuildContext context, RomItem item) {
     if (context.mounted) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.of(context)!.romKeptInTemporary(item.displayName),
-          ),
-          backgroundColor: Colors.grey[700],
-          duration: const Duration(seconds: 5),
-          behavior: SnackBarBehavior.floating,
-        ),
+      AppSnackBar.info(
+        context,
+        AppLocalizations.of(context)!.romKeptInTemporary(item.displayName),
+        duration: const Duration(seconds: 5),
       );
     }
   }

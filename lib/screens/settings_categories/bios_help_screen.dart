@@ -8,6 +8,7 @@ import '../../services/bios_check_service.dart';
 import '../../services/bios_download_service.dart';
 import '../../services/keyboard_service.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/bios/bios_download_dialog.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -31,6 +32,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   // Download state tracking
   final Map<String, bool> _downloadingPlatforms = {};
   String? _currentDownloadToken;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   @override
   void dispose() {
     // Note: We don't dispose the singleton service here anymore
+    _focusNode.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -122,13 +125,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.downloadFailed}: $e',
-            ),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.downloadFailed}: $e',
         );
       }
     } finally {
@@ -157,11 +156,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
     }
 
     if (missingByPlatform.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.noDownloadableBios),
-          backgroundColor: Colors.blue,
-        ),
+      AppSnackBar.info(
+        context,
+        AppLocalizations.of(context)!.noDownloadableBios,
       );
       return;
     }
@@ -194,25 +191,17 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
         await _loadBiosData();
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.allDownloadsCompleted,
-              ),
-              backgroundColor: Colors.green,
-            ),
+          AppSnackBar.success(
+            context,
+            AppLocalizations.of(context)!.allDownloadsCompleted,
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.batchDownloadFailed}: $e',
-            ),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.batchDownloadFailed}: $e',
         );
       }
     }
@@ -333,35 +322,42 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
 
   Widget _buildStatusIcon(BiosRequirement requirement) {
     if (requirement.hasAllFiles) {
-      return const Icon(Icons.check_circle, color: Colors.green, size: 20);
+      return const Icon(
+        Icons.check_circle_rounded,
+        color: Color(0xFF30D158),
+        size: 20,
+      );
     } else if (requirement.hasSomeFiles) {
-      return const Icon(Icons.warning, color: Colors.orange, size: 20);
+      return const Icon(
+        Icons.warning_amber_rounded,
+        color: Color(0xFFFF9F0A),
+        size: 20,
+      );
     } else {
-      return const Icon(Icons.cancel, color: Colors.red, size: 20);
-    }
-  }
-
-  Color _getStatusColor(BiosRequirement requirement) {
-    if (requirement.hasAllFiles) {
-      return Colors.green.withValues(alpha: 0.1);
-    } else if (requirement.hasSomeFiles) {
-      return Colors.orange.withValues(alpha: 0.1);
-    } else {
-      return Colors.red.withValues(alpha: 0.1);
+      return const Icon(
+        Icons.cancel_rounded,
+        color: Color(0xFFFF453A),
+        size: 20,
+      );
     }
   }
 
   Widget _buildBiosFileItem(BiosFile file) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final statusColor = file.found
+        ? const Color(0xFF30D158)
+        : const Color(0xFFFF453A);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
       child: Row(
         children: [
           Icon(
-            file.found ? Icons.check_circle : Icons.cancel,
-            color: file.found ? Colors.green : Colors.red,
-            size: 18,
+            file.found ? Icons.check_circle_rounded : Icons.cancel_rounded,
+            color: statusColor,
+            size: 17,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -370,9 +366,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                   file.filename,
                   style: TextStyle(
                     fontFamily: 'monospace',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: file.found ? Colors.green : Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: statusColor,
                   ),
                 ),
                 if (file.description != null || file.region != null)
@@ -381,7 +377,10 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                       if (file.region != null) file.region,
                       if (file.description != null) file.description,
                     ].join(' - '),
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colorScheme.onSurface.withValues(alpha: 0.58),
+                    ),
                   ),
               ],
             ),
@@ -416,11 +415,24 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   }
 
   Widget _buildPlatformCard(BiosRequirement requirement) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      color: _getStatusColor(requirement),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    const requiredColor = Color(0xFFFF453A);
+    const optionalColor = Color(0xFF0A84FF);
+    final badgeColor = requirement.required ? requiredColor : optionalColor;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.14),
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        data: theme.copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           leading: _buildStatusIcon(requirement),
           title: Row(
@@ -428,50 +440,34 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
               Expanded(
                 child: Text(
                   requirement.displayName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              if (requirement.required)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.biosRequired,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              else
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.biosOptional,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 3,
+                ),
+                decoration: BoxDecoration(
+                  color: badgeColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(
+                    color: badgeColor.withValues(alpha: 0.35),
                   ),
                 ),
+                child: Text(
+                  requirement.required
+                      ? AppLocalizations.of(context)!.biosRequired
+                      : AppLocalizations.of(context)!.biosOptional,
+                  style: TextStyle(
+                    color: badgeColor,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
           subtitle: Padding(
@@ -600,7 +596,7 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                     const SizedBox(height: 8),
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton.icon(
+                      child: FilledButton.icon(
                         onPressed:
                             _downloadingPlatforms[requirement.platform] == true
                             ? null
@@ -614,14 +610,9 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : const Icon(Icons.download, size: 16),
+                            : const Icon(Icons.download_rounded, size: 18),
                         label: Text(
                           _buildDownloadButtonText(requirement, context),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
                     ),
@@ -636,82 +627,86 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   }
 
   Widget _buildSummary() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final stats = BiosCheckService.instance.getStatistics(_allRequirements);
     final downloadableCount = _allRequirements
         .where((req) => req.canDownload && req.hasDownloadableMissing)
         .length;
 
     return Container(
-      margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.14),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.analytics_outlined, size: 20),
-              const SizedBox(width: 8),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.analytics_outlined,
+                  size: 20,
+                  color: colorScheme.primary,
+                ),
+              ),
+              const SizedBox(width: 12),
               Text(
-                AppLocalizations.of(context)!.summary,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                l10n.summary,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),
               if (downloadableCount > 0)
-                ElevatedButton.icon(
+                FilledButton.icon(
                   onPressed: _downloadAllMissingBios,
-                  icon: const Icon(Icons.download, size: 16),
-                  label: Text(
-                    AppLocalizations.of(context)!.downloadAllMissingBios,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    textStyle: const TextStyle(fontSize: 12),
-                  ),
+                  icon: const Icon(Icons.download_rounded, size: 18),
+                  label: Text(l10n.downloadAllMissingBios),
                 ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildSummaryStat(
-                AppLocalizations.of(context)!.biosComplete,
+                l10n.biosComplete,
                 '${stats['platformsComplete']}',
-                Colors.green,
+                const Color(0xFF30D158),
               ),
               _buildSummaryStat(
-                AppLocalizations.of(context)!.biosPartial,
+                l10n.biosPartial,
                 '${stats['platformsPartial']}',
-                Colors.orange,
+                const Color(0xFFFF9F0A),
               ),
               _buildSummaryStat(
-                AppLocalizations.of(context)!.biosMissing,
+                l10n.biosMissing,
                 '${stats['platformsMissing']}',
-                Colors.red,
+                const Color(0xFFFF453A),
               ),
               _buildSummaryStat(
-                AppLocalizations.of(context)!.biosFiles,
+                l10n.biosFiles,
                 '${stats['foundFiles']}/${stats['totalFiles']}',
-                Colors.blue,
+                const Color(0xFF0A84FF),
               ),
               if (downloadableCount > 0)
                 _buildSummaryStat(
-                  AppLocalizations.of(context)!.biosDownloadable,
+                  l10n.biosDownloadable,
                   '$downloadableCount',
-                  Colors.purple,
+                  const Color(0xFFBF5AF2),
                 ),
             ],
           ),
@@ -721,131 +716,161 @@ class _BiosHelpScreenState extends State<BiosHelpScreen> {
   }
 
   Widget _buildSummaryStat(String label, String value, Color color) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         Text(
           value,
           style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
             color: color,
           ),
         ),
-        Text(label, style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: colorScheme.onSurface.withValues(alpha: 0.58),
+          ),
+        ),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return KeyboardListener(
-      focusNode: FocusNode()..requestFocus(),
+      focusNode: _focusNode..requestFocus(),
       onKeyEvent: _handleKeyEvent,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.biosFirmwareHelp),
+          title: Text(l10n.biosFirmwareHelp),
           actions: [
             IconButton(
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh_rounded),
               onPressed: _isLoading ? null : _loadBiosData,
-              tooltip: AppLocalizations.of(context)!.refreshF5Tooltip,
+              tooltip: l10n.refreshF5Tooltip,
             ),
           ],
         ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  // Summary
-                  _buildSummary(),
-
-                  // Filter toggle
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: SwitchListTile(
-                      title: Text(
-                        AppLocalizations.of(context)!.showOnlyMissing,
-                      ),
-                      value: _showOnlyMissing,
-                      onChanged: (value) => _toggleFilter(),
-                    ),
-                  ),
-
-                  // Platform list
-                  Expanded(
-                    child: _filteredRequirements.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.check_circle_outline,
-                                  size: 64,
-                                  color: Colors.grey[400],
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  _showOnlyMissing
-                                      ? AppLocalizations.of(
-                                          context,
-                                        )!.allBiosFilesFound
-                                      : AppLocalizations.of(
-                                          context,
-                                        )!.noBiosRequirements,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[600],
+        body: Column(
+          children: [
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Align(
+                      alignment: Alignment.topCenter,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1080),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                          child: Column(
+                            children: [
+                              _buildSummary(),
+                              const SizedBox(height: 12),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: colorScheme.surfaceContainerLow,
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: colorScheme.outline.withValues(
+                                      alpha: 0.14,
+                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          )
-                        : ListView.builder(
-                            controller: _scrollController,
-                            itemCount: _filteredRequirements.length,
-                            itemBuilder: (context, index) {
-                              return _buildPlatformCard(
-                                _filteredRequirements[index],
-                              );
-                            },
+                                child: SwitchListTile(
+                                  title: Text(l10n.showOnlyMissing),
+                                  value: _showOnlyMissing,
+                                  onChanged: (value) => _toggleFilter(),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Expanded(
+                                child: _filteredRequirements.isEmpty
+                                    ? Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.check_circle_outline,
+                                              size: 56,
+                                              color: colorScheme.onSurface
+                                                  .withValues(alpha: 0.35),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            Text(
+                                              _showOnlyMissing
+                                                  ? l10n.allBiosFilesFound
+                                                  : l10n.noBiosRequirements,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium
+                                                  ?.copyWith(
+                                                    color: colorScheme.onSurface
+                                                        .withValues(alpha: 0.65),
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        controller: _scrollController,
+                                        padding: const EdgeInsets.only(
+                                          bottom: 16,
+                                        ),
+                                        itemCount:
+                                            _filteredRequirements.length,
+                                        itemBuilder: (context, index) {
+                                          return _buildPlatformCard(
+                                            _filteredRequirements[index],
+                                          );
+                                        },
+                                      ),
+                              ),
+                            ],
                           ),
-                  ),
-
-                  // Bottom controls bar
-                  ControlsBottomBar(
-                    actions: [
-                      BottomBarAction(
-                        label: AppLocalizations.of(context)!.back,
-                        keyboardKey: 'ESC',
-                        gamepadButton: 'B',
-                      ),
-                      BottomBarAction(
-                        label: AppLocalizations.of(context)!.toggleFilter,
-                        keyboardKey: 'Enter',
-                        gamepadButton: 'A',
-                      ),
-                      BottomBarAction(
-                        label: AppLocalizations.of(context)!.refresh,
-                        keyboardKey: 'F5',
-                        gamepadButton: 'Start',
-                      ),
-                      if (_allRequirements.any(
-                        (req) => req.canDownload && req.hasDownloadableMissing,
-                      ))
-                        BottomBarAction(
-                          label: AppLocalizations.of(context)!.downloadAll,
-                          keyboardKey: 'D',
-                          gamepadButton: 'Y',
                         ),
-                    ],
-                    counterText: _filteredRequirements.isEmpty
-                        ? null
-                        : AppLocalizations.of(
-                            context,
-                          )!.platformCount(_filteredRequirements.length),
+                      ),
+                    ),
+            ),
+            ControlsBottomBar(
+              actions: [
+                BottomBarAction(
+                  label: l10n.back,
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                BottomBarAction(
+                  label: l10n.toggleFilter,
+                  keyboardKey: 'Enter',
+                  gamepadButton: 'A',
+                ),
+                BottomBarAction(
+                  label: l10n.refresh,
+                  keyboardKey: 'F5',
+                  gamepadButton: 'Start',
+                ),
+                if (_allRequirements.any(
+                  (req) => req.canDownload && req.hasDownloadableMissing,
+                ))
+                  BottomBarAction(
+                    label: l10n.downloadAll,
+                    keyboardKey: 'D',
+                    gamepadButton: 'Y',
                   ),
-                ],
-              ),
+              ],
+              counterText: _filteredRequirements.isEmpty
+                  ? null
+                  : l10n.platformCount(_filteredRequirements.length),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -12,6 +12,7 @@ import '../../../widgets/roms/launch_progress_dialog.dart';
 import '../../../widgets/roms/emulator_selection_dialog.dart';
 import '../../../widgets/common/error_dialog.dart';
 import '../../../widgets/common/auth_error_dialog.dart';
+import '../../../widgets/common/app_snackbar.dart';
 import '../../pdf_viewer_screen.dart';
 import '../../settings_categories/archive_org_settings_screen.dart';
 import '../../../utils/platform_names.dart';
@@ -182,16 +183,9 @@ class RomLauncher {
                 wasCancelled = true;
                 if (context.mounted) {
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        AppLocalizations.of(context)!.downloadCancelled,
-                      ),
-                      backgroundColor: Colors.orange,
-                      duration: const Duration(seconds: 5),
-                      behavior: SnackBarBehavior.floating,
-                    ),
+                  AppSnackBar.warning(
+                    context,
+                    AppLocalizations.of(context)!.downloadCancelled,
                   );
                 }
               }
@@ -230,16 +224,11 @@ class RomLauncher {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                '${AppLocalizations.of(context)!.launched} ${item.displayName}',
-              ),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 3),
-              behavior: SnackBarBehavior.floating,
-            ),
+          AppSnackBar.success(
+            context,
+            '${AppLocalizations.of(context)!.launched} ${item.displayName}',
+            icon: Icons.play_arrow_rounded,
+            duration: const Duration(seconds: 3),
           );
         }
 

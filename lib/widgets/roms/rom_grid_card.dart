@@ -5,6 +5,7 @@ import '../../models/media.dart';
 import '../../services/media_service.dart';
 import '../common/download_badge.dart';
 import '../common/placeholder_image.dart';
+import '../common/platform_badge.dart';
 
 /// Reusable ROM card widget for grid and carousel views
 class RomGridCard extends StatefulWidget {
@@ -65,20 +66,43 @@ class _RomGridCardState extends State<RomGridCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final imagePath = widget.media != null
         ? widget.mediaService.getBestImagePath(widget.media!)
         : null;
 
-    final cardContent = Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: widget.isSelected ? 8 : 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: widget.isSelected
-            ? BorderSide(color: theme.colorScheme.primary, width: 3)
-            : BorderSide.none,
-      ),
+    final cardContent = AnimatedScale(
+      scale: widget.isSelected ? 1.04 : 1.0,
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOutCubic,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: widget.isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.45),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : null,
+        ),
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          elevation: 0,
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+            side: widget.isSelected
+                ? BorderSide(
+                    color: Colors.white.withValues(alpha: 0.92),
+                    width: 2.5,
+                  )
+                : BorderSide(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    width: 1,
+                  ),
+          ),
       child: InkWell(
         onTap: widget.onTap,
         child: Stack(
@@ -118,18 +142,10 @@ class _RomGridCardState extends State<RomGridCard> {
                       ),
                       if (widget.showPlatform &&
                           widget.item.platform != null) ...[
-                        const SizedBox(height: 2),
-                        Text(
-                          widget.item.platform!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            fontSize: 10,
-                            color: theme.textTheme.bodySmall?.color?.withValues(
-                              alpha: 0.6,
-                            ),
-                          ),
+                        const SizedBox(height: 4),
+                        PlatformBadge(
+                          platformId: widget.item.platform!,
+                          compact: true,
                         ),
                       ],
                     ],
@@ -146,6 +162,8 @@ class _RomGridCardState extends State<RomGridCard> {
           ],
         ),
       ),
+    ),
+    ),
     );
 
     if (widget.width != null || widget.height != null) {

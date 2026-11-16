@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/emulator_platform.dart';
+import '../models/platform_info.dart';
+import '../models/rom.dart';
 import '../services/rom_service.dart';
 import '../services/media_service.dart';
 import '../services/keyboard_service.dart';
@@ -14,12 +17,12 @@ import '../services/collection_service.dart';
 import '../services/screen_keyboard_handler.dart';
 import '../utils/platform_icons.dart';
 import '../widgets/platforms/platform_card.dart';
-import '../widgets/platforms/platform_info_dialog.dart';
 import '../widgets/common/theme_selector.dart';
 import '../widgets/common/help_dialog.dart';
 import '../widgets/common/exit_dialog.dart';
 import '../widgets/common/smart_svg.dart';
 import '../widgets/common/controls_bottom_bar.dart';
+import '../widgets/common/app_snackbar.dart';
 import '../services/debug_service.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'roms_screen.dart';
@@ -49,14 +52,13 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   final Map<String, String?> _systemImagesCache = {};
   final Map<String, String?> _systemLogosCache = {};
   final Map<String, String> _systemBackgroundsCache = {};
-  ScreenViewMode _viewMode = ScreenViewMode.carousel;
-  late PageController _carouselController;
-  late ScrollController _gridScrollController;
-  late FocusNode _carouselFocusNode;
-  late FocusNode _gridFocusNode;
-  int _carouselCurrentIndex = 0;
-  int _gridSelectedIndex = 0;
-  bool _showNavigationHint = true;
+  final Map<String, PlatformInfo?> _platformInfoCache = {};
+  late ScrollController _shelfScrollController;
+  late FocusNode _screenFocusNode;
+  int _selectedIndex = 0;
+
+  static const double _shelfItemWidth = 152.0;
+  static const double _shelfItemSpacing = 14.0;
 
   @override
   void initState() {
@@ -66,55 +68,34 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     _gamepadService = GamepadService.instance;
     _platformInfoService = PlatformInfoService.instance;
     _collectionService = CollectionService.instance;
-    _carouselController = PageController();
-    _gridScrollController = ScrollController();
-    _carouselFocusNode = FocusNode();
-    _gridFocusNode = FocusNode();
+    _shelfScrollController = ScrollController();
+    _screenFocusNode = FocusNode();
 
     // Initialize keyboard handler
     _keyboardHandler = ScreenKeyboardHandler<EmulatorPlatform>(
       keyboardService: _keyboardService,
       config: ScreenKeyboardConfig<EmulatorPlatform>(
-        getDisplayName: (platform) => platform.name,
+        getDisplayName: (platform) => platform.displayName,
         getItems: () => _platforms,
-        getCurrentIndex: () => _viewMode == ScreenViewMode.grid
-            ? _gridSelectedIndex
-            : _carouselCurrentIndex,
+        getCurrentIndex: () => _selectedIndex,
         setCurrentIndex: (newIndex) {
           setState(() {
-            if (_viewMode == ScreenViewMode.grid) {
-              _gridSelectedIndex = newIndex;
-            } else {
-              _carouselCurrentIndex = newIndex;
-            }
+            _selectedIndex = newIndex;
           });
-        },
-        getColumns: () => _viewMode == ScreenViewMode.grid
-            ? _calculateCrossAxisCount(context)
-            : null,
-        scrollToIndex: (index, {columns, centerItem = false}) {
-          if (_viewMode == ScreenViewMode.grid) {
-            _scrollToIndex(index, columns ?? _calculateCrossAxisCount(context));
-          } else {
-            _carouselController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
+          if (_platforms.isNotEmpty) {
+            _ensurePlatformMediaAndInfo(_platforms[newIndex].name);
           }
+        },
+        getColumns: () => null,
+        scrollToIndex: (index, {columns, centerItem = false}) {
+          _scrollToShelfIndex(index, centerItem: centerItem);
         },
         onSelect: _handleSelection,
         onBack: _showExitDialog,
         onRefresh: _loadPlatforms,
-        onToggleView: _toggleScreenViewMode,
+        onSearch: _showGlobalSearchDialog,
         onShowHelp: _showHelpDialog,
-        onHideNavigationHint: _hideNavigationHint,
         onCustomShortcut: (key) {
-          // Handle platform info shortcut (I key)
-          if (key == LogicalKeyboardKey.keyI) {
-            _showEmulatorPlatformInfo();
-            return true;
-          }
           // Handle settings shortcut (Tab key)
           if (key == LogicalKeyboardKey.tab) {
             _stopGamepadPolling();
@@ -151,15 +132,11 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   void _showGamepadToast(String gamepadName) {
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${AppLocalizations.of(context)!.gamepadConnected}: $gamepadName',
-        ),
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.green.shade700,
-      ),
+    AppSnackBar.success(
+      context,
+      '${AppLocalizations.of(context)!.gamepadConnected}: $gamepadName',
+      icon: Icons.gamepad,
+      duration: const Duration(seconds: 3),
     );
   }
 
@@ -184,10 +161,8 @@ class _PlatformsScreenState extends State<PlatformsScreen>
   void dispose() {
     _stopGamepadPolling();
     _gamepadService.onGamepadConnected = null; // Clear callback
-    _carouselController.dispose();
-    _gridScrollController.dispose();
-    _carouselFocusNode.dispose();
-    _gridFocusNode.dispose();
+    _shelfScrollController.dispose();
+    _screenFocusNode.dispose();
     super.dispose();
   }
 
@@ -226,13 +201,6 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       return;
     }
 
-    // Handle view toggle (Y button)
-    if (_gamepadService.isViewTogglePressed()) {
-      _toggleScreenViewMode();
-      _gamepadService.updatePreviousButtonStates();
-      return;
-    }
-
     // Handle help (X button for help)
     if (_gamepadService.isHelpPressed()) {
       _showHelpDialog();
@@ -240,49 +208,27 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       return;
     }
 
-    // Handle navigation
-    if (_viewMode == ScreenViewMode.grid) {
-      _handleGamepadGridNavigation();
-    } else {
-      _handleGamepadCarouselNavigation();
-    }
+    // Handle shelf navigation
+    _handleGamepadShelfNavigation();
 
     // Update previous states after handling all inputs
     _gamepadService.updatePreviousButtonStates();
   }
 
-  /// Handle gamepad navigation in grid mode
-  void _handleGamepadGridNavigation() {
-    final columns = _calculateCrossAxisCount(context);
-    final newIndex = _gamepadService.handleGridNavigation(
-      currentIndex: _gridSelectedIndex,
-      itemCount: _platforms.length,
-      columns: columns,
-    );
-
-    if (newIndex != null) {
-      setState(() {
-        _gridSelectedIndex = newIndex;
-      });
-      _scrollToIndex(newIndex, columns);
-    }
-  }
-
-  /// Handle gamepad navigation in carousel mode
-  void _handleGamepadCarouselNavigation() {
+  /// Handle gamepad navigation along the platform shelf
+  void _handleGamepadShelfNavigation() {
     final newIndex = _gamepadService.handleCarouselNavigation(
-      currentIndex: _carouselCurrentIndex,
+      currentIndex: _selectedIndex,
       itemCount: _platforms.length,
       loop: true,
     );
 
     if (newIndex != null) {
-      _hideNavigationHint();
-      _carouselController.animateToPage(
-        newIndex,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      setState(() {
+        _selectedIndex = newIndex;
+      });
+      _ensurePlatformMediaAndInfo(_platforms[newIndex].name);
+      _scrollToShelfIndex(newIndex);
     }
   }
 
@@ -343,10 +289,16 @@ class _PlatformsScreenState extends State<PlatformsScreen>
           );
         }
 
+        // Preload media and info for the initial selected platform
+        if (_platforms.isNotEmpty) {
+          _selectedIndex = _selectedIndex.clamp(0, _platforms.length - 1);
+          _ensurePlatformMediaAndInfo(_platforms[_selectedIndex].name);
+        }
+
         // Request focus after loading platforms
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) {
-            _requestFocusForCurrentScreenViewMode();
+          if (mounted && !_screenFocusNode.hasFocus) {
+            _screenFocusNode.requestFocus();
           }
         });
       }
@@ -467,139 +419,87 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     }
   }
 
-  void _scrollToIndex(int index, int columns) {
-    if (!_gridScrollController.hasClients) return;
-
-    // Calculate item dimensions
-    final screenWidth = MediaQuery.of(context).size.width;
-    final itemWidth = (screenWidth - 16 * 2 - 16 * (columns - 1)) / columns;
-    final itemHeight = itemWidth / 0.8; // Based on childAspectRatio
-
-    // Calculate row
-    final row = index ~/ columns;
-    final rowOffset = row * (itemHeight + 16); // item height + spacing
-
-    // Get viewport height
-    final viewportHeight = _gridScrollController.position.viewportDimension;
-    final currentScroll = _gridScrollController.offset;
-    final maxScroll = _gridScrollController.position.maxScrollExtent;
-
-    // Calculate item position in viewport
-    final itemTop = rowOffset;
-    final itemBottom = rowOffset + itemHeight;
-
-    // Check if item is outside viewport
-    if (itemTop < currentScroll) {
-      // Item is above viewport, scroll up
-      _gridScrollController.animateTo(
-        itemTop - 16, // Add some padding
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
-    } else if (itemBottom > currentScroll + viewportHeight) {
-      // Item is below viewport, scroll down
-      final targetScroll = itemBottom - viewportHeight + 16;
-      _gridScrollController.animateTo(
-        targetScroll.clamp(0.0, maxScroll),
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
+  Future<void> _loadPlatformInfo(String platformName) async {
+    if (_platformInfoCache.containsKey(platformName)) {
+      return;
+    }
+    final info = await _platformInfoService.getPlatformInfo(platformName);
+    if (mounted) {
+      setState(() {
+        _platformInfoCache[platformName] = info;
+      });
     }
   }
 
-  void _toggleScreenViewMode() {
-    setState(() {
-      if (_viewMode == ScreenViewMode.grid) {
-        _viewMode = ScreenViewMode.carousel;
-        _carouselCurrentIndex = 0;
-        _carouselController = PageController();
-      } else {
-        _viewMode = ScreenViewMode.grid;
-      }
-    });
-
-    // Request focus for the new view mode after the widget rebuilds
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _requestFocusForCurrentScreenViewMode();
-      }
-    });
+  void _ensurePlatformMediaAndInfo(String platformName) {
+    _loadSystemImage(platformName);
+    _loadSystemLogo(platformName);
+    _loadSystemBackground(platformName);
+    _loadPlatformInfo(platformName);
   }
 
-  /// Request focus for the current view mode's FocusNode
-  void _requestFocusForCurrentScreenViewMode() {
-    switch (_viewMode) {
-      case ScreenViewMode.grid:
-        if (!_gridFocusNode.hasFocus) {
-          _gridFocusNode.requestFocus();
-        }
-        break;
-      case ScreenViewMode.carousel:
-      case ScreenViewMode.list:
-        if (!_carouselFocusNode.hasFocus) {
-          _carouselFocusNode.requestFocus();
-        }
-        break;
+  void _scrollToShelfIndex(int index, {bool centerItem = false}) {
+    if (!_shelfScrollController.hasClients) return;
+
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    final horizontalPadding = isMobile ? 16.0 : 36.0;
+    const itemExtent = _shelfItemWidth + _shelfItemSpacing;
+    final itemLeft = horizontalPadding + index * itemExtent;
+    final itemRight = itemLeft + _shelfItemWidth;
+
+    final currentOffset = _shelfScrollController.offset;
+    final viewportWidth = _shelfScrollController.position.viewportDimension;
+    final maxScroll = _shelfScrollController.position.maxScrollExtent;
+    const edgeMargin = 36.0;
+
+    double? targetOffset;
+    if (centerItem) {
+      final itemCenter = itemLeft + (_shelfItemWidth / 2);
+      targetOffset = (itemCenter - (viewportWidth / 2)).clamp(0.0, maxScroll);
+    } else if (itemLeft < currentOffset + edgeMargin) {
+      targetOffset = (itemLeft - edgeMargin).clamp(0.0, maxScroll);
+    } else if (itemRight > currentOffset + viewportWidth - edgeMargin) {
+      targetOffset = (itemRight - viewportWidth + edgeMargin).clamp(
+        0.0,
+        maxScroll,
+      );
+    }
+
+    if (targetOffset != null && (targetOffset - currentOffset).abs() > 1.0) {
+      _shelfScrollController.animateTo(
+        targetOffset,
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOutCubic,
+      );
     }
   }
 
   /// Centralized keyboard event handler - delegates to ScreenKeyboardHandler
   KeyEventResult _handleKeyEvent(KeyEvent event) {
-    return _keyboardHandler.handleKeyEvent(event, _viewMode);
+    return _keyboardHandler.handleKeyEvent(event, ScreenViewMode.carousel);
   }
 
   /// Show help dialog with keyboard shortcuts
   void _showHelpDialog() async {
-    // Pause gamepad polling while dialog is open
     _stopGamepadPolling();
 
     await HelpDialog.show(
       context,
-      showSearchShortcut: false,
-      showPlatformInfoShortcut: true,
+      showSearchShortcut: true,
+      showPlatformInfoShortcut: false,
     );
 
-    // Resume gamepad polling after dialog closes
     if (mounted) {
       _startGamepadPolling();
     }
   }
 
-  /// Show platform information dialog
-  Future<void> _showEmulatorPlatformInfo() async {
-    final selectedEmulatorPlatform = _viewMode == ScreenViewMode.grid
-        ? _platforms[_gridSelectedIndex]
-        : _platforms[_carouselCurrentIndex];
-
-    final platformInfo = await _platformInfoService.getPlatformInfo(
-      selectedEmulatorPlatform.name,
-    );
-
-    if (platformInfo != null && mounted) {
-      PlatformInfoDialog.show(
-        context,
-        selectedEmulatorPlatform.name,
-        platformInfo,
-      );
-    } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.of(
-              context,
-            )!.noInfoAvailable(selectedEmulatorPlatform.displayName),
-          ),
-        ),
-      );
-    }
-  }
-
-  /// Handle selection based on current view mode
+  /// Handle selection of the active platform
   void _handleSelection() {
-    final selectedEmulatorPlatform = _viewMode == ScreenViewMode.grid
-        ? _platforms[_gridSelectedIndex]
-        : _platforms[_carouselCurrentIndex];
-    _navigateToRoms(selectedEmulatorPlatform);
+    if (_platforms.isEmpty) return;
+    final selectedPlatform =
+        _platforms[_selectedIndex.clamp(0, _platforms.length - 1)];
+    _navigateToRoms(selectedPlatform);
   }
 
   @override
@@ -614,11 +514,34 @@ class _PlatformsScreenState extends State<PlatformsScreen>
         systemOverlayStyle: SystemUiOverlayStyle.light,
         flexibleSpace: ClipRect(
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withValues(alpha: 0.2)),
+            filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.35),
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.white.withValues(alpha: 0.06),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
-        title: Image.asset('assets/images/icon.png', width: 24, height: 24),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset('assets/images/icon.png', width: 24, height: 24),
+            const SizedBox(width: 10),
+            const Text(
+              'Forsaken',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                letterSpacing: -0.3,
+              ),
+            ),
+          ],
+        ),
         actions: isMobile
             ? [
                 // Mobile: Only hamburger menu
@@ -627,11 +550,8 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                   tooltip: 'Menu',
                   onSelected: (value) {
                     switch (value) {
-                      case 'platform_info':
-                        _showEmulatorPlatformInfo();
-                        break;
-                      case 'toggle_view':
-                        _toggleScreenViewMode();
+                      case 'search':
+                        _showGlobalSearchDialog();
                         break;
                       case 'refresh':
                         _loadPlatforms();
@@ -647,36 +567,13 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                     }
                   },
                   itemBuilder: (context) => [
-                    if (_platforms.isNotEmpty)
-                      PopupMenuItem(
-                        value: 'platform_info',
-                        child: Row(
-                          children: [
-                            const Icon(Icons.info_outline),
-                            const SizedBox(width: 12),
-                            Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.emulatorPlatformInfo,
-                            ),
-                          ],
-                        ),
-                      ),
                     PopupMenuItem(
-                      value: 'toggle_view',
+                      value: 'search',
                       child: Row(
                         children: [
-                          Icon(
-                            _viewMode == ScreenViewMode.grid
-                                ? Icons.view_carousel
-                                : Icons.grid_view,
-                          ),
+                          const Icon(Icons.search),
                           const SizedBox(width: 12),
-                          Text(
-                            _viewMode == ScreenViewMode.grid
-                                ? AppLocalizations.of(context)!.carouselView
-                                : AppLocalizations.of(context)!.gridView,
-                          ),
+                          Text(AppLocalizations.of(context)!.search),
                         ],
                       ),
                     ),
@@ -704,24 +601,12 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                 ),
               ]
             : [
-                // Desktop: Show all actions as icon buttons
+                // Desktop: Clean action bar
                 const ThemeSelector(),
-                if (_platforms.isNotEmpty)
-                  IconButton(
-                    icon: const Icon(Icons.info_outline),
-                    onPressed: _showEmulatorPlatformInfo,
-                    tooltip: AppLocalizations.of(context)!.platformInfoTooltip,
-                  ),
                 IconButton(
-                  icon: Icon(
-                    _viewMode == ScreenViewMode.grid
-                        ? Icons.view_carousel
-                        : Icons.grid_view,
-                  ),
-                  onPressed: _toggleScreenViewMode,
-                  tooltip: _viewMode == ScreenViewMode.grid
-                      ? AppLocalizations.of(context)!.carouselView
-                      : AppLocalizations.of(context)!.gridView,
+                  icon: const Icon(Icons.search),
+                  onPressed: _showGlobalSearchDialog,
+                  tooltip: AppLocalizations.of(context)!.search,
                 ),
                 IconButton(
                   icon: const Icon(Icons.refresh),
@@ -742,29 +627,76 @@ class _PlatformsScreenState extends State<PlatformsScreen>
                 ),
               ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(child: _buildBody()),
-          // Bottom bar with controls
-          ControlsBottomBar(
-            actions: _getBottomBarActions(),
-            counterText: _platforms.isEmpty
-                ? null
-                : '${_getCurrentIndex() + 1} / ${_platforms.length}',
+          _buildDynamicBackdrop(),
+          Column(
+            children: [
+              Expanded(child: _buildBody()),
+              // Bottom bar with controls
+              ControlsBottomBar(
+                actions: _getBottomBarActions(),
+                counterText: _platforms.isEmpty
+                    ? null
+                    : '${_getCurrentIndex() + 1} / ${_platforms.length}',
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  /// Get current selected index based on view mode
-  int _getCurrentIndex() {
-    return _viewMode == ScreenViewMode.carousel
-        ? _carouselCurrentIndex
-        : _gridSelectedIndex;
+  Widget _buildDynamicBackdrop() {
+    String? bgPath;
+    if (_platforms.isNotEmpty) {
+      final idx = _getCurrentIndex().clamp(0, _platforms.length - 1);
+      bgPath = _systemBackgroundsCache[_platforms[idx].name];
+    }
+
+    return Positioned.fill(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 350),
+            child: bgPath != null
+                ? Image.asset(
+                    bgPath,
+                    key: ValueKey(bgPath),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const SizedBox.shrink(),
+                  )
+                : const SizedBox.shrink(),
+          ),
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color(0xFF0B0C10).withValues(alpha: 0.48),
+                    const Color(0xFF0B0C10).withValues(alpha: 0.86),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  /// Get bottom bar actions based on current view mode
+  /// Get current selected index
+  int _getCurrentIndex() {
+    if (_platforms.isEmpty) return 0;
+    return _selectedIndex.clamp(0, _platforms.length - 1);
+  }
+
+  /// Get bottom bar actions
   List<BottomBarAction> _getBottomBarActions() {
     final l10n = AppLocalizations.of(context)!;
     return [
@@ -775,16 +707,10 @@ class _PlatformsScreenState extends State<PlatformsScreen>
         icon: Icons.check,
       ),
       BottomBarAction(
-        label: l10n.info,
-        keyboardKey: 'I',
+        label: l10n.search,
+        keyboardKey: 'S',
         gamepadButton: 'Y',
-        icon: Icons.info_outline,
-      ),
-      BottomBarAction(
-        label: l10n.view,
-        keyboardKey: 'V',
-        gamepadButton: 'R3',
-        icon: Icons.view_carousel,
+        icon: Icons.search,
       ),
       BottomBarAction(
         label: l10n.refresh,
@@ -842,50 +768,481 @@ class _PlatformsScreenState extends State<PlatformsScreen>
       );
     }
 
-    if (_viewMode == ScreenViewMode.carousel) {
-      return _buildCarouselView();
-    }
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    final selectedIdx = _getCurrentIndex();
+    final selectedPlatform = _platforms[selectedIdx];
 
     return Padding(
-      padding: const EdgeInsets.only(top: 48),
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 56),
       child: Focus(
-        focusNode: _gridFocusNode,
+        focusNode: _screenFocusNode,
         autofocus: true,
         onKeyEvent: (node, event) => _handleKeyEvent(event),
-        child: GridView.builder(
-          controller: _gridScrollController,
-          padding: const EdgeInsets.all(16),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: _calculateCrossAxisCount(context),
-            childAspectRatio: 0.8,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-          ),
-          itemCount: _platforms.length,
-          itemBuilder: (context, index) {
-            final platform = _platforms[index];
-            return PlatformCard(
-              platform: platform,
-              onTap: () => _navigateToRoms(platform),
-              logoPath: _systemLogosCache[platform.name],
-              backgroundPath: _systemBackgroundsCache[platform.name],
-              onLoadLogo: () => _loadSystemLogo(platform.name),
-              onLoadBackground: () => _loadSystemBackground(platform.name),
-              isSelected: index == _gridSelectedIndex,
-            );
-          },
+        child: Column(
+          children: [
+            Expanded(
+              child: _buildHeroShowcase(selectedPlatform, isMobile: isMobile),
+            ),
+            _buildPlatformShelf(isMobile: isMobile),
+          ],
         ),
       ),
     );
   }
 
-  int _calculateCrossAxisCount(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    if (width > 1200) return 6;
-    if (width > 900) return 5;
-    if (width > 600) return 4;
-    if (width > 400) return 3;
-    return 2;
+  Widget _buildHeroShowcase(
+    EmulatorPlatform platform, {
+    required bool isMobile,
+  }) {
+    // Ensure media & info are loaded for the active platform
+    if (!_systemImagesCache.containsKey(platform.name)) {
+      _loadSystemImage(platform.name);
+    }
+    if (!_systemLogosCache.containsKey(platform.name)) {
+      _loadSystemLogo(platform.name);
+    }
+    if (!_systemBackgroundsCache.containsKey(platform.name)) {
+      _loadSystemBackground(platform.name);
+    }
+    if (!_platformInfoCache.containsKey(platform.name)) {
+      _loadPlatformInfo(platform.name);
+    }
+
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final imagePath = _systemImagesCache[platform.name];
+    final logoPath = _systemLogosCache[platform.name];
+    final info = _platformInfoCache[platform.name];
+
+    final infoColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Platform Logo or Display Name
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 220),
+          child: Align(
+            key: ValueKey('logo_${platform.name}_$logoPath'),
+            alignment: Alignment.centerLeft,
+            child: logoPath != null
+                ? ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: isMobile ? 260 : 340,
+                      maxHeight: isMobile ? 54 : 74,
+                    ),
+                    child: _buildLogoImage(
+                      logoPath,
+                      height: isMobile ? 54 : 72,
+                      color: logoPath.contains('/clogos/')
+                          ? null
+                          : Colors.white,
+                      fallback: Text(
+                        platform.displayName,
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.5,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
+                : Text(
+                    platform.displayName,
+                    style: (isMobile
+                            ? theme.textTheme.headlineSmall
+                            : theme.textTheme.headlineLarge)
+                        ?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.6,
+                          color: Colors.white,
+                        ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+          ),
+        ),
+        if (info != null && logoPath != null) ...[
+          const SizedBox(height: 6),
+          Text(
+            info.fullName,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: Colors.white.withValues(alpha: 0.72),
+              fontWeight: FontWeight.w500,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+        const SizedBox(height: 12),
+        // Metadata badges (ROM count + manufacturer / year / generation)
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildMetaPill(
+              icon: Icons.sports_esports_rounded,
+              label: l10n.folderRomCount(platform.romCount),
+              highlighted: true,
+            ),
+            if (info != null) ...[
+              _buildMetaPill(
+                icon: Icons.business_rounded,
+                label: info.manufacturer,
+              ),
+              _buildMetaPill(
+                icon: Icons.calendar_today_rounded,
+                label: info.releaseYear.toString(),
+              ),
+              _buildMetaPill(
+                icon: Icons.layers_rounded,
+                label: info.generationString,
+              ),
+            ],
+          ],
+        ),
+        if (info != null) ...[
+          const SizedBox(height: 14),
+          Text(
+            info.description,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.white.withValues(alpha: 0.8),
+              height: 1.45,
+            ),
+            maxLines: isMobile ? 2 : 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (!isMobile) ...[
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 10,
+              runSpacing: 8,
+              children: [
+                _buildSpecChip(l10n.cpu, info.cpu),
+                _buildSpecChip(l10n.resolution, info.resolution),
+                _buildSpecChip(l10n.colors, info.colors),
+              ],
+            ),
+          ],
+        ],
+        const SizedBox(height: 18),
+        ExcludeFocus(
+          child: FilledButton.icon(
+            onPressed: () => _navigateToRoms(platform),
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+            icon: const Icon(Icons.play_arrow_rounded, size: 20),
+            label: Text(
+              l10n.select,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
+      ],
+    );
+
+    final heroVisual = AnimatedSwitcher(
+      duration: const Duration(milliseconds: 280),
+      child: KeyedSubtree(
+        key: ValueKey('img_${platform.name}_$imagePath'),
+        child: imagePath != null
+            ? Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: isMobile ? 130 : 280,
+                    maxWidth: isMobile ? 220 : 420,
+                  ),
+                  child: Image.asset(
+                    imagePath,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) =>
+                        _buildFallbackIcon(platform.name, isMobile ? 84 : 128),
+                  ),
+                ),
+              )
+            : Center(
+                child: _buildFallbackIcon(
+                  platform.name,
+                  isMobile ? 76 : 116,
+                ),
+              ),
+      ),
+    );
+
+    if (isMobile) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 130, child: heroVisual),
+            const SizedBox(height: 12),
+            infoColumn,
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(36, 16, 36, 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 6,
+            child: SingleChildScrollView(child: infoColumn),
+          ),
+          const SizedBox(width: 32),
+          Expanded(flex: 4, child: heroVisual),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMetaPill({
+    required IconData icon,
+    required String label,
+    bool highlighted = false,
+  }) {
+    final primary = Theme.of(context).colorScheme.primary;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+      decoration: BoxDecoration(
+        color: highlighted
+            ? primary.withValues(alpha: 0.22)
+            : Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: highlighted
+              ? primary.withValues(alpha: 0.45)
+              : Colors.white.withValues(alpha: 0.12),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 14,
+            color: highlighted ? Colors.white : Colors.white.withValues(alpha: 0.8),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: highlighted ? FontWeight.w600 : FontWeight.w500,
+              color: Colors.white.withValues(alpha: highlighted ? 1.0 : 0.88),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSpecChip(String label, String value) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.09)),
+      ),
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: '$label: ',
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: Colors.white.withValues(alpha: 0.55),
+              ),
+            ),
+            TextSpan(
+              text: value,
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w500,
+                color: Colors.white.withValues(alpha: 0.9),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlatformShelf({required bool isMobile}) {
+    final horizontalPadding = isMobile ? 16.0 : 36.0;
+    return SizedBox(
+      height: isMobile ? 166 : 196,
+      child: Listener(
+        onPointerSignal: (event) {
+          if (event is PointerScrollEvent &&
+              _shelfScrollController.hasClients) {
+            final delta = event.scrollDelta.dy != 0
+                ? event.scrollDelta.dy
+                : event.scrollDelta.dx;
+            final maxScroll = _shelfScrollController.position.maxScrollExtent;
+            final target = (_shelfScrollController.offset + delta).clamp(
+              0.0,
+              maxScroll,
+            );
+            _shelfScrollController.jumpTo(target);
+          }
+        },
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(
+            dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.trackpad,
+            },
+          ),
+          child: ListView.separated(
+            controller: _shelfScrollController,
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.fromLTRB(
+              horizontalPadding,
+              8,
+              horizontalPadding,
+              14,
+            ),
+            itemCount: _platforms.length,
+            separatorBuilder: (context, index) =>
+                const SizedBox(width: _shelfItemSpacing),
+            itemBuilder: (context, index) {
+              final platform = _platforms[index];
+              final isSelected = index == _selectedIndex;
+              return SizedBox(
+                width: _shelfItemWidth,
+                child: PlatformCard(
+                  platform: platform,
+                  onTap: () {
+                    if (!_screenFocusNode.hasFocus) {
+                      _screenFocusNode.requestFocus();
+                    }
+                    if (_selectedIndex != index) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                      _ensurePlatformMediaAndInfo(platform.name);
+                      _scrollToShelfIndex(index);
+                    } else {
+                      _navigateToRoms(platform);
+                    }
+                  },
+                  logoPath: _systemLogosCache[platform.name],
+                  backgroundPath: _systemBackgroundsCache[platform.name],
+                  onLoadLogo: () => _loadSystemLogo(platform.name),
+                  onLoadBackground: () => _loadSystemBackground(platform.name),
+                  isSelected: isSelected,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showGlobalSearchDialog() async {
+    if (!mounted) return;
+    _stopGamepadPolling();
+
+    final query = await showDialog<String>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.7),
+      builder: (dialogContext) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: const _GlobalSearchDialog(),
+      ),
+    );
+
+    if (!mounted) return;
+    if (query == null || query.isEmpty) {
+      _startGamepadPolling();
+      _screenFocusNode.requestFocus();
+      return;
+    }
+
+    await _executeGlobalSearch(query);
+  }
+
+  Future<void> _executeGlobalSearch(String query) async {
+    final l10n = AppLocalizations.of(context)!;
+    final queryLower = query.toLowerCase();
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withValues(alpha: 0.6),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    final matchingRoms = <Rom>[];
+    try {
+      for (final platform in _platforms) {
+        if (_isCollection(platform)) continue;
+        final roms = platform.isJsonlPlatform
+            ? await widget.romService.loadRomsForJsonlPlatform(platform.name)
+            : platform.roms;
+        for (final rom in roms) {
+          if (rom.displayName.toLowerCase().contains(queryLower) ||
+              rom.name.toLowerCase().contains(queryLower)) {
+            matchingRoms.add(rom);
+          }
+        }
+      }
+    } finally {
+      if (mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
+
+    if (!mounted) return;
+
+    if (matchingRoms.isEmpty) {
+      AppSnackBar.info(
+        context,
+        '${l10n.noRomsFound}: "$query"',
+        icon: Icons.search_off,
+      );
+      _startGamepadPolling();
+      _screenFocusNode.requestFocus();
+      return;
+    }
+
+    final searchPlatform = EmulatorPlatform(
+      name: 'search_results',
+      customDisplayName: '${l10n.search}: "$query"',
+      path: '',
+      roms: matchingRoms,
+    );
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RomsScreen(
+          platform: searchPlatform,
+          romService: widget.romService,
+          isCollection: true,
+        ),
+      ),
+    );
+
+    if (mounted) {
+      await _reloadCollections();
+      _startGamepadPolling();
+      _screenFocusNode.requestFocus();
+    }
   }
 
   void _navigateToRoms(EmulatorPlatform platform) async {
@@ -908,6 +1265,9 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     // Resume gamepad polling when returning
     if (mounted) {
       _startGamepadPolling();
+      if (!_screenFocusNode.hasFocus) {
+        _screenFocusNode.requestFocus();
+      }
 
       // Reload collections (recently played, downloaded) to show any new additions
       // This ensures that if a game was just played, it appears in "Recently Played"
@@ -929,205 +1289,6 @@ class _PlatformsScreenState extends State<PlatformsScreen>
     if (shouldExit && mounted) {
       Navigator.of(context).pop();
     }
-  }
-
-  Widget _buildCarouselView() {
-    return Focus(
-      focusNode: _carouselFocusNode,
-      autofocus: true,
-      onKeyEvent: (node, event) => _handleKeyEvent(event),
-      child: Stack(
-        children: [
-          PageView.builder(
-            controller: _carouselController,
-            itemCount: _platforms.length,
-            onPageChanged: (index) {
-              setState(() {
-                _carouselCurrentIndex = index;
-                _hideNavigationHint();
-              });
-            },
-            itemBuilder: (context, index) {
-              final platform = _platforms[index];
-              return _buildCarouselItem(platform);
-            },
-          ),
-          // Navigation hint (only show initially)
-          if (_showNavigationHint)
-            Positioned(
-              top: 20,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.navigationHint,
-                    style: const TextStyle(color: Colors.white70, fontSize: 12),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  void _hideNavigationHint() {
-    if (_showNavigationHint) {
-      setState(() {
-        _showNavigationHint = false;
-      });
-    }
-  }
-
-  Widget _buildCarouselItem(EmulatorPlatform platform) {
-    // Trigger lazy loading of image and logo
-    if (!_systemImagesCache.containsKey(platform.name)) {
-      _loadSystemImage(platform.name);
-    }
-    if (!_systemLogosCache.containsKey(platform.name)) {
-      _loadSystemLogo(platform.name);
-    }
-    if (!_systemBackgroundsCache.containsKey(platform.name)) {
-      _loadSystemBackground(platform.name);
-    }
-
-    final imagePath = _systemImagesCache[platform.name];
-    final logoPath = _systemLogosCache[platform.name];
-    final backgroundPath = _systemBackgroundsCache[platform.name];
-
-    return Stack(
-      children: [
-        // Background image
-        if (backgroundPath != null)
-          Positioned.fill(
-            child: Image.asset(
-              backgroundPath,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  Container(color: Theme.of(context).colorScheme.surface),
-            ),
-          ),
-        // Gradient overlay
-        Positioned.fill(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black.withValues(alpha: 0.5),
-                  Colors.black.withValues(alpha: 0.8),
-                ],
-              ),
-            ),
-          ),
-        ),
-        // Content
-        Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Large system image
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(48.0),
-                  child: imagePath != null
-                      ? Image.asset(
-                          imagePath,
-                          width: MediaQuery.of(context).size.width * 0.40,
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildFallbackIcon(platform.name, 200);
-                          },
-                        )
-                      : _buildFallbackIcon(platform.name, 200),
-                ),
-              ),
-              // EmulatorPlatform info
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 48.0),
-                child: Column(
-                  children: [
-                    // EmulatorPlatform name/logo
-                    _buildEmulatorPlatformNameOrLogo(platform, logoPath),
-                    const SizedBox(height: 16),
-                    // ROM count
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.secondaryContainer.withValues(alpha: 0.9),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        AppLocalizations.of(
-                          context,
-                        )!.folderRomCount(platform.romCount),
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSecondaryContainer,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 48),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmulatorPlatformNameOrLogo(
-    EmulatorPlatform platform,
-    String? logoPath,
-  ) {
-    if (logoPath != null) {
-      final isColorLogo = logoPath.contains('/clogos/');
-      Color? logoColor;
-      if (!isColorLogo) {
-        final brightness = Theme.of(context).brightness;
-        logoColor = brightness == Brightness.light
-            ? Colors.black
-            : Colors.white;
-      }
-
-      return _buildLogoImage(
-        logoPath,
-        height: 80,
-        color: logoColor,
-        fallback: _buildEmulatorPlatformNameText(platform),
-      );
-    } else {
-      // No logo found, use text
-      return _buildEmulatorPlatformNameText(platform);
-    }
-  }
-
-  Widget _buildEmulatorPlatformNameText(EmulatorPlatform platform) {
-    return Text(
-      platform.displayName,
-      style: Theme.of(
-        context,
-      ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
-      textAlign: TextAlign.center,
-    );
   }
 
   Widget _buildLogoImage(
@@ -1184,5 +1345,76 @@ class _PlatformsScreenState extends State<PlatformsScreen>
 
   IconData _getEmulatorPlatformIcon(String platformName) {
     return PlatformIcons.getIconForPlatform(platformName);
+  }
+}
+
+class _GlobalSearchDialog extends StatefulWidget {
+  const _GlobalSearchDialog();
+
+  @override
+  State<_GlobalSearchDialog> createState() => _GlobalSearchDialogState();
+}
+
+class _GlobalSearchDialogState extends State<_GlobalSearchDialog> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
+      backgroundColor: const Color(0xFF161822),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+      ),
+      title: Row(
+        children: [
+          const Icon(Icons.search, color: Colors.white70),
+          const SizedBox(width: 10),
+          Text(l10n.search),
+        ],
+      ),
+      content: SizedBox(
+        width: 420,
+        child: TextField(
+          controller: _controller,
+          autofocus: true,
+          textInputAction: TextInputAction.search,
+          decoration: InputDecoration(
+            hintText: l10n.searchGamesHint,
+            prefixIcon: const Icon(Icons.videogame_asset_rounded),
+            filled: true,
+            fillColor: Colors.white.withValues(alpha: 0.05),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: Colors.white.withValues(alpha: 0.12),
+              ),
+            ),
+          ),
+          onSubmitted: (value) {
+            Navigator.of(context).pop(value.trim());
+          },
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton.icon(
+          onPressed: () =>
+              Navigator.of(context).pop(_controller.text.trim()),
+          icon: const Icon(Icons.search, size: 18),
+          label: Text(l10n.search),
+        ),
+      ],
+    );
   }
 }

@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart';
 import '../../services/config_service.dart';
-import '../../services/debug_service.dart';
 import '../../services/keyboard_service.dart';
+import '../../services/rom_storage_service.dart';
+import '../../widgets/common/animated_lucide_icon.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -72,94 +74,51 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
 
     try {
       final stats = <String, dynamic>{};
+      final gamelistPath = await _configService.gamelistPath;
+      stats['gamelistPath'] = gamelistPath;
 
-      // Count ROM files (small files containing URLs)
-      final romsPath = _configService.romsPath;
-      final romsDir = Directory(romsPath);
+      final storageStats = await RomStorageService.instance.getStorageStats();
+      final tempCount = (storageStats['tempCount'] as int?) ?? 0;
+      final foreverCount = (storageStats['foreverCount'] as int?) ?? 0;
+      stats['romCount'] = tempCount + foreverCount;
 
-      if (await romsDir.exists()) {
-        int romCount = 0;
-        await for (final entity in romsDir.list(recursive: true)) {
-          if (entity is File) {
-            try {
-              // ROM files are small text files with URLs (< 5KB)
-              final stat = await entity.stat();
-              if (stat.size < 5000) {
-                romCount++;
-              }
-            } catch (e) {
-              // Skip files we can't access
-              continue;
-            }
-          }
-        }
-        stats['romCount'] = romCount;
-      } else {
-        stats['romCount'] = 0;
+      if (mounted) {
+        setState(() {
+          _stats = stats;
+          _isLoadingStats = false;
+        });
       }
-
-      // Check disk space
-      if (await romsDir.exists()) {
-        final stat = await romsDir.stat();
-        stats['lastModified'] = stat.modified;
-      }
-
-      setState(() {
-        _stats = stats;
-        _isLoadingStats = false;
-      });
     } catch (e) {
-      setState(() {
-        _stats = {};
-        _isLoadingStats = false;
-      });
+      if (mounted) {
+        setState(() {
+          _stats = {'romCount': 0, 'gamelistPath': '—'};
+          _isLoadingStats = false;
+        });
+      }
     }
   }
 
   Future<void> _cleanupTempRoms() async {
     try {
-      final tempDir = Directory.systemTemp;
-      int deletedCount = 0;
+      final storage = RomStorageService.instance;
+      final beforeStats = await storage.getStorageStats();
+      final deletedCount = (beforeStats['tempCount'] as int?) ?? 0;
 
-      await for (final entity in tempDir.list()) {
-        if (entity is File) {
-          final name = path.basename(entity.path);
-          // Look for common ROM extensions
-          if (name.contains('rom_') ||
-              name.endsWith('.nes') ||
-              name.endsWith('.snes') ||
-              name.endsWith('.gba') ||
-              name.endsWith('.n64') ||
-              name.endsWith('.zip')) {
-            try {
-              await entity.delete();
-              deletedCount++;
-            } catch (e) {
-              DebugService.instance.error(
-                'Error deleting temp file: $e',
-                tag: 'SystemUtilities',
-              );
-            }
-          }
-        }
-      }
+      await storage.cleanupAllTempRoms();
 
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.cleanedUpTempFiles(deletedCount.toString())),
-          ),
+        AppSnackBar.success(
+          context,
+          l10n.cleanedUpTempFiles(deletedCount.toString()),
+          icon: Icons.cleaning_services_outlined,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.errorCleaningTempFiles} $e',
-            ),
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorCleaningTempFiles} $e',
         );
       }
     }
@@ -167,39 +126,31 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
 
   Future<void> _verifyRomFiles() async {
     try {
-      final romsPath = _configService.romsPath;
-      final romsDir = Directory(romsPath);
+      final gamelistPath = await _configService.gamelistPath;
+      final gamelistDir = Directory(gamelistPath);
 
-      if (!await romsDir.exists()) {
+      if (!await gamelistDir.exists()) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.romsDirectoryDoesNotExist,
-              ),
-            ),
+          AppSnackBar.warning(
+            context,
+            AppLocalizations.of(context)!.romsDirectoryDoesNotExist,
           );
         }
         return;
       }
 
-      int totalRoms = 0;
-      int missingRoms = 0;
+      int totalFiles = 0;
+      int emptyFiles = 0;
 
-      await for (final entity in romsDir.list(recursive: true)) {
-        if (entity is File) {
+      await for (final entity in gamelistDir.list(recursive: true)) {
+        if (entity is File && entity.path.toLowerCase().endsWith('.jsonl')) {
           try {
-            final stat = await entity.stat();
-            // ROM files are small text files with URLs (< 5KB)
-            if (stat.size < 5000) {
-              totalRoms++;
-              final contents = await entity.readAsString();
-              if (contents.trim().isEmpty) {
-                missingRoms++;
-              }
+            totalFiles++;
+            final contents = await entity.readAsString();
+            if (contents.trim().isEmpty) {
+              emptyFiles++;
             }
-          } catch (e) {
-            // Skip files we can't access
+          } catch (_) {
             continue;
           }
         }
@@ -215,13 +166,13 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${AppLocalizations.of(context)!.totalRomFiles}: $totalRoms',
+                  '${AppLocalizations.of(context)!.totalRomFiles}: $totalFiles',
                 ),
                 Text(
-                  '${AppLocalizations.of(context)!.emptyRomFiles}: $missingRoms',
+                  '${AppLocalizations.of(context)!.emptyRomFiles}: $emptyFiles',
                 ),
                 Text(
-                  '${AppLocalizations.of(context)!.validRomFiles}: ${totalRoms - missingRoms}',
+                  '${AppLocalizations.of(context)!.validRomFiles}: ${totalFiles - emptyFiles}',
                 ),
               ],
             ),
@@ -242,12 +193,9 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.errorVerifyingRomFiles} $e',
-            ),
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorVerifyingRomFiles} $e',
         );
       }
     }
@@ -256,18 +204,13 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
   Future<void> _checkMissingGamelists() async {
     try {
       final gamelistPath = await _configService.gamelistPath;
-      final romsPath = _configService.romsPath;
+      final gamelistDir = Directory(gamelistPath);
 
-      final romsDir = Directory(romsPath);
-
-      if (!await romsDir.exists()) {
+      if (!await gamelistDir.exists()) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.romsDirectoryDoesNotExist,
-              ),
-            ),
+          AppSnackBar.warning(
+            context,
+            AppLocalizations.of(context)!.romsDirectoryDoesNotExist,
           );
         }
         return;
@@ -276,18 +219,15 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       final platforms = <String>[];
       final missingGamelists = <String>[];
 
-      // Get all platform directories
-      await for (final entity in romsDir.list()) {
+      await for (final entity in gamelistDir.list()) {
         if (entity is Directory) {
           final platform = path.basename(entity.path);
           platforms.add(platform);
 
-          // Check if gamelist exists
-          final gamelistFile = File(
-            path.join(gamelistPath, platform, 'gamelist.xml'),
-          );
+          final jsonlFile = File(path.join(entity.path, '$platform.jsonl'));
+          final xmlFile = File(path.join(entity.path, 'gamelist.xml'));
 
-          if (!await gamelistFile.exists()) {
+          if (!await jsonlFile.exists() && !await xmlFile.exists()) {
             missingGamelists.add(platform);
           }
         }
@@ -332,12 +272,9 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.errorCheckingGamelists} $e',
-            ),
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorCheckingGamelists} $e',
         );
       }
     }
@@ -348,12 +285,9 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
       // Only backup if there are local overrides
       if (!_configService.hasLocalOverrides) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.noCustomConfigToBackup,
-              ),
-            ),
+          AppSnackBar.info(
+            context,
+            AppLocalizations.of(context)!.noCustomConfigToBackup,
           );
         }
         return;
@@ -382,21 +316,17 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
         await file.writeAsString(jsonString);
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                '${AppLocalizations.of(context)!.configurationBackedUp}\n$result',
-              ),
-            ),
+          AppSnackBar.success(
+            context,
+            '${AppLocalizations.of(context)!.configurationBackedUp}\n$result',
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.of(context)!.errorBackingUp} $e'),
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorBackingUp} $e',
         );
       }
     }
@@ -422,101 +352,188 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
         body: Column(
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Stats Card
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.systemStatistics,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 960),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Stats Card
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.08),
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!.systemStatistics,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(height: 16),
+                              if (_isLoadingStats)
+                                const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 8),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              else if (_stats != null)
+                                LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    final romFiles = _StatRow(
+                                      label: AppLocalizations.of(
+                                        context,
+                                      )!.romFiles,
+                                      value: '${_stats!['romCount'] ?? 0}',
+                                      icon: Icons.file_copy_outlined,
+                                    );
+                                    final romsPath = _StatRow(
+                                      label: AppLocalizations.of(
+                                        context,
+                                      )!.gamelistPathAutomatic,
+                                      value:
+                                          (_stats!['gamelistPath'] as String?)
+                                                  ?.isNotEmpty ==
+                                              true
+                                          ? _stats!['gamelistPath'] as String
+                                          : '—',
+                                      icon: Icons.folder_outlined,
+                                    );
+                                    if (constraints.maxWidth >= 640) {
+                                      return Row(
+                                        children: [
+                                          Expanded(child: romFiles),
+                                          const SizedBox(width: 24),
+                                          Expanded(flex: 2, child: romsPath),
+                                        ],
+                                      );
+                                    }
+                                    return Column(
+                                      children: [
+                                        romFiles,
+                                        const SizedBox(height: 12),
+                                        romsPath,
+                                      ],
+                                    );
+                                  },
+                                ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      if (_isLoadingStats)
-                        const Center(child: CircularProgressIndicator())
-                      else if (_stats != null) ...[
-                        _StatRow(
-                          label: AppLocalizations.of(context)!.romFiles,
-                          value: '${_stats!['romCount'] ?? 0}',
-                          icon: Icons.file_copy,
+
+                        const SizedBox(height: 28),
+
+                        Text(
+                          AppLocalizations.of(context)!.maintenanceTools,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
-                        const SizedBox(height: 8),
-                        _StatRow(
-                          label: AppLocalizations.of(context)!.romsPath,
-                          value: _configService.romsPath,
-                          icon: Icons.folder,
+
+                        const SizedBox(height: 14),
+
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final cards = [
+                              _UtilityCard(
+                                iconType: AnimatedLucideIconType.trash2,
+                                title: AppLocalizations.of(
+                                  context,
+                                )!.cleanupTemporaryRoms,
+                                description: AppLocalizations.of(
+                                  context,
+                                )!.cleanupTemporaryRomsDescription,
+                                onPressed: _cleanupTempRoms,
+                              ),
+                              _UtilityCard(
+                                iconType: AnimatedLucideIconType.shieldCheck,
+                                title: AppLocalizations.of(
+                                  context,
+                                )!.verifyRomFiles,
+                                description: AppLocalizations.of(
+                                  context,
+                                )!.verifyRomFilesDescription,
+                                onPressed: _verifyRomFiles,
+                              ),
+                              _UtilityCard(
+                                iconType: AnimatedLucideIconType.folderCheck,
+                                title: AppLocalizations.of(
+                                  context,
+                                )!.checkMissingGamelists,
+                                description: AppLocalizations.of(
+                                  context,
+                                )!.checkMissingGamelistsDescription,
+                                onPressed: _checkMissingGamelists,
+                              ),
+                              _UtilityCard(
+                                iconType: AnimatedLucideIconType.archive,
+                                title: AppLocalizations.of(
+                                  context,
+                                )!.backupConfiguration,
+                                description: AppLocalizations.of(
+                                  context,
+                                )!.backupConfigurationDescription,
+                                onPressed: _backupConfiguration,
+                              ),
+                            ];
+
+                            if (constraints.maxWidth >= 720) {
+                              return Column(
+                                children: [
+                                  IntrinsicHeight(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Expanded(child: cards[0]),
+                                        const SizedBox(width: 14),
+                                        Expanded(child: cards[1]),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 14),
+                                  IntrinsicHeight(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Expanded(child: cards[2]),
+                                        const SizedBox(width: 14),
+                                        Expanded(child: cards[3]),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            return Column(
+                              children: cards
+                                  .map(
+                                    (c) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 12),
+                                      child: c,
+                                    ),
+                                  )
+                                  .toList(),
+                            );
+                          },
                         ),
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
-
-              const SizedBox(height: 24),
-
-              Text(
-                AppLocalizations.of(context)!.maintenanceTools,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              Expanded(
-                child: ListView(
-                  children: [
-                    _UtilityCard(
-                      icon: Icons.cleaning_services,
-                      title: AppLocalizations.of(context)!.cleanupTemporaryRoms,
-                      description: AppLocalizations.of(
-                        context,
-                      )!.cleanupTemporaryRomsDescription,
-                      onPressed: _cleanupTempRoms,
-                    ),
-                    _UtilityCard(
-                      icon: Icons.verified,
-                      title: AppLocalizations.of(context)!.verifyRomFiles,
-                      description: AppLocalizations.of(
-                        context,
-                      )!.verifyRomFilesDescription,
-                      onPressed: _verifyRomFiles,
-                    ),
-                    _UtilityCard(
-                      icon: Icons.checklist,
-                      title: AppLocalizations.of(
-                        context,
-                      )!.checkMissingGamelists,
-                      description: AppLocalizations.of(
-                        context,
-                      )!.checkMissingGamelistsDescription,
-                      onPressed: _checkMissingGamelists,
-                    ),
-                    _UtilityCard(
-                      icon: Icons.backup,
-                      title: AppLocalizations.of(context)!.backupConfiguration,
-                      description: AppLocalizations.of(
-                        context,
-                      )!.backupConfigurationDescription,
-                      onPressed: _backupConfiguration,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
             ),
             ControlsBottomBar(
               actions: [
@@ -581,36 +598,95 @@ class _StatRow extends StatelessWidget {
 }
 
 /// Widget for a utility action card
-class _UtilityCard extends StatelessWidget {
-  final IconData icon;
+class _UtilityCard extends StatefulWidget {
+  final AnimatedLucideIconType iconType;
   final String title;
   final String description;
   final VoidCallback onPressed;
 
   const _UtilityCard({
-    required this.icon,
+    required this.iconType,
     required this.title,
     required this.description,
     required this.onPressed,
   });
 
   @override
+  State<_UtilityCard> createState() => _UtilityCardState();
+}
+
+class _UtilityCardState extends State<_UtilityCard> {
+  bool _isHoveredOrFocused = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: Theme.of(context).primaryColor),
+    final colorScheme = Theme.of(context).colorScheme;
+    return Material(
+      color: colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(
+          color: _isHoveredOrFocused
+              ? Colors.white.withValues(alpha: 0.25)
+              : Colors.white.withValues(alpha: 0.08),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-        subtitle: Text(description),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onPressed,
+      ),
+      child: InkWell(
+        onTap: widget.onPressed,
+        onHover: (hovered) => setState(() => _isHoveredOrFocused = hovered),
+        onFocusChange: (focused) =>
+            setState(() => _isHoveredOrFocused = focused),
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.07),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: AnimatedLucideIcon(
+                  type: widget.iconType,
+                  size: 22,
+                  animate: _isHoveredOrFocused,
+                  color: colorScheme.onSurface.withValues(alpha: 0.85),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      widget.description,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.chevron_right_rounded,
+                size: 20,
+                color: colorScheme.onSurface.withValues(alpha: 0.4),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

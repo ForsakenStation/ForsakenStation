@@ -11,6 +11,7 @@ import '../../mixins/gamepad_polling_mixin.dart';
 import '../../mixins/screen_navigation_mixin.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
 import '../../l10n/generated/app_localizations.dart';
 
@@ -287,13 +288,9 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
 
           if (!success && mounted) {
             ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.romMigrationFailed),
-                backgroundColor: Colors.orange,
-                behavior: SnackBarBehavior.floating,
-                duration: const Duration(seconds: 5),
-              ),
+            AppSnackBar.warning(
+              context,
+              AppLocalizations.of(context)!.romMigrationFailed,
             );
           }
         }
@@ -334,25 +331,17 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
 
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.pathsSaved),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 5),
-          ),
+        AppSnackBar.success(
+          context,
+          AppLocalizations.of(context)!.pathsSaved,
+          duration: const Duration(seconds: 5),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context)!.errorSavingPaths} $e',
-            ),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 5),
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorSavingPaths} $e',
         );
       }
     } finally {
@@ -398,21 +387,17 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
       try {
         await _configService.resetToDefaults();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.configurationReset),
-            ),
+          AppSnackBar.success(
+            context,
+            AppLocalizations.of(context)!.configurationReset,
           );
           setState(() {}); // Refresh to show updated config path
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                '${AppLocalizations.of(context)!.errorResettingConfiguration} $e',
-              ),
-            ),
+          AppSnackBar.error(
+            context,
+            '${AppLocalizations.of(context)!.errorResettingConfiguration} $e',
           );
         }
       }
@@ -459,144 +444,218 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.configurePathsDescription,
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 16),
-                    // Info card about ROM database
-                    Card(
-                      color: Colors.blue.shade50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              color: Colors.blue.shade700,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
+        body: Column(
+          children: [
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 880),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            children: [
+                              Text(
                                 AppLocalizations.of(
                                   context,
-                                )!.romListsAutoManaged,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.blue.shade900,
-                                ),
+                                )!.configurePathsDescription,
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.65),
+                                    ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    _PathField(
-                      label: AppLocalizations.of(context)!.mediaPathLabel,
-                      hint: AppLocalizations.of(context)!.mediaPathHint,
-                      controller: _mediaPathController,
-                      onBrowse: () => _pickDirectory(_mediaPathController),
-                      isSelected: _selectedIndex == 0,
-                      showGamepadIndicator: _isGamepadConnected,
-                    ),
-                    const SizedBox(height: 16),
-                    _PathField(
-                      label: AppLocalizations.of(context)!.emulatorsPathLabel,
-                      hint: AppLocalizations.of(context)!.emulatorsPathHint,
-                      controller: _emulatorsPathController,
-                      onBrowse: () => _pickDirectory(_emulatorsPathController),
-                      isSelected: _selectedIndex == 1,
-                      showGamepadIndicator: _isGamepadConnected,
-                    ),
-                    const SizedBox(height: 16),
-                    // Gamelist path (read-only, informational)
-                    Card(
-                      color: Colors.green.shade50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.playlist_play,
-                                  color: Colors.green.shade700,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  AppLocalizations.of(
+                              const SizedBox(height: 16),
+                              // Info card about ROM database
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(
                                     context,
-                                  )!.gamelistPathAutomatic,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green.shade700,
+                                  ).colorScheme.surfaceContainerLow,
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.08),
                                   ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              _gamelistPathDisplay,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'monospace',
+                                padding: const EdgeInsets.all(14),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.info_outline_rounded,
+                                      size: 20,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.7),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.romListsAutoManaged,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface
+                                                  .withValues(alpha: 0.8),
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.gamelistAutoDescription,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.green.shade900,
+                              const SizedBox(height: 20),
+                              _PathField(
+                                label: AppLocalizations.of(
+                                  context,
+                                )!.mediaPathLabel,
+                                hint: AppLocalizations.of(
+                                  context,
+                                )!.mediaPathHint,
+                                controller: _mediaPathController,
+                                onBrowse: () =>
+                                    _pickDirectory(_mediaPathController),
+                                isSelected: _selectedIndex == 0,
+                                showGamepadIndicator: _isGamepadConnected,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    const Divider(),
-                    const SizedBox(height: 16),
-                    // ROM Storage section
-                    Text(
-                      AppLocalizations.of(context)!.romStorage,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.configureRomStorageDescription,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 16),
-                    _PathField(
-                      label: AppLocalizations.of(context)!.tempRomStorageLabel,
-                      hint: _tempPathDisplay.isEmpty
-                          ? AppLocalizations.of(context)!.defaultAppSupportDir
-                          : AppLocalizations.of(
-                              context,
-                            )!.currentPathDisplay(_tempPathDisplay),
-                      controller: _romTempPathController,
-                      onBrowse: () => _pickDirectory(_romTempPathController),
-                      isSelected: _selectedIndex == 2,
-                      showGamepadIndicator: _isGamepadConnected,
-                    ),
-                    const SizedBox(height: 8),
+                              const SizedBox(height: 14),
+                              _PathField(
+                                label: AppLocalizations.of(
+                                  context,
+                                )!.emulatorsPathLabel,
+                                hint: AppLocalizations.of(
+                                  context,
+                                )!.emulatorsPathHint,
+                                controller: _emulatorsPathController,
+                                onBrowse: () =>
+                                    _pickDirectory(_emulatorsPathController),
+                                isSelected: _selectedIndex == 1,
+                                showGamepadIndicator: _isGamepadConnected,
+                              ),
+                              const SizedBox(height: 14),
+                              // Gamelist path (read-only, informational)
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.surfaceContainerLow,
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.08),
+                                  ),
+                                ),
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.playlist_play_rounded,
+                                          size: 20,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withValues(alpha: 0.75),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.gamelistPathAutomatic,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      _gamelistPathDisplay,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontFamily: 'monospace',
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.85),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.gamelistAutoDescription,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.6),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 28),
+                              Divider(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outline.withValues(alpha: 0.14),
+                              ),
+                              const SizedBox(height: 16),
+                              // ROM Storage section
+                              Text(
+                                AppLocalizations.of(context)!.romStorage,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.configureRomStorageDescription,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.65),
+                                    ),
+                              ),
+                              const SizedBox(height: 14),
+                              _PathField(
+                                label: AppLocalizations.of(
+                                  context,
+                                )!.tempRomStorageLabel,
+                                hint: _tempPathDisplay.isEmpty
+                                    ? AppLocalizations.of(
+                                        context,
+                                      )!.defaultAppSupportDir
+                                    : AppLocalizations.of(
+                                        context,
+                                      )!.currentPathDisplay(_tempPathDisplay),
+                                controller: _romTempPathController,
+                                onBrowse: () =>
+                                    _pickDirectory(_romTempPathController),
+                                isSelected: _selectedIndex == 2,
+                                showGamepadIndicator: _isGamepadConnected,
+                              ),
+                              const SizedBox(height: 8),
                     Text(
                       AppLocalizations.of(context)!.tempRomStorageDescription,
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
@@ -625,139 +684,161 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                     ),
                     const SizedBox(height: 16),
                     // Config source display (read-only)
-                    Card(
-                      color: Colors.green.shade50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.settings_applications,
-                                  color: Colors.green.shade700,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  AppLocalizations.of(
-                                    context,
-                                  )!.configurationFile,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green.shade700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!.source,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                        _configService.configPath,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontFamily: 'monospace',
-                                        ),
-                                      ),
-                                      if (_configService.hasLocalOverrides) ...[
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          AppLocalizations.of(
-                                            context,
-                                          )!.customConfigActive,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.orange,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                ),
-                                if (_configService.hasLocalOverrides)
-                                  IconButton(
-                                    icon: const Icon(Icons.restore),
-                                    onPressed: _resetConfigToDefaults,
-                                    tooltip: AppLocalizations.of(
-                                      context,
-                                    )!.resetToDefaults,
-                                    color: Colors.orange.shade700,
-                                  ),
-                              ],
-                            ),
-                          ],
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerLow,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.08),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 32),
-                    const Divider(),
-                    const SizedBox(height: 16),
-                    Card(
-                      color: Colors.blue.shade50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.info_outline,
-                                  color: Colors.blue.shade700,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  AppLocalizations.of(context)!.pathStructure,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue.shade700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.pathStructureDescription,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black,
-                                fontFamily: 'monospace',
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.settings_applications,
+                                size: 20,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.75),
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 8),
+                              Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.configurationFile,
+                                style: Theme.of(context).textTheme.titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!.source,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withValues(alpha: 0.6),
+                                          ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _configService.configPath,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontFamily: 'monospace',
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withValues(alpha: 0.85),
+                                      ),
+                                    ),
+                                    if (_configService.hasLocalOverrides) ...[
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.customConfigActive,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withValues(alpha: 0.75),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                              if (_configService.hasLocalOverrides)
+                                IconButton(
+                                  icon: const Icon(Icons.restore),
+                                  onPressed: _resetConfigToDefaults,
+                                  tooltip: AppLocalizations.of(
+                                    context,
+                                  )!.resetToDefaults,
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Divider(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.outline.withValues(alpha: 0.14),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerLow,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.08),
                         ),
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline_rounded,
+                                size: 20,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.75),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                AppLocalizations.of(context)!.pathStructure,
+                                style: Theme.of(context).textTheme.titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.pathStructureDescription,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'monospace',
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               Container(
                 decoration: _selectedIndex == 5
                     ? BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(999),
                         border: Border.all(
                           color: Theme.of(context).colorScheme.primary,
                           width: 2,
@@ -766,13 +847,10 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                     : null,
                 child: SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: FilledButton(
                     onPressed: (_isSaving || _isMigrating) ? null : _savePaths,
-                    style: ElevatedButton.styleFrom(
+                    style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: _selectedIndex == 5
-                          ? Theme.of(context).colorScheme.primaryContainer
-                          : null,
                     ),
                     child: (_isSaving || _isMigrating)
                         ? Row(
@@ -812,25 +890,30 @@ class _SystemPathsScreenState extends State<SystemPathsScreen>
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: ControlsBottomBar(
-          actions: [
-            BottomBarAction(
-              label: AppLocalizations.of(context)!.back,
-              keyboardKey: 'ESC',
-              gamepadButton: 'B',
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
-            BottomBarAction(
-              label: AppLocalizations.of(context)!.navigate,
-              keyboardKey: '↑↓',
-              gamepadButton: 'D-pad',
-            ),
-            BottomBarAction(
-              label: AppLocalizations.of(context)!.select,
-              keyboardKey: 'Enter',
-              gamepadButton: 'A',
+            ControlsBottomBar(
+              actions: [
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.back,
+                  keyboardKey: 'ESC',
+                  gamepadButton: 'B',
+                ),
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.navigate,
+                  keyboardKey: '↑↓',
+                  gamepadButton: 'D-pad',
+                ),
+                BottomBarAction(
+                  label: AppLocalizations.of(context)!.select,
+                  keyboardKey: 'Enter',
+                  gamepadButton: 'A',
+                ),
+              ],
             ),
           ],
         ),
@@ -860,55 +943,55 @@ class _PathField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      elevation: isSelected ? 8 : 2,
-      color: isSelected ? theme.colorScheme.primaryContainer : null,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  labelText: label,
-                  hintText: hint,
-                  border: const OutlineInputBorder(),
-                  filled: isSelected,
-                  fillColor: isSelected
-                      ? theme.colorScheme.primaryContainer.withValues(
-                          alpha: 0.3,
-                        )
-                      : null,
-                ),
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isSelected
+              ? Colors.white.withValues(alpha: 0.38)
+              : Colors.white.withValues(alpha: 0.08),
+          width: isSelected ? 1.5 : 1,
+        ),
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                labelText: label,
+                hintText: hint,
+                border: const OutlineInputBorder(),
               ),
             ),
-            const SizedBox(width: 8),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.folder_open),
-                  onPressed: onBrowse,
-                  tooltip: AppLocalizations.of(context)!.browse,
-                  style: IconButton.styleFrom(
-                    backgroundColor: isSelected
-                        ? theme.colorScheme.primary
-                        : theme.primaryColor,
-                    foregroundColor: Colors.white,
-                  ),
+          ),
+          const SizedBox(width: 10),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.folder_open),
+                onPressed: onBrowse,
+                tooltip: AppLocalizations.of(context)!.browse,
+                style: IconButton.styleFrom(
+                  backgroundColor: isSelected
+                      ? Colors.white.withValues(alpha: 0.16)
+                      : Colors.white.withValues(alpha: 0.06),
+                  foregroundColor: theme.colorScheme.onSurface,
                 ),
-                if (showGamepadIndicator && isSelected) ...[
-                  const SizedBox(height: 4),
-                  const GamepadButtonIndicator(
-                    button: GamepadButton.a,
-                    size: 20,
-                  ),
-                ],
+              ),
+              if (showGamepadIndicator && isSelected) ...[
+                const SizedBox(height: 4),
+                const GamepadButtonIndicator(
+                  button: GamepadButton.a,
+                  size: 20,
+                ),
               ],
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

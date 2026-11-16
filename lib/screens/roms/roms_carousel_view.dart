@@ -1,4 +1,5 @@
 import '../../models/game_info.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../models/rom_item.dart';
 import '../../models/media.dart';
@@ -207,16 +208,27 @@ class RomsCarouselView extends StatelessWidget {
         SafeArea(
           top: false,
           child: Center(
-            child: SizedBox(
-              width: 200, // Fixed width for centered appearance
-              child: ElevatedButton.icon(
-                onPressed: () => onRomLaunch(item),
-                icon: const Icon(Icons.gamepad),
-                label: Text(AppLocalizations.of(context)!.play),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 8,
+            child: ExcludeFocus(
+              child: SizedBox(
+                width: 220,
+                child: FilledButton.icon(
+                  onPressed: () => onRomLaunch(item),
+                  icon: const Icon(Icons.play_arrow_rounded, size: 22),
+                  label: Text(
+                    AppLocalizations.of(context)!.play,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    shape: const StadiumBorder(),
                   ),
                 ),
               ),
@@ -232,18 +244,42 @@ class RomsCarouselView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Stack(
         children: [
-          ListView.builder(
-            controller: scrollController,
-            scrollDirection: Axis.horizontal,
-            itemCount: items.length,
-            // CRITICAL: Fixed item extent for performance with large lists
-            // Width = card (180px) + horizontal padding (16px) = 196px
-            itemExtent: 196.0,
-            itemBuilder: (context, index) {
-              final item = items[index];
-              final isSelected = index == selectedIndex;
-              return _buildCarouselCard(context, item, isSelected, index);
+          Listener(
+            onPointerSignal: (event) {
+              if (event is PointerScrollEvent && scrollController.hasClients) {
+                final delta = event.scrollDelta.dy != 0
+                    ? event.scrollDelta.dy
+                    : event.scrollDelta.dx;
+                final maxScroll = scrollController.position.maxScrollExtent;
+                final target = (scrollController.offset + delta).clamp(
+                  0.0,
+                  maxScroll,
+                );
+                scrollController.jumpTo(target);
+              }
             },
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                dragDevices: {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse,
+                  PointerDeviceKind.trackpad,
+                },
+              ),
+              child: ListView.builder(
+                controller: scrollController,
+                scrollDirection: Axis.horizontal,
+                itemCount: items.length,
+                // CRITICAL: Fixed item extent for performance with large lists
+                // Width = card (180px) + horizontal padding (16px) = 196px
+                itemExtent: 196.0,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  final isSelected = index == selectedIndex;
+                  return _buildCarouselCard(context, item, isSelected, index);
+                },
+              ),
+            ),
           ),
           // Navigation hint
           if (showNavigationHint)

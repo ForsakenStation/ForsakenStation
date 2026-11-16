@@ -11,6 +11,7 @@ import '../common/language_flags.dart';
 import '../common/star_rating.dart';
 import '../common/region_flags.dart';
 import '../common/rom_tag_badges.dart';
+import '../common/platform_badge.dart';
 import 'rom_info_section.dart';
 
 class RomDetailPanel extends StatefulWidget {
@@ -175,6 +176,10 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
+                if (widget.item.platform != null) ...[
+                  const SizedBox(height: 8),
+                  PlatformBadge(platformId: widget.item.platform!),
+                ],
                 const SizedBox(height: 12),
 
                 // Rating stars, Languages, Regions, and Tags
@@ -294,16 +299,27 @@ class _RomDetailPanelState extends State<RomDetailPanel> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: widget.onLaunch,
-                  icon: const Icon(Icons.gamepad),
-                  label: Text(AppLocalizations.of(context)!.play),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
+              child: ExcludeFocus(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: widget.onLaunch,
+                    icon: const Icon(Icons.play_arrow_rounded, size: 22),
+                    label: Text(
+                      AppLocalizations.of(context)!.play,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      shape: const StadiumBorder(),
                     ),
                   ),
                 ),

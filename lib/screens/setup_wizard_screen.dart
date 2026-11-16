@@ -14,6 +14,7 @@ import '../services/emulator_download_service.dart';
 import '../services/romlist_download_service.dart';
 import '../services/gamelist_download_service.dart';
 import '../models/emulator_download_info.dart';
+import '../widgets/common/animated_lucide_icon.dart';
 import '../widgets/common/controls_bottom_bar.dart';
 import '../mixins/gamepad_polling_mixin.dart';
 import '../mixins/screen_navigation_mixin.dart';
@@ -89,6 +90,8 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
   void initState() {
     super.initState();
 
+    _disclaimerAccepted = _configService.isDisclaimerAccepted;
+
     // Initialize controllers with current values
     _emulatorsPathController = TextEditingController(
       text: _configService.emulatorsPath,
@@ -118,39 +121,39 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
       _steps = [
         _WizardStep(
           title: AppLocalizations.of(context)!.welcome,
-          icon: Icons.waving_hand,
+          icon: AnimatedLucideIconType.wandSparkles,
           builder: _buildWelcomeStep,
         ),
         if (!kIsWeb) ...[
           _WizardStep(
             title: AppLocalizations.of(context)!.emulators,
-            icon: Icons.videogame_asset,
+            icon: AnimatedLucideIconType.cpu,
             builder: _buildEmulatorsStep,
           ),
           _WizardStep(
             title: AppLocalizations.of(context)!.storage,
-            icon: Icons.folder,
+            icon: AnimatedLucideIconType.folder,
             builder: _buildStorageStep,
           ),
           _WizardStep(
             title: AppLocalizations.of(context)!.wizardDownloadEmulators,
-            icon: Icons.download,
+            icon: AnimatedLucideIconType.cloudDownload,
             builder: _buildDownloadEmulatorsStep,
           ),
           _WizardStep(
             title: AppLocalizations.of(context)!.wizardDownloadRomLists,
-            icon: Icons.list_alt,
+            icon: AnimatedLucideIconType.database,
             builder: _buildDownloadRomListsStep,
           ),
           _WizardStep(
             title: AppLocalizations.of(context)!.wizardDownloadGamelists,
-            icon: Icons.format_list_bulleted,
+            icon: AnimatedLucideIconType.archive,
             builder: _buildDownloadGamelistsStep,
           ),
         ],
         _WizardStep(
           title: AppLocalizations.of(context)!.ready,
-          icon: Icons.check_circle,
+          icon: AnimatedLucideIconType.shieldCheck,
           builder: _buildReadyStep,
         ),
       ];
@@ -247,6 +250,10 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
     if (error != null) {
       setState(() => _validationError = error);
       return;
+    }
+
+    if (_currentStep == 0 && _disclaimerAccepted) {
+      _configService.setDisclaimerAccepted(true);
     }
 
     // Save paths when leaving storage step (step 2) so download steps
@@ -563,20 +570,42 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
             // Validation error
             if (_validationError != null)
               Container(
-                width: double.infinity,
+                margin: const EdgeInsets.fromLTRB(24, 0, 24, 8),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
+                  horizontal: 16,
                   vertical: 10,
                 ),
-                color: theme.colorScheme.errorContainer,
-                child: Text(
-                  _validationError!,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onErrorContainer,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF453A).withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFFFF453A).withValues(alpha: 0.35),
                   ),
-                  textAlign: TextAlign.center,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline_rounded,
+                      size: 18,
+                      color: Color(0xFFFF453A),
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        _validationError!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
+            // Mouse / touch navigation bar
+            _buildNavigationButtons(theme),
 
             // Bottom controls
             ControlsBottomBar(
@@ -610,10 +639,77 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
     );
   }
 
+  Widget _buildNavigationButtons(ThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 12),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 640),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (_canGoBack)
+                OutlinedButton.icon(
+                  onPressed: _goBack,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.white.withValues(alpha: 0.85),
+                    side: BorderSide(
+                      color: Colors.white.withValues(alpha: 0.16),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                  icon: const Icon(Icons.arrow_back_rounded, size: 18),
+                  label: Text(l10n.back),
+                )
+              else
+                const SizedBox.shrink(),
+              FilledButton.icon(
+                onPressed: _isLastStep ? _finishSetup : _goNext,
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+                icon: Icon(
+                  _isLastStep
+                      ? Icons.check_rounded
+                      : Icons.arrow_forward_rounded,
+                  size: 18,
+                ),
+                label: Text(
+                  _isLastStep ? l10n.finish : l10n.next,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildStepIndicator(ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      color: theme.colorScheme.surface,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(color: Colors.white.withValues(alpha: 0.06)),
+        ),
+      ),
       child: SafeArea(
         bottom: false,
         child: Row(
@@ -621,72 +717,91 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
             final step = _steps[index];
             final isActive = index == _currentStep;
             final isCompleted = index < _currentStep;
-            final color = isActive
-                ? theme.colorScheme.primary
+            final activeColor = theme.colorScheme.primary;
+            const completedColor = Color(0xFF30D158);
+            final labelColor = isActive
+                ? Colors.white
                 : isCompleted
-                ? theme.colorScheme.primary.withValues(alpha: 0.5)
-                : theme.colorScheme.onSurface.withValues(alpha: 0.3);
+                ? completedColor
+                : Colors.white.withValues(alpha: 0.45);
 
             return Expanded(
               child: Row(
                 children: [
-                  if (index > 0)
-                    Expanded(
-                      child: Container(
-                        height: 2,
-                        color: isCompleted
-                            ? theme.colorScheme.primary.withValues(alpha: 0.5)
-                            : theme.colorScheme.onSurface.withValues(
-                                alpha: 0.15,
-                              ),
-                      ),
-                    ),
+                  Expanded(
+                    child: index == 0
+                        ? const SizedBox.shrink()
+                        : Container(
+                            height: 2,
+                            margin: const EdgeInsets.only(bottom: 18),
+                            color: isCompleted || isActive
+                                ? activeColor.withValues(alpha: 0.55)
+                                : Colors.white.withValues(alpha: 0.1),
+                          ),
+                  ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
                         width: 36,
                         height: 36,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: isActive
-                              ? theme.colorScheme.primary
+                              ? activeColor
                               : isCompleted
-                              ? theme.colorScheme.primary.withValues(alpha: 0.2)
-                              : theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.08,
+                              ? completedColor.withValues(alpha: 0.18)
+                              : Colors.white.withValues(alpha: 0.07),
+                          border: Border.all(
+                            color: isActive
+                                ? activeColor
+                                : isCompleted
+                                ? completedColor.withValues(alpha: 0.5)
+                                : Colors.white.withValues(alpha: 0.12),
+                          ),
+                        ),
+                        child: Center(
+                          child: isCompleted
+                              ? const Icon(
+                                  Icons.check_rounded,
+                                  size: 18,
+                                  color: completedColor,
+                                )
+                              : AnimatedLucideIcon(
+                                  type: step.icon,
+                                  size: 16,
+                                  color: isActive
+                                      ? Colors.white
+                                      : Colors.white.withValues(alpha: 0.55),
+                                  animate: isActive,
                                 ),
                         ),
-                        child: Icon(
-                          isCompleted ? Icons.check : step.icon,
-                          size: 18,
-                          color: isActive ? theme.colorScheme.onPrimary : color,
-                        ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
                       Text(
                         step.title,
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: color,
+                          color: labelColor,
                           fontWeight: isActive
-                              ? FontWeight.bold
+                              ? FontWeight.w600
                               : FontWeight.normal,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                  if (index < _totalSteps - 1 && index == 0)
-                    Expanded(
-                      child: Container(
-                        height: 2,
-                        color: _currentStep > 0
-                            ? theme.colorScheme.primary.withValues(alpha: 0.5)
-                            : theme.colorScheme.onSurface.withValues(
-                                alpha: 0.15,
-                              ),
-                      ),
-                    ),
+                  Expanded(
+                    child: index == _totalSteps - 1
+                        ? const SizedBox.shrink()
+                        : Container(
+                            height: 2,
+                            margin: const EdgeInsets.only(bottom: 18),
+                            color: isCompleted
+                                ? activeColor.withValues(alpha: 0.55)
+                                : Colors.white.withValues(alpha: 0.1),
+                          ),
+                  ),
                 ],
               ),
             );
@@ -704,70 +819,107 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
     final theme = Theme.of(context);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
+          constraints: const BoxConstraints(maxWidth: 640),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 32),
-              Icon(
-                Icons.sports_esports,
-                size: 80,
-                color: theme.colorScheme.primary,
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Center(
+                  child: AnimatedLucideIcon(
+                    type: AnimatedLucideIconType.gamepad,
+                    size: 28,
+                    color: theme.colorScheme.primary,
+                    animate: true,
+                  ),
+                ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 10),
               Text(
                 AppLocalizations.of(context)!.welcomeMessage,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.4,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 '${AppLocalizations.of(context)!.version} $kAppVersion',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 6),
               Text(
                 AppLocalizations.of(context)!.appDescription,
-                style: theme.textTheme.bodyLarge,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.85),
+                ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 14),
               // Legal disclaimer
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                    color: Colors.white.withValues(alpha: 0.08),
                   ),
                 ),
                 child: Text(
                   kLegalDisclaimer,
-                  style: theme.textTheme.bodySmall?.copyWith(height: 1.6),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    height: 1.4,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               // Acceptance checkbox
-              CheckboxListTile(
-                value: _disclaimerAccepted,
-                onChanged: (value) {
-                  setState(() {
-                    _disclaimerAccepted = value ?? false;
-                    _validationError = null;
-                  });
-                },
-                title: Text(AppLocalizations.of(context)!.iUnderstand),
-                controlAffinity: ListTileControlAffinity.leading,
-                contentPadding: EdgeInsets.zero,
+              Material(
+                color: _disclaimerAccepted
+                    ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                    : Colors.white.withValues(alpha: 0.04),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  side: BorderSide(
+                    color: _disclaimerAccepted
+                        ? theme.colorScheme.primary.withValues(alpha: 0.45)
+                        : Colors.white.withValues(alpha: 0.08),
+                  ),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: CheckboxListTile(
+                  value: _disclaimerAccepted,
+                  onChanged: (value) {
+                    final accepted = value ?? false;
+                    setState(() {
+                      _disclaimerAccepted = accepted;
+                      _validationError = null;
+                    });
+                    _configService.setDisclaimerAccepted(accepted);
+                  },
+                  title: Text(
+                    AppLocalizations.of(context)!.iUnderstand,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
               ),
             ],
           ),
@@ -1140,10 +1292,11 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 48),
-              Icon(
-                Icons.check_circle_outline,
+              AnimatedLucideIcon(
+                type: AnimatedLucideIconType.shieldCheck,
                 size: 80,
                 color: theme.colorScheme.primary,
+                animate: true,
               ),
               const SizedBox(height: 24),
               Text(
@@ -1471,7 +1624,7 @@ class _SetupWizardScreenState extends State<SetupWizardScreen>
 
 class _WizardStep {
   final String title;
-  final IconData icon;
+  final AnimatedLucideIconType icon;
   final Widget Function() builder;
 
   const _WizardStep({

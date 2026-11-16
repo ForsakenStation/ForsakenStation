@@ -56,45 +56,70 @@ class _PlatformCardState extends State<PlatformCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: widget.isSelected ? 8 : 4,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: widget.isSelected
-            ? BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)
-            : BorderSide.none,
-      ),
-      child: InkWell(
-        onTap: widget.onTap,
-        child: Stack(
-          children: [
-            if (widget.backgroundPath != null)
-              Positioned.fill(
-                child: Image.asset(
-                  widget.backgroundPath!,
-                  fit: BoxFit.cover,
-                  cacheWidth: 400,
-                  cacheHeight: 300,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Container(color: Theme.of(context).colorScheme.surface),
-                ),
-              ),
-            // Gradient overlay to ensure text readability
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withValues(alpha: 0.3),
-                      Colors.black.withValues(alpha: 0.7),
-                    ],
+    return AnimatedScale(
+      scale: widget.isSelected ? 1.04 : 1.0,
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOutCubic,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: widget.isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.45),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ]
+              : null,
+        ),
+        child: Card(
+          elevation: 0,
+          margin: EdgeInsets.zero,
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: widget.isSelected
+                ? BorderSide(
+                    color: Colors.white.withValues(alpha: 0.92),
+                    width: 2.5,
+                  )
+                : BorderSide(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    width: 1,
+                  ),
+          ),
+          child: InkWell(
+            onTap: widget.onTap,
+            child: Stack(
+              children: [
+                if (widget.backgroundPath != null)
+                  Positioned.fill(
+                    child: Image.asset(
+                      widget.backgroundPath!,
+                      fit: BoxFit.cover,
+                      cacheWidth: 400,
+                      cacheHeight: 300,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    ),
+                  ),
+                // Gradient overlay to ensure text readability
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.15),
+                          Colors.black.withValues(alpha: 0.82),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
             // Content
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -172,6 +197,8 @@ class _PlatformCardState extends State<PlatformCard> {
           ],
         ),
       ),
+    ),
+    ),
     );
   }
 

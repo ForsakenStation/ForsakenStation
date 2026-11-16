@@ -9,6 +9,7 @@ import '../../services/debug_service.dart';
 import '../../mixins/gamepad_polling_mixin.dart';
 import '../../mixins/dialog_controls_mixin.dart';
 import '../../widgets/common/controls_bottom_bar.dart';
+import '../../widgets/common/app_snackbar.dart';
 import '../../widgets/common/dialog_button_bar.dart';
 import '../../widgets/common/gamepad_button_indicator.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -214,34 +215,24 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
         setState(() => _isRomDbDownloading = false);
 
         if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.romDatabaseDownloaded,
-              ),
-              backgroundColor: Colors.green,
-            ),
+          AppSnackBar.success(
+            context,
+            AppLocalizations.of(context)!.romDatabaseDownloaded,
           );
           await _loadStatus();
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.failedDownloadRomDatabase,
-              ),
-              backgroundColor: Colors.red,
-            ),
+          AppSnackBar.error(
+            context,
+            AppLocalizations.of(context)!.failedDownloadRomDatabase,
           );
         }
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isRomDbDownloading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.of(context)!.error}: $e'),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.error}: $e',
         );
       }
     }
@@ -259,19 +250,15 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
 
     if (mounted) {
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.romDatabaseCleared),
-            backgroundColor: Colors.orange,
-          ),
+        AppSnackBar.warning(
+          context,
+          AppLocalizations.of(context)!.romDatabaseCleared,
         );
         await _loadStatus();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.failedClearDatabase),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackBar.error(
+          context,
+          AppLocalizations.of(context)!.failedClearDatabase,
         );
       }
     }
@@ -310,34 +297,24 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
         setState(() => _isGamelistsDownloading = false);
 
         if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.gamelistsDownloadedSuccess,
-              ),
-              backgroundColor: Colors.green,
-            ),
+          AppSnackBar.success(
+            context,
+            AppLocalizations.of(context)!.gamelistsDownloadedSuccess,
           );
           await _loadStatus();
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.failedDownloadGamelists,
-              ),
-              backgroundColor: Colors.red,
-            ),
+          AppSnackBar.error(
+            context,
+            AppLocalizations.of(context)!.failedDownloadGamelists,
           );
         }
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isGamelistsDownloading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.of(context)!.error}: $e'),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.error}: $e',
         );
       }
     }
@@ -355,19 +332,15 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
 
     if (mounted) {
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.gamelistsCleared),
-            backgroundColor: Colors.orange,
-          ),
+        AppSnackBar.warning(
+          context,
+          AppLocalizations.of(context)!.gamelistsCleared,
         );
         await _loadStatus();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.failedClearGamelists),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackBar.error(
+          context,
+          AppLocalizations.of(context)!.failedClearGamelists,
         );
       }
     }
@@ -412,13 +385,9 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
         setState(() => _isRebuildingCache = false);
 
         if (result.hasError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.rebuildMediaCacheError,
-              ),
-              backgroundColor: Colors.red,
-            ),
+          AppSnackBar.error(
+            context,
+            AppLocalizations.of(context)!.rebuildMediaCacheError,
           );
         } else {
           final summary = AppLocalizations.of(context)!
@@ -429,12 +398,10 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
                 result.mediaPathsAdded.toString(),
               );
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(summary),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 5),
-            ),
+          AppSnackBar.success(
+            context,
+            summary,
+            duration: const Duration(seconds: 5),
           );
 
           if (result.errors > 0) {
@@ -448,11 +415,9 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
     } catch (e) {
       if (mounted) {
         setState(() => _isRebuildingCache = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.of(context)!.error}: $e'),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.error}: $e',
         );
       }
     }
@@ -627,220 +592,294 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
   }
 
   Widget _buildContentView() {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        // --- Section 0: ROM Database ---
-        _buildSectionHeader(
-          AppLocalizations.of(context)!.romDatabase,
-          Icons.storage,
-        ),
-        _buildStatusCard(
-          isDownloaded: _isRomDbDownloaded,
-          statusLabel: AppLocalizations.of(context)!.databaseStatus,
-          downloadedLabel: AppLocalizations.of(context)!.downloaded,
-          notDownloadedLabel: AppLocalizations.of(context)!.notDownloaded,
-          info: _romDbInfo,
-        ),
-        const SizedBox(height: 8),
-        _buildInfoCard(
-          title: AppLocalizations.of(context)!.aboutRomDatabase,
-          description: AppLocalizations.of(
-            context,
-          )!.aboutRomDatabaseDescription,
-          source: AppLocalizations.of(context)!.romDatabaseSource,
-        ),
-        const SizedBox(height: 12),
-        _buildActionButtons(
-          section: 0,
-          isDownloaded: _isRomDbDownloaded,
-          onDownload: _downloadRomDatabase,
-          onClear: _clearRomDatabase,
-        ),
-        const SizedBox(height: 32),
+    final l10n = AppLocalizations.of(context)!;
 
-        // --- Section 1: Gamelists ---
-        _buildSectionHeader(
-          AppLocalizations.of(context)!.gamelistsStatus,
-          Icons.list_alt,
-        ),
-        _buildStatusCard(
-          isDownloaded: _isGamelistsDownloaded,
-          statusLabel: AppLocalizations.of(context)!.gamelistsStatus,
-          downloadedLabel: AppLocalizations.of(context)!.gamelistsDownloaded,
-          notDownloadedLabel: AppLocalizations.of(
-            context,
-          )!.gamelistsNotDownloaded,
-          info: _gamelistsInfo,
-        ),
-        const SizedBox(height: 8),
-        _buildInfoCard(
-          title: AppLocalizations.of(context)!.aboutGamelists,
-          description: AppLocalizations.of(context)!.aboutGamelistsDescription,
-          source: AppLocalizations.of(context)!.gamelistsSource,
-        ),
-        const SizedBox(height: 12),
-        _buildActionButtons(
-          section: 1,
-          isDownloaded: _isGamelistsDownloaded,
-          onDownload: _downloadGamelists,
-          onClear: _clearGamelists,
-        ),
-        const SizedBox(height: 32),
+    final romDbCard = _buildUnifiedDatabaseCard(
+      section: 0,
+      icon: Icons.storage_rounded,
+      accentColor: const Color(0xFF0A84FF),
+      title: l10n.romDatabase,
+      isDownloaded: _isRomDbDownloaded,
+      downloadedLabel: l10n.downloaded,
+      notDownloadedLabel: l10n.notDownloaded,
+      info: _romDbInfo,
+      description: l10n.aboutRomDatabaseDescription,
+      source: l10n.romDatabaseSource,
+      onDownload: _downloadRomDatabase,
+      onClear: _clearRomDatabase,
+    );
 
-        // --- Section 2: Media Cache ---
-        _buildSectionHeader(
-          AppLocalizations.of(context)!.rebuildMediaCache,
-          Icons.cached,
-        ),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              AppLocalizations.of(context)!.rebuildMediaCacheDescription,
-            ),
+    final gamelistsCard = _buildUnifiedDatabaseCard(
+      section: 1,
+      icon: Icons.list_alt_rounded,
+      accentColor: const Color(0xFF5E5CE6),
+      title: l10n.gamelistsStatus,
+      isDownloaded: _isGamelistsDownloaded,
+      downloadedLabel: l10n.gamelistsDownloaded,
+      notDownloadedLabel: l10n.gamelistsNotDownloaded,
+      info: _gamelistsInfo,
+      description: l10n.aboutGamelistsDescription,
+      source: l10n.gamelistsSource,
+      onDownload: _downloadGamelists,
+      onClear: _clearGamelists,
+    );
+
+    final mediaCacheCard = _buildMediaCacheCard(l10n);
+
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 1120),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth >= 860) {
+                return Column(
+                  children: [
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(child: romDbCard),
+                          const SizedBox(width: 20),
+                          Expanded(child: gamelistsCard),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    mediaCacheCard,
+                  ],
+                );
+              }
+              return Column(
+                children: [
+                  romDbCard,
+                  const SizedBox(height: 16),
+                  gamelistsCard,
+                  const SizedBox(height: 16),
+                  mediaCacheCard,
+                ],
+              );
+            },
           ),
         ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            _buildAnimatedButton(
-              section: 2,
-              buttonIndex: 0,
-              child: ElevatedButton.icon(
-                onPressed: _rebuildMediaCache,
-                icon: const Icon(Icons.build),
-                label: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(AppLocalizations.of(context)!.rebuildMediaCache),
-                    if (_isGamepadConnected &&
-                        _selectedSection == 2 &&
-                        _selectedButtonInSection == 0) ...[
-                      const SizedBox(width: 8),
-                      const GamepadButtonIndicator(
-                        button: GamepadButton.a,
-                        size: 16,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-      ],
+      ),
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
+  Widget _buildUnifiedDatabaseCard({
+    required int section,
+    required IconData icon,
+    required Color accentColor,
+    required String title,
+    required bool isDownloaded,
+    required String downloadedLabel,
+    required String notDownloadedLabel,
+    required Map<String, dynamic>? info,
+    required String description,
+    required String source,
+    required VoidCallback onDownload,
+    required VoidCallback onClear,
+  }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final statusColor = isDownloaded
+        ? const Color(0xFF30D158)
+        : const Color(0xFFFF9F0A);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.14),
+        ),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(width: 8),
+          Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: accentColor.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, size: 20, color: accentColor),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(
+                    color: statusColor.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      isDownloaded
+                          ? Icons.check_circle_rounded
+                          : Icons.cloud_download_outlined,
+                      size: 14,
+                      color: statusColor,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      isDownloaded ? downloadedLabel : notDownloadedLabel,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: statusColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
           Text(
-            title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary,
+            description,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurface.withValues(alpha: 0.78),
+              height: 1.45,
             ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            source,
+            style: TextStyle(
+              fontFamily: 'monospace',
+              fontSize: 12,
+              color: colorScheme.onSurface.withValues(alpha: 0.48),
+            ),
+          ),
+          if (isDownloaded && info != null) ...[
+            const SizedBox(height: 14),
+            Divider(
+              height: 1,
+              color: colorScheme.outline.withValues(alpha: 0.12),
+            ),
+            const SizedBox(height: 12),
+            if (info['fileCount'] != null)
+              _buildInfoRow(
+                AppLocalizations.of(context)!.platforms,
+                '${info['fileCount']}',
+              ),
+            if (info['totalSizeMB'] != null)
+              _buildInfoRow(
+                AppLocalizations.of(context)!.totalSize,
+                '${info['totalSizeMB']} MB',
+              ),
+          ],
+          const Spacer(),
+          const SizedBox(height: 18),
+          _buildActionButtons(
+            section: section,
+            isDownloaded: isDownloaded,
+            onDownload: onDownload,
+            onClear: onClear,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStatusCard({
-    required bool isDownloaded,
-    required String statusLabel,
-    required String downloadedLabel,
-    required String notDownloadedLabel,
-    Map<String, dynamic>? info,
-  }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+  Widget _buildMediaCacheCard(AppLocalizations l10n) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    const accentColor = Color(0xFFFF9F0A);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.14),
+        ),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: accentColor.withValues(alpha: 0.16),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              Icons.cached_rounded,
+              size: 20,
+              color: accentColor,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  isDownloaded ? Icons.check_circle : Icons.cloud_download,
-                  color: isDownloaded ? Colors.green : Colors.orange,
-                  size: 32,
+                Text(
+                  l10n.rebuildMediaCache,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        statusLabel,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      Text(
-                        isDownloaded ? downloadedLabel : notDownloadedLabel,
-                        style: TextStyle(
-                          color: isDownloaded ? Colors.green : Colors.orange,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                const SizedBox(height: 4),
+                Text(
+                  l10n.rebuildMediaCacheDescription,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.65),
+                    height: 1.4,
                   ),
                 ),
               ],
             ),
-            if (isDownloaded && info != null) ...[
-              const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 16),
-              if (info['fileCount'] != null)
-                _buildInfoRow(
-                  AppLocalizations.of(context)!.platforms,
-                  '${info['fileCount']}',
-                ),
-              if (info['totalSizeMB'] != null)
-                _buildInfoRow(
-                  AppLocalizations.of(context)!.totalSize,
-                  '${info['totalSizeMB']} MB',
-                ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoCard({
-    required String title,
-    required String description,
-    required String source,
-  }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 12),
-            Text(description),
-            const SizedBox(height: 12),
-            Text(
-              source,
-              style: TextStyle(
-                fontFamily: 'monospace',
-                fontSize: 12,
-                color: Colors.grey,
+          ),
+          const SizedBox(width: 16),
+          _buildAnimatedButton(
+            section: 2,
+            buttonIndex: 0,
+            child: OutlinedButton.icon(
+              onPressed: _rebuildMediaCache,
+              icon: const Icon(Icons.build_rounded, size: 18),
+              label: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(l10n.rebuildMediaCache),
+                  if (_isGamepadConnected &&
+                      _selectedSection == 2 &&
+                      _selectedButtonInSection == 0) ...[
+                    const SizedBox(width: 8),
+                    const GamepadButtonIndicator(
+                      button: GamepadButton.a,
+                      size: 16,
+                    ),
+                  ],
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -858,9 +897,12 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
         _buildAnimatedButton(
           section: section,
           buttonIndex: 0,
-          child: ElevatedButton.icon(
+          child: FilledButton.icon(
             onPressed: onDownload,
-            icon: Icon(isDownloaded ? Icons.refresh : Icons.download),
+            icon: Icon(
+              isDownloaded ? Icons.refresh_rounded : Icons.download_rounded,
+              size: 18,
+            ),
             label: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -889,15 +931,19 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
           _buildAnimatedButton(
             section: section,
             buttonIndex: 1,
-            child: TextButton.icon(
+            child: OutlinedButton.icon(
               onPressed: onClear,
-              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              icon: const Icon(
+                Icons.delete_outline_rounded,
+                size: 18,
+                color: Color(0xFFFF453A),
+              ),
               label: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     AppLocalizations.of(context)!.clear,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Color(0xFFFF453A)),
                   ),
                   if (_isGamepadConnected &&
                       _selectedSection == section &&
@@ -940,7 +986,7 @@ class _RomDatabaseScreenState extends State<RomDatabaseScreen>
                     width: 2,
                   )
                 : Border.all(color: Colors.transparent, width: 2),
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(999),
           ),
           child: child,
         ),

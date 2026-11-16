@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/legal.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../utils/app_theme.dart';
 
 class InitializingScreen extends StatefulWidget {
   const InitializingScreen({super.key});
@@ -21,19 +22,21 @@ class _InitializingScreenState extends State<InitializingScreen>
 
     // Configure animations
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 600),
       vsync: this,
     );
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _scaleAnimation = Tween<double>(
-      begin: 0.8,
+      begin: 0.92,
       end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+    ).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+    );
 
     _controller.forward();
   }
@@ -46,14 +49,16 @@ class _InitializingScreenState extends State<InitializingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF0B0C10),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: RadialGradient(
-            center: Alignment.center,
-            radius: 1.0,
-            colors: [Colors.grey[900]!, Colors.black],
+            center: Alignment(0, -0.15),
+            radius: 1.1,
+            colors: [Color(0xFF181C26), Color(0xFF0B0C10)],
           ),
         ),
         child: SafeArea(
@@ -63,48 +68,45 @@ class _InitializingScreenState extends State<InitializingScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Spacer to push content up slightly
                   const Spacer(flex: 2),
 
-                  // Logo with scale animation
+                  // Logo with subtle Apple TV-style halo
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: Container(
-                      padding: const EdgeInsets.all(32),
+                      padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.04),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.08),
+                        ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.cyan.withValues(alpha: 0.3),
+                            color: AppColors.darkPrimary.withValues(alpha: 0.22),
                             blurRadius: 40,
-                            spreadRadius: 10,
+                            spreadRadius: 4,
                           ),
                         ],
                       ),
                       child: Image.asset(
                         'assets/images/icon.png',
-                        width: 120,
-                        height: 120,
+                        width: 104,
+                        height: 104,
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 48),
+                  const SizedBox(height: 36),
 
                   // App title
                   Text(
-                    AppLocalizations.of(context)!.appTitle.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 8,
+                    l10n.appTitle.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 4.5,
                       color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          color: Colors.cyan.withValues(alpha: 0.5),
-                          blurRadius: 20,
-                        ),
-                      ],
                     ),
                   ),
 
@@ -112,41 +114,40 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                   // Subtitle
                   Text(
-                    AppLocalizations.of(context)!.retroGamingFrontend,
+                    l10n.retroGamingFrontend,
                     style: TextStyle(
                       fontSize: 14,
-                      letterSpacing: 2,
-                      color: Colors.grey[400],
+                      letterSpacing: 1.2,
+                      color: Colors.white.withValues(alpha: 0.58),
                     ),
                   ),
 
-                  const Spacer(flex: 1),
+                  const SizedBox(height: 44),
 
-                  // Indeterminate loading indicator
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 80),
+                  // Compact indeterminate loading indicator
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 280),
                     child: Column(
                       children: [
-                        // Indeterminate progress bar
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(999),
                           child: LinearProgressIndicator(
-                            minHeight: 6,
-                            backgroundColor: Colors.grey[800],
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.cyan,
+                            minHeight: 4,
+                            backgroundColor: Colors.white.withValues(alpha: 0.12),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              AppColors.darkPrimary,
                             ),
                           ),
                         ),
 
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
 
-                        // Status text
                         Text(
-                          AppLocalizations.of(context)!.loading,
+                          l10n.loading,
                           style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[300],
+                            fontSize: 13,
+                            letterSpacing: 0.4,
+                            color: Colors.white.withValues(alpha: 0.65),
                           ),
                         ),
                       ],
@@ -157,10 +158,13 @@ class _InitializingScreenState extends State<InitializingScreen>
 
                   // Version at the bottom
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 32),
+                    padding: const EdgeInsets.only(bottom: 28),
                     child: Text(
                       'v$kAppVersion',
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withValues(alpha: 0.35),
+                      ),
                     ),
                   ),
                 ],
