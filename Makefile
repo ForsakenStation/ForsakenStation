@@ -1,4 +1,4 @@
-.PHONY: help clean deps build run test analyze format appimage portable migrate scrape
+.PHONY: help clean deps build run test analyze format appimage portable migrate scrape install-desktop
 
 # Default target
 help:
@@ -25,6 +25,7 @@ help:
 	@echo ""
 	@echo "📦 DEPENDENCIES:"
 	@echo "  make deps           - Install Flutter dependencies"
+	@echo "  make install-desktop - Install Linux .desktop & icon for Wayland"
 	@echo "  make clean          - Clean build artifacts"
 	@echo "  make clean-all      - Deep clean (Flutter + deps)"
 	@echo ""
@@ -115,14 +116,23 @@ scrape:
 	@echo "Usage: cd scripts/media-scraper && ./scrape_with_env.sh <platform> [options]"
 	@cd scripts/media-scraper && ./scrape_with_env.sh --help
 
+# Linux desktop integration (Wayland/X11 taskbar icon)
+install-desktop:
+	@echo "🖥️  Installing desktop entry and icon..."
+	mkdir -p ~/.local/share/applications ~/.local/share/icons/hicolor/512x512/apps
+	cp linux/com.forsaken.emulator.desktop ~/.local/share/applications/com.forsaken.emulator.desktop
+	cp assets/images/icon.png ~/.local/share/icons/hicolor/512x512/apps/com.forsaken.emulator.png
+	@command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database ~/.local/share/applications || true
+	@echo "✅ Desktop entry installed."
+
 # Documentation
 docs:
 	@echo "📚 Documentation Links:"
 	@echo ""
 	@echo "Main documentation:"
 	@echo "  - README.md"
-	@echo "  - QUICK_LINKS.md"
-	@echo "  - TESTING_NEEDED.md"
+	@echo "  - docs/CONTROLS.md"
+	@echo "  - docs/EMULATOR_CONFIG.md"
 	@echo ""
 	@echo "Scripts documentation:"
 	@echo "  - scripts/README.md"
@@ -131,5 +141,4 @@ docs:
 	@echo ""
 	@echo "Development:"
 	@echo "  - AGENTS.md"
-	@echo "  - docs/TODO.md"
 	@echo ""

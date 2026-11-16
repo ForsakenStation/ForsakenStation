@@ -1,6 +1,6 @@
 // Legal disclaimer and related constants for Forsaken Emulator.
 
-const String kAppVersion = '1.0.0';
+const String kAppVersion = '0.1.0';
 
 const String kLegalDisclaimer =
     'LEGAL DISCLAIMER\n'
@@ -16,5 +16,13 @@ const String kLegalDisclaimer =
     '\n'
     'The developers of Forsaken Emulator assume no responsibility for '
     'how this software is used.\n'
+    '\n'
+    'TRADEMARKS & AFFILIATION\n'
+    '\n'
+    'Forsaken Emulator is an independent project and is not affiliated with, '
+    'endorsed by, or sponsored by any console manufacturer, hardware vendor, '
+    'or game publisher. All platform names, logos, console images, and '
+    'trademarks belong to their respective owners and are used solely for '
+    'identification and informational purposes.\n'
     '\n'
     'By using this software, you acknowledge and accept these terms.';

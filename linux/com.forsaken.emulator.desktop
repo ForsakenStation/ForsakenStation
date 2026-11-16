@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Forsaken
+Comment=Multi-platform retro gaming frontend
+Exec=emulator
+Icon=com.forsaken.emulator
+Type=Application
+Categories=Game;Emulator;
+StartupWMClass=com.forsaken.emulator
+Terminal=false

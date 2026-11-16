@@ -69,21 +69,22 @@ done
 
 # 5. Crear .desktop file
 echo "📝 Creating desktop entry..."
-cat > "$APPDIR/usr/share/applications/forsaken.desktop" << EOF
+cat > "$APPDIR/usr/share/applications/com.forsaken.emulator.desktop" << EOF
 [Desktop Entry]
 Type=Application
-Name=Forsaken Emulator
-Comment=Multi-platform ROM frontend
+Name=Forsaken
+Comment=Multi-platform retro gaming frontend
 Exec=forsaken
-Icon=forsaken
+Icon=com.forsaken.emulator
 Categories=Game;Emulator;
+StartupWMClass=com.forsaken.emulator
 Terminal=false
 EOF
 
 # 6. Copiar icono
 if [ -f "assets/images/icon.png" ]; then
-    cp "assets/images/icon.png" "$APPDIR/usr/share/icons/hicolor/256x256/apps/forsaken.png"
-    cp "assets/images/icon.png" "$APPDIR/forsaken.png"
+    cp "assets/images/icon.png" "$APPDIR/usr/share/icons/hicolor/256x256/apps/com.forsaken.emulator.png"
+    cp "assets/images/icon.png" "$APPDIR/com.forsaken.emulator.png"
 fi
 
 # 7. Crear AppRun script
@@ -105,8 +106,8 @@ EOF
 chmod +x "$APPDIR/AppRun"
 
 # 8. Crear symlinks requeridos
-ln -sf "usr/share/applications/forsaken.desktop" "$APPDIR/forsaken.desktop"
-ln -sf "usr/share/icons/hicolor/256x256/apps/forsaken.png" "$APPDIR/.DirIcon"
+ln -sf "usr/share/applications/com.forsaken.emulator.desktop" "$APPDIR/com.forsaken.emulator.desktop"
+ln -sf "usr/share/icons/hicolor/256x256/apps/com.forsaken.emulator.png" "$APPDIR/.DirIcon"
 
 # 9. Generar AppImage
 echo "🗜️  Generating AppImage..."
