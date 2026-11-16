@@ -4,6 +4,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../models/media.dart';
 import '../../services/debug_service.dart';
 import '../../screens/pdf_viewer_screen.dart';
+import '../common/placeholder_image.dart';
 import 'fullscreen_image_viewer.dart';
 
 /// Carousel widget for displaying media (images and videos) with navigation
@@ -72,7 +73,13 @@ class _MediaCarouselState extends State<MediaCarousel> {
   @override
   Widget build(BuildContext context) {
     if (_mediaItems.isEmpty) {
-      return Container(height: widget.height);
+      final placeholderSize = (widget.height * 0.55).clamp(110.0, 200.0);
+      return SizedBox(
+        height: widget.height,
+        child: Center(
+          child: PlaceholderImage(size: placeholderSize),
+        ),
+      );
     }
 
     return Column(

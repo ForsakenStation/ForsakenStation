@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110" width="360" height="110">
+  <defs>
+    <linearGradient id="dlBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#30D158"/>
+      <stop offset="100%" stop-color="#0A84FF"/>
+    </linearGradient>
+    <linearGradient id="dlStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <!-- Emblem badge -->
+  <rect x="8" y="15" width="80" height="80" rx="22" fill="url(#dlBg)" stroke="url(#dlStroke)" stroke-width="2"/>
+  <!-- Download arrow -->
+  <path d="M 48 33 L 48 61" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+  <path d="M 36 51 L 48 63 L 60 51" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Tray -->
+  <path d="M 30 66 L 30 74 C 30 76.2 31.8 78 34 78 L 62 78 C 64.2 78 66 76.2 66 74 L 66 66" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="106" y="51" fill="#FFFFFF" font-family="sans-serif" font-size="25" font-weight="800" letter-spacing="1.0">DOWNLOADED</text>
+  <text x="106" y="79" fill="#8CEAB0" font-family="sans-serif" font-size="18" font-weight="600" letter-spacing="2.6">LOCAL LIBRARY</text>
+</svg>

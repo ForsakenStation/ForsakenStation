@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E2331"/>
+      <stop offset="100%" stop-color="#0E1118"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="46%" r="48%">
+      <stop offset="0%" stop-color="#0A84FF" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#0A84FF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cartGrad" x1="68" y1="48" x2="172" y2="192" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2B3245"/>
+      <stop offset="100%" stop-color="#181C26"/>
+    </linearGradient>
+    <linearGradient id="labelGrad" x1="84" y1="74" x2="156" y2="138" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0A84FF" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.12"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Subtle backdrop & ambient glow -->
+  <rect width="240" height="240" fill="url(#bgGrad)"/>
+  <circle cx="120" cy="112" r="96" fill="url(#glow)"/>
+
+  <!-- Cartridge body -->
+  <path d="M68 58C68 51.3726 73.3726 46 80 46H150L172 68V182C172 188.627 166.627 194 160 194H80C73.3726 194 68 188.627 68 182V58Z"
+        fill="url(#cartGrad)" stroke="rgba(255,255,255,0.16)" stroke-width="2.5"/>
+
+  <!-- Top grip ridges -->
+  <line x1="84" y1="56" x2="138" y2="56" stroke="rgba(255,255,255,0.14)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="84" y1="64" x2="146" y2="64" stroke="rgba(255,255,255,0.10)" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Cartridge label window -->
+  <rect x="82" y="78" width="76" height="62" rx="8" fill="url(#labelGrad)" stroke="rgba(10,132,255,0.45)" stroke-width="2"/>
+
+  <!-- Minimalist gamepad emblem inside label -->
+  <path d="M103 109H113M108 104V114" stroke="#E2E8F0" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="132" cy="105" r="2.8" fill="#38BDF8"/>
+  <circle cx="138" cy="111" r="2.8" fill="#0A84FF"/>
+
+  <!-- Bottom connector notch -->
+  <rect x="92" y="160" width="56" height="22" rx="4" fill="#10131A" stroke="rgba(255,255,255,0.09)" stroke-width="1.5"/>
+  <line x1="104" y1="166" x2="104" y2="176" stroke="rgba(255,255,255,0.16)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="114" y1="166" x2="114" y2="176" stroke="rgba(255,255,255,0.16)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="126" y1="166" x2="126" y2="176" stroke="rgba(255,255,255,0.16)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="136" y1="166" x2="136" y2="176" stroke="rgba(255,255,255,0.16)" stroke-width="2" stroke-linecap="round"/>
+</svg>
