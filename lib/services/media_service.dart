@@ -5,6 +5,7 @@ import '../models/media.dart';
 import '../models/rom.dart';
 import '../models/rom_item.dart';
 import '../utils/file_utils.dart';
+import '../utils/platform_aliases.dart';
 import 'config_service.dart';
 import 'debug_service.dart';
 
@@ -568,30 +569,29 @@ class MediaService {
   /// Get system/platform image from _systems folder
   /// Returns path to platform image or _default.png if platform image doesn't exist
   Future<String?> getSystemImage(String platformName) async {
-    final systemsPath = 'assets/theme/images/systems';
+    const systemsPath = 'assets/theme/images/systems';
+    const imageExtensions = ['png', 'jpg', 'jpeg', 'webp'];
+    final candidates = PlatformAliases.getCandidates(platformName);
 
-    // Try common image extensions for the platform
-    final imageExtensions = ['png', 'jpg', 'jpeg', 'webp'];
-
-    // First, try to find the platform-specific image
-    for (var ext in imageExtensions) {
-      final platformImagePath = '$systemsPath/$platformName.$ext';
-
-      // Check if asset exists using rootBundle (works on all platforms including Android)
-      try {
-        await rootBundle.load(platformImagePath);
-        _debug.debug(
-          'Found system image: $platformImagePath',
-          tag: 'MediaService',
-        );
-        return platformImagePath;
-      } catch (e) {
-        // Asset doesn't exist, continue to next
+    // First, try to find a matching platform-specific image across aliases
+    for (final candidate in candidates) {
+      for (final ext in imageExtensions) {
+        final platformImagePath = '$systemsPath/$candidate.$ext';
+        try {
+          await rootBundle.load(platformImagePath);
+          _debug.debug(
+            'Found system image: $platformImagePath',
+            tag: 'MediaService',
+          );
+          return platformImagePath;
+        } catch (e) {
+          // Asset doesn't exist, continue to next
+        }
       }
     }
 
     // If platform image not found, try _default
-    for (var ext in imageExtensions) {
+    for (final ext in imageExtensions) {
       final defaultImagePath = '$systemsPath/_default.$ext';
 
       try {
@@ -618,30 +618,32 @@ class MediaService {
   /// 2. White logo (assets/theme/images/logos/)
   /// Returns asset path or null if not found
   Future<String?> getSystemLogo(String platformName) async {
-    final imageExtensions = ['svgz', 'svg'];
+    const imageExtensions = ['svgz', 'svg'];
+    final candidates = PlatformAliases.getCandidates(platformName);
 
-    // Priority 1: Color logo
-    for (var ext in imageExtensions) {
-      final colorLogoPath = 'assets/theme/images/clogos/$platformName.$ext';
-      // Check if asset exists using rootBundle (works on all platforms including Android)
-      try {
-        await rootBundle.load(colorLogoPath);
-        _debug.debug('Found color logo: $colorLogoPath', tag: 'MediaService');
-        return colorLogoPath;
-      } catch (e) {
-        // Asset doesn't exist, continue to next
+    for (final candidate in candidates) {
+      // Priority 1: Color logo
+      for (final ext in imageExtensions) {
+        final colorLogoPath = 'assets/theme/images/clogos/$candidate.$ext';
+        try {
+          await rootBundle.load(colorLogoPath);
+          _debug.debug('Found color logo: $colorLogoPath', tag: 'MediaService');
+          return colorLogoPath;
+        } catch (e) {
+          // Asset doesn't exist, continue to next
+        }
       }
-    }
 
-    // Priority 2: White logo
-    for (var ext in imageExtensions) {
-      final whiteLogoPath = 'assets/theme/images/logos/$platformName.$ext';
-      try {
-        await rootBundle.load(whiteLogoPath);
-        _debug.debug('Found white logo: $whiteLogoPath', tag: 'MediaService');
-        return whiteLogoPath;
-      } catch (e) {
-        // Asset doesn't exist, continue to next
+      // Priority 2: White logo
+      for (final ext in imageExtensions) {
+        final whiteLogoPath = 'assets/theme/images/logos/$candidate.$ext';
+        try {
+          await rootBundle.load(whiteLogoPath);
+          _debug.debug('Found white logo: $whiteLogoPath', tag: 'MediaService');
+          return whiteLogoPath;
+        } catch (e) {
+          // Asset doesn't exist, continue to next
+        }
       }
     }
 
@@ -650,17 +652,20 @@ class MediaService {
   }
 
   /// Get system background image from assets
-  /// Returns asset path to background or default.jpg if platform background not found
+  /// Returns asset path to background or default.webp if platform background not found
   Future<String> getSystemBackground(String platformName) async {
-    final backgroundPath = 'assets/theme/images/backgrounds/$platformName.webp';
-    try {
-      await rootBundle.load(backgroundPath);
-      return backgroundPath;
-    } catch (e) {
-      // Asset doesn't exist, use default
+    final candidates = PlatformAliases.getCandidates(platformName);
+
+    for (final candidate in candidates) {
+      final backgroundPath = 'assets/theme/images/backgrounds/$candidate.webp';
+      try {
+        await rootBundle.load(backgroundPath);
+        return backgroundPath;
+      } catch (e) {
+        // Asset doesn't exist, try next alias
+      }
     }
 
-    final defaultPath = 'assets/theme/images/backgrounds/default.webp';
-    return defaultPath;
+    return 'assets/theme/images/backgrounds/default.webp';
   }
 }

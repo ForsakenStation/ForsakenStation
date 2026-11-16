@@ -75,7 +75,11 @@ class RomService {
         }
       }
 
-      platforms.sort((a, b) => a.name.compareTo(b.name));
+      platforms.sort(
+        (a, b) => a.displayName.toLowerCase().compareTo(
+          b.displayName.toLowerCase(),
+        ),
+      );
 
       _debug.info(
         'Loaded ${platforms.length} platforms from JSONL',

@@ -406,6 +406,18 @@
       "corePreferences": {}
     },
     {
+      "system": "camplynx",
+      "command": [
+        {
+          "name": "mame",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
       "system": "casloopy",
       "command": [
         {
@@ -510,6 +522,18 @@
       "corePreferences": {}
     },
     {
+      "system": "coco",
+      "command": [
+        {
+          "name": "mame",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
       "system": "colecovision",
       "command": [
         {
@@ -595,6 +619,18 @@
       "corePreferences": {}
     },
     {
+      "system": "daphne",
+      "command": [
+        {
+          "name": "hypseus",
+          "command": "hypseus-singe/hypseus-singe.AppImage"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
       "system": "doom",
       "command": [
         {
@@ -612,6 +648,18 @@
         {
           "name": "dosbox_pure",
           "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/dosbox_pure_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "dragon32",
+      "command": [
+        {
+          "name": "mame",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
         }
       ],
       "useForeverMode": false,
@@ -771,6 +819,18 @@
         {
           "name": "gw",
           "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/gw_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "gamecom",
+      "command": [
+        {
+          "name": "mame",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
         }
       ],
       "useForeverMode": false,
@@ -970,11 +1030,35 @@
       "corePreferences": {}
     },
     {
+      "system": "hypseus",
+      "command": [
+        {
+          "name": "hypseus",
+          "command": "hypseus-singe/hypseus-singe.AppImage"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
       "system": "intellivision",
       "command": [
         {
           "name": "freeintv",
           "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/freeintv_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "j2me",
+      "command": [
+        {
+          "name": "freej2me",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/freej2me_libretro.so"
         }
       ],
       "useForeverMode": false,
@@ -1217,6 +1301,18 @@
         {
           "name": "bluemsx",
           "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/bluemsx_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "mugen",
+      "command": [
+        {
+          "name": "Ikemen_GO",
+          "command": "Ikemen_GO_Linux"
         }
       ],
       "useForeverMode": false,
@@ -1474,6 +1570,30 @@
       "useForeverMode": false,
       "acceptZipFiles": true,
       "todo": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "p2000t",
+      "command": [
+        {
+          "name": "mame",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "palm",
+      "command": [
+        {
+          "name": "mu",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mu_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
       "corePreferences": {}
     },
     {
@@ -1785,6 +1905,34 @@
       "corePreferences": {}
     },
     {
+      "system": "sg1000",
+      "command": [
+        {
+          "name": "genesis_plus_gx",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/genesis_plus_gx_libretro.so"
+        },
+        {
+          "name": "gearsystem",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/gearsystem_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "singe",
+      "command": [
+        {
+          "name": "hypseus",
+          "command": "hypseus-singe/hypseus-singe.AppImage"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
       "system": "snes",
       "command": [
         {
@@ -1873,6 +2021,18 @@
       "corePreferences": {}
     },
     {
+      "system": "supracan",
+      "command": [
+        {
+          "name": "mame",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
       "system": "switch",
       "command": [
         {
@@ -1898,6 +2058,42 @@
       "corePreferences": {}
     },
     {
+      "system": "thomson",
+      "command": [
+        {
+          "name": "theodore",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/theodore_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "ti99",
+      "command": [
+        {
+          "name": "mame",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "tic80",
+      "command": [
+        {
+          "name": "tic80",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/tic80_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
       "system": "triforce",
       "command": [
         {
@@ -1911,6 +2107,18 @@
       ],
       "useForeverMode": false,
       "acceptZipFiles": false,
+      "corePreferences": {}
+    },
+    {
+      "system": "tutor",
+      "command": [
+        {
+          "name": "mame",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mame_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
       "corePreferences": {}
     },
     {
@@ -1979,6 +2187,18 @@
         {
           "name": "mednafen_vb",
           "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/mednafen_vb_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
+      "system": "vpinball",
+      "command": [
+        {
+          "name": "VPinballX_GL",
+          "command": "vpinball/VPinballX_GL"
         }
       ],
       "useForeverMode": false,
@@ -2127,6 +2347,18 @@
       "corePreferences": {}
     },
     {
+      "system": "x1",
+      "command": [
+        {
+          "name": "x1",
+          "command": "retroarch.AppImage -f -L ~/.config/retroarch/cores/x1_libretro.so"
+        }
+      ],
+      "useForeverMode": false,
+      "acceptZipFiles": true,
+      "corePreferences": {}
+    },
+    {
       "system": "x68000",
       "command": [
         {
@@ -2143,11 +2375,11 @@
       "command": [
         {
           "name": "xemu",
-          "command": "xemu.AppImage"
+          "command": "xemu.AppImage -dvd_path"
         }
       ],
       "useForeverMode": false,
-      "acceptZipFiles": true,
+      "acceptZipFiles": false,
       "corePreferences": {}
     },
     {

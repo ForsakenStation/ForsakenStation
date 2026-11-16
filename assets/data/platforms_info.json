@@ -898,5 +898,945 @@
     "cpu": "Variable según máquina",
     "resolution": "Variable según máquina",
     "colors": "Variable según hardware"
+  },
+  "adam": {
+    "fullName": "Coleco Adam",
+    "manufacturer": "Coleco",
+    "releaseYear": 1983,
+    "generation": null,
+    "description": "Ordenador doméstico de Coleco basado en la arquitectura de ColecoVision con teclado, impresora margarita y unidades digitales de cinta.",
+    "cpu": "Zilog Z80A @ 3.58 MHz",
+    "resolution": "256x192",
+    "colors": "16 colores"
+  },
+  "advision": {
+    "fullName": "Entex Adventure Vision",
+    "manufacturer": "Entex Industries",
+    "releaseYear": 1982,
+    "generation": 2,
+    "description": "Consola portátil de sobremesa única con pantalla LED roja monocroma mediante espejo giratorio y controles arcade integrados.",
+    "cpu": "Intel 8048 @ 733 kHz",
+    "resolution": "150x40",
+    "colors": "Monocromo (LED rojo)"
+  },
+  "apfm1000": {
+    "fullName": "APF MP-1000",
+    "manufacturer": "APF Electronics",
+    "releaseYear": 1978,
+    "generation": 2,
+    "description": "Consola doméstica de segunda generación con mandos numéricos desmontables y juego integrado Rocket Patrol.",
+    "cpu": "Motorola 6800 @ 895 kHz",
+    "resolution": "256x192",
+    "colors": "8 colores"
+  },
+  "apple2": {
+    "fullName": "Apple II",
+    "manufacturer": "Apple Computer",
+    "releaseYear": 1977,
+    "generation": null,
+    "description": "Ordenador doméstico pionero diseñado por Steve Wozniak que definió la informática personal y una enorme biblioteca de juegos clásicos.",
+    "cpu": "MOS Technology 6502 @ 1.023 MHz",
+    "resolution": "280x192",
+    "colors": "6-16 colores"
+  },
+  "arcadia": {
+    "fullName": "Emerson Arcadia 2001",
+    "manufacturer": "Emerson Radio",
+    "releaseYear": 1982,
+    "generation": 2,
+    "description": "Consola compacta de 8 bits con mandos tipo Intellivision y adaptaciones de populares recreativas de principios de los 80.",
+    "cpu": "Signetics 2650 @ 3.58 MHz",
+    "resolution": "128x208",
+    "colors": "8 colores"
+  },
+  "archimedes": {
+    "fullName": "Acorn Archimedes",
+    "manufacturer": "Acorn Computers",
+    "releaseYear": 1987,
+    "generation": null,
+    "description": "Familia de ordenadores personales británicos que estrenó el procesador RISC ARM de 32 bits con gráficos y sonido avanzados para su época.",
+    "cpu": "ARM2 / ARM3 @ 8-33 MHz",
+    "resolution": "640x512",
+    "colors": "256 colores"
+  },
+  "arduboy": {
+    "fullName": "Arduboy",
+    "manufacturer": "Bateske / Arduboy",
+    "releaseYear": 2016,
+    "generation": null,
+    "description": "Microconsola portátil de código abierto del tamaño de una tarjeta de crédito basada en Arduino con pantalla OLED monocroma.",
+    "cpu": "ATmega32U4 @ 16 MHz",
+    "resolution": "128x64",
+    "colors": "Monocromo (OLED)"
+  },
+  "astrocade": {
+    "fullName": "Bally Astrocade",
+    "manufacturer": "Bally Manufacturing",
+    "releaseYear": 1978,
+    "generation": 2,
+    "description": "Consola doméstica con gráficos bitmap de alta calidad para finales de los 70 y mandos multifunción con gatillo y dial giratorio.",
+    "cpu": "Zilog Z80 @ 1.789 MHz",
+    "resolution": "160x102",
+    "colors": "256 colores (4 por línea)"
+  },
+  "atarist": {
+    "fullName": "Atari ST",
+    "manufacturer": "Atari Corporation",
+    "releaseYear": 1985,
+    "generation": null,
+    "description": "Ordenador de 16/32 bits muy popular en Europa por su potencia gráfica, puertos MIDI integrados y gran catálogo de juegos.",
+    "cpu": "Motorola 68000 @ 8 MHz",
+    "resolution": "320x200 / 640x400",
+    "colors": "16 de 512 colores"
+  },
+  "atarixe": {
+    "fullName": "Atari XEGS",
+    "manufacturer": "Atari Corporation",
+    "releaseYear": 1987,
+    "generation": null,
+    "description": "Sistema de videojuegos híbrido basado en la familia de ordenadores Atari 8-bit compatible con cartuchos XE y periféricos.",
+    "cpu": "MOS 6502C @ 1.79 MHz",
+    "resolution": "320x192",
+    "colors": "128-256 colores"
+  },
+  "channelf": {
+    "fullName": "Fairchild Channel F",
+    "manufacturer": "Fairchild Semiconductor",
+    "releaseYear": 1976,
+    "generation": 2,
+    "description": "Primera consola doméstica programable de la historia en utilizar cartuchos ROM intercambiables y microprocesador.",
+    "cpu": "Fairchild F8 @ 1.79 MHz",
+    "resolution": "128x64",
+    "colors": "8 colores"
+  },
+  "fmtowns": {
+    "fullName": "FM Towns",
+    "manufacturer": "Fujitsu",
+    "releaseYear": 1989,
+    "generation": null,
+    "description": "Ordenador japonés pionero en integrar unidad de CD-ROM de serie con gráficos de alta resolución y sonido PCM de gran calidad.",
+    "cpu": "Intel 80386DX @ 16 MHz",
+    "resolution": "640x480",
+    "colors": "32.768 colores"
+  },
+  "macintosh": {
+    "fullName": "Apple Macintosh",
+    "manufacturer": "Apple Computer",
+    "releaseYear": 1984,
+    "generation": null,
+    "description": "Familia clásica de ordenadores personales Apple con interfaz gráfica pionera y títulos emblemáticos en blanco y negro y color.",
+    "cpu": "Motorola 68000 @ 7.83 MHz",
+    "resolution": "512x342 / 640x480",
+    "colors": "Monocromo / 256+ colores"
+  },
+  "model2": {
+    "fullName": "Sega Model 2",
+    "manufacturer": "Sega",
+    "releaseYear": 1993,
+    "generation": null,
+    "description": "Placa arcade revolucionaria de Sega que introdujo el mapeado de texturas 3D en tiempo real en clásicos como Daytona USA y Virtua Fighter 2.",
+    "cpu": "Intel i960-KB @ 25 MHz",
+    "resolution": "496x384",
+    "colors": "16.7 millones de colores"
+  },
+  "model3": {
+    "fullName": "Sega Model 3",
+    "manufacturer": "Sega",
+    "releaseYear": 1996,
+    "generation": null,
+    "description": "Potente placa arcade de 32 bits desarrollada junto a Lockheed Martin capaz de mover más de un millón de polígonos por segundo.",
+    "cpu": "PowerPC 603 @ 66-166 MHz",
+    "resolution": "496x384",
+    "colors": "16.7 millones de colores"
+  },
+  "naomi": {
+    "fullName": "Sega NAOMI",
+    "manufacturer": "Sega",
+    "releaseYear": 1998,
+    "generation": null,
+    "description": "Placa arcade modular basada en la arquitectura de Dreamcast con el doble de memoria principal y de vídeo.",
+    "cpu": "Hitachi SH-4 @ 200 MHz",
+    "resolution": "640x480",
+    "colors": "16.7 millones de colores"
+  },
+  "naomi2": {
+    "fullName": "Sega NAOMI 2",
+    "manufacturer": "Sega",
+    "releaseYear": 2000,
+    "generation": null,
+    "description": "Evolución de la placa NAOMI equipada con doble procesador SH-4 y doble GPU PowerVR2 para arcade 3D de alta complejidad.",
+    "cpu": "Dual Hitachi SH-4 @ 200 MHz",
+    "resolution": "640x480",
+    "colors": "16.7 millones de colores"
+  },
+  "ngage": {
+    "fullName": "Nokia N-Gage",
+    "manufacturer": "Nokia",
+    "releaseYear": 2003,
+    "generation": 6,
+    "description": "Híbrido de teléfono móvil y consola portátil con pantalla vertical y soporte 3D basado en Symbian OS.",
+    "cpu": "ARM920T @ 104 MHz",
+    "resolution": "176x208",
+    "colors": "4.096 colores"
+  },
+  "pc": {
+    "fullName": "IBM PC / MS-DOS",
+    "manufacturer": "IBM / Varios",
+    "releaseYear": 1981,
+    "generation": null,
+    "description": "Plataforma compatible IBM PC y MS-DOS que albergó la edad dorada de las aventuras gráficas, rol, estrategia y shooters clásicos.",
+    "cpu": "x86 (8086 - Pentium)",
+    "resolution": "320x200 / 640x480",
+    "colors": "16 - 256 colores"
+  },
+  "prboom": {
+    "fullName": "Doom (PrBoom)",
+    "manufacturer": "id Software",
+    "releaseYear": 1993,
+    "generation": null,
+    "description": "Motor clásico de Doom y WADs compatibles que revolucionó los videojuegos en primera persona en PC.",
+    "cpu": "x86 / Multiplataforma",
+    "resolution": "320x200+",
+    "colors": "256 colores"
+  },
+  "vc4000": {
+    "fullName": "Interton VC 4000",
+    "manufacturer": "Interton",
+    "releaseYear": 1978,
+    "generation": 2,
+    "description": "Consola europea de segunda generación con cartuchos de 8 bits y mandos con teclado numérico de 12 botones.",
+    "cpu": "Signetics 2650A @ 887 kHz",
+    "resolution": "160x200",
+    "colors": "8 colores"
+  },
+  "vic20": {
+    "fullName": "Commodore VIC-20",
+    "manufacturer": "Commodore International",
+    "releaseYear": 1980,
+    "generation": null,
+    "description": "Predecesor del Commodore 64 y primer ordenador doméstico de la historia en superar el millón de unidades vendidas.",
+    "cpu": "MOS Technology 6502 @ 1.02 MHz",
+    "resolution": "176x184",
+    "colors": "16 colores"
+  },
+  "windows": {
+    "fullName": "Microsoft Windows",
+    "manufacturer": "Microsoft",
+    "releaseYear": 1995,
+    "generation": null,
+    "description": "Entorno de videojuegos para PC bajo Windows con soporte DirectX y OpenGL.",
+    "cpu": "x86 / x64",
+    "resolution": "640x480+",
+    "colors": "16.7 millones de colores"
+  },
+  "android": {
+    "fullName": "Android",
+    "manufacturer": "Google / Open Handset Alliance",
+    "releaseYear": 2008,
+    "generation": null,
+    "description": "Plataforma móvil y de televisión inteligente con amplio catálogo de juegos nativos y soporte para mando.",
+    "cpu": "ARM / x86",
+    "resolution": "Variable (HD / 4K)",
+    "colors": "16.7 millones de colores"
+  },
+  "ios": {
+    "fullName": "Apple iOS",
+    "manufacturer": "Apple",
+    "releaseYear": 2007,
+    "generation": null,
+    "description": "Sistema operativo móvil de Apple para iPhone y iPad.",
+    "cpu": "Apple Silicon / ARM",
+    "resolution": "Variable",
+    "colors": "16.7 millones de colores"
+  },
+  "atari800": {
+    "fullName": "Atari 800 / 8-bit Family",
+    "manufacturer": "Atari, Inc.",
+    "releaseYear": 1979,
+    "generation": null,
+    "description": "Familia de ordenadores domésticos de 8 bits de Atari (400/800/XL/XE) equipada con los chips gráficos y de sonido ANTIC, GTIA y POKEY.",
+    "cpu": "MOS Technology 6502 @ 1.79 MHz",
+    "resolution": "320x192",
+    "colors": "128-256 colores"
+  },
+  "atarijaguarcd": {
+    "fullName": "Atari Jaguar CD",
+    "manufacturer": "Atari Corporation",
+    "releaseYear": 1995,
+    "generation": 5,
+    "description": "Periférico de unidad CD-ROM para Atari Jaguar con lector de doble velocidad y soporte para juegos en formato CD y música con efectos visuales VLM.",
+    "cpu": "Tom & Jerry + Motorola 68000",
+    "resolution": "320x240 / 720x576",
+    "colors": "16.7 millones de colores"
+  },
+  "bbcmicro": {
+    "fullName": "Acorn BBC Micro",
+    "manufacturer": "Acorn Computers",
+    "releaseYear": 1981,
+    "generation": null,
+    "description": "Ordenador británico de 8 bits diseñado para la serie de alfabetización informática de la BBC, muy influyente en Reino Unido y Europa.",
+    "cpu": "MOS Technology 6502A @ 2 MHz",
+    "resolution": "640x256",
+    "colors": "8-16 colores"
+  },
+  "camplynx": {
+    "fullName": "Camputers Lynx",
+    "manufacturer": "Camputers Ltd",
+    "releaseYear": 1983,
+    "generation": null,
+    "description": "Ordenador doméstico británico de 8 bits con diseño estilizado y gráficos en color de buena resolución para la época.",
+    "cpu": "Zilog Z80A @ 4 MHz",
+    "resolution": "256x248 / 512x248",
+    "colors": "8 colores"
+  },
+  "casloopy": {
+    "fullName": "Casio Loopy",
+    "manufacturer": "Casio",
+    "releaseYear": 1995,
+    "generation": 5,
+    "description": "Consola japonesa de 32 bits lanzada exclusivamente en Japón que incorporaba una impresora térmica integrada para crear pegatinas desde los juegos.",
+    "cpu": "Hitachi SH-1 (SH7021) @ 20 MHz",
+    "resolution": "512x240",
+    "colors": "512 colores"
+  },
+  "cave": {
+    "fullName": "Cave Arcade (68k / CV1000)",
+    "manufacturer": "CAVE",
+    "releaseYear": 1995,
+    "generation": null,
+    "description": "Placas arcade de CAVE célebres por definir el género bullet hell (danmaku) con títulos como DoDonPachi, Mushihimesama y Espgaluda.",
+    "cpu": "Motorola 68000 / Hitachi SH-3",
+    "resolution": "320x240",
+    "colors": "32.768 - 65.536 colores"
+  },
+  "crvision": {
+    "fullName": "VTech CreatiVision",
+    "manufacturer": "VTech",
+    "releaseYear": 1982,
+    "generation": 2,
+    "description": "Híbrido entre consola de videojuegos y ordenador doméstico con mandos acoplables que formaban un teclado alfanumérico completo.",
+    "cpu": "Rockwell 6502A @ 2 MHz",
+    "resolution": "256x192",
+    "colors": "16 colores"
+  },
+  "daphne": {
+    "fullName": "LaserDisc Arcade (Daphne)",
+    "manufacturer": "Varios (Cinematronics / Atari / Sega)",
+    "releaseYear": 1983,
+    "generation": null,
+    "description": "Juegos arcade basados en vídeo FMV almacenado en LaserDisc, como Dragon's Lair, Space Ace y Cliff Hanger.",
+    "cpu": "Zilog Z80 / 6809 + LaserDisc",
+    "resolution": "Vídeo analógico NTSC/PAL",
+    "colors": "Color completo (vídeo)"
+  },
+  "laserdisc": {
+    "fullName": "LaserDisc Arcade",
+    "manufacturer": "Varios",
+    "releaseYear": 1983,
+    "generation": null,
+    "description": "Sistema arcade interactivo basado en discos ópticos LaserDisc con animación tradicional y vídeo real.",
+    "cpu": "Varios + Reproductor LaserDisc",
+    "resolution": "Vídeo analógico NTSC/PAL",
+    "colors": "Color completo (vídeo)"
+  },
+  "dragon32": {
+    "fullName": "Dragon 32 / 64",
+    "manufacturer": "Dragon Data",
+    "releaseYear": 1982,
+    "generation": null,
+    "description": "Ordenador doméstico británico basado en el TRS-80 Color Computer con procesador Motorola 6809E y gran comunidad en Europa.",
+    "cpu": "Motorola 6809E @ 0.89 MHz",
+    "resolution": "256x192",
+    "colors": "8 colores"
+  },
+  "dsi": {
+    "fullName": "Nintendo DSi",
+    "manufacturer": "Nintendo",
+    "releaseYear": 2008,
+    "generation": 7,
+    "description": "Revisión mejorada de Nintendo DS con procesador más rápido, mayor memoria RAM, doble cámara, ranura SD y tienda DSiWare.",
+    "cpu": "ARM9 @ 133 MHz + ARM7 @ 33 MHz",
+    "resolution": "256x192 (doble pantalla)",
+    "colors": "262.144 colores"
+  },
+  "fm7": {
+    "fullName": "Fujitsu FM-7",
+    "manufacturer": "Fujitsu",
+    "releaseYear": 1982,
+    "generation": null,
+    "description": "Ordenador japonés de 8 bits de gran éxito por su arquitectura de doble procesador 6809 y gráficos de alta resolución.",
+    "cpu": "Dual Motorola 6809 @ 2 MHz",
+    "resolution": "640x200",
+    "colors": "8 colores"
+  },
+  "gamate": {
+    "fullName": "Bit Corp Gamate",
+    "manufacturer": "Bit Corporation",
+    "releaseYear": 1990,
+    "generation": 4,
+    "description": "Consola portátil taiwanesa de 8 bits competidora de Game Boy con pantalla LCD monocroma de 4 tonos de gris.",
+    "cpu": "UMC UA6588F (6502) @ 4.43 MHz",
+    "resolution": "160x152",
+    "colors": "4 tonos de gris"
+  },
+  "gameandwatch": {
+    "fullName": "Nintendo Game & Watch",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1980,
+    "generation": 2,
+    "description": "Icónica línea de juegos electrónicos portátiles LCD creados por Gunpei Yokoi que introdujo la cruceta direccional moderna.",
+    "cpu": "Sharp SM5xx (4 bits)",
+    "resolution": "LCD segmentado fijo",
+    "colors": "Monocromo (LCD)"
+  },
+  "gamecom": {
+    "fullName": "Tiger Game.com",
+    "manufacturer": "Tiger Electronics",
+    "releaseYear": 1997,
+    "generation": 5,
+    "description": "Consola portátil pionera en incluir pantalla táctil resistiva y capacidad de conexión a internet mediante módem.",
+    "cpu": "Sharp SM8521 (8 bits) @ 10 MHz",
+    "resolution": "200x160",
+    "colors": "4 tonos de gris"
+  },
+  "gamepock": {
+    "fullName": "Epoch Game Pocket Computer",
+    "manufacturer": "Epoch",
+    "releaseYear": 1984,
+    "generation": 3,
+    "description": "Rara consola portátil japonesa de cartuchos intercambiables anterior a Game Boy con pantalla LCD monocroma.",
+    "cpu": "NEC uPD78C06 @ 6 MHz",
+    "resolution": "75x64",
+    "colors": "Monocromo (LCD)"
+  },
+  "gp32": {
+    "fullName": "Game Park GP32",
+    "manufacturer": "Game Park",
+    "releaseYear": 2001,
+    "generation": 6,
+    "description": "Consola portátil surcoreana de 32 bits muy apreciada por la escena homebrew, emuladores y software libre.",
+    "cpu": "ARM920T @ 133 MHz",
+    "resolution": "320x240",
+    "colors": "65.536 colores"
+  },
+  "gmaster": {
+    "fullName": "Hartung Game Master",
+    "manufacturer": "Hartung",
+    "releaseYear": 1990,
+    "generation": 4,
+    "description": "Consola portátil europea de bajo coste con pantalla LCD de matriz de puntos y pequeño catálogo de juegos de acción.",
+    "cpu": "NEC uPD78C10",
+    "resolution": "64x64",
+    "colors": "Monocromo (LCD)"
+  },
+  "megaduck": {
+    "fullName": "Mega Duck / Cougar Boy",
+    "manufacturer": "Welback Holdings / Creatronic",
+    "releaseYear": 1993,
+    "generation": 4,
+    "description": "Consola portátil de 8 bits similar en arquitectura a Game Boy y Watara Supervision, distribuida en Europa y Sudamérica.",
+    "cpu": "Sharp LR35902 @ 4.19 MHz",
+    "resolution": "160x144",
+    "colors": "4 tonos de gris"
+  },
+  "msx2+": {
+    "fullName": "MSX2+",
+    "manufacturer": "Sony / Panasonic / Sanyo",
+    "releaseYear": 1988,
+    "generation": null,
+    "description": "Evolución del estándar MSX2 lanzada en Japón con chip gráfico V9958 capaz de mostrar más de 19.000 colores simultáneos y scroll suave.",
+    "cpu": "Zilog Z80A @ 3.58 MHz",
+    "resolution": "512x424",
+    "colors": "19.268 colores"
+  },
+  "msxturbor": {
+    "fullName": "MSX turbo R",
+    "manufacturer": "Panasonic",
+    "releaseYear": 1990,
+    "generation": null,
+    "description": "Última y más potente generación oficial del estándar MSX, equipada con procesador R800 de 16 bits y audio PCM integrado.",
+    "cpu": "ASCII R800 @ 29.5 MHz + Z80",
+    "resolution": "512x424",
+    "colors": "19.268 colores"
+  },
+  "multivision": {
+    "fullName": "Othello Multivision",
+    "manufacturer": "Tsukuda Original",
+    "releaseYear": 1983,
+    "generation": 3,
+    "description": "Clon japonés con licencia oficial de la Sega SG-1000 fabricado por Tsukuda Original con soporte completo para sus cartuchos.",
+    "cpu": "NEC 780C (Z80) @ 3.58 MHz",
+    "resolution": "256x192",
+    "colors": "16 colores"
+  },
+  "n64dd": {
+    "fullName": "Nintendo 64DD",
+    "manufacturer": "Nintendo",
+    "releaseYear": 1999,
+    "generation": 5,
+    "description": "Periférico de discos magnéticos reescribibles para Nintendo 64 lanzado solo en Japón con juegos exclusivos como F-Zero X Expansion Kit.",
+    "cpu": "MIPS R4300i @ 93.75 MHz (N64)",
+    "resolution": "640x480",
+    "colors": "16.7 millones de colores"
+  },
+  "namco2x6": {
+    "fullName": "Namco System 246 / 256",
+    "manufacturer": "Namco",
+    "releaseYear": 2001,
+    "generation": null,
+    "description": "Placas arcade de Namco basadas en la arquitectura de PlayStation 2, hogar de Tekken 4/5, Soulcalibur II/III y Time Crisis 3.",
+    "cpu": "Emotion Engine @ 294.9-300 MHz",
+    "resolution": "640x480",
+    "colors": "16.7 millones de colores"
+  },
+  "oric": {
+    "fullName": "Tangerine Oric-1 / Oric Atmos",
+    "manufacturer": "Tangerine Computer Systems",
+    "releaseYear": 1983,
+    "generation": null,
+    "description": "Familia de ordenadores británicos de 8 bits muy populares en Reino Unido y Francia con chip de sonido AY-3-8912.",
+    "cpu": "MOS Technology 6502A @ 1 MHz",
+    "resolution": "240x200",
+    "colors": "8 colores"
+  },
+  "chihiro": {
+    "fullName": "Sega Chihiro",
+    "manufacturer": "Sega / Microsoft",
+    "releaseYear": 2002,
+    "generation": null,
+    "description": "Placa arcade basada en la arquitectura de la Xbox original utilizada en clásicos como OutRun 2, Virtua Cop 3 y The House of the Dead III.",
+    "cpu": "Intel Pentium III @ 733 MHz",
+    "resolution": "640x480 / 720p",
+    "colors": "16.7 millones de colores"
+  },
+  "coco": {
+    "fullName": "TRS-80 Color Computer",
+    "manufacturer": "Tandy Corporation",
+    "releaseYear": 1980,
+    "generation": null,
+    "description": "Ordenador doméstico de Tandy basado en el procesador Motorola 6809E, muy popular en Norteamérica durante los años 80.",
+    "cpu": "Motorola 6809E @ 0.89-1.79 MHz",
+    "resolution": "256x192 / 320x225",
+    "colors": "9-64 colores"
+  },
+  "easyrpg": {
+    "fullName": "EasyRPG (RPG Maker 2000/2003)",
+    "manufacturer": "EasyRPG Team / Enterbrain",
+    "releaseYear": 2000,
+    "generation": null,
+    "description": "Intérprete de código abierto compatible con juegos creados en RPG Maker 2000 y RPG Maker 2003.",
+    "cpu": "Motor multiplataforma",
+    "resolution": "320x240",
+    "colors": "16 bits / 256 colores"
+  },
+  "ebooks": {
+    "fullName": "eBooks / Revistas y Manuales",
+    "manufacturer": "Varios",
+    "releaseYear": 1990,
+    "generation": null,
+    "description": "Colección de libros digitales, manuales técnicos, revistas y guías de videojuegos.",
+    "cpu": "Visor de documentos",
+    "resolution": "Escalable",
+    "colors": "Color completo"
+  },
+  "flash": {
+    "fullName": "Adobe Flash",
+    "manufacturer": "Macromedia / Adobe",
+    "releaseYear": 1996,
+    "generation": null,
+    "description": "Plataforma multimedia web que dio vida a miles de juegos independientes y animaciones interactivas durante los años 2000.",
+    "cpu": "ActionScript VM / Ruffle",
+    "resolution": "Vectorial / Escalable",
+    "colors": "16.7 millones de colores"
+  },
+  "fpinball": {
+    "fullName": "Future Pinball",
+    "manufacturer": "BSP Software",
+    "releaseYear": 2005,
+    "generation": null,
+    "description": "Simulador de mesas de pinball en 3D con físicas en tiempo real y editor de mesas creadas por la comunidad.",
+    "cpu": "x86 / OpenGL",
+    "resolution": "HD / Full HD",
+    "colors": "16.7 millones de colores"
+  },
+  "hypseus": {
+    "fullName": "Hypseus Singe (LaserDisc)",
+    "manufacturer": "Varios",
+    "releaseYear": 1983,
+    "generation": null,
+    "description": "Fork moderno de Daphne con soporte mejorado para juegos LaserDisc arcade y títulos Singe en alta definición.",
+    "cpu": "Emulador LaserDisc / Singe",
+    "resolution": "NTSC / HD",
+    "colors": "Color completo"
+  },
+  "j2me": {
+    "fullName": "Java 2 Micro Edition (J2ME)",
+    "manufacturer": "Sun Microsystems",
+    "releaseYear": 1999,
+    "generation": null,
+    "description": "Plataforma móvil de los teléfonos Java de los años 2000 con miles de juegos clásicos adaptados a pantallas pequeñas.",
+    "cpu": "JVM (KVM / CLDC)",
+    "resolution": "128x128 - 240x320",
+    "colors": "65.536 colores"
+  },
+  "lowresnx": {
+    "fullName": "LowRes NX",
+    "manufacturer": "Inutilis / Timo Kloss",
+    "releaseYear": 2018,
+    "generation": null,
+    "description": "Consola de fantasía programable en BASIC inspirada en sistemas de 8 y 16 bits con sprites y audio chiptune.",
+    "cpu": "CPU virtual BASIC",
+    "resolution": "160x128",
+    "colors": "32 colores"
+  },
+  "lutro": {
+    "fullName": "Lutro (LÖVE Retro)",
+    "manufacturer": "Libretro",
+    "releaseYear": 2015,
+    "generation": null,
+    "description": "Framework de juegos 2D en Lua basado en LÖVE diseñado específicamente como core de RetroArch.",
+    "cpu": "LuaJIT",
+    "resolution": "Variable",
+    "colors": "16.7 millones de colores"
+  },
+  "mplayer": {
+    "fullName": "Media Player",
+    "manufacturer": "Varios",
+    "releaseYear": 2001,
+    "generation": null,
+    "description": "Reproductor multimedia integrado para vídeos, cinemáticas y contenido audiovisual.",
+    "cpu": "Decodificador multimedia",
+    "resolution": "Escalable",
+    "colors": "16.7 millones de colores"
+  },
+  "mugen": {
+    "fullName": "M.U.G.E.N",
+    "manufacturer": "Elecbyte",
+    "releaseYear": 1999,
+    "generation": null,
+    "description": "Motor gratuito de juegos de lucha 2D altamente personalizable creado para diseñar crossovers con personajes y escenarios propios.",
+    "cpu": "x86 / Ikemen GO",
+    "resolution": "320x240 / 1280x720",
+    "colors": "256 - 16.7M colores"
+  },
+  "naomigd": {
+    "fullName": "Sega NAOMI GD-ROM",
+    "manufacturer": "Sega",
+    "releaseYear": 2000,
+    "generation": null,
+    "description": "Expansión de unidad GD-ROM para la placa arcade Sega NAOMI que permitía juegos de mayor capacidad como Ikaruga y Border Down.",
+    "cpu": "Hitachi SH-4 @ 200 MHz",
+    "resolution": "640x480",
+    "colors": "16.7 millones de colores"
+  },
+  "nes3d": {
+    "fullName": "3DNes / NES 3D",
+    "manufacturer": "Geod Studio",
+    "releaseYear": 2016,
+    "generation": null,
+    "description": "Emulador experimental de NES que convierte los gráficos 2D clásicos en escenas voxelizadas en 3D en tiempo real.",
+    "cpu": "Ricoh 2A03 (emulado 3D)",
+    "resolution": "HD / 3D",
+    "colors": "16.7 millones de colores"
+  },
+  "o2em": {
+    "fullName": "Magnavox Odyssey² / Videopac",
+    "manufacturer": "Magnavox / Philips",
+    "releaseYear": 1978,
+    "generation": 2,
+    "description": "Consola doméstica de segunda generación equipada con teclado de membrana integrado y módulo opcional de síntesis de voz.",
+    "cpu": "Intel 8048 @ 1.79 MHz",
+    "resolution": "160x200",
+    "colors": "16 colores"
+  },
+  "openbor": {
+    "fullName": "OpenBOR",
+    "manufacturer": "Senile Team / Comunidad",
+    "releaseYear": 2004,
+    "generation": null,
+    "description": "Motor de código abierto especializado en beat 'em ups 2D de desplazamiento lateral estilo arcade.",
+    "cpu": "Motor C multiplataforma",
+    "resolution": "320x240 - 960x540",
+    "colors": "16 - 32 bits"
+  },
+  "p2000t": {
+    "fullName": "Philips P2000T",
+    "manufacturer": "Philips",
+    "releaseYear": 1980,
+    "generation": null,
+    "description": "Microordenador europeo de Philips basado en Z80 con almacenamiento en minicasetes digitales de alta velocidad.",
+    "cpu": "Zilog Z80 @ 2.5 MHz",
+    "resolution": "40x24 caracteres (teletexto)",
+    "colors": "8 colores"
+  },
+  "palm": {
+    "fullName": "Palm OS",
+    "manufacturer": "Palm, Inc.",
+    "releaseYear": 1996,
+    "generation": null,
+    "description": "Sistema operativo de las clásicas agendas electrónicas Palm PDA con gran catálogo de juegos táctiles con stylus.",
+    "cpu": "Motorola DragonBall / ARM",
+    "resolution": "160x160 / 320x320",
+    "colors": "Monocromo - 65.536 colores"
+  },
+  "pc88": {
+    "fullName": "NEC PC-8801",
+    "manufacturer": "NEC",
+    "releaseYear": 1981,
+    "generation": null,
+    "description": "Ordenador japonés de 8 bits muy influyente en el desarrollo temprano de RPGs, novelas visuales y shooters de Falcom y Enix.",
+    "cpu": "NEC uPD780 (Z80) @ 4-8 MHz",
+    "resolution": "640x200 / 640x400",
+    "colors": "8 de 512 colores"
+  },
+  "pc98": {
+    "fullName": "NEC PC-9801",
+    "manufacturer": "NEC",
+    "releaseYear": 1982,
+    "generation": null,
+    "description": "Dominante familia de ordenadores japoneses de 16/32 bits célebre por los primeros Touhou, Policenauts y RPGs clásicos.",
+    "cpu": "Intel 8086 / 386 / 486",
+    "resolution": "640x400",
+    "colors": "16 de 4.096 colores"
+  },
+  "pico8": {
+    "fullName": "PICO-8",
+    "manufacturer": "Lexaloffle Games",
+    "releaseYear": 2015,
+    "generation": null,
+    "description": "Consola de fantasía de 8 bits con estrictas limitaciones creativas y cartuchos PNG compartibles por la comunidad.",
+    "cpu": "VM Lua de PICO-8",
+    "resolution": "128x128",
+    "colors": "16 colores"
+  },
+  "pinballfx": {
+    "fullName": "Pinball FX",
+    "manufacturer": "Zen Studios",
+    "releaseYear": 2007,
+    "generation": null,
+    "description": "Plataforma moderna de simulación de pinball digital con mesas originales y licencias de Williams y Bally.",
+    "cpu": "Unreal Engine",
+    "resolution": "Full HD / 4K",
+    "colors": "16.7 millones de colores"
+  },
+  "pinballfx2": {
+    "fullName": "Pinball FX2",
+    "manufacturer": "Zen Studios",
+    "releaseYear": 2010,
+    "generation": null,
+    "description": "Secuela de Pinball FX con físicas mejoradas y decenas de mesas temáticas de Marvel, Star Wars y franquicias clásicas.",
+    "cpu": "Zen Pinball Engine",
+    "resolution": "Full HD",
+    "colors": "16.7 millones de colores"
+  },
+  "pinballfx3": {
+    "fullName": "Pinball FX3",
+    "manufacturer": "Zen Studios",
+    "releaseYear": 2017,
+    "generation": null,
+    "description": "Entrega de Zen Studios con torneos multijugador, iluminación mejorada y colección oficial de mesas Williams.",
+    "cpu": "Zen Pinball Engine",
+    "resolution": "Full HD / 4K",
+    "colors": "16.7 millones de colores"
+  },
+  "pinballm": {
+    "fullName": "Pinball M",
+    "manufacturer": "Zen Studios",
+    "releaseYear": 2023,
+    "generation": null,
+    "description": "Simulador de pinball enfocado a temáticas de terror y acción para público adulto desarrollado por Zen Studios.",
+    "cpu": "Unreal Engine",
+    "resolution": "Full HD / 4K",
+    "colors": "16.7 millones de colores"
+  },
+  "pv1000": {
+    "fullName": "Casio PV-1000",
+    "manufacturer": "Casio",
+    "releaseYear": 1983,
+    "generation": 3,
+    "description": "Rara consola doméstica de 8 bits lanzada por Casio exclusivamente en Japón con un catálogo reducido de 15 juegos.",
+    "cpu": "Zilog Z80A @ 3.579 MHz",
+    "resolution": "256x192",
+    "colors": "8 colores"
+  },
+  "samcoupe": {
+    "fullName": "SAM Coupé",
+    "manufacturer": "Miles Gordon Technology",
+    "releaseYear": 1989,
+    "generation": null,
+    "description": "Ordenador británico de 8 bits concebido como sucesor compatible con el ZX Spectrum pero con gráficos y sonido muy superiores.",
+    "cpu": "Zilog Z80B @ 6 MHz",
+    "resolution": "256x192 / 512x192",
+    "colors": "16 de 128 colores"
+  },
+  "scv": {
+    "fullName": "Epoch Super Cassette Vision",
+    "manufacturer": "Epoch",
+    "releaseYear": 1984,
+    "generation": 3,
+    "description": "Consola doméstica de 8 bits lanzada en Japón y Francia con sprites avanzados y títulos arcade de Namco y Tecmo.",
+    "cpu": "NEC uPD7801G @ 4 MHz",
+    "resolution": "309x246",
+    "colors": "16 colores"
+  },
+  "singe": {
+    "fullName": "Singe (LaserDisc / FMV)",
+    "manufacturer": "Scott Duensing / Comunidad",
+    "releaseYear": 2006,
+    "generation": null,
+    "description": "Motor Lua para juegos de pistola óptica y vídeo interactivo en LaserDisc basado en Daphne y Hypseus.",
+    "cpu": "Lua / Motor FMV",
+    "resolution": "NTSC / HD",
+    "colors": "Color completo"
+  },
+  "spectravideo": {
+    "fullName": "Spectravideo SV-318 / SV-328",
+    "manufacturer": "Spectravideo",
+    "releaseYear": 1983,
+    "generation": null,
+    "description": "Ordenadores domésticos basados en Z80 cuya arquitectura sirvió de base directa para el estándar MSX.",
+    "cpu": "Zilog Z80A @ 3.58 MHz",
+    "resolution": "256x192",
+    "colors": "16 colores"
+  },
+  "supracan": {
+    "fullName": "Funtech Super A'Can",
+    "manufacturer": "Funtech",
+    "releaseYear": 1995,
+    "generation": 4,
+    "description": "Exclusiva consola taiwanesa de 16 bits con procesador 68000 y solo 12 juegos publicados oficialmente.",
+    "cpu": "Motorola 68000 @ 10.73 MHz",
+    "resolution": "320x240",
+    "colors": "256 de 32.768 colores"
+  },
+  "thomson": {
+    "fullName": "Thomson MO5 / TO7 / TO8",
+    "manufacturer": "Thomson",
+    "releaseYear": 1984,
+    "generation": null,
+    "description": "Familia de ordenadores domésticos y educativos franceses de gran popularidad en Francia durante los años 80.",
+    "cpu": "Motorola 6809E @ 1 MHz",
+    "resolution": "320x200",
+    "colors": "16 colores"
+  },
+  "ti99": {
+    "fullName": "Texas Instruments TI-99/4A",
+    "manufacturer": "Texas Instruments",
+    "releaseYear": 1981,
+    "generation": null,
+    "description": "Primer ordenador doméstico de 16 bits del mercado, recordado por sus cartuchos Command Module y sintetizador de voz.",
+    "cpu": "TI TMS9900 @ 3 MHz",
+    "resolution": "256x192",
+    "colors": "16 colores"
+  },
+  "tic80": {
+    "fullName": "TIC-80",
+    "manufacturer": "Vadim Grigoruk",
+    "releaseYear": 2017,
+    "generation": null,
+    "description": "Tiny Computer de fantasía de código abierto para crear y jugar títulos retro en Lua, MoonScript, JavaScript o Wren.",
+    "cpu": "VM multi-lenguaje",
+    "resolution": "240x136",
+    "colors": "16 colores"
+  },
+  "triforce": {
+    "fullName": "Namco · Sega · Nintendo Triforce",
+    "manufacturer": "Namco / Sega / Nintendo",
+    "releaseYear": 2002,
+    "generation": null,
+    "description": "Placa arcade desarrollada conjuntamente sobre la arquitectura de GameCube para títulos como Mario Kart Arcade GP y F-Zero AX.",
+    "cpu": "IBM PowerPC Gekko @ 486 MHz",
+    "resolution": "640x480",
+    "colors": "16.7 millones de colores"
+  },
+  "tutor": {
+    "fullName": "Tomy Tutor (Pyūta)",
+    "manufacturer": "Tomy / Matsushita",
+    "releaseYear": 1982,
+    "generation": null,
+    "description": "Ordenador doméstico de 16 bits basado en la familia TMS9900 con cartuchos educativos y juegos arcade.",
+    "cpu": "TI TMS9995 @ 10.7 MHz",
+    "resolution": "256x192",
+    "colors": "16 colores"
+  },
+  "uzebox": {
+    "fullName": "Uzebox",
+    "manufacturer": "Alec Bourque",
+    "releaseYear": 2008,
+    "generation": null,
+    "description": "Consola retro de código abierto basada en un único microcontrolador AVR de 8 bits sin chip gráfico dedicado.",
+    "cpu": "ATmega644 @ 28.6 MHz",
+    "resolution": "240x224",
+    "colors": "256 colores"
+  },
+  "vircon32": {
+    "fullName": "Vircon32",
+    "manufacturer": "Carra",
+    "releaseYear": 2021,
+    "generation": null,
+    "description": "Consola virtual de 32 bits diseñada para parecerse a una consola clásica de los años 90 con programación en C y ensamblador.",
+    "cpu": "CPU virtual de 32 bits",
+    "resolution": "640x360",
+    "colors": "16.7 millones de colores"
+  },
+  "vpinball": {
+    "fullName": "Visual Pinball",
+    "manufacturer": "Randy Davis / Comunidad",
+    "releaseYear": 2000,
+    "generation": null,
+    "description": "Simulador y editor de pinball de código abierto que recrea mesas reales y originales en combinación con PinMAME.",
+    "cpu": "x86 / DirectX / OpenGL",
+    "resolution": "Full HD / 4K",
+    "colors": "16.7 millones de colores"
+  },
+  "vsmile": {
+    "fullName": "VTech V.Smile",
+    "manufacturer": "VTech",
+    "releaseYear": 2004,
+    "generation": 6,
+    "description": "Consola educativa infantil con mando ergonómico adaptable para zurdos y diestros y cartuchos de personajes populares.",
+    "cpu": "Sunplus SPG2xx (16 bits)",
+    "resolution": "320x240",
+    "colors": "65.536 colores"
+  },
+  "wasm4": {
+    "fullName": "WASM-4",
+    "manufacturer": "Bruno Garcia",
+    "releaseYear": 2021,
+    "generation": null,
+    "description": "Consola de fantasía basada en WebAssembly para crear minijuegos retro de hasta 64 KB en múltiples lenguajes.",
+    "cpu": "WebAssembly VM",
+    "resolution": "160x160",
+    "colors": "4 colores (paleta)"
+  },
+  "x1": {
+    "fullName": "Sharp X1",
+    "manufacturer": "Sharp Corporation",
+    "releaseYear": 1982,
+    "generation": null,
+    "description": "Serie de ordenadores japoneses de 8 bits muy apreciados por sus capacidades de vídeo, superposición RGB y conversiones arcade.",
+    "cpu": "Sharp Z80A @ 4 MHz",
+    "resolution": "640x200 / 640x400",
+    "colors": "8 - 4.096 colores"
+  },
+  "zaccariapinball": {
+    "fullName": "Zaccaria Pinball",
+    "manufacturer": "Magic Pixel",
+    "releaseYear": 2016,
+    "generation": null,
+    "description": "Colección oficial digitalizada de mesas de pinball clásicas fabricadas por la histórica compañía italiana Zaccaria.",
+    "cpu": "x86 / DirectX",
+    "resolution": "Full HD / 4K",
+    "colors": "16.7 millones de colores"
+  },
+  "zmachine": {
+    "fullName": "Z-Machine (Infocom)",
+    "manufacturer": "Infocom",
+    "releaseYear": 1979,
+    "generation": null,
+    "description": "Máquina virtual creada por Infocom para ejecutar aventuras conversacionales clásicas como Zork y The Hitchhiker's Guide.",
+    "cpu": "Intérprete Z-Machine",
+    "resolution": "Modo texto",
+    "colors": "Texto / Paleta ANSI"
   }
 }

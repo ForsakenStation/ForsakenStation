@@ -533,3 +533,9 @@ genhtml coverage/lcov.info -o coverage/html
 - Localization files (`lib/l10n/generated/`)
 
 See `.lcovrc` for the full exclusion configuration.
+
+## Legal Disclaimer & Trademarks
+
+Forsaken Emulator is a frontend interface for launching emulators. It does not include, distribute, or encourage the download of copyrighted game ROMs or BIOS files. Users are solely responsible for ensuring they have the legal right to use any ROM or BIOS files with this software.
+
+Forsaken Emulator is an independent project and is **not affiliated with, endorsed by, or sponsored by** any console manufacturer, hardware vendor, or game publisher. All platform names, logos, console images, artwork, and trademarks displayed in this repository or application belong to their respective owners and are used solely for identification and informational purposes.

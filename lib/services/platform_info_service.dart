@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/platform_info.dart';
+import '../utils/platform_aliases.dart';
 import 'debug_service.dart';
 import 'locale_service.dart';
 
@@ -13,6 +14,7 @@ class PlatformInfoService {
   static const Set<String> _localizedInfoLanguages = {'ca', 'en', 'eu', 'gl'};
 
   Map<String, PlatformInfo>? _platformInfoCache;
+  Map<String, PlatformInfo>? _fallbackInfoCache;
   String? _cachedLanguageCode;
 
   PlatformInfoService._();
@@ -57,23 +59,60 @@ class PlatformInfoService {
     }
   }
 
+  Future<Map<String, PlatformInfo>> _loadFallbackInfo() async {
+    if (_fallbackInfoCache != null) return _fallbackInfoCache!;
+    try {
+      final jsonString = await rootBundle.loadString(
+        'assets/data/platforms_info.json',
+      );
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
+      _fallbackInfoCache = {};
+      jsonData.forEach((key, value) {
+        _fallbackInfoCache![key] = PlatformInfo.fromJson(value);
+      });
+      return _fallbackInfoCache!;
+    } catch (e) {
+      DebugService.instance.error(
+        'Error loading fallback platform info: $e',
+        tag: 'PlatformInfo',
+      );
+      return {};
+    }
+  }
+
   /// Get information for a specific platform by its identifier
   ///
   /// Returns null if the platform information is not found
   Future<PlatformInfo?> getPlatformInfo(String platformId) async {
     final allInfo = await loadPlatformInfo();
-    return allInfo[platformId.toLowerCase()];
+    final candidates = PlatformAliases.getCandidates(platformId);
+
+    for (final candidate in candidates) {
+      final info = allInfo[candidate.toLowerCase()];
+      if (info != null) return info;
+    }
+
+    if (_cachedLanguageCode != null &&
+        _localizedInfoLanguages.contains(_cachedLanguageCode)) {
+      final fallback = await _loadFallbackInfo();
+      for (final candidate in candidates) {
+        final info = fallback[candidate.toLowerCase()];
+        if (info != null) return info;
+      }
+    }
+
+    return null;
   }
 
   /// Check if platform information exists for a given platform ID
   Future<bool> hasPlatformInfo(String platformId) async {
-    final allInfo = await loadPlatformInfo();
-    return allInfo.containsKey(platformId.toLowerCase());
+    return (await getPlatformInfo(platformId)) != null;
   }
 
   /// Clear the cache (useful for testing or reloading)
   void clearCache() {
     _platformInfoCache = null;
+    _fallbackInfoCache = null;
     _cachedLanguageCode = null;
   }
 

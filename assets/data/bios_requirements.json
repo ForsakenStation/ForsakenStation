@@ -1543,5 +1543,28 @@
       }
     ],
     "notes": "Required for Super Game Boy functionality in SNES emulators. SGB1.sfc is essential, SGB2.sfc provides enhanced features."
+  },
+  {
+    "platform": "xbox",
+    "displayName": "Original Xbox (xemu)",
+    "required": true,
+    "locations": [
+      "~/.local/share/xemu/xemu/"
+    ],
+    "files": [
+      {
+        "filename": "mcpx_1.0.bin",
+        "description": "Xbox MCPX Boot ROM"
+      },
+      {
+        "filename": "Complex_4627v1.03.bin",
+        "description": "Xbox Flash/BIOS ROM (or retail 4627/3944)"
+      },
+      {
+        "filename": "xbox_hdd.qcow2",
+        "description": "Pre-formatted Xbox Hard Disk Image"
+      }
+    ],
+    "notes": "xemu requires MCPX Boot ROM, Flash ROM, and an HDD image configured in Machine -> Settings -> System (saved in xemu.toml)."
   }
 ]

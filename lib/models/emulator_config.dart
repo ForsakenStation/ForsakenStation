@@ -1,6 +1,7 @@
 import 'dart:convert';
 import '../services/debug_service.dart';
 import '../utils/file_utils.dart';
+import '../utils/platform_aliases.dart';
 import '../utils/platform_utils.dart' as platform_utils;
 
 /// Represents a single emulator command configuration
@@ -276,14 +277,18 @@ class EmulatorsConfig {
     }
   }
 
-  /// Get configuration for a specific platform
+  /// Get configuration for a specific platform (resolving known aliases)
   EmulatorConfig? getConfigForPlatform(String platform) {
-    return _platformMap[platform.toLowerCase()];
+    for (final candidate in PlatformAliases.getCandidates(platform)) {
+      final config = _platformMap[candidate.toLowerCase()];
+      if (config != null) return config;
+    }
+    return null;
   }
 
   /// Check if a platform is configured
   bool isPlatformConfigured(String platform) {
-    return _platformMap.containsKey(platform.toLowerCase());
+    return getConfigForPlatform(platform) != null;
   }
 
   /// Get list of all configured platforms
