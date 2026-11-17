@@ -282,18 +282,7 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
 
   Future<void> _backupConfiguration() async {
     try {
-      // Only backup if there are local overrides
-      if (!_configService.hasLocalOverrides) {
-        if (mounted) {
-          AppSnackBar.info(
-            context,
-            AppLocalizations.of(context)!.noCustomConfigToBackup,
-          );
-        }
-        return;
-      }
-
-      // Get current config
+      // Get current active config
       final dialogTitle = AppLocalizations.of(context)!.saveConfigurationBackup;
       final config = await _configService.getConfig();
 
@@ -327,6 +316,47 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
         AppSnackBar.error(
           context,
           '${AppLocalizations.of(context)!.errorBackingUp} $e',
+        );
+      }
+    }
+  }
+
+  Future<void> _importConfiguration() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        dialogTitle: AppLocalizations.of(context)!.systemUtilities,
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+      );
+
+      if (result.isEmpty || result.single.path == null) return;
+
+      final file = File(result.single.path!);
+      final content = await file.readAsString();
+      final decoded = jsonDecode(content);
+
+      if (decoded is! Map<String, dynamic> || decoded['emulators'] is! List) {
+        if (mounted) {
+          AppSnackBar.error(
+            context,
+            '${AppLocalizations.of(context)!.errorSavingSettings} Invalid config.json format',
+          );
+        }
+        return;
+      }
+
+      await _configService.saveConfig(decoded);
+      if (mounted) {
+        AppSnackBar.success(
+          context,
+          AppLocalizations.of(context)!.configurationReloaded,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        AppSnackBar.error(
+          context,
+          '${AppLocalizations.of(context)!.errorSavingSettings} $e',
         );
       }
     }
@@ -477,44 +507,44 @@ class _SystemUtilitiesScreenState extends State<SystemUtilitiesScreen> {
                               ),
                               _UtilityCard(
                                 iconType: AnimatedLucideIconType.archive,
-                                title: AppLocalizations.of(
-                                  context,
-                                )!.backupConfiguration,
+                                title: 'Export config.json',
                                 description: AppLocalizations.of(
                                   context,
                                 )!.backupConfigurationDescription,
                                 onPressed: _backupConfiguration,
                               ),
+                              _UtilityCard(
+                                iconType: AnimatedLucideIconType.folderCheck,
+                                title: 'Import config.json',
+                                description:
+                                    'Restore emulators configuration from a config.json file',
+                                onPressed: _importConfiguration,
+                              ),
                             ];
 
                             if (constraints.maxWidth >= 720) {
-                              return Column(
-                                children: [
+                              final rows = <Widget>[];
+                              for (var i = 0; i < cards.length; i += 2) {
+                                if (i > 0) rows.add(const SizedBox(height: 14));
+                                rows.add(
                                   IntrinsicHeight(
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
                                       children: [
-                                        Expanded(child: cards[0]),
+                                        Expanded(child: cards[i]),
                                         const SizedBox(width: 14),
-                                        Expanded(child: cards[1]),
+                                        Expanded(
+                                          child: i + 1 < cards.length
+                                              ? cards[i + 1]
+                                              : const SizedBox.shrink(),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 14),
-                                  IntrinsicHeight(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        Expanded(child: cards[2]),
-                                        const SizedBox(width: 14),
-                                        Expanded(child: cards[3]),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
+                                );
+                              }
+                              return Column(children: rows);
                             }
 
                             return Column(
