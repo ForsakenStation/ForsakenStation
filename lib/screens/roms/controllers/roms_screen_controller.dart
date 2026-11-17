@@ -4,6 +4,7 @@ import '../../../models/rom_item.dart';
 import '../../../models/media.dart';
 import '../../../models/game_info.dart';
 import '../../../models/emulator_platform.dart';
+import '../../../models/pagination_model.dart';
 import '../../../services/media_service.dart';
 import '../../../services/gamelist_service.dart';
 import '../../../services/rom_service.dart';
@@ -23,6 +24,10 @@ class RomsScreenController extends ChangeNotifier {
   int _selectedIndex = 0;
   bool _isLoading = true;
   String _searchQuery = '';
+  
+  // Pagination state
+  PaginationModel<RomItem>? _paginationModel;
+  bool _paginationEnabled = false;
 
   // Media loading control with debouncing
   Timer? _mediaLoadTimer;
@@ -52,6 +57,15 @@ class RomsScreenController extends ChangeNotifier {
   Map<String, RomMedia> get mediaCache => _mediaCache;
   Map<String, GameInfo> get gameInfoCache => _gameInfoCache;
   bool get isNavigating => _isNavigating;
+  
+  // Pagination getters
+  PaginationModel<RomItem>? get paginationModel => _paginationModel;
+  bool get isPaginationEnabled => _paginationEnabled;
+  List<RomItem> get paginatedItems => _paginationModel?.currentPageItems ?? _filteredItems;
+  int get currentPage => _paginationModel?.currentPage ?? 0;
+  int get totalPages => _paginationModel?.totalPages ?? 1;
+  bool get hasPreviousPage => _paginationModel?.hasPreviousPage ?? false;
+  bool get hasNextPage => _paginationModel?.hasNextPage ?? false;
 
   set selectedIndex(int value) {
     if (_selectedIndex != value) {
@@ -75,6 +89,7 @@ class RomsScreenController extends ChangeNotifier {
     required String currentPath,
     String? currentSubdirectory,
     bool isCollection = false,
+    int pageSize = PaginationConfig.listPageSize,
   }) async {
     _isLoading = true;
     _selectedIndex = 0;
@@ -116,12 +131,31 @@ class RomsScreenController extends ChangeNotifier {
         _sortItems();
       }
       _updateFilteredItems();
+      
+      // Initialize pagination if there are enough items
+      _initializePagination(pageSize);
+      
       _isLoading = false;
       notifyListeners();
     } catch (e) {
       _debug.error('Error loading ROM items: $e', tag: 'RomsScreenController');
       _isLoading = false;
       notifyListeners();
+    }
+  }
+  
+  /// Initialize pagination model
+  void _initializePagination(int pageSize) {
+    // Enable pagination only if there are enough items
+    _paginationEnabled = _filteredItems.length > pageSize;
+    if (_paginationEnabled) {
+      _paginationModel = PaginationModel<RomItem>(
+        items: _filteredItems,
+        currentPage: 0,
+        pageSize: pageSize,
+      );
+    } else {
+      _paginationModel = null;
     }
   }
 
@@ -185,6 +219,12 @@ class RomsScreenController extends ChangeNotifier {
       _filteredItems = _items.where((item) {
         return item.displayName.toLowerCase().contains(query);
       }).toList();
+    }
+    
+    // Reinitialize pagination when filter changes
+    if (_paginationEnabled && _paginationModel != null) {
+      final currentPageSize = _paginationModel!.pageSize;
+      _initializePagination(currentPageSize);
     }
   }
 
@@ -323,5 +363,79 @@ class RomsScreenController extends ChangeNotifier {
         }
       }
     });
+  }
+  
+  // ============================================================================
+  // Pagination Methods
+  // ============================================================================
+  
+  /// Enable or disable pagination
+  void setPaginationEnabled(bool enabled, {int? pageSize}) {
+    if (_paginationEnabled != enabled || (enabled && pageSize != null)) {
+      _paginationEnabled = enabled;
+      if (enabled && _filteredItems.isNotEmpty) {
+        _paginationModel = PaginationModel<RomItem>(
+          items: _filteredItems,
+          currentPage: 0,
+          pageSize: pageSize ?? PaginationConfig.listPageSize,
+        );
+      } else {
+        _paginationModel = null;
+      }
+      notifyListeners();
+    }
+  }
+  
+  /// Go to next page
+  void goToNextPage() {
+    if (_paginationModel != null) {
+      _paginationModel!.nextPage();
+      _selectedIndex = 0; // Reset to first item in new page
+      notifyListeners();
+    }
+  }
+  
+  /// Go to previous page
+  void goToPreviousPage() {
+    if (_paginationModel != null) {
+      _paginationModel!.previousPage();
+      _selectedIndex = 0; // Reset to first item in new page
+      notifyListeners();
+    }
+  }
+  
+  /// Go to first page
+  void goToFirstPage() {
+    if (_paginationModel != null) {
+      _paginationModel!.goToFirstPage();
+      _selectedIndex = 0;
+      notifyListeners();
+    }
+  }
+  
+  /// Go to last page
+  void goToLastPage() {
+    if (_paginationModel != null) {
+      _paginationModel!.goToLastPage();
+      _selectedIndex = 0;
+      notifyListeners();
+    }
+  }
+  
+  /// Go to specific page (0-based index)
+  void goToPage(int page) {
+    if (_paginationModel != null) {
+      _paginationModel!.goToPage(page);
+      _selectedIndex = 0;
+      notifyListeners();
+    }
+  }
+  
+  /// Set page size and reinitialize pagination
+  void setPageSize(int pageSize) {
+    if (_filteredItems.isNotEmpty) {
+      _initializePagination(pageSize);
+      notifyListeners();
+    }
   }
 }
