@@ -183,46 +183,46 @@ jobs:
           name: linux-release
           path: dist/artifacts/*
 
-  build-macos:
-    needs: [prepare, test]
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.47.7'
-          channel: 'stable'
-          cache: true
-
-      - name: Install Flutter dependencies
-        run: flutter pub get
-
-      - name: Build macOS release
-        run: >
-          flutter build macos --release
-          --build-name="${{ needs.prepare.outputs.build_name }}"
-          --build-number="${{ github.run_number }}"
-
-      - name: Package macOS (.dmg)
-        shell: bash
-        run: |
-          VERSION="${{ needs.prepare.outputs.version }}"
-          APP_SOURCE="build/macos/Build/Products/Release/emulator.app"
-          STAGING="dist/dmg_staging"
-          mkdir -p "$STAGING" dist/artifacts
-          cp -R "$APP_SOURCE" "$STAGING/Forsaken.app"
-          ln -s /Applications "$STAGING/Applications"
-          hdiutil create \
-            -volname "Forsaken ${VERSION}" \
-            -srcfolder "$STAGING" \
-            -ov -format UDZO \
-            "dist/artifacts/Forsaken-${VERSION}-macos.dmg"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: macos-release
-          path: dist/artifacts/*
+#  build-macos:
+#    needs: [prepare, test]
+#    runs-on: macos-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      - uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.47.7'
+#          channel: 'stable'
+#          cache: true
+#
+#      - name: Install Flutter dependencies
+#        run: flutter pub get
+#
+#      - name: Build macOS release
+#        run: >
+#          flutter build macos --release
+#          --build-name="${{ needs.prepare.outputs.build_name }}"
+#          --build-number="${{ github.run_number }}"
+#
+#      - name: Package macOS (.dmg)
+#        shell: bash
+#        run: |
+#          VERSION="${{ needs.prepare.outputs.version }}"
+#          APP_SOURCE="build/macos/Build/Products/Release/emulator.app"
+#          STAGING="dist/dmg_staging"
+#          mkdir -p "$STAGING" dist/artifacts
+#          cp -R "$APP_SOURCE" "$STAGING/Forsaken.app"
+#          ln -s /Applications "$STAGING/Applications"
+#          hdiutil create \
+#            -volname "Forsaken ${VERSION}" \
+#            -srcfolder "$STAGING" \
+#            -ov -format UDZO \
+#            "dist/artifacts/Forsaken-${VERSION}-macos.dmg"
+#
+#      - uses: actions/upload-artifact@v4
+#        with:
+#          name: macos-release
+#          path: dist/artifacts/*
 
   build-windows:
     needs: [prepare, test]
