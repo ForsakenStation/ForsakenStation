@@ -6,6 +6,7 @@ import 'package:path/path.dart' as path;
 import '../models/rom.dart';
 import '../models/emulator_config.dart';
 import '../models/download_result.dart';
+import '../utils/security_validator.dart';
 import 'config_service.dart';
 import 'debug_service.dart';
 import 'download_resolver_service.dart';
@@ -61,18 +62,19 @@ class DownloadService {
     _isCancelled = false;
 
     try {
-      if (rom.downloadUrl == null || rom.downloadUrl!.isEmpty) {
+      if (rom.downloadUrl == null ||
+          !SecurityValidator.isValidDownloadUrl(rom.downloadUrl)) {
         _debug.warning(
-          'No download URL for ROM: ${rom.displayName}',
+          'Invalid or missing download URL for ROM: ${rom.displayName}',
           tag: 'DownloadService',
         );
         return DownloadResult.error(
           DownloadErrorType.generic,
-          message: 'No download URL',
+          message: 'Invalid or missing download URL',
         );
       }
 
-      final fileName = rom.fileName;
+      final fileName = SecurityValidator.sanitizeFileName(rom.fileName);
       final isZip = fileName.toLowerCase().endsWith('.zip');
       final needsExtraction =
           isZip && emulatorConfig != null && emulatorConfig.requiresExtraction;
@@ -414,6 +416,13 @@ class DownloadService {
       int extractedCount = 0;
       for (final archiveFile in archive) {
         final filePath = path.join(extractDir.path, archiveFile.name);
+        if (!SecurityValidator.isSafePathWithinBase(extractDir.path, filePath)) {
+          _debug.warning(
+            'Skipping unsafe archive entry: ${archiveFile.name}',
+            tag: 'DownloadService',
+          );
+          continue;
+        }
 
         if (archiveFile.isFile) {
           final outFile = File(filePath);
