@@ -610,7 +610,11 @@ class _RomsScreenState extends State<RomsScreen> {
   }
 
   void _scrollToCarouselIndex(int index, {bool centerItem = false}) {
-    // Optional implementation
+    ScrollUtils.scrollToCarouselIndex(
+      _carouselController,
+      index,
+      centerItem: centerItem,
+    );
   }
 
   void _scrollToSelectedIndex() {

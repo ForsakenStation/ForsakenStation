@@ -58,7 +58,7 @@ class RomsListView extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          flex: 3,
+          flex: 4,
           child: Focus(
             focusNode: focusNode,
             autofocus: true,
@@ -117,7 +117,7 @@ class RomsListView extends StatelessWidget {
             : const SizedBox.shrink(),
         isWideScreen
             ? Expanded(
-                flex: 2,
+                flex: 5,
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(12, 8, 12, 8),
                   decoration: BoxDecoration(

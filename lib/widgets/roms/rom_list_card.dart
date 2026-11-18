@@ -116,10 +116,6 @@ class _RomListCardState extends State<RomListCard> {
                   ],
                 ),
               ),
-              if (!widget.item.isFolder && !widget.showPlatform) ...[
-                const SizedBox(width: 8),
-                _buildMediaIndicators(),
-              ],
               Icon(
                 widget.item.isFolder ? Icons.chevron_right : Icons.play_arrow,
                 color: theme.iconTheme.color?.withValues(alpha: 0.6),
@@ -193,56 +189,5 @@ class _RomListCardState extends State<RomListCard> {
 
   Widget _defaultThumbnail(BuildContext context) {
     return const PlaceholderImage(size: 60, borderRadius: 8);
-  }
-
-  Widget _buildMediaIndicators() {
-    if (widget.media == null || !widget.media!.hasAnyMedia) {
-      return const SizedBox.shrink();
-    }
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (widget.media!.box3d?.exists ?? false)
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Icon(Icons.view_in_ar, size: 16, color: Colors.purple),
-          ),
-        if (widget.media!.cover?.exists ?? false)
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Icon(Icons.image, size: 16, color: Colors.blue),
-          ),
-        if (widget.media!.marquee?.exists ?? false)
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Icon(Icons.rectangle, size: 16, color: Colors.indigo),
-          ),
-        if (widget.media!.screenshot?.exists ?? false)
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Icon(Icons.photo_camera, size: 16, color: Colors.green),
-          ),
-        if (widget.media!.mixImage?.exists ?? false)
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Icon(Icons.collections, size: 16, color: Colors.teal),
-          ),
-        if (widget.media!.video?.exists ?? false)
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: Icon(Icons.videocam, size: 16, color: Colors.orange),
-          ),
-        if (widget.media!.manual?.exists ?? false)
-          Padding(
-            padding: const EdgeInsets.only(left: 4),
-            child: Icon(
-              Icons.picture_as_pdf,
-              size: 16,
-              color: Colors.red.shade400,
-            ),
-          ),
-      ],
-    );
   }
 }
