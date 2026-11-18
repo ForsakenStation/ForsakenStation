@@ -1,0 +1,36 @@
+name: Feature Request
+description: Suggest a new feature or improvement for Forsaken
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Motivation
+      description: Is your feature request related to a problem or missing workflow?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the behavior or UI/UX you would like to see.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Platforms / Navigation
+        - ROM Views (List / Carousel / Grid)
+        - Emulator / BIOS Management
+        - Media / Gamelists
+        - Gamepad / Keyboard Controls
+        - Settings / Storage
+        - Other
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Add mockups, references, or screenshots if applicable.

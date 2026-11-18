@@ -1,0 +1,31 @@
+name: Platform / Emulator / BIOS Support
+description: Request or fix a platform configuration, emulator command, or BIOS requirement
+title: "[Platform]: "
+labels: ["enhancement", "platform"]
+body:
+  - type: input
+    id: platform_id
+    attributes:
+      label: Platform ID / Name
+      description: e.g. xbox, amiga, dsi, saturn
+      placeholder: "e.g. xbox"
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: What needs to be added or fixed?
+      options:
+        - Emulator launch command (config.json)
+        - Emulator download link (emulator_downloads.json)
+        - BIOS / Firmware requirement or download mapping
+        - Platform info / logo / system image
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Provide the emulator name, CLI flags, expected file extensions, or BIOS filenames.
+    validations:
+      required: true
